@@ -1,0 +1,308 @@
+/* Reset de márgenes y paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+/* Establecer fondo general y fuente */
+
+/* Estilo para el contenedor principal (contenido) */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Encabezados globales */
+h1, h2, h3, h4, h5, h6 {
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Párrafos */
+p {
+    margin-bottom: 20px;
+}
+
+/* Enlaces */
+a {
+    color: #2196F3;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Estilo de botones */
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Media Queries para hacer la página responsiva */
+
+/* Para pantallas de tablet y más pequeñas (máximo 768px de ancho) */
+@media (max-width: 768px) {
+    /* Aseguramos que el contenedor se ajuste a pantallas más pequeñas */
+    .container {
+        padding: 10px;
+    }
+
+    /* Hacer que los encabezados sean un poco más pequeños */
+    h1 {
+        font-size: 28px;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+
+    h3 {
+        font-size: 20px;
+    }
+
+    /* Hacer que los botones sean más pequeños */
+    button {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+}
+
+/* Para pantallas de teléfonos móviles (máximo 480px de ancho) */
+@media (max-width: 480px) {
+    /* Ajustar el tamaño de fuente en párrafos y encabezados */
+    h1 {
+        font-size: 24px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    h3 {
+        font-size: 18px;
+    }
+
+    p {
+        font-size: 14px;
+    }
+
+    /* Redimensionar botones y otras interacciones */
+    button {
+        padding: 6px 12px;
+        font-size: 14px;
+    }
+
+    /* Asegurarse de que los enlaces sean más fáciles de leer en pantallas pequeñas */
+    a {
+        font-size: 16px;
+    }
+}
+
+/* Para pantallas grandes (mayores a 1200px de ancho) */
+@media (min-width: 1200px) {
+    /* Ajustar el tamaño de fuente de los encabezados en pantallas grandes */
+    h1 {
+        font-size: 36px;
+    }
+
+    h2 {
+        font-size: 30px;
+    }
+
+    h3 {
+        font-size: 26px;
+    }
+
+    /* Ajustar el tamaño de los botones para pantallas grandes */
+    button {
+        padding: 12px 24px;
+        font-size: 18px;
+    }
+}
+
+
+/******************************************************************************************************/
+/******************************************************************************************************/
+/******************************************************************************************************/
+/******************************************************************************************************/
+/******************************************************************************************************/
+/* Estilo general para el cuerpo */
+
+
+/* Contenedor principal */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-image: url('../images/fondoLog.jpg'); /* Cambia la ruta por la imagen que quieras usar */
+}
+
+/* Caja de login */
+.login-box {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+}
+
+/* Título del formulario */
+h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Estilos para las alertas */
+.alert {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+/* Estilos para los grupos de entrada */
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.input-group label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+    color: #555;
+}
+
+.input-group input{
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    color: #333;
+    box-sizing: border-box;
+}
+
+select#area, #noEmpleado {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+/* Estilos para la vista previa de la foto */
+.photo-preview {
+    display: flex;
+    justify-content: center; /* Centra la imagen horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    width: 100%;
+    height: 200px; /* Ajusta la altura según sea necesario */
+    overflow: hidden; /* Evita que la imagen se salga */
+}
+
+#photo-image {
+    max-width: 100%; /* Para que la imagen no se desborde */
+    max-height: 100%; /* Para que la imagen se ajuste sin perder la proporción */
+    margin: 0 auto; /* Centra la imagen */
+    display: block; /* Asegura que el bloque ocupe el espacio completo */
+}
+
+
+/* Estilos para la opción Recordarme */
+.remember-me {
+    text-align: left;
+    margin-top: 10px;
+}
+
+.remember-me input {
+    margin-right: 5px;
+}
+
+/* Botones */
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 15px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Estilo para el botón de acceso por QR */
+.qr-option {
+    margin-top: 15px;
+}
+
+.qr-option button {
+    background-color: #007bff;
+}
+
+.qr-option button:hover {
+    background-color: #0056b3;
+}
+
+/* Enlace para registro */
+.register-link {
+    margin-top: 20px;
+}
+
+.register-link a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}
+
+/************ESTILOS PARA BOTON DE OJO DEL INPUT contraseña**************************************************/
+/************************************************************************************************************/
+.password-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .password-container input {
+        flex: 1;
+        padding-right: 30px;
+    }
+
+    .eye-icon {
+        position: absolute;
+        right: 10px;
+        cursor: pointer;
+        font-size: 18px;
+        user-select: none;
+    }
