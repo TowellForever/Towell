@@ -286,8 +286,6 @@ button:hover {
     text-decoration: underline;
 }
 
-/************ESTILOS PARA BOTON DE OJO DEL INPUT contraseña**************************************************/
-/************************************************************************************************************/
 .password-container {
         position: relative;
         display: flex;
@@ -305,4 +303,43 @@ button:hover {
         cursor: pointer;
         font-size: 18px;
         user-select: none;
+    }
+
+/************ESTILOS PARA MODAL de olvidaste contraseña en LOGIN**************************************************/
+/************************************************************************************************************/
+    /* Fondo del modal (oscuro y semitransparente) */
+    .modal {
+        display: none; /* Inicialmente oculto */
+        position: fixed; /* Fijo en la pantalla */
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro con transparencia */
+        z-index: 1000; /* Aseguramos que esté por encima de otros elementos */
+    }
+
+    /* Contenido del modal (el cuadro flotante) */
+    .modal-content {
+        background-color: #fff;
+        margin: 15% auto; /* Centrado vertical y horizontal */
+        padding: 20px;
+        border-radius: 8px; /* Bordes redondeados */
+        width: 300px; /* Ancho fijo del modal */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para dar el efecto flotante */
+    }
+
+    /* Estilo del botón de cerrar */
+    #close-modal {
+        margin-top: 10px;
+        background-color: #f44336; /* Rojo */
+        color: white;
+        border: none;
+        padding: 5px 15px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    #close-modal:hover {
+        background-color: #d32f2f;
     }

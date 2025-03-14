@@ -6,6 +6,7 @@
     <title>Login</title>
     <link rel="stylesheet" href="{{ asset('css/estilos.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
+    
 </head>
 <body class="fondoLog">
     <div class="login-container">
@@ -83,10 +84,24 @@
 
             </form>
 
-            <!-- Enlace para registrar una nueva cuenta -->
+           <!-- Enlace para recuperar la contraseña -->
             <div class="register-link">
-                <p>¿Olvidaste tu contraseña? <a href="#">Pulsa aquí</a></p>
+                <p>¿Olvidaste tu contraseña? <a href="#" id="forgot-password-link">Pulsa aquí</a></p>
             </div>
+
+            <!-- Modal de recuperación de contraseña -->
+            <div id="forgot-password-modal" class="modal">
+                <div class="modal-content">
+                    <h2>Recuperar Contraseña</h2>
+                    <form id="forgot-password-form">
+                        <label for="numero_empleado">Número de empleado:</label>
+                        <input type="text" id="numero_empleado" name="numero_empleado" required>
+                        <button type="submit">Enviar solicitud</button>
+                    </form>
+                    <button id="close-modal">Cerrar</button>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -164,43 +179,67 @@
         });
     </script>
 
-<script>
-    const qrButton = document.getElementById('qr-button');
-    const qrVideo = document.getElementById('qr-video');
+    <script>
+        const qrButton = document.getElementById('qr-button');
+        const qrVideo = document.getElementById('qr-video');
 
-    qrButton.addEventListener('click', function() {
-        // Abrir cámara para leer QR
-        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-            .then(function(stream) {
-                qrVideo.srcObject = stream;
-                qrVideo.style.display = 'block';
-                qrVideo.play();
+        qrButton.addEventListener('click', function() {
+            // Abrir cámara para leer QR
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+                .then(function(stream) {
+                    qrVideo.srcObject = stream;
+                    qrVideo.style.display = 'block';
+                    qrVideo.play();
 
-                // Llamar a la función de lectura cada 100ms
-                const interval = setInterval(() => {
-                    if (qrVideo.readyState === qrVideo.HAVE_ENOUGH_DATA) {
-                        const canvas = document.createElement('canvas');
-                        canvas.width = qrVideo.videoWidth;
-                        canvas.height = qrVideo.videoHeight;
-                        const context = canvas.getContext('2d');
-                        context.drawImage(qrVideo, 0, 0, canvas.width, canvas.height);
+                    // Llamar a la función de lectura cada 100ms
+                    const interval = setInterval(() => {
+                        if (qrVideo.readyState === qrVideo.HAVE_ENOUGH_DATA) {
+                            const canvas = document.createElement('canvas');
+                            canvas.width = qrVideo.videoWidth;
+                            canvas.height = qrVideo.videoHeight;
+                            const context = canvas.getContext('2d');
+                            context.drawImage(qrVideo, 0, 0, canvas.width, canvas.height);
 
-                        // Leer el código QR
-                        const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-                        const qrCode = jsQR(imageData.data, canvas.width, canvas.height);
+                            // Leer el código QR
+                            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                            const qrCode = jsQR(imageData.data, canvas.width, canvas.height);
 
-                        if (qrCode) {
-                            clearInterval(interval); // Detener el escaneo cuando se lee un QR
-                            window.location.href = qrCode.data; // Redirigir a la URL del QR
+                            if (qrCode) {
+                                clearInterval(interval); // Detener el escaneo cuando se lee un QR
+                                window.location.href = qrCode.data; // Redirigir a la URL del QR
+                            }
                         }
-                    }
-                }, 100);
-            })
-            .catch(function(error) {
-                console.log('Error al acceder a la cámara: ', error);
-            });
-    });
-</script>
+                    }, 100);
+                })
+                .catch(function(error) {
+                    console.log('Error al acceder a la cámara: ', error);
+                });
+        });
+    </script>
+
+    <script>
+        // Mostrar el modal
+        document.getElementById('forgot-password-link').addEventListener('click', function() {
+            document.getElementById('forgot-password-modal').style.display = 'block';
+        });
+
+        // Cerrar el modal
+        document.getElementById('close-modal').addEventListener('click', function() {
+            document.getElementById('forgot-password-modal').style.display = 'none';
+        });
+
+        // Enviar el formulario de recuperación de contraseña
+        document.getElementById('forgot-password-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var numeroEmpleado = document.getElementById('numero_empleado').value;
+
+            // Aquí enviarías la solicitud al correo jesus.alvarez@towelmex.com
+            alert('Solicitud enviada con el número de empleado: ' + numeroEmpleado + '. Se enviará la solicitud a jesus.alvarez@towelmex.com.');
+
+            // Cerrar el modal después de enviar
+            document.getElementById('forgot-password-modal').style.display = 'none';
+        });
+    </script>
 
 </body>
 </html>
