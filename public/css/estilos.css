@@ -377,13 +377,14 @@ button:hover {
 
     .plane-thead-tr {
         position: sticky;
-        top: 0;
-        background-color: #1d6f42; /* Verde Excel */
+        top: 0; /* Se fija en la parte superior cuando se desplaza */
+        background-color: #1d546f; /* Verde Excel */
         z-index: 10;
     }
 
     .plane-th {
         white-space: nowrap;
+        vertical-align: top; /* Alinea el texto arriba */
     }
 
     /* Contenedor para los botones en columna */

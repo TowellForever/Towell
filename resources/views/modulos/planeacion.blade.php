@@ -4,65 +4,30 @@
 
     <div class="container mx-auto">
         <h1 class="text-3xl font-bold text-center mb-6">PLANEACIÓN</h1>
-        <div class="table-container">
+        <div class="table-container relative">
             <div class="table-container-plane table-wrapper bg-white shadow-lg rounded-lg p-2">
                 <table class="plane-table border border-gray-300">
                     <thead>
                         <tr class="plane-thead-tr text-white text-sm">
-                            <th class="plane-th border border-gray-400 p-10">Número de registro</th>
-                            <th class="plane-th border border-gray-400 p-10">Cuenta</th>
-                            <th class="plane-th border border-gray-400 p-10">Salón</th>
-                            <th class="plane-th border border-gray-400 p-10">Telar</th>
-                            <th class="plane-th border border-gray-400 p-10">Último</th>
-                            <th class="plane-th border border-gray-400 p-10">Cambios Hilo</th>
-                            <th class="plane-th border border-gray-400 p-10">Maq</th>
-                            <th class="plane-th border border-gray-400 p-10">Ancho</th>
-                            <th class="plane-th border border-gray-400 p-10">Ef Std</th>
-                            <th class="plane-th border border-gray-400 p-10">Vel</th>
-                            <th class="plane-th border border-gray-400 p-10">Hilo</th>
-                            <th class="plane-th border border-gray-400 p-10">Calibre Pie</th>
-                            <th class="plane-th border border-gray-400 p-10">Jornada</th>
-                            <th class="plane-th border border-gray-400 p-10">Clave Mod.</th>
-                            <th class="plane-th border border-gray-400 p-10">Usar cuando no existe en base</th>
-                            <th class="plane-th border border-gray-400 p-10">Producto</th>
-                            <th class="plane-th border border-gray-400 p-10">Saldos</th>
-                            <th class="plane-th border border-gray-400 p-10">Day Scheduling</th>
-                            <th class="plane-th border border-gray-400 p-10">Orden Producto</th>
-                            <th class="plane-th border border-gray-400 p-10">INN</th>
-                            <th class="plane-th border border-gray-400 p-10">Descripción</th>
-                            <th class="plane-th border border-gray-400 p-10">Aplic.</th>
-                            <th class="plane-th border border-gray-400 p-10">Obs.</th>
-                            <th class="plane-th border border-gray-400 p-10">Tipo de pedido</th>
-                            <th class="plane-th border border-gray-400 p-10">Tiras</th>
-                            <th class="plane-th border border-gray-400 p-10">Pei.</th>
-                            <th class="plane-th border border-gray-400 p-10">LCR</th>
-                            <th class="plane-th border border-gray-400 p-10">PCR</th>
-                            <th class="plane-th border border-gray-400 p-10">Luc</th>
-                            <th class="plane-th border border-gray-400 p-10">Calibre Tira</th>
-                            <th class="plane-thborder border-gray-400 p-10">Dob</th>
-                            <th class="plane-thborder border-gray-400 p-10">Pasadas Tira</th>
-                            <th class="plane-thborder border-gray-400 p-10">Pasadas C1</th>
-                            <th class="plane-thborder border-gray-400 p-10">Pasadas C2</th>
-                            <th class="plane-thborder border-gray-400 p-10">Pasadas C3</th>
-                            <th class="plane-thborder border-gray-400 p-10">Pasadas C4</th>
-                            <th class="plane-thborder border-gray-400 p-10">Pasadas C5</th>
-                            <th class="plane-thborder border-gray-400 p-10">Ancho por Toalla</th>
-                            <th class="plane-thborder border-gray-400 p-10">Color Tira</th>
-                            <th class="plane-thborder border-gray-400 p-10">Plano</th>
-                            <th class="plane-thborder border-gray-400 p-10">Cuenta Pie</th>
-                            <th class="plane-thborder border-gray-400 p-10">Color Pie</th>
-                            <th class="plane-thborder border-gray-400 p-10">Peso (gr/m²)</th>
-                            <th class="plane-thborder border-gray-400 p-10">Días Efectivos</th>
-                            <th class="plane-thborder border-gray-400 p-10">Prod (Kg)/Día</th>
-                            <th class="plane-thborder border-gray-400 p-10">STD/Día</th>
-                            <th class="plane-thborder border-gray-400 p-10">STD (Toa/HR) 100%</th>
-                            <th class="plane-thborder border-gray-400 p-10">Días jornada completa</th>
-                            <th class="plane-thborder border-gray-400 p-10">Horas</th>
-                            <th class="plane-thborder border-gray-400 p-10">Inicio</th>
-                            <th class="plane-thborder border-gray-400 p-10">Fin</th>
-                            <th class="plane-thborder border-gray-400 p-10">Entrega</th>
-                            <th class="plane-thborder border-gray-400 p-10">Dif vs Compromiso</th>
-                            <th class="plane-thborder border-gray-400 p-10">DONE</th>
+                            @php
+                                $headers = [
+                                    'Número de registro', 'Cuenta', 'Salón', 'Telar', 'Último', 'Cambios Hilo', 'Maq', 'Ancho', 'Ef Std', 'Vel', 'Hilo', 'Calibre Pie', 'Jornada', 'Clave Mod.',
+                                    'Usar cuando no existe en base', 'Producto', 'Saldos', 'Day Scheduling', 'Orden Producto', 'INN', 'Descripción', 'Aplic.', 'Obs.', 'Tipo de pedido',
+                                    'Tiras', 'Pei.', 'LCR', 'PCR', 'Luc', 'Calibre Tira', 'Dob', 'Pasadas Tira', 'Pasadas C1', 'Pasadas C2', 'Pasadas C3', 'Pasadas C4', 'Pasadas C5',
+                                    'Ancho por Toalla', 'Color Tira', 'Plano', 'Cuenta Pie', 'Color Pie', 'Peso (gr/m²)', 'Días Efectivos', 'Prod (Kg)/Día', 'STD/Día', 'STD (Toa/HR) 100%',
+                                    'Días jornada completa', 'Horas', 'Inicio', 'Fin', 'Entrega', 'Dif vs Compromiso', 'DONE'
+                                ];
+                            @endphp
+                            
+                            @foreach($headers as $index => $header)
+                                <th class="plane-th border border-gray-400 p-4 relative" data-index="{{ $index }}">
+                                    {{ $header }}
+                                    <div class="absolute top-8 right-0 flex">
+                                        <button class="toggle-column bg-red-500 text-white text-xs px-1 py-0.5" data-index="{{ $index }}">⛔</button>
+                                        <button class="pin-column bg-blue-500 text-white text-xs px-1 py-0.5 ml-1" data-index="{{ $index }}">📌</button>
+                                    </div>
+                                </th>
+                            @endforeach
                         </tr>
                     </thead>
                     <tbody>
@@ -72,7 +37,7 @@
                         
                             // Datos ficticios
                             const data = [];
-                            for (let i = 1; i <= 15; i++) {
+                            for (let i = 1; i <= 10; i++) {
                                 data.push([
                                     i, // Número de registro
                                     "Cta" + i, // Cuenta
@@ -135,7 +100,7 @@
                             data.forEach(rowData => {
                                 let row = "<tr>";
                                 rowData.forEach(cellData => {
-                                    row += `<td class="border border-gray-300 p-2">${cellData}</td>`;
+                                    row += `<td class="border border-gray-300 p-1">${cellData}</td>`;
                                 });
                                 row += "</tr>";
                                 tbody.innerHTML += row;
@@ -148,12 +113,58 @@
             <!--SEGUNDO CONTENEDOR para botones-->
             <!-- Botones alineados a la derecha -->
             <div class="button-column mb-4">
-                <a href="#" class="button-plane bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700">Catálogo Telares</a>
-                <a href="#" class="button-plane bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700 ml-2">Catálogo Eficiencia STD</a>
-                <a href="#" class="button-plane bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700 ml-2">Catálogo Velocidad STD</a>
-                <a href="#" class="button-plane bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700 ml-2">Calendarios</a>
-                <a href="#" class="button-plane bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700 ml-2">Aplicaciones</a>
+                <a href="#" class="button-plane ml-2">Catálogo Telares</a>
+                <a href="#" class="button-plane ml-2">Catálogo Eficiencia STD</a>
+                <a href="#" class="button-plane ml-2">Catálogo Velocidad STD</a>
+                <a href="#" class="button-plane ml-2">Calendarios</a>
+                <a href="#" class="button-plane ml-2">Aplicaciones</a>
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll(".toggle-column").forEach(button => {
+                button.addEventListener("click", function() {
+                    let index = this.getAttribute("data-index");
+                    document.querySelectorAll(`th:nth-child(${+index + 1}), td:nth-child(${+index + 1})`).forEach(el => {
+                        el.classList.toggle("hidden");
+                    });
+                });
+            });
+            
+            document.querySelectorAll(".pin-column").forEach(button => {
+            button.addEventListener("click", function () {
+                let index = parseInt(this.getAttribute("data-index")) + 1; // Ajuste por nth-child
+                let columnCells = document.querySelectorAll(`th:nth-child(${index}), td:nth-child(${index})`);
+
+                // Verificar si la columna ya está fijada
+                let isPinned = columnCells[0].classList.contains("sticky");
+
+                if (isPinned) {
+                    // Si está fijada, quitar clases y restaurar
+                    columnCells.forEach(el => {
+                        el.classList.remove("sticky", "z-10", "shadow-md");
+                        el.style.left = "";
+                        el.style.backgroundColor = ""; // Restaurar fondo
+                    });
+                } else {
+                    // Obtener el ancho acumulado de las columnas fijas previas
+                    let pinnedColumns = document.querySelectorAll("th.sticky");
+                    let leftOffset = 0;
+                    pinnedColumns.forEach(col => {
+                        leftOffset += col.offsetWidth;
+                    });
+
+                    // Fijar la columna con estilos adecuados
+                    columnCells.forEach(el => {
+                        el.classList.add("sticky", "z-10", "shadow-md");
+                        el.style.left = `${leftOffset}px`;
+                        el.style.backgroundColor = "#70bbe1"; // Mantener el fondo visible
+                    });
+                }
+            });
+        });
+
+        });
+    </script>
 @endsection
