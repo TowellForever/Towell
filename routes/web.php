@@ -14,13 +14,27 @@ Route::get('/login', function () {
     return view('login');
 });
 Route::post('/login', [AuthController::class, 'login']);
+// Ruta para obtener el nombre y la foto del empleado
+Route::get('/obtener-nombre/{noEmpleado}', function ($noEmpleado) {
+    $empleado = App\Models\Usuario::where('numero_empleado', $noEmpleado)->first();
+    
+    if ($empleado) {
+        return response()->json([
+            'nombre' => $empleado->nombre,
+            'foto' => $empleado->foto // Asumiendo que 'foto' es el campo en la base de datos
+        ]);
+    }
+    return response()->json([], 404);
+});
 
 Route::get('/produccionProceso', function () { return view('produccionProceso');});
+
+//RUTAS DEL MODULO planeacion
+Route::get('/modulo-planeacion', function () { return view('modulos/planeacion');});
 
 //RUTAS DEL MODULO tejido
 Route::get('/modulo-tejido', function () { return view('modulos/tejido');});
 Route::get('/tejido/jacquard-sulzer', function () { return view('modulos/tejido/jacquard-sulzer');});
-
 Route::get('/tejido/jacquard-smith', function () { return view('modulos/tejido/jacquard-smith');});
 Route::get('/tejido/smith', function () { return view('modulos/tejido/smith');});
 Route::get('/tejido/itema-viejo', function () { return view('modulos/tejido/itema-viejo');});
@@ -38,15 +52,3 @@ Route::get('/obtener-empleados/{area}', function ($area) {
     return App\Models\Usuario::where('area', $area)->get();
 });
 
-// Ruta para obtener el nombre y la foto del empleado
-Route::get('/obtener-nombre/{noEmpleado}', function ($noEmpleado) {
-    $empleado = App\Models\Usuario::where('numero_empleado', $noEmpleado)->first();
-    
-    if ($empleado) {
-        return response()->json([
-            'nombre' => $empleado->nombre,
-            'foto' => $empleado->foto // Asumiendo que 'foto' es el campo en la base de datos
-        ]);
-    }
-    return response()->json([], 404);
-});
