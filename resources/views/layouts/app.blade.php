@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'TOWELL')</title>
+    <title>@yield('title', 'TOWELL S.A DE C.V')</title>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -14,6 +14,7 @@
             background-color: #a8d6f8;
         }
     </style>
+    <link rel="stylesheet" href="{{ asset('css/estilos.css') }}">
 </head>
 <body class="min-h-screen flex flex-col">
 

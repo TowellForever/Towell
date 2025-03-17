@@ -1,73 +1,66 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planeación</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-</head>
-<body class="p-6">
+@extends('layouts.app')
+
+@section('content')
     <div class="container mx-auto">
         <h1 class="text-3xl font-bold text-center mb-6">PLANEACIÓN</h1>
-        <div class="table-container bg-white shadow-lg rounded-lg p-4">
-            <table class="border border-gray-300">
+        <div class="table-container-plane bg-white shadow-lg rounded-lg p-4">
+            <table class="plane-table border border-gray-300">
                 <thead>
-                    <tr class="text-white text-sm">
-                        <th class="border border-gray-400 p-2">Número de registro</th>
-                        <th class="border border-gray-400 p-2">Cuenta</th>
-                        <th class="border border-gray-400 p-2">Salón</th>
-                        <th class="border border-gray-400 p-2">Telar</th>
-                        <th class="border border-gray-400 p-2">Último</th>
-                        <th class="border border-gray-400 p-2">Cambios Hilo</th>
-                        <th class="border border-gray-400 p-2">Maq</th>
-                        <th class="border border-gray-400 p-2">Ancho</th>
-                        <th class="border border-gray-400 p-2">Ef Std</th>
-                        <th class="border border-gray-400 p-2">Vel</th>
-                        <th class="border border-gray-400 p-2">Hilo</th>
-                        <th class="border border-gray-400 p-2">Calibre Pie</th>
-                        <th class="border border-gray-400 p-2">Jornada</th>
-                        <th class="border border-gray-400 p-2">Clave Mod.</th>
-                        <th class="border border-gray-400 p-2">Usar cuando no existe en base</th>
-                        <th class="border border-gray-400 p-2">Producto</th>
-                        <th class="border border-gray-400 p-2">Saldos</th>
-                        <th class="border border-gray-400 p-2">Day Scheduling</th>
-                        <th class="border border-gray-400 p-2">Orden Producto</th>
-                        <th class="border border-gray-400 p-2">INN</th>
-                        <th class="border border-gray-400 p-2">Descripción</th>
-                        <th class="border border-gray-400 p-2">Aplic.</th>
-                        <th class="border border-gray-400 p-2">Obs.</th>
-                        <th class="border border-gray-400 p-2">Tipo de pedido</th>
-                        <th class="border border-gray-400 p-2">Tiras</th>
-                        <th class="border border-gray-400 p-2">Pei.</th>
-                        <th class="border border-gray-400 p-2">LCR</th>
-                        <th class="border border-gray-400 p-2">PCR</th>
-                        <th class="border border-gray-400 p-2">Luc</th>
-                        <th class="border border-gray-400 p-2">Calibre Tira</th>
-                        <th class="border border-gray-400 p-2">Dob</th>
-                        <th class="border border-gray-400 p-2">Pasadas Tira</th>
-                        <th class="border border-gray-400 p-2">Pasadas C1</th>
-                        <th class="border border-gray-400 p-2">Pasadas C2</th>
-                        <th class="border border-gray-400 p-2">Pasadas C3</th>
-                        <th class="border border-gray-400 p-2">Pasadas C4</th>
-                        <th class="border border-gray-400 p-2">Pasadas C5</th>
-                        <th class="border border-gray-400 p-2">Ancho por Toalla</th>
-                        <th class="border border-gray-400 p-2">Color Tira</th>
-                        <th class="border border-gray-400 p-2">Plano</th>
-                        <th class="border border-gray-400 p-2">Cuenta Pie</th>
-                        <th class="border border-gray-400 p-2">Color Pie</th>
-                        <th class="border border-gray-400 p-2">Peso (gr/m²)</th>
-                        <th class="border border-gray-400 p-2">Días Efectivos</th>
-                        <th class="border border-gray-400 p-2">Prod (Kg)/Día</th>
-                        <th class="border border-gray-400 p-2">STD/Día</th>
-                        <th class="border border-gray-400 p-2">STD (Toa/HR) 100%</th>
-                        <th class="border border-gray-400 p-2">Días jornada completa</th>
-                        <th class="border border-gray-400 p-2">Horas</th>
-                        <th class="border border-gray-400 p-2">Inicio</th>
-                        <th class="border border-gray-400 p-2">Fin</th>
-                        <th class="border border-gray-400 p-2">Entrega</th>
-                        <th class="border border-gray-400 p-2">Dif vs Compromiso</th>
-                        <th class="border border-gray-400 p-2">DONE</th>
+                    <tr class="plane-thead-tr text-white text-sm">
+                        <th class="plane-th border border-gray-400 p-2">Número de registro</th>
+                        <th class="plane-th border border-gray-400 p-2">Cuenta</th>
+                        <th class="plane-th border border-gray-400 p-2">Salón</th>
+                        <th class="plane-th border border-gray-400 p-2">Telar</th>
+                        <th class="plane-th border border-gray-400 p-2">Último</th>
+                        <th class="plane-th border border-gray-400 p-2">Cambios Hilo</th>
+                        <th class="plane-th border border-gray-400 p-2">Maq</th>
+                        <th class="plane-th border border-gray-400 p-2">Ancho</th>
+                        <th class="plane-th border border-gray-400 p-2">Ef Std</th>
+                        <th class="plane-th border border-gray-400 p-2">Vel</th>
+                        <th class="plane-th border border-gray-400 p-2">Hilo</th>
+                        <th class="plane-th border border-gray-400 p-2">Calibre Pie</th>
+                        <th class="plane-th border border-gray-400 p-2">Jornada</th>
+                        <th class="plane-th border border-gray-400 p-2">Clave Mod.</th>
+                        <th class="plane-th border border-gray-400 p-2">Usar cuando no existe en base</th>
+                        <th class="plane-th border border-gray-400 p-2">Producto</th>
+                        <th class="plane-th border border-gray-400 p-2">Saldos</th>
+                        <th class="plane-th border border-gray-400 p-2">Day Scheduling</th>
+                        <th class="plane-th border border-gray-400 p-2">Orden Producto</th>
+                        <th class="plane-th border border-gray-400 p-2">INN</th>
+                        <th class="plane-th border border-gray-400 p-2">Descripción</th>
+                        <th class="plane-th border border-gray-400 p-2">Aplic.</th>
+                        <th class="plane-th border border-gray-400 p-2">Obs.</th>
+                        <th class="plane-th border border-gray-400 p-2">Tipo de pedido</th>
+                        <th class="plane-th border border-gray-400 p-2">Tiras</th>
+                        <th class="plane-th border border-gray-400 p-2">Pei.</th>
+                        <th class="plane-th border border-gray-400 p-2">LCR</th>
+                        <th class="plane-th border border-gray-400 p-2">PCR</th>
+                        <th class="plane-th border border-gray-400 p-2">Luc</th>
+                        <th class="plane-th border border-gray-400 p-2">Calibre Tira</th>
+                        <th class="plane-thborder border-gray-400 p-2">Dob</th>
+                        <th class="plane-thborder border-gray-400 p-2">Pasadas Tira</th>
+                        <th class="plane-thborder border-gray-400 p-2">Pasadas C1</th>
+                        <th class="plane-thborder border-gray-400 p-2">Pasadas C2</th>
+                        <th class="plane-thborder border-gray-400 p-2">Pasadas C3</th>
+                        <th class="plane-thborder border-gray-400 p-2">Pasadas C4</th>
+                        <th class="plane-thborder border-gray-400 p-2">Pasadas C5</th>
+                        <th class="plane-thborder border-gray-400 p-2">Ancho por Toalla</th>
+                        <th class="plane-thborder border-gray-400 p-2">Color Tira</th>
+                        <th class="plane-thborder border-gray-400 p-2">Plano</th>
+                        <th class="plane-thborder border-gray-400 p-2">Cuenta Pie</th>
+                        <th class="plane-thborder border-gray-400 p-2">Color Pie</th>
+                        <th class="plane-thborder border-gray-400 p-2">Peso (gr/m²)</th>
+                        <th class="plane-thborder border-gray-400 p-2">Días Efectivos</th>
+                        <th class="plane-thborder border-gray-400 p-2">Prod (Kg)/Día</th>
+                        <th class="plane-thborder border-gray-400 p-2">STD/Día</th>
+                        <th class="plane-thborder border-gray-400 p-2">STD (Toa/HR) 100%</th>
+                        <th class="plane-thborder border-gray-400 p-2">Días jornada completa</th>
+                        <th class="plane-thborder border-gray-400 p-2">Horas</th>
+                        <th class="plane-thborder border-gray-400 p-2">Inicio</th>
+                        <th class="plane-thborder border-gray-400 p-2">Fin</th>
+                        <th class="plane-thborder border-gray-400 p-2">Entrega</th>
+                        <th class="plane-thborder border-gray-400 p-2">Dif vs Compromiso</th>
+                        <th class="plane-thborder border-gray-400 p-2">DONE</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -151,5 +144,4 @@
             </table>
         </div>
     </div>
-</body>
-</html>
+@endsection
