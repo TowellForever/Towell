@@ -16,7 +16,16 @@ Route::get('/login', function () {
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::get('/produccionProceso', function () { return view('produccionProceso');});
+
+//RUTAS DEL MODULO tejido
 Route::get('/modulo-tejido', function () { return view('modulos/tejido');});
+Route::get('/tejido/jacquard-sulzer', function () { return view('modulos/tejido/jacquard-sulzer');});
+
+Route::get('/tejido/jacquard-smith', function () { return view('modulos/tejido/jacquard-smith');});
+Route::get('/tejido/smith', function () { return view('modulos/tejido/smith');});
+Route::get('/tejido/itema-viejo', function () { return view('modulos/tejido/itema-viejo');});
+Route::get('/tejido/itema-nuevo', function () { return view('modulos/tejido/itema-nuevo');});
+Route::get('/tejido/programar-requerimientos', function () { return view('modulos/tejido/programar-requerimientos');});
 
 //Route::get('/alta-usuarios', function () { return view('alta_usuarios');});//BORRAR UNA VEZ CREADO EL CONTROLLER
 

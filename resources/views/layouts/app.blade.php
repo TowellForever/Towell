@@ -11,7 +11,7 @@
     <!-- Estilos personalizados -->
     <style>
         body {
-            background-color: #9bc8ea;
+            background-color: #a8d6f8;
         }
     </style>
 </head>
@@ -21,9 +21,7 @@
     <nav class="bg-blue-350 text-white p-4">
         <div class="container mx-auto flex justify-between items-center">
             <a href="/produccionProceso" class="text-3xl font-extrabold">TOWELL</a>
-            <p class="text-2xl font-bold uppercase flex justify-center items-center"> <!--uppercase - Lo usé para transformar las letras a mayusculas, pero esta tecnica si toma en cuenta letras con acento, y no las deja en minusculas-->
-                {{ Auth::User()->nombre }}
-            </p>
+
         </div>
     </nav>
 
