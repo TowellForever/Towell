@@ -343,3 +343,33 @@ button:hover {
     #close-modal:hover {
         background-color: #d32f2f;
     }
+
+/************ESTILOS PARA TABLA de planeación**************************************************/
+/************************************************************************************************************/
+    /* Establecer que el encabezado de la tabla sea fijo */
+    .table-container-plane {
+        max-height: 2000px; /* Ajusta la altura según necesites */
+        overflow-y: auto;
+        overflow-x: auto;
+        position: relative;
+    }
+
+    .plane-body{
+        background-color: #a8d6f8;
+    }
+
+    .plane-table {
+        min-width: 2000px; /* Ajusta el ancho mínimo si es necesario */
+        border-collapse: collapse;
+    }
+
+    .plane-thead-tr {
+        position: sticky;
+        top: 0;
+        background-color: #1d6f42; /* Verde Excel */
+        z-index: 10;
+    }
+
+    .plane-th {
+        white-space: nowrap;
+    }
