@@ -121,6 +121,7 @@
             </div>
         </div>
     </div>
+    <!--SCRIPT que sirve para ocultar y fijar columnas de la tabla-->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             document.querySelectorAll(".toggle-column").forEach(button => {
@@ -166,5 +167,39 @@
         });
 
         });
+    </script>
+    <!--Con este script todas las celdas del cuerpo de la tabla, son editables-->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll("td").forEach(td => {
+            td.addEventListener("click", function () {
+                if (this.querySelector("input")) return; // Evitar múltiples inputs
+
+                let originalContent = this.innerText;
+                let input = document.createElement("input");
+                input.type = "text";
+                input.value = originalContent;
+                input.classList.add("w-full", "border", "p-1");
+
+                input.addEventListener("blur", function () {
+                    td.innerText = this.value || originalContent; // Guardar o restaurar valor
+                    // Aquí puedes agregar una función para guardar en la base de datos
+                    console.log("Nuevo valor:", this.value);
+                });
+
+                input.addEventListener("keydown", function (e) {
+                    if (e.key === "Enter") this.blur();
+                    if (e.key === "Escape") {
+                        td.innerText = originalContent;
+                    }
+                });
+
+                td.innerText = ""; 
+                td.appendChild(input);
+                input.focus();
+            });
+        });
+    });
+
     </script>
 @endsection

@@ -18,7 +18,7 @@ class User extends Authenticatable
     ];
 
     protected $hidden = [
-        'contrasenia', 'remember_token',
+        'contrasenia',
     ];
 
     protected $casts = [

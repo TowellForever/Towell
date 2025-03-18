@@ -84,11 +84,6 @@
 
             </form>
 
-           <!-- Enlace para recuperar la contraseña -->
-            <div class="register-link">
-                <p>¿Olvidaste tu contraseña? <a href="#" id="forgot-password-link">Pulsa aquí</a></p>
-            </div>
-
             <!-- Modal de recuperación de contraseña -->
             <div id="forgot-password-modal" class="modal">
                 <div class="modal-content">
@@ -214,30 +209,6 @@
                 .catch(function(error) {
                     console.log('Error al acceder a la cámara: ', error);
                 });
-        });
-    </script>
-
-    <script>
-        // Mostrar el modal
-        document.getElementById('forgot-password-link').addEventListener('click', function() {
-            document.getElementById('forgot-password-modal').style.display = 'block';
-        });
-
-        // Cerrar el modal
-        document.getElementById('close-modal').addEventListener('click', function() {
-            document.getElementById('forgot-password-modal').style.display = 'none';
-        });
-
-        // Enviar el formulario de recuperación de contraseña
-        document.getElementById('forgot-password-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            var numeroEmpleado = document.getElementById('numero_empleado').value;
-
-            // Aquí enviarías la solicitud al correo jesus.alvarez@towelmex.com
-            alert('Solicitud enviada con el número de empleado: ' + numeroEmpleado + '. Se enviará la solicitud a jesus.alvarez@towelmex.com.');
-
-            // Cerrar el modal después de enviar
-            document.getElementById('forgot-password-modal').style.display = 'none';
         });
     </script>
 
