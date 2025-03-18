@@ -48,7 +48,7 @@
     </nav>
 
     <!-- Contenido de la página -->
-    <main class="flex-grow container mx-auto p-6">
+    <main class="flex-grow container mx-auto mt-[-70px]">
         @yield('content')
     </main>
 
