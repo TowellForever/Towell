@@ -149,7 +149,6 @@ button:hover {
     justify-content: center;
     align-items: center;
     width: 100%;
-    background-image: url('../images/fondoLog.jpg'); /* Cambia la ruta por la imagen que quieras usar */
 }
 
 /* Caja de login */

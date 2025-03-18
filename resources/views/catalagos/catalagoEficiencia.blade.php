@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <h1 class="mb-4 text-3xl font-bold text-center">Catálogo de Eficiencia</h1>
+    <h1 class="mb-4 text-3xl font-bold text-center">Catálogo de Eficiencia STD</h1>
     
     <!-- Tabla de telares -->
     <table class="table table-bordered table-sm">

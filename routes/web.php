@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CatalagoEficienciaController;
 use App\Http\Controllers\CatalagoTelarController;
+use App\Http\Controllers\CatalagoVelocidadController;
 use App\Http\Controllers\UsuarioController;
 use App\Models\Usuario;
 use Illuminate\Support\Facades\Route;
@@ -57,3 +58,4 @@ Route::get('/obtener-empleados/{area}', function ($area) {
 //RUTAS de CATALAGOS (3 catalagos)
 Route::get('/telares', [CatalagoTelarController::class, 'index'])->name('telares');
 Route::get('/eficiencia', [CatalagoEficienciaController::class, 'index'])->name('eficiencia');
+Route::get('/velocidad', [CatalagoVelocidadController::class, 'index'])->name('velocidad');
