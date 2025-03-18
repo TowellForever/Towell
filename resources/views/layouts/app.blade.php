@@ -13,9 +13,25 @@
 
     <!-- Estilos personalizados -->
     <style>
-        body {
-            background-color: #a8d6f8;
+    body {
+        background: linear-gradient(135deg, #05cef6, #b9ecff, #044aa5);
+        background-size: 300% 300%;
+        animation: gradientAnimation 5s ease infinite;
+    }
+
+    @keyframes gradientAnimation {
+        0% {
+            background-position: 0% 50%;
         }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+
     </style>
     <link rel="stylesheet" href="{{ asset('css/estilos.css') }}">
 </head>

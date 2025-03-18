@@ -114,7 +114,7 @@
             <!-- Botones alineados a la derecha -->
             <div class="button-column mb-4">
                 <a href="{{ route('telares') }}" class="button-plane ml-2">Catálogo Telares</a>
-                <a href="#" class="button-plane ml-2">Catálogo Eficiencia STD</a>
+                <a href="{{ route('eficiencia') }}" class="button-plane ml-2">Catálogo Eficiencia STD</a>
                 <a href="#" class="button-plane ml-2">Catálogo Velocidad STD</a>
                 <a href="#" class="button-plane ml-2">Calendarios</a>
                 <a href="#" class="button-plane ml-2">Aplicaciones</a>
