@@ -5,7 +5,7 @@
     <h1 class="mb-4 text-3xl font-bold text-center">Catálogo de Telares</h1>
 
     <!-- Formulario de búsqueda -->
-    <form method="GET" action="{{ route('telares') }}" class="mb-4">
+    <form method="GET" action="{{ route('telares.index') }}" class="mb-4">
         <div class="row p-3 rounded" style="background-color: #003366;">
             <div class="col-md-2">
                 <input type="text" name="salon" class="form-control" placeholder="Buscar por salón" value="{{ request('salon') }}">
@@ -25,9 +25,20 @@
             <div class="col-md-2">
                 <input type="text" name="ancho" class="form-control" placeholder="Buscar por ancho" value="{{ request('ancho') }}">
             </div>
-            <div class="col-md-12 text-right mt-2">
-                <button type="submit" class="col-md-1 btn btn-primary px-4 py-2">Buscar</button>
-                <a href="{{ route('telares') }}" class="btn btn-secondary px-4 py-2">Restablecer</a>
+            <div class="col-md-12 mt-2 d-flex flex-wrap justify-content-between">
+                <!-- Botón Agregar Telar alineado a la izquierda -->
+                <a href="{{ route('telares.create') }}" class="btn btn-success px-4 py-2 mx-1 col-12 col-md-auto">
+                    Agregar Telar
+                </a>
+                <!-- Contenedor para los botones Buscar y Restablecer alineados a la derecha -->
+                <div class="d-flex flex-wrap justify-content-md-end justify-content-center col-12 col-md-auto">
+                    <button type="submit" class="btn btn-primary px-4 py-2 mx-1 col-12 col-md-auto">
+                        Buscar
+                    </button>
+                    <a href="{{ route('telares.index') }}" class="btn btn-secondary px-4 py-2 mx-1 col-12 col-md-auto">
+                        Restablecer
+                    </a>
+                </div>
             </div>
         </div>
     </form>

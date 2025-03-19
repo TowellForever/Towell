@@ -16,5 +16,5 @@ class CatalagoTelar extends Model
     public $timestamps = false;
 
     // Si quieres proteger ciertas columnas de la asignación masiva:
-    protected $fillable = ['salon', 'telar', 'nombre', 'cuenta', 'pie', 'ancho'];
+    protected $fillable = ['salon', 'telar', 'nombre', 'cuenta', 'piel', 'ancho'];
 }

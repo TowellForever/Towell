@@ -38,4 +38,36 @@ class CatalagoTelarController extends Controller
         // Pasa los resultados y el estado de "sin resultados"
         return view('catalagos.catalagoTelares', compact('telares', 'noResults'));
     }
+
+    public function create()
+    {
+        return view('catalagos.telaresCreate'); // Cargar la vista para agregar un telar
+    }
+
+    public function store(Request $request)
+    {
+        // Validación de los datos
+        $request->validate([
+            'salon' => 'required',
+            'telar' => 'required',
+            'nombre' => 'required',
+            'cuenta' => 'required',
+            'piel' => 'required',
+            'ancho' => 'nullable',
+        ]);
+
+        // Crear un nuevo telar
+        CatalagoTelar::create([
+            'salon' => $request->salon,
+            'telar' => $request->telar,
+            'nombre' => $request->nombre,
+            'cuenta' => $request->cuenta,
+            'piel' => $request->piel,
+            'ancho' => $request->ancho,
+        ]);
+
+        // Redirigir a la página de índice o donde desees
+        return redirect()->route('telares.index')->with('success', 'Telar agregado exitosamente!');
+    }
+    
 }

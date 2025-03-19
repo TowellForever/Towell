@@ -30,7 +30,8 @@ Route::get('/obtener-nombre/{noEmpleado}', function ($noEmpleado) {
     return response()->json([], 404);
 });
 
-Route::get('/produccionProceso', function () { return view('produccionProceso');});
+Route::get('/produccionProceso', function () {return view('produccionProceso');})->name('produccionProceso');
+
 
 //RUTAS DEL MODULO planeacion
 Route::get('/modulo-planeacion', function () { return view('modulos/planeacion');});
@@ -56,6 +57,7 @@ Route::get('/obtener-empleados/{area}', function ($area) {
 });
 
 //RUTAS de CATALAGOS (3 catalagos)
-Route::get('/telares', [CatalagoTelarController::class, 'index'])->name('telares');
-Route::get('/eficiencia', [CatalagoEficienciaController::class, 'index'])->name('eficiencia');
-Route::get('/velocidad', [CatalagoVelocidadController::class, 'index'])->name('velocidad');
+Route::resource('telares', CatalagoTelarController::class);
+Route::resource('eficiencia', CatalagoEficienciaController::class);
+Route::resource('velocidad', CatalagoVelocidadController::class);
+

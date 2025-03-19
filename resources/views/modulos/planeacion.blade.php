@@ -22,7 +22,7 @@
                             @foreach($headers as $index => $header)
                                 <th class="plane-th border border-gray-400 p-4 relative" data-index="{{ $index }}">
                                     {{ $header }}
-                                    <div class="absolute top-8 right-0 flex">
+                                    <div class="absolute top-12 right-0 flex">
                                         <button class="toggle-column bg-red-500 text-white text-xs px-1 py-0.5" data-index="{{ $index }}">⛔</button>
                                         <button class="pin-column bg-blue-500 text-white text-xs px-1 py-0.5 ml-1" data-index="{{ $index }}">📌</button>
                                     </div>
@@ -113,9 +113,9 @@
             <!--SEGUNDO CONTENEDOR para botones-->
             <!-- Botones alineados a la derecha -->
             <div class="button-column mb-4">
-                <a href="{{ route('telares') }}" class="button-plane ml-2">Catálogo Telares</a>
-                <a href="{{ route('eficiencia') }}" class="button-plane ml-2">Catálogo Eficiencia STD</a>
-                <a href="{{ route('velocidad') }}" class="button-plane ml-2">Catálogo Velocidad STD</a>
+                <a href="{{ route('telares.index') }}" class="button-plane ml-2">Catálogo Telares</a>
+                <a href="{{ route('eficiencia.index') }}" class="button-plane ml-2">Catálogo Eficiencia STD</a>
+                <a href="{{ route('velocidad.index') }}" class="button-plane ml-2">Catálogo Velocidad STD</a>
                 <a href="#" class="button-plane ml-2">Calendarios</a>
                 <a href="#" class="button-plane ml-2">Aplicaciones</a>
             </div>
