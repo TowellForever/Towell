@@ -10,31 +10,38 @@ class CatalagoVelocidadController extends Controller
 {
     public function index(Request $request)
     {
-         // Realiza la consulta con los filtros
-         $velocidad = DB::table('catalago_velocidad')
-         ->when($request->telar, function ($query) use ($request) {
-             return $query->where('telar', 'like', '%' . $request->telar . '%');
-         })
-         ->when($request->salon, function ($query) use ($request) {
-             return $query->where('salon', 'like', '%' . $request->salon . '%');
-         })
-         ->when($request->tipo_hilo, function ($query) use ($request) {
-             return $query->where('tipo_hilo', 'like', '%' . $request->tipo_hilo . '%');
-         })
-         ->when($request->velocidad, function ($query) use ($request) {
-             return $query->where('velocidad', 'like', '%' . $request->velocidad . '%');
-         })
-         ->when($request->densidad, function ($query) use ($request) {
-             return $query->where('densidad', 'like', '%' . $request->densidad . '%');
-         })
-         ->get();
- 
-         // Verifica si hay resultados
-         $noResults = $velocidad->isEmpty();
- 
-         // Pasa los resultados y el estado de "sin resultados"
-         return view('catalagos.catalagoVelocidad', compact('velocidad', 'noResults'));
+        $page = $request->input('page', 1); // Página actual
+        $perPage = 10; // Número de registros por página
+        $offset = ($page - 1) * $perPage; // Cálculo del inicio
+    
+        $query = DB::table('catalago_velocidad')
+            ->selectRaw('*, ROW_NUMBER() OVER (ORDER BY id ASC) AS row_num')
+            ->when($request->telar, fn($q) => $q->where('telar', 'like', '%' . $request->telar . '%'))
+            ->when($request->salon, fn($q) => $q->where('salon', 'like', '%' . $request->salon . '%'))
+            ->when($request->tipo_hilo, fn($q) => $q->where('tipo_hilo', 'like', '%' . $request->tipo_hilo . '%'))
+            ->when($request->velocidad, fn($q) => $q->where('velocidad', 'like', '%' . $request->velocidad . '%'))
+            ->when($request->densidad, fn($q) => $q->where('densidad', 'like', '%' . $request->densidad . '%'));
+    
+        // Contar total de registros sin paginar
+        $total = $query->count();
+    
+        // Aplicar paginación usando una subconsulta
+        $velocidad = DB::table(DB::raw("({$query->toSql()}) as sub"))
+            ->mergeBindings($query)
+            ->whereBetween('row_num', [$offset + 1, $offset + $perPage])
+            ->get();
+    
+        $noResults = $velocidad->isEmpty();
+    
+        return view('catalagos.catalagoVelocidad', [
+            'velocidad' => $velocidad,
+            'noResults' => $noResults,
+            'total' => $total,
+            'perPage' => $perPage,
+            'currentPage' => $page // Se mantiene la coherencia en la variable para la vista
+        ]);
     }
+    
 
     public function create()
     {

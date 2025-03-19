@@ -35,6 +35,10 @@ Route::get('/obtener-empleados/{area}', function ($area) { return App\Models\Usu
 
 Route::get('/produccionProceso', function () {return view('produccionProceso');})->name('produccionProceso');
 
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::get('/produccionProceso', [UsuarioController::class, 'index'])->name('produccion.index')->middleware('auth');
+
 
 //RUTAS DEL MODULO planeacion
 //Route::get('/modulo-planeacion', function () { return view('modulos/planeacion');});
@@ -59,7 +63,6 @@ Route::post('/usuarios', [UsuarioController::class, 'store'])->name('usuarios.st
 Route::resource('telares', CatalagoTelarController::class);
 Route::resource('eficiencia', CatalagoEficienciaController::class);
 Route::resource('velocidad', CatalagoVelocidadController::class);
-
 
 
 
