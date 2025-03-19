@@ -70,6 +70,33 @@
             @endforeach
         </tbody>
     </table>
+    <div class="d-flex justify-content-center mt-4">
+        <nav>
+            <ul class="pagination">
+                @php
+                    $totalPages = ceil($total / $perPage);
+                @endphp
+    
+                @if ($currentPage > 1)
+                    <li class="page-item">
+                        <a class="page-link" href="{{ request()->fullUrlWithQuery(['page' => $currentPage - 1]) }}">Anterior</a>
+                    </li>
+                @endif
+    
+                @for ($i = 1; $i <= $totalPages; $i++)
+                    <li class="page-item {{ $currentPage == $i ? 'active' : '' }}">
+                        <a class="page-link" href="{{ request()->fullUrlWithQuery(['page' => $i]) }}">{{ $i }}</a>
+                    </li>
+                @endfor
+    
+                @if ($currentPage < $totalPages)
+                    <li class="page-item">
+                        <a class="page-link" href="{{ request()->fullUrlWithQuery(['page' => $currentPage + 1]) }}">Siguiente</a>
+                    </li>
+                @endif
+            </ul>
+        </nav>
+    </div>
 </div>
 
 <script>
