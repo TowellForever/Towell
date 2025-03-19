@@ -6,18 +6,21 @@
         <h1 class="text-3xl font-bold text-center mb-6">PLANEACIÓN</h1>
         <div class="table-container relative">
             <div class="table-container-plane table-wrapper bg-white shadow-lg rounded-lg p-2">
-                <table class="plane-table border border-gray-300">
+                <table class="celP plane-table border border-gray-300">
                     <thead>
                         <tr class="plane-thead-tr text-white text-sm">
                             @php
-                                $headers = [
-                                    'Número de registro', 'Cuenta', 'Salón', 'Telar', 'Último', 'Cambios Hilo', 'Maq', 'Ancho', 'Ef Std', 'Vel', 'Hilo', 'Calibre Pie', 'Jornada', 'Clave Mod.',
-                                    'Usar cuando no existe en base', 'Producto', 'Saldos', 'Day Scheduling', 'Orden Producto', 'INN', 'Descripción', 'Aplic.', 'Obs.', 'Tipo de pedido',
-                                    'Tiras', 'Pei.', 'LCR', 'PCR', 'Luc', 'Calibre Tira', 'Dob', 'Pasadas Tira', 'Pasadas C1', 'Pasadas C2', 'Pasadas C3', 'Pasadas C4', 'Pasadas C5',
-                                    'Ancho por Toalla', 'Color Tira', 'Plano', 'Cuenta Pie', 'Color Pie', 'Peso (gr/m²)', 'Días Efectivos', 'Prod (Kg)/Día', 'STD/Día', 'STD (Toa/HR) 100%',
-                                    'Días jornada completa', 'Horas', 'Inicio', 'Fin', 'Entrega', 'Dif vs Compromiso', 'DONE'
-                                ];
-                            @endphp
+                            $headers = [
+                                'Cuenta', 'Salon', 'Telar', 'Último', 'Cambios_Hilo', 'Maquina', 'Ancho', 'Eficiencia_Std', 'Velocidad_STD', 'Calibre_Rizo', 'Calibre_Pie', 'Calendario',
+                                'Clave_Estilo', 'Tamano', 'Estilo_Alternativo', 'Nombre_Producto', 'Saldos', 'Fecha_Captura', 'Orden_Prod', 'Fecha_Liberacion', 'Id_Flog', 'Descrip',
+                                'Aplic', 'Obs', 'Tipo_Ped', 'Tiras', 'Peine', 'Largo_Crudo', 'Peso_Crudo', 'Luchaje', 'CALIBRE_TRA', 'Dobladillo', 'PASADAS_TRAMA', 'PASADAS_C1',
+                                'PASADAS_C2', 'PASADAS_C3', 'PASADAS_C4', 'PASADAS_C5', 'ancho_por_toalla', 'COLOR_TRAMA', 'CALIBRE_C1', 'Clave_Color_C1', 'COLOR_C1', 'CALIBRE_C2',
+                                'Clave_Color_C2', 'COLOR_C2', 'CALIBRE_C3', 'Clave_Color_C3', 'COLOR_C3', 'CALIBRE_C4', 'Clave_Color_C4', 'COLOR_C4', 'CALIBRE_C5', 'Clave_Color_C5',
+                                'COLOR_C5', 'Plano', 'Cuenta_Pie', 'Clave_Color_Pie', 'Color_Pie', 'Peso____(gr_/_m²)', 'Dias_Ef', 'Prod_(Kg)/Día', 'Std/Dia', 'Prod_(Kg)/Día1',
+                                'Std_(Toa/Hr)_100%', 'Dias_jornada_completa', 'Horas', 'Std/Hrefectivo', 'Inicio_Tejido', 'Calc4', 'Calc5', 'Calc6', 'Fin_Tejido', 'Fecha_Compromiso',
+                                'Fecha_Compromiso1', 'Entrega', 'Dif_vs_Compromiso'
+                            ];
+                        @endphp                        
                             
                             @foreach($headers as $index => $header)
                                 <th class="plane-th border border-gray-400 p-4 relative" data-index="{{ $index }}">
@@ -31,83 +34,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!--SCRIPT DE PRUEBA, crea datos ficticios para vizualizar la mega tabla-->
-                        <script>
-                            const tbody = document.querySelector("tbody");
-                        
-                            // Datos ficticios
-                            const data = [];
-                            for (let i = 1; i <= 10; i++) {
-                                data.push([
-                                    i, // Número de registro
-                                    "Cta" + i, // Cuenta
-                                    "Salón " + (i % 5 + 1), // Salón
-                                    "T-" + (Math.floor(Math.random() * 10) + 1), // Telar
-                                    Math.floor(Math.random() * 1000), // Último
-                                    Math.floor(Math.random() * 5) + " cambios", // Cambios Hilo
-                                    "M-" + (Math.floor(Math.random() * 10) + 1), // Maq
-                                    (Math.random() * 3 + 1).toFixed(2), // Ancho
-                                    (Math.random() * 100).toFixed(2) + "%", // Ef Std
-                                    Math.floor(Math.random() * 20) + 50, // Vel
-                                    "Hilo " + (Math.floor(Math.random() * 50) + 1), // Hilo
-                                    Math.floor(Math.random() * 10) + 20, // Calibre Pie
-                                    Math.floor(Math.random() * 3) + 1, // Jornada
-                                    "Mod-" + (i % 5 + 1), // Clave Mod.
-                                    i % 2 === 0 ? "Sí" : "No", // Usar cuando no existe en base
-                                    "Prod-" + (i * 2), // Producto
-                                    Math.floor(Math.random() * 100), // Saldos
-                                    Math.floor(Math.random() * 30) + 1, // Day Scheduling
-                                    Math.floor(Math.random() * 10000) + 1000, // Orden Producto
-                                    "INN-" + (Math.floor(Math.random() * 100) + 1), // INN
-                                    "Desc " + i, // Descripción
-                                    "Apli " + (Math.floor(Math.random() * 10) + 1), // Aplic.
-                                    "Obs " + (i % 3 === 0 ? "X" : "-"), // Obs.
-                                    i % 2 === 0 ? "Normal" : "Urgente", // Tipo de pedido
-                                    Math.floor(Math.random() * 5) + 1, // Tiras
-                                    Math.random().toFixed(2), // Pei.
-                                    Math.random().toFixed(2), // LCR
-                                    Math.random().toFixed(2), // PCR
-                                    Math.random().toFixed(2), // Luc
-                                    Math.floor(Math.random() * 10) + 1, // Calibre Tira
-                                    Math.floor(Math.random() * 10) + 1, // Dob
-                                    Math.floor(Math.random() * 50) + 10, // Pasadas Tira
-                                    Math.floor(Math.random() * 50) + 10, // Pasadas C1
-                                    Math.floor(Math.random() * 50) + 10, // Pasadas C2
-                                    Math.floor(Math.random() * 50) + 10, // Pasadas C3
-                                    Math.floor(Math.random() * 50) + 10, // Pasadas C4
-                                    Math.floor(Math.random() * 50) + 10, // Pasadas C5
-                                    (Math.random() * 10 + 5).toFixed(2), // Ancho por Toalla
-                                    "Color-" + (Math.floor(Math.random() * 10) + 1), // Color Tira
-                                    "Plano " + i, // Plano
-                                    "Pie-" + (Math.floor(Math.random() * 5) + 1), // Cuenta Pie
-                                    "Color-" + (Math.floor(Math.random() * 10) + 1), // Color Pie
-                                    Math.floor(Math.random() * 500) + 200, // Peso (gr/m²)
-                                    Math.floor(Math.random() * 30) + 1, // Días Efectivos
-                                    Math.floor(Math.random() * 500) + 100, // Prod (Kg)/Día
-                                    Math.floor(Math.random() * 50) + 10, // STD/Día
-                                    Math.floor(Math.random() * 100) + 20, // STD (Toa/HR) 100%
-                                    Math.floor(Math.random() * 10) + 1, // Días jornada completa
-                                    Math.floor(Math.random() * 12) + 1, // Horas
-                                    "2025-03-" + (Math.floor(Math.random() * 28) + 1), // Inicio
-                                    "2025-04-" + (Math.floor(Math.random() * 28) + 1), // Fin
-                                    "2025-05-" + (Math.floor(Math.random() * 28) + 1), // Entrega
-                                    Math.floor(Math.random() * 10) - 5, // Dif vs Compromiso
-                                    i % 2 === 0 ? "✔" : "✖" // DONE
-                                ]);
-                            }
-                        
-                            // Generar filas con los datos ficticios
-                            data.forEach(rowData => {
-                                let row = "<tr>";
-                                rowData.forEach(cellData => {
-                                    row += `<td class="border border-gray-300 p-1">${cellData}</td>`;
-                                });
-                                row += "</tr>";
-                                tbody.innerHTML += row;
-                            });
-                        </script>
-                        
+                        @foreach($datos as $registro)
+                            <tr>
+                                @foreach($headers as $header)
+                                    <td class="small">{{ $registro->$header }}</td> <!-- Imprime el valor correspondiente de la columna -->
+                                @endforeach
+                            </tr>
+                        @endforeach
                     </tbody>
+                    
                 </table>
             </div>
             <!--SEGUNDO CONTENEDOR para botones-->

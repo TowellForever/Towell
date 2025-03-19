@@ -7,7 +7,7 @@
     <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
         @php
             $modulos = [
-                ['nombre' => 'Planeación', 'imagen' => 'planeacion.png', 'ruta' => '/modulo-planeacion'],
+                ['nombre' => 'Planeación', 'imagen' => 'planeacion.png', 'ruta' => route('planeacion.index')], // Usando route() para generar la URL
                 ['nombre' => 'Urdido', 'imagen' => 'urdido.jpg', 'ruta' => '#'],
                 ['nombre' => 'Engomado', 'imagen' => 'engomado.jpg', 'ruta' => '#'],
                 ['nombre' => 'Tejido', 'imagen' => 'tejido.jpg', 'ruta' => '/modulo-tejido'],

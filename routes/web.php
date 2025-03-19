@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CatalagoEficienciaController;
 use App\Http\Controllers\CatalagoTelarController;
 use App\Http\Controllers\CatalagoVelocidadController;
+use App\Http\Controllers\PlaneacionController;
 use App\Http\Controllers\UsuarioController;
 use App\Models\Usuario;
 use Illuminate\Support\Facades\Route;
@@ -29,12 +30,16 @@ Route::get('/obtener-nombre/{noEmpleado}', function ($noEmpleado) {
     }
     return response()->json([], 404);
 });
+// Ruta para obtener los empleados de un área específica
+Route::get('/obtener-empleados/{area}', function ($area) { return App\Models\Usuario::where('area', $area)->get();});
 
 Route::get('/produccionProceso', function () {return view('produccionProceso');})->name('produccionProceso');
 
 
 //RUTAS DEL MODULO planeacion
-Route::get('/modulo-planeacion', function () { return view('modulos/planeacion');});
+//Route::get('/modulo-planeacion', function () { return view('modulos/planeacion');});
+// Ruta de recursos para Planeacion
+Route::resource('planeacion', PlaneacionController::class);
 
 //RUTAS DEL MODULO tejido
 Route::get('/modulo-tejido', function () { return view('modulos/tejido');});
@@ -50,14 +55,12 @@ Route::get('/tejido/programar-requerimientos', function () { return view('modulo
 Route::get('/usuarios/create', [UsuarioController::class, 'create'])->name('usuarios.create');
 Route::post('/usuarios', [UsuarioController::class, 'store'])->name('usuarios.store');
 
-
-// Ruta para obtener los empleados de un área específica
-Route::get('/obtener-empleados/{area}', function ($area) {
-    return App\Models\Usuario::where('area', $area)->get();
-});
-
-//RUTAS de CATALAGOS (3 catalagos)
+//RUTAS de CATALAGOS (3 catalagos), se usaron rutas de recursos para manejar las operaciones CRUD
 Route::resource('telares', CatalagoTelarController::class);
 Route::resource('eficiencia', CatalagoEficienciaController::class);
 Route::resource('velocidad', CatalagoVelocidadController::class);
+
+
+
+
 

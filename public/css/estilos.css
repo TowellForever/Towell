@@ -409,3 +409,12 @@ button:hover {
     .button-plane:hover {
         background-color: #2779bd; /* Cambio de color en hover */
     }
+
+    /* Establecer el comportamiento de las celdas */
+    table.celP td {
+        max-height: 50px; /* Ajusta esta altura según lo necesites */
+        overflow: hidden; /* Ocultar el contenido que exceda la altura */
+        text-overflow: ellipsis; /* Agregar puntos suspensivos a contenido largo */
+        padding: 4px 8px; /* Ajustar el padding para reducir el espacio interno */
+        white-space: nowrap; /* Evitar que el texto se rompa en varias líneas */
+    }
