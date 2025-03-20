@@ -34,7 +34,23 @@ class AuthController extends Controller
         return back()->with('error', 'Su contraseña está incorrecta');
     }
 
+    public function loginQR(Request $request)
+    {
+        $request->validate([
+            'numero_empleado' => 'required|exists:usuarios,numero_empleado'
+        ]);
 
+        // Buscar el usuario en la BD
+        $empleado = Usuario::where('numero_empleado', $request->numero_empleado)->first();
+
+        if ($empleado) {
+            // Iniciar sesión sin contraseña
+            Auth::login($empleado);
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Empleado no encontrado'], 401);
+    }
 
     public function logout()
     {
