@@ -14,9 +14,7 @@ Route::get('/', function () {
 });
 
 //Rutas de login
-Route::get('/login', function () {
-    return view('login');
-});
+Route::get('/login', function () { return view('login'); });
 Route::post('/login', [AuthController::class, 'login']);
 // Ruta para obtener el nombre y la foto del empleado
 Route::get('/obtener-nombre/{noEmpleado}', function ($noEmpleado) {
@@ -37,6 +35,7 @@ Route::get('/produccionProceso', function () {return view('produccionProceso');}
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login-qr', [AuthController::class, 'loginQR']);
 Route::get('/produccionProceso', [UsuarioController::class, 'index'])->name('produccion.index')->middleware('auth');
 
 

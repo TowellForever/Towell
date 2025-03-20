@@ -32,6 +32,8 @@
             }
         }
     </style>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
 </head>
 <body class="fondoLog">
     <div class="login-container">
@@ -96,10 +98,9 @@
                         <span id="togglePassword" class="eye-icon">👁️</span>
                     </div>
                 </div>
-
+                
                 <!-- Botón para enviar formulario -->
                 <button type="submit" id="btnLogin">Iniciar sesión</button>
-
                 <!-- Botón de Acceso por QR -->
                 <div class="qr-option">
                     <button type="button" id="qr-button">Accesar por QR</button>
@@ -124,6 +125,8 @@
 
         </div>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
 
     <script>
         document.getElementById('area').addEventListener('change', function() {
@@ -199,19 +202,18 @@
         });
     </script>
 
+    
     <script>
         const qrButton = document.getElementById('qr-button');
         const qrVideo = document.getElementById('qr-video');
 
         qrButton.addEventListener('click', function() {
-            // Abrir cámara para leer QR
             navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
                 .then(function(stream) {
                     qrVideo.srcObject = stream;
                     qrVideo.style.display = 'block';
                     qrVideo.play();
 
-                    // Llamar a la función de lectura cada 100ms
                     const interval = setInterval(() => {
                         if (qrVideo.readyState === qrVideo.HAVE_ENOUGH_DATA) {
                             const canvas = document.createElement('canvas');
@@ -220,22 +222,38 @@
                             const context = canvas.getContext('2d');
                             context.drawImage(qrVideo, 0, 0, canvas.width, canvas.height);
 
-                            // Leer el código QR
                             const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
                             const qrCode = jsQR(imageData.data, canvas.width, canvas.height);
 
                             if (qrCode) {
-                                clearInterval(interval); // Detener el escaneo cuando se lee un QR
-                                window.location.href = qrCode.data; // Redirigir a la URL del QR
+                                clearInterval(interval);
+
+                                // Enviar el número de empleado al backend para autenticación
+                                fetch('/login-qr', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                                    },
+                                    body: JSON.stringify({ numero_empleado: qrCode.data })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        window.location.href = '/produccionProceso';
+                                    } else {
+                                        alert('Error: ' + data.message);
+                                    }
+                                })
+                                .catch(error => console.error('Error en la autenticación QR:', error));
                             }
                         }
                     }, 100);
                 })
-                .catch(function(error) {
+                .catch(error => {
                     console.log('Error al acceder a la cámara: ', error);
                 });
         });
     </script>
-
 </body>
 </html>

@@ -34,6 +34,8 @@ class AuthController extends Controller
         return back()->with('error', 'Su contraseña está incorrecta');
     }
 
+
+
     public function logout()
     {
         Auth::logout();

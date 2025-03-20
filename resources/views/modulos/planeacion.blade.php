@@ -37,12 +37,19 @@
                         @foreach($datos as $registro)
                             <tr>
                                 @foreach($headers as $header)
-                                    <td class="small">{{ $registro->$header }}</td> <!-- Imprime el valor correspondiente de la columna -->
+                                    <td class="small">
+                                        @if (is_numeric($registro->$header))
+                                            {{ number_format($registro->$header, 2) }} <!-- Formatea el número a 2 decimales -->
+                                        @elseif ($registro->$header instanceof \Carbon\Carbon || strtotime($registro->$header)) 
+                                            {{ \Carbon\Carbon::parse($registro->$header)->format('d-m-Y') }} <!-- Formatea la fecha -->
+                                        @else
+                                            {{ $registro->$header }} <!-- Si no es un número ni una fecha, imprime el valor tal cual -->
+                                        @endif
+                                    </td>
                                 @endforeach
                             </tr>
                         @endforeach
-                    </tbody>
-                    
+                    </tbody>                                     
                 </table>
             </div>
             <!--SEGUNDO CONTENEDOR para botones-->
