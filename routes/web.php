@@ -38,12 +38,6 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/login-qr', [AuthController::class, 'loginQR']);
 Route::get('/produccionProceso', [UsuarioController::class, 'index'])->name('produccion.index')->middleware('auth');
 
-
-//RUTAS DEL MODULO planeacion
-//Route::get('/modulo-planeacion', function () { return view('modulos/planeacion');});
-// Ruta de recursos para Planeacion
-Route::resource('planeacion', PlaneacionController::class);
-
 //RUTAS DEL MODULO tejido
 Route::get('/modulo-tejido', function () { return view('modulos/tejido');});
 Route::get('/tejido/jacquard-sulzer', function () { return view('modulos/tejido/jacquard-sulzer');});
@@ -58,10 +52,33 @@ Route::get('/tejido/programar-requerimientos', function () { return view('modulo
 Route::get('/usuarios/create', [UsuarioController::class, 'create'])->name('usuarios.create');
 Route::post('/usuarios', [UsuarioController::class, 'store'])->name('usuarios.store');
 
+
+//RUTAS DEL MODULO planeacion
+// Ruta de recursos para Planeacion
+Route::resource('planeacion', PlaneacionController::class);
 //RUTAS de CATALAGOS (3 catalagos), se usaron rutas de recursos para manejar las operaciones CRUD
 Route::resource('telares', CatalagoTelarController::class);
 Route::resource('eficiencia', CatalagoEficienciaController::class);
 Route::resource('velocidad', CatalagoVelocidadController::class);
+// ✅ NUEVAS RUTAS de planeacion
+Route::get('/calendarios', [PlaneacionController::class, 'calendarios'])->name('planeacion.calendarios');
+Route::get('/aplicaciones', [PlaneacionController::class, 'aplicaciones'])->name('planeacion.aplicaciones');
+
+
+
+
+
+Route::put('/tejido-en-proceso/{id}', [PlaneacionController::class, 'update'])->name('tejido_scheduling.update');
+
+
+
+// Rutas de catálogos
+Route::resource('telares', CatalagoTelarController::class);
+Route::resource('eficiencia', CatalagoEficienciaController::class);
+Route::resource('velocidad', CatalagoVelocidadController::class);
+
+
+
 
 
 

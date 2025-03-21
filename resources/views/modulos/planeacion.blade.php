@@ -38,18 +38,24 @@
                             <tr>
                                 @foreach($headers as $header)
                                     <td class="small">
-                                        @if (is_numeric($registro->$header))
-                                            {{ number_format($registro->$header, 2) }} <!-- Formatea el número a 2 decimales -->
-                                        @elseif ($registro->$header instanceof \Carbon\Carbon || strtotime($registro->$header)) 
-                                            {{ \Carbon\Carbon::parse($registro->$header)->format('d-m-Y') }} <!-- Formatea la fecha -->
-                                        @else
-                                            {{ $registro->$header }} <!-- Si no es un número ni una fecha, imprime el valor tal cual -->
-                                        @endif
+                                        {{ $registro->$header }} <!-- Imprime el valor tal cual -->
                                     </td>
                                 @endforeach
+                    
+                                <!-- Agregar checkbox 'en_proceso' -->
+                                <td>
+                                    <form action="{{ route('tejido_scheduling.update', $registro->id) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <input type="checkbox" name="en_proceso" value="1"
+                                            {{ $registro->en_proceso ? 'checked' : '' }}
+                                            onclick="this.form.submit()">
+                                    </form>
+                                </td>
                             </tr>
                         @endforeach
-                    </tbody>                                     
+                    </tbody>                    
+                                                                     
                 </table>
             </div>
             <!--SEGUNDO CONTENEDOR para botones-->
@@ -58,8 +64,8 @@
                 <a href="{{ route('telares.index') }}" class="button-plane ml-2">Catálogo Telares</a>
                 <a href="{{ route('eficiencia.index') }}" class="button-plane ml-2">Catálogo Eficiencia STD</a>
                 <a href="{{ route('velocidad.index') }}" class="button-plane ml-2">Catálogo Velocidad STD</a>
-                <a href="#" class="button-plane ml-2">Calendarios</a>
-                <a href="#" class="button-plane ml-2">Aplicaciones</a>
+                <a href="{{ route('planeacion.calendarios') }}" class="button-plane ml-2">Calendarios</a>
+                <a href="{{ route('planeacion.aplicaciones') }}" class="button-plane ml-2">Aplicaciones</a>
             </div>
         </div>
     </div>
