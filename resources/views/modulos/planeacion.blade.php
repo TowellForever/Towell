@@ -1,7 +1,39 @@
 @extends('layouts.app')
 
 @section('content')
+    <div class="flex justify-between mb-1 w-1/5">
+        <!-- Botón de búsqueda (lupa) -->
+        <div class="w-20 text-left">
+            <button id="search-toggle" class="p-2 rounded-full bg-blue-500 text-white hover:bg-blue-600">
+                <i class="fas fa-search text-3xl"></i>
+            </button>
+        </div>
 
+        <!-- Botón de restablecer (cruz o refresh) -->
+        <div class="w-auto text-right">
+            <button id="reset-search" class="p-3 rounded-full bg-red-500 text-white hover:bg-red-600">
+                Restablecer búsqueda
+            </button>
+        </div>
+    </div>
+
+    <!-- Formulario de búsqueda que estará oculto inicialmente -->
+    <div id="search-form" class="mb-6 hidden w-1/2 ml-0">
+        <form action="{{ route('planeacion.index') }}" method="GET" class="flex justify-center gap-4">
+            <!-- Select para escoger la columna -->
+            <select name="column" class="form-control">
+                <option value="">Selecciona una columna</option>
+                @foreach($headers as $header)
+                    <option value="{{ $header }}">{{ $header }}</option>
+                @endforeach
+            </select>
+
+            <!-- Input para el valor de búsqueda -->
+            <input type="text" name="value" class="form-control " placeholder="Valor a buscar">
+            <!-- Botón de buscar -->
+            <button type="submit" class="btn btn-primary w-60">Buscar</button>
+        </form>
+    </div>
     <div class="container mx-auto">
         <h1 class="text-3xl font-bold text-center mb-6">PLANEACIÓN</h1>
         <div class="table-container relative">
@@ -11,17 +43,18 @@
                         <tr class="plane-thead-tr text-white text-sm">
                             @php
                             $headers = [
-                                'Cuenta', 'Salon', 'Telar', 'Último', 'Cambios_Hilo', 'Maquina', 'Ancho', 'Eficiencia_Std', 'Velocidad_STD', 'Calibre_Rizo', 'Calibre_Pie', 'Calendario',
+                                'Cuenta', 'Salon', 'Telar', 'Ultimo', 'Cambios_Hilo', 'Maquina', 'Ancho', 'Eficiencia_Std', 'Velocidad_STD', 'Calibre_Rizo', 'Calibre_Pie', 'Calendario',
                                 'Clave_Estilo', 'Tamano', 'Estilo_Alternativo', 'Nombre_Producto', 'Saldos', 'Fecha_Captura', 'Orden_Prod', 'Fecha_Liberacion', 'Id_Flog', 'Descrip',
                                 'Aplic', 'Obs', 'Tipo_Ped', 'Tiras', 'Peine', 'Largo_Crudo', 'Peso_Crudo', 'Luchaje', 'CALIBRE_TRA', 'Dobladillo', 'PASADAS_TRAMA', 'PASADAS_C1',
                                 'PASADAS_C2', 'PASADAS_C3', 'PASADAS_C4', 'PASADAS_C5', 'ancho_por_toalla', 'COLOR_TRAMA', 'CALIBRE_C1', 'Clave_Color_C1', 'COLOR_C1', 'CALIBRE_C2',
                                 'Clave_Color_C2', 'COLOR_C2', 'CALIBRE_C3', 'Clave_Color_C3', 'COLOR_C3', 'CALIBRE_C4', 'Clave_Color_C4', 'COLOR_C4', 'CALIBRE_C5', 'Clave_Color_C5',
                                 'COLOR_C5', 'Plano', 'Cuenta_Pie', 'Clave_Color_Pie', 'Color_Pie', 'Peso____(gr_/_m²)', 'Dias_Ef', 'Prod_(Kg)/Día', 'Std/Dia', 'Prod_(Kg)/Día1',
                                 'Std_(Toa/Hr)_100%', 'Dias_jornada_completa', 'Horas', 'Std/Hrefectivo', 'Inicio_Tejido', 'Calc4', 'Calc5', 'Calc6', 'Fin_Tejido', 'Fecha_Compromiso',
-                                'Fecha_Compromiso1', 'Entrega', 'Dif_vs_Compromiso'
+                                'Fecha_Compromiso1', 'Entrega', 'Dif_vs_Compromiso','en_proceso'
                             ];
                         @endphp                        
-                            
+                            <th class="plane-th border border-gray-400 p-4 relative">En proceso
+                            </th>
                             @foreach($headers as $index => $header)
                                 <th class="plane-th border border-gray-400 p-4 relative" data-index="{{ $index }}">
                                     {{ $header }}
@@ -36,12 +69,6 @@
                     <tbody>
                         @foreach($datos as $registro)
                             <tr>
-                                @foreach($headers as $header)
-                                    <td class="small">
-                                        {{ $registro->$header }} <!-- Imprime el valor tal cual -->
-                                    </td>
-                                @endforeach
-                    
                                 <!-- Agregar checkbox 'en_proceso' -->
                                 <td>
                                     <form action="{{ route('tejido_scheduling.update', $registro->id) }}" method="POST">
@@ -52,6 +79,26 @@
                                             onclick="this.form.submit()">
                                     </form>
                                 </td>
+                                @foreach($headers as $header)
+                                @php
+                                    $value = $registro->$header; // Obtener el valor del campo
+                            
+                                    // Verificamos el tipo de dato para darle formato
+                                    if (is_numeric($value)) {
+                                        // Si es un número, lo mostramos sin decimales
+                                        $formattedValue = number_format($value, 0);
+                                    } elseif (strtotime($value)) {
+                                        // Si es una fecha, la formateamos como "día-mes-año"
+                                        $formattedValue = \Carbon\Carbon::parse($value)->format('d-m-Y');
+                                    } else {
+                                        // Si es texto, lo dejamos tal cual
+                                        $formattedValue = $value;
+                                    }
+                                @endphp
+                            
+                                <td class="small">{{ $formattedValue }}</td>
+                            @endforeach
+                                                       
                             </tr>
                         @endforeach
                     </tbody>                    
@@ -150,4 +197,20 @@
     });
 
     </script>
+     <!-- Script para mostrar/ocultar el formulario de búsqueda -->
+     <script>
+        document.getElementById("search-toggle").addEventListener("click", function() {
+            let searchForm = document.getElementById("search-form");
+            searchForm.classList.toggle("hidden");
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("reset-search").addEventListener("click", function () {
+                window.location.href = "{{ route('planeacion.index') }}"; // Redirige a la ruta planificacion.index
+            });
+        });
+    </script>
+    
+    
 @endsection

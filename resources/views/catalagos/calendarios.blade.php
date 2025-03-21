@@ -25,6 +25,20 @@
                         <td class="border border-gray-300 px-6 py-3">5</td>
                         <td class="border border-gray-300 px-6 py-3">40</td>
                     </tr>
+                    <tr class="bg-gray-100 text-center font-semibold">
+                        <td class="border border-gray-300 px-6 py-3">002</td>
+                        <td class="border border-gray-300 px-6 py-3" colspan="3">Producción B</td>
+                        <td class="border border-gray-300 px-6 py-3">10</td>
+                        <td class="border border-gray-300 px-6 py-3">30</td>
+                    </tr>
+
+                    <tr class="bg-transparent text-center font-semibold">
+                        <td class="px-6 py-3 border-0 bg-transparent"></td>
+                        <td class="px-6 py-3 border-0 bg-transparent" colspan="3"></td>
+                        <td class="px-6 py-3 border-0 bg-transparent"></td>
+                        <td class="px-6 py-3 border-0 bg-transparent"></td>
+                    </tr>
+                                                                    
                     
                     <!-- Segundo Encabezado -->
                     <tr class="bg-gray-700 text-white text-center">
