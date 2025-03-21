@@ -56,6 +56,7 @@
                 <th onclick="sortTable(2, this)" style="width: 20%;">Tipo de Hilo</th>
                 <th onclick="sortTable(3, this)" style="width: 15%;">Eficiencia</th>
                 <th onclick="sortTable(4, this)" style="width: 15%;">Densidad</th>
+                <th onclick="sortTable(4, this)" style="width: 15%;">Acciones</th>
             </tr>
         </thead>
         <tbody id="eficiencia-body">
@@ -66,9 +67,26 @@
                     <td class="bg-white">{{ $item->tipo_hilo }}</td>
                     <td class="bg-white">{{ $item->eficiencia }}</td>
                     <td class="bg-white">{{ $item->densidad }}</td>
+                    <td class="bg-white">
+                        <div class="d-flex justify-content-center gap-2">
+                            <!-- Botón Editar -->
+                            <a href="{{ route('eficiencia.edit', $item->id) }}" class="btn btn-sm btn-warning">
+                                ✏️
+                            </a>
+                    
+                            <!-- Botón Eliminar -->
+                            <form action="{{ route('eficiencia.destroy', $item->id) }}" method="POST" onsubmit="return confirm('¿Seguro que quieres eliminar este registro?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    🗑️
+                                </button>
+                            </form>
+                        </div>
+                    </td>                    
                 </tr>
             @endforeach
-        </tbody>
+        </tbody>        
         <div class="d-flex justify-content-center mt-4">
             <nav>
                 <ul class="pagination">
@@ -95,8 +113,9 @@
                     @endif
                 </ul>
             </nav>
-        </div>
-        
+        </div><br>
+    </table>
+</div>
 <script>
     let currentSortColumn = null;
     let sortOrder = "asc";

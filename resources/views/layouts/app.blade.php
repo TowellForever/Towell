@@ -40,8 +40,31 @@
     <!-- Navbar -->
     <nav class="bg-blue-350 text-white p-4">
         <div class="container mx-auto flex justify-between items-center">
+            <!-- Logo Towell -->
             <a href="/produccionProceso" class="text-3xl font-extrabold">TOWELL</a>
-            <p class="text-2xl font-bold uppercase flex justify-center items-center"> <!--uppercase - Lo usé para transformar las letras a mayusculas, pero esta tecnica si toma en cuenta letras con acento, y no las deja en minusculas-->
+
+            <!-- Botones de navegación -->
+            <div class="flex gap-4">
+                <!-- Botón Atrás -->
+                <button onclick="history.back()" class="bg-white text-blue-500 font-bold py-2 px-4 rounded-lg shadow-md hover:bg-gray-300 transition duration-300 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 19 2 12 11 5 11 19"></polygon>
+                        <polygon points="22 19 13 12 22 5 22 19"></polygon>
+                    </svg>
+                    Atrás
+                </button>
+                <!-- Botón Adelante -->
+                <button onclick="history.forward()" class="bg-white text-blue-500 font-bold py-2 px-4 rounded-lg shadow-md hover:bg-gray-300 transition duration-300 flex items-center gap-2">
+                    Adelante
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="13 19 22 12 13 5 13 19"></polygon>
+                        <polygon points="2 19 11 12 2 5 2 19"></polygon>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Nombre del usuario -->
+            <p class="text-2xl font-bold uppercase flex justify-center items-center">
                 {{ Auth::User()->nombre }}
             </p>
         </div>

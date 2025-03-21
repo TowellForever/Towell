@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CatalagoEficiencia;
+use App\Models\CatalagoVelocidad;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -70,4 +71,37 @@ class CatalagoEficienciaController extends Controller
         // Redirigir a la lista de eficiencias con un mensaje de éxito
         return redirect()->route('eficiencia.index')->with('success', 'Eficiencia agregada exitosamente!');
     }
+
+    public function edit($id)
+    {
+        $registro = CatalagoEficiencia::findOrFail($id);
+        return view('catalagos.Eficiencia-edit', compact('registro'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'telar' => 'required',
+            'salon' => 'required',
+            'tipo_hilo' => 'required',
+            'eficiencia' => 'required',
+            'densidad' => 'required',
+        ]);
+
+        $registro = CatalagoEficiencia::findOrFail($id);
+        $registro->update($request->all());
+
+        return redirect()->route('eficiencia.index')->with('success', 'Registro actualizado correctamente.');
+    }
+
+    public function destroy($id)
+    {
+        $registro = CatalagoVelocidad::findOrFail($id);
+        $registro->delete();
+
+        return redirect()->route('eficiencia.index')->with('success', 'Registro eliminado correctamente.');
+    }
+
+
+
 }
