@@ -49,7 +49,7 @@ Route::get('/tejido/programar-requerimientos', function () { return view('modulo
 
 //ruta para llegar a la vista dinamica de los telares de jacquard-sulzer
 Route::get('/tejido/jacquard-sulzer/{telar}', [PlaneacionController::class, 'mostrarTelarSulzer'])->name('tejido.mostrarTelarSulzer');
-
+Route::get('/modulos/tejido/telares/ordenes-programadas/{telar}', [PlaneacionController::class, 'mostrarOrdenesProgramadas'])->name('tejido.mostrarOrdenesProgramadas');
 
 
 

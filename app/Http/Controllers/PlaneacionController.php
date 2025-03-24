@@ -89,8 +89,18 @@ class PlaneacionController extends Controller
         // Retornar la vista con los datos del telar
         return view('modulos/tejido/telares/jacquard-sulzer', compact('telar', 'datos'));
     }
-    
-    
+    //el siguiente metodo aun está en desuso
+    public function mostrarOrdenesProramadas($telar)
+    {
+         // Buscar el registro en proceso para este telar
+        $datos = DB::table('TEJIDO_SCHEDULING')
+        ->where('en_proceso', 1)
+        ->where('telar', $telar)
+        ->get();
+
+        // Retornar la vista con los datos del telar
+        return view('modulos/tejido/telares/jacquard-sulzer', compact('telar', 'datos'));
+    }
 
 
 }

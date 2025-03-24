@@ -6,7 +6,7 @@
         {{ str_replace('-', ' ', 'JACQUARD SULZER') }} - {{ $telar }}
     </h1>
 
-    <table class="table border border-gray-800">
+    <table class="table border-0">
         <thead class="bg-cyan-500 text-white text-center">
             <tr>
                 <th colspan="5">EN PROCESO</th>
@@ -15,41 +15,45 @@
         <tbody class="bg-white text-black">
             @foreach($datos as $dato)
                 <tr>
-                    <td class="border p-2">     
+                    <td class=" p-2">     
                         <b>Orden:</b> {{ $dato->Orden_Prod }} 
                         <br><b>Cuenta Rizo:</b> {{ $dato->Cuenta }}
-                        <br><b>Trama 4:</b> {{ '$dato->' }}
-                        <br><b>Artículo:</b> {{ '$dato->' }}
+                        <br><b>Trama 4:</b> {{ number_format($dato->CALIBRE_C3, 2) }}
+                        <br><b>Artículo:</b> {{ $dato->Nombre_Producto }}
                         <br><b>Pedido:</b> {{ $dato->Tipo_Ped }}
-                        <br><b>Fin:</b> {{ $dato->Fin_Tejido }}
+                        <br><b>Fin:</b> {{ \Carbon\Carbon::parse($dato->Fin_Tejido)->format('d/m/Y') }}
                     </td>
-                    <td class="border p-2">
+                    <td class=" p-2">
                             <b>No Flog:</b> {{ $dato->Id_Flog }} 
                         <br><b>Cuenta Pie:</b> {{ $dato->Calibre_Pie }}
-                        <br><b>Trama 5:</b> {{ '$dato->' }}
-                        <br><b>Producido:</b> {{ '$dato->' }}
-                        <br><b>Fecha de Compromiso Tejido:</b> {{ $dato->Fecha_Compromiso }}
+                        <br><b>Trama 5:</b> {{ number_format($dato->CALIBRE_C4, 2) }}
+                        <br>
+                        <br><b>Producido:</b> {{ '---' }}
+                        <br><b>Fecha de Compromiso Tejido:</b> {{ \Carbon\Carbon::parse($dato->Fecha_Compromiso)->format('d/m/Y') }}
                     </td>
-                    <td class="border p-2">
-                            <b>Trama 1:</b> {{ '$dato->' }} 
-                        <br><b>Trama 6:</b> {{ '$dato->' }}
+                    <td class=" p-2">
+                        <br>
+                        <b>Trama 1:</b> {{ number_format($dato->CALIBRE_TRA, 2) }}
+                        <br><b>Trama 6:</b> {{ number_format($dato->CALIBRE_C5 , 2) }}
                         <br><b>Número de Tiras:</b> {{ $dato->Tiras }}
-                        <br><b>Producción (KG)/Día:</b> {{ '$dato->Prod_(KG)Día ACENTO' }}
-                        <br><b>Fecha de Compromiso Cliente:</b> {{ $dato->Fecha_Compromiso1}}
-
+                        <br><b>Producción (KG)/Día:</b> {{ '$dato->' }}
+                        <br><b>Fecha de Compromiso Cliente:</b> {{ \Carbon\Carbon::parse($dato->Fecha_Compromiso1)->format('d/m/Y') }}
                     </td>
-                    <td class="border p-2">
+                    <td class=" p-2">
                             <b>Cliente:</b> {{ '$dato->' }} 
-                        <br><b>Trama 2:</b> {{ '$dato->' }}
-                        <br><b>Trama 7:</b> {{ '$dato->' }}
-                        <br><b>STD/Día:</b> {{ '$dato->Std/Dia Undefined property' }}
+                        <br><b>Trama 2:</b> {{ number_format($dato->CALIBRE_C1 , 2) }}
+                        <br><b>Trama 7:</b> {{ '-' }}
+                        <br>
+                        <br><b>STD/Día:</b> {{ '$dato->Std/Dia ' }}
 
                     </td>
-                    <td class="border p-2">
-                            <b>Trama 3:</b> {{ '$dato->' }} 
-                        <br><b>Trama 8:</b> {{ '$dato->' }}
-                        <br><b>Inicio:</b> {{ $dato->Inicio_Tejido }}
-                        <br><b>Entrega:</b> {{ $dato->Entrega }}
+                    <td class=" p-2">
+                            <br>
+                            <b>Trama 3:</b> {{ number_format($dato->CALIBRE_C2 , 2) }}
+                        <br><b>Trama 8:</b> {{ '-' }}
+                        <br>
+                        <br><b>Inicio:</b> {{ \Carbon\Carbon::parse($dato->Inicio_Tejido)->format('d/m/Y') }}
+                        <br><b>Entrega:</b> {{ \Carbon\Carbon::parse($dato->Entrega)->format('d/m/Y') }}
 
                     </td>
 
@@ -69,7 +73,7 @@
                     <div class="flex">
                         <div class="flex">
                             <div class="mr-4">
-                                <b>Tipo: </b><b> {{ 'RIZO o PIE' }} </b>
+                                <b>Tipo: </b> {{ 'RIZO o PIE' }} 
                                 <br><b>Cuenta:</b> {{ $dato->Cuenta }}
                             </div>
                             <div class="mr-4" >
@@ -198,151 +202,22 @@
                                 </tr>
                             </tbody>
                         </table>
-
+                        <div class="ml-20 mt-6 flex-col space-y-2">
+                            <a href="#"><button class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">GUARDAR</button></a>
+                            <a href="#"><button href class="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700 mt-1">PROGRAMAR</button></a>
+                        </div>
+                           
                     </div>
                 </td>
             </tr>
         </tbody>
     </table>
- <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>    <!--TABLA DE ÓRDENES PROGRAMADAS (3 cuerpos)-->
-    <table class="table border-4 border-gray-300">
-        <thead class="bg-cyan-500 text-white text-center">
-            <tr>
-                <th colspan="5">ÓRDENES PROGRAMADAS</th>
-            </tr>
-        </thead>
-        <tbody class="bg-white text-black">
-            @foreach($datos as $dato)
-                <tr>
-                    <td class="border p-2">     
-                        <b>Orden:</b> {{ $dato->Orden_Prod }} 
-                        <br><b>Cuenta Rizo:</b> {{ $dato->Cuenta }}
-                        <br><b>Trama 4:</b> {{ '$dato->' }}
-                        <br><b>Artículo:</b> {{ '$dato->' }}
-                        <br><b>Pedido:</b> {{ $dato->Tipo_Ped }}
-                        <br><b>Fin:</b> {{ $dato->Fin_Tejido }}
-                    </td>
-                    <td class="border p-2">
-                            <b>No Flog:</b> {{ $dato->Id_Flog }} 
-                        <br><b>Cuenta Pie:</b> {{ $dato->Calibre_Pie }}
-                        <br><b>Trama 5:</b> {{ '$dato->' }}
-                        <br><b>Producido:</b> {{ '$dato->' }}
-                        <br><b>Fecha de Compromiso Tejido:</b> {{ $dato->Fecha_Compromiso }}
-                    </td>
-                    <td class="border p-2">
-                            <b>Trama 1:</b> {{ '$dato->' }} 
-                        <br><b>Trama 6:</b> {{ '$dato->' }}
-                        <br><b>Número de Tiras:</b> {{ $dato->Tiras }}
-                        <br><b>Producción (KG)/Día:</b> {{ '$dato->Prod_(KG)Día ACENTO' }}
-                        <br><b>Fecha de Compromiso Cliente:</b> {{ $dato->Fecha_Compromiso1}}
 
-                    </td>
-                    <td class="border p-2">
-                            <b>Cliente:</b> {{ '$dato->' }} 
-                        <br><b>Trama 2:</b> {{ '$dato->' }}
-                        <br><b>Trama 7:</b> {{ '$dato->' }}
-                        <br><b>STD/Día:</b> {{ '$dato->Std/Dia Undefined property' }}
+    <div class="flex justify-center mt-6 w-80">
+        <a href=""><button class="bg-blue-800 text-white font-bold py-2 px-6 rounded hover:bg-blue-900">
+            Órdenes Programadas
+        </button></a>
+    </div>
 
-                    </td>
-                    <td class="border p-2">
-                            <b>Trama 3:</b> {{ '$dato->' }} 
-                        <br><b>Trama 8:</b> {{ '$dato->' }}
-                        <br><b>Inicio:</b> {{ $dato->Inicio_Tejido }}
-                        <br><b>Entrega:</b> {{ $dato->Entrega }}
-
-                    </td>
-
-                </tr>
-            @endforeach
-        </tbody>
-        <tbody class="bg-white text-black">
-            @foreach($datos as $dato)
-                <tr>
-                    <td class="border p-2">     
-                        <b>Orden:</b> {{ $dato->Orden_Prod }} 
-                        <br><b>Cuenta Rizo:</b> {{ $dato->Cuenta }}
-                        <br><b>Trama 4:</b> {{ '$dato->' }}
-                        <br><b>Artículo:</b> {{ '$dato->' }}
-                        <br><b>Pedido:</b> {{ $dato->Tipo_Ped }}
-                        <br><b>Fin:</b> {{ $dato->Fin_Tejido }}
-                    </td>
-                    <td class="border p-2">
-                            <b>No Flog:</b> {{ $dato->Id_Flog }} 
-                        <br><b>Cuenta Pie:</b> {{ $dato->Calibre_Pie }}
-                        <br><b>Trama 5:</b> {{ '$dato->' }}
-                        <br><b>Producido:</b> {{ '$dato->' }}
-                        <br><b>Fecha de Compromiso Tejido:</b> {{ $dato->Fecha_Compromiso }}
-                    </td>
-                    <td class="border p-2">
-                            <b>Trama 1:</b> {{ '$dato->' }} 
-                        <br><b>Trama 6:</b> {{ '$dato->' }}
-                        <br><b>Número de Tiras:</b> {{ $dato->Tiras }}
-                        <br><b>Producción (KG)/Día:</b> {{ '$dato->Prod_(KG)Día ACENTO' }}
-                        <br><b>Fecha de Compromiso Cliente:</b> {{ $dato->Fecha_Compromiso1}}
-
-                    </td>
-                    <td class="border p-2">
-                            <b>Cliente:</b> {{ '$dato->' }} 
-                        <br><b>Trama 2:</b> {{ '$dato->' }}
-                        <br><b>Trama 7:</b> {{ '$dato->' }}
-                        <br><b>STD/Día:</b> {{ '$dato->Std/Dia Undefined property' }}
-
-                    </td>
-                    <td class="border p-2">
-                            <b>Trama 3:</b> {{ '$dato->' }} 
-                        <br><b>Trama 8:</b> {{ '$dato->' }}
-                        <br><b>Inicio:</b> {{ $dato->Inicio_Tejido }}
-                        <br><b>Entrega:</b> {{ $dato->Entrega }}
-
-                    </td>
-
-                </tr>
-            @endforeach
-        </tbody>
-        <tbody class="bg-white text-black">
-            @foreach($datos as $dato)
-                <tr>         
-                    <td class="border p-2">     
-                        <b>Orden:</b> {{ $dato->Orden_Prod }} 
-                        <br><b>Cuenta Rizo:</b> {{ $dato->Cuenta }}
-                        <br><b>Trama 4:</b> {{ '$dato->' }}
-                        <br><b>Artículo:</b> {{ '$dato->' }}
-                        <br><b>Pedido:</b> {{ $dato->Tipo_Ped }}
-                        <br><b>Fin:</b> {{ $dato->Fin_Tejido }}
-                    </td>
-                    <td class="border p-2">
-                            <b>No Flog:</b> {{ $dato->Id_Flog }} 
-                        <br><b>Cuenta Pie:</b> {{ $dato->Calibre_Pie }}
-                        <br><b>Trama 5:</b> {{ '$dato->' }}
-                        <br><b>Producido:</b> {{ '$dato->' }}
-                        <br><b>Fecha de Compromiso Tejido:</b> {{ $dato->Fecha_Compromiso }}
-                    </td>
-                    <td class="border p-2">
-                            <b>Trama 1:</b> {{ '$dato->' }} 
-                        <br><b>Trama 6:</b> {{ '$dato->' }}
-                        <br><b>Número de Tiras:</b> {{ $dato->Tiras }}
-                        <br><b>Producción (KG)/Día:</b> {{ '$dato->Prod_(KG)Día ACENTO' }}
-                        <br><b>Fecha de Compromiso Cliente:</b> {{ $dato->Fecha_Compromiso1}}
-
-                    </td>
-                    <td class="border p-2">
-                            <b>Cliente:</b> {{ '$dato->' }} 
-                        <br><b>Trama 2:</b> {{ '$dato->' }}
-                        <br><b>Trama 7:</b> {{ '$dato->' }}
-                        <br><b>STD/Día:</b> {{ '$dato->Std/Dia Undefined property' }}
-
-                    </td>
-                    <td class="border p-2">
-                            <b>Trama 3:</b> {{ '$dato->' }} 
-                        <br><b>Trama 8:</b> {{ '$dato->' }}
-                        <br><b>Inicio:</b> {{ $dato->Inicio_Tejido }}
-                        <br><b>Entrega:</b> {{ $dato->Entrega }}
-
-                    </td>
-
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
 </div>
 @endsection
