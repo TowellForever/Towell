@@ -7,20 +7,20 @@
     <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
         @php
             $modulos = [
-                ['nombre' => '207', 'imagen' => 'Jaqcuard.png', 'ruta' => '#'],
-                ['nombre' => '208', 'imagen' => 'Jaqcuard.png', 'ruta' => '#'],
-                ['nombre' => '209', 'imagen' => 'Jaqcuard.png', 'ruta' => '#'],
-                ['nombre' => '210', 'imagen' => 'Jaqcuard.png', 'ruta' => '#'],
-                ['nombre' => '211', 'imagen' => 'Jaqcuard.png', 'ruta' => '#']
+                ['nombre' => '207', 'imagen' => 'Jaqcuard.png'],
+                ['nombre' => '208', 'imagen' => 'Jaqcuard.png'],
+                ['nombre' => '209', 'imagen' => 'Jaqcuard.png'],
+                ['nombre' => '210', 'imagen' => 'Jaqcuard.png'],
+                ['nombre' => '211', 'imagen' => 'Jaqcuard.png']
             ];
         @endphp
 
         @foreach ($modulos as $modulo)
-            <a href="{{ url($modulo['ruta']) }}" class="block">
+            <a href="{{ route('tejido.mostrarTelarSulzer', ['telar' => $modulo['nombre']]) }}" class="block">
                 <div class="bg-white shadow-lg rounded-2xl p-4 flex flex-col justify-between items-center transition-transform transform hover:scale-105 h-60">
                     <div class="flex-grow flex items-center justify-center">
                         <img src="{{ asset('storage/fotos_tejido/' . $modulo['imagen']) }}" 
-                        alt="{{ $modulo['nombre'] }}" 
+                        alt="Telar {{ $modulo['nombre'] }}" 
                         class="h-36 w-36 object-cover rounded-lg">
                     </div>
                     <h2 class="text-lg font-semibold text-center mt-3">{{ $modulo['nombre'] }}</h2>

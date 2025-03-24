@@ -76,6 +76,19 @@ class PlaneacionController extends Controller
         return redirect()->route('planeacion.index') // Asegúrate de redirigir a la ruta correcta
             ->with('success', 'Estado actualizado correctamente');
     }
+
+    //metodos de TELARES (tablas de datos)********************************************************************************************************
+    public function mostrarTelarSulzer($telar)
+    {
+         // Buscar el registro en proceso para este telar
+        $datos = DB::table('TEJIDO_SCHEDULING')
+        ->where('en_proceso', 1)
+        ->where('telar', $telar)
+        ->get();
+
+        // Retornar la vista con los datos del telar
+        return view('modulos/tejido/telares/jacquard-sulzer', compact('telar', 'datos'));
+    }
     
     
 
