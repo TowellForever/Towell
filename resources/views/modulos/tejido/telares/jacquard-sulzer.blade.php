@@ -76,17 +76,17 @@
                     <div class="flex">
                         <div class="flex">
                             <div class="mr-4">
-                                <b>Tipo: 
-                                    <br>RIZO  {{ 'GETTING' }}
-                                    <br>PIE   {{ 'GETTING' }}
+                                <b><br><br>Tipo: &nbsp;&nbsp;&nbsp;
                                 </b> 
-                                <br><b>Cuenta PIE:</b> <label id="cuenta-pie" >{{ $dato->Cuenta }}</label>
-                                <br><b>Cuenta RIZO:</b> <label id="cuenta-rizo"> {{ $dato->Cuenta }}</label>                                                          
+                                <b>Cuenta:</b>
+                                <br><b>RIZO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b><label id="cuenta-rizo"> {{ $dato->Cuenta }}</label>  
+                                <br><b>PIE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b> <label id="cuenta-pie" >{{ $dato->Calibre_Pie }}</label>                                                      
                             </div>
                             <div class="mr-4" >
                                 <b>Fecha:</b> {{ 'GETTING' }}
                                 <br><b>Turno:</b> {{ 'GETTING' }}
-                                <br><b>Metros:</b> <input type="text" id="metros" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <br><b>Metros:</b> <br><input type="text" id="metros" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <br><input type="text" id="metros" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                             </div>
                         </div>                        
                 
@@ -555,6 +555,7 @@
         });
     </script>
 
-
+    <script>
+    </script>
 
 @endsection

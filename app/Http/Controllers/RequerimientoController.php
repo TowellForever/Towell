@@ -18,7 +18,7 @@ class RequerimientoController extends Controller
         try {
             $data = $request->all();
     
-            // Definimos los grupos de checkboxes
+            // Definimos los grupos de checkboxes, Grupo 1 es Rizo y Grupo 2 es pie
             $grupo1 = [
                 "ck_A1", "ck_A3", "ck_A5", "ck_B1", "ck_B3", "ck_B5",
                 "ck_C1", "ck_C3", "ck_C5", "ck_D1", "ck_D3", "ck_D5",
@@ -110,5 +110,16 @@ class RequerimientoController extends Controller
             return response()->json(['message' => 'Error al guardar el requerimiento', 'error' => $e->getMessage()], 500);
         }
     }
+
+    public function obtenerUltimosRequerimientos()
+    {
+        $ultimosRequerimientos = Requerimiento::whereIn('status', ['montado', 'activo'])
+            ->orderBy('fecha_hora_creacion', 'desc')
+            ->take(2)
+            ->get();
+
+        return response()->json($ultimosRequerimientos);
+    }
+
    
 }
