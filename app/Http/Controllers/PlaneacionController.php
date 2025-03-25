@@ -77,7 +77,7 @@ class PlaneacionController extends Controller
             ->with('success', 'Estado actualizado correctamente');
     }
 
-    //metodos de TELARES (tablas de datos)********************************************************************************************************
+    //metodos de TELARES (tablas de datos de tejido)********************************************************************************************************
     public function mostrarTelarSulzer($telar)
     {
          // Buscar el registro en proceso para este telar
@@ -89,6 +89,22 @@ class PlaneacionController extends Controller
         // Retornar la vista con los datos del telar
         return view('modulos/tejido/telares/jacquard-sulzer', compact('telar', 'datos'));
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     //el siguiente metodo aun está en desuso
     public function mostrarOrdenesProramadas($telar)
     {
