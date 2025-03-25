@@ -26,8 +26,8 @@ class RequerimientoController extends Controller
                 'turno' => $data['turno'],
                 'metros' => $data['metros'],
                 'status' => 'activo',
-                'julio_reserv' => $data['julio_reserv'] ?? 'valor_predeterminado', // Asigna un valor por defecto si no está presente
-                'orden_prod' => $data['orden_prod'] ?? 'valor_predeterminado', // Similar
+                'julio_reserv' => $data['julio_reserv'] ?? '0000', // Asigna un valor por defecto si no está presente
+                'orden_prod' => $data['orden_prod'] ?? '000', // Similar
                 'fecha_hora_creacion' => now(), // Usar la fecha actual si es necesario
                 'fecha_hora_modificado' => now(), // Usar la fecha actual si es necesario
     

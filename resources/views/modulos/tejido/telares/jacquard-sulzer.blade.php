@@ -200,7 +200,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td class="border text-center">
+                                    <td class="border text-center"><input type="text" id="julio_reserv" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                                     </td>                           
                                 </tr>
                                 <tr>
@@ -366,10 +366,21 @@
                 if (this.checked) {
                     // Obtener la fila donde se marcó el checkbox
                     let fila = this.closest('tr');
-                    
-                    // Obtener los valores de cuenta Rizo y cuenta Pie de la fila
-                    let cuentaRizo = String(document.getElementById('cuenta-rizo').value);
-                    let cuentaPie = String(document.getElementById('cuenta-pie').value);
+                    let julioR = String(document.getElementById('julio_reserv').value);
+                            // Asumiendo que $datos es un array de objetos y tienes múltiples valores de "Cuenta"
+                            let datos1 = @json($datos); // Convertimos el objeto PHP $datos en un array de JavaScript
+                            // Ejemplo: acceder a "Cuenta" de un elemento específico, por ejemplo el primero
+                            let cuentaRizo = datos1[0].Cuenta; // Accede al primer objeto y luego su propiedad Orden_Prod
+
+                            // Asumiendo que $datos es un array de objetos y tienes múltiples valores de "Calibre_Pie"
+                            let datos2 = @json($datos); // Convertimos el objeto PHP $datos en un array de JavaScript
+                            // Ejemplo: acceder a "Orden_Prod" de un elemento específico, por ejemplo el primero
+                            let cuentaPie = datos2[0].Calibre_Pie; // Accede al primer objeto y luego su propiedad Calibre_Pie
+
+                            // Asumiendo que $datos es un array de objetos y tienes múltiples valores de "Orden_Prod"
+                            let datos = @json($datos); // Convertimos el objeto PHP $datos en un array de JavaScript
+                            // Ejemplo: acceder a "Orden_Prod" de un elemento específico, por ejemplo el primero
+                            let ordenProd = datos[0].Orden_Prod; // Accede al primer objeto y luego su propiedad Orden_Prod
 
                     // Obtener la fecha y el turno de la tabla correspondiente
                     let fecha = this.closest('table').querySelector('th').innerText.replace('Fecha: ', '');
@@ -429,6 +440,8 @@
                         fecha: fecha,
                         turno: turno,
                         metros: metros,
+                        julio_reserv: julioR,
+                        orden_prod: ordenProd, // Aquí envías el valor a tu backend
                         ck_A1,
                         ck_A2,
                         ck_A3,
