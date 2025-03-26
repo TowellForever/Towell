@@ -7,23 +7,23 @@
     <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
         @php
             $modulos = [
-                ['nombre' => '305', 'imagen' => 'smith.jpg', 'ruta' => '#'],
-                ['nombre' => '306', 'imagen' => 'smith.jpg', 'ruta' => '#'],
-                ['nombre' => '307', 'imagen' => 'smith.jpg', 'ruta' => '#'],
-                ['nombre' => '308', 'imagen' => 'smith.jpg', 'ruta' => '#'],
-                ['nombre' => '309', 'imagen' => 'smith.jpg', 'ruta' => '#'],
-                ['nombre' => '310', 'imagen' => 'smith.jpg', 'ruta' => '#'],
-                ['nombre' => '311', 'imagen' => 'smith.jpg', 'ruta' => '#'],
-                ['nombre' => '312', 'imagen' => 'smith.jpg', 'ruta' => '#'],
-                ['nombre' => '313', 'imagen' => 'smith.jpg', 'ruta' => '#'],
-                ['nombre' => '314', 'imagen' => 'smith.jpg', 'ruta' => '#'],
-                ['nombre' => '315', 'imagen' => 'smith.jpg', 'ruta' => '#'],
-                ['nombre' => '316', 'imagen' => 'smith.jpg', 'ruta' => '#']
+                ['nombre' => '305', 'imagen' => 'smith.jpg'],
+                ['nombre' => '306', 'imagen' => 'smith.jpg'],
+                ['nombre' => '307', 'imagen' => 'smith.jpg'],
+                ['nombre' => '308', 'imagen' => 'smith.jpg'],
+                ['nombre' => '309', 'imagen' => 'smith.jpg'],
+                ['nombre' => '310', 'imagen' => 'smith.jpg'],
+                ['nombre' => '311', 'imagen' => 'smith.jpg'],
+                ['nombre' => '312', 'imagen' => 'smith.jpg'],
+                ['nombre' => '313', 'imagen' => 'smith.jpg'],
+                ['nombre' => '314', 'imagen' => 'smith.jpg'],
+                ['nombre' => '315', 'imagen' => 'smith.jpg'],
+                ['nombre' => '316', 'imagen' => 'smith.jpg']
             ];
         @endphp
 
         @foreach ($modulos as $modulo)
-            <a href="{{ url($modulo['ruta']) }}" class="block">
+            <a href="{{ route('tejido.mostrarTelarSulzer', ['telar' => $modulo['nombre']]) }}" class="block">
                 <div class="bg-white shadow-lg rounded-2xl p-4 flex flex-col justify-between items-center transition-transform transform hover:scale-105 h-60">
                     <div class="flex-grow flex items-center justify-center">
                         <img src="{{ asset('storage/fotos_tejido/' . $modulo['imagen']) }}" 
