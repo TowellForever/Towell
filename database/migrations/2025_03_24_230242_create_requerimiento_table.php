@@ -7,6 +7,7 @@ return new class extends Migration {
     public function up() {
         Schema::create('requerimiento', function (Blueprint $table) {
             $table->id();
+            $table->string('telar')->nullable();
             $table->string('cuenta_rizo')->nullable();
             $table->string('cuenta_pie')->nullable();
             $table->string('metros')->nullable();
@@ -16,6 +17,9 @@ return new class extends Migration {
             $table->integer('rizo')->nullable();
             $table->integer('pie')->nullable();
             $table->string('valor')->nullable();
+            $table->string('fecha')->nullable();
+            $table->string('metros_pie')->nullable();
+            $table->string('julio_reserv_pie')->nullable();
             $table->datetime('fecha_hora_creacion')->nullable();
             $table->datetime('fecha_hora_modificado')->nullable();
 

@@ -13,6 +13,7 @@ class Requerimiento extends Model
 
     // Los campos que son asignables en masa
     protected $fillable = [
+        'telar',
         'cuenta_rizo', 
         'cuenta_pie', 
         'metros', 
@@ -20,8 +21,13 @@ class Requerimiento extends Model
         'status', 
         'orden_prod',             // Añadir a $fillable
         'valor',
+        'fecha',
+        'metros_pie',
+        'julio_reserv_pie',
         'fecha_hora_creacion',    // Añadir a $fillable
         'fecha_hora_modificado',  // Añadir a $fillable
+        'rizo',
+        'pie',
     ];
 
     // Definimos cómo se deben convertir los campos de fecha
