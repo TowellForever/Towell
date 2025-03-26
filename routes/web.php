@@ -47,7 +47,6 @@ Route::get('/tejido/smith', function () { return view('modulos/tejido/smith');})
 Route::get('/tejido/itema-viejo', function () { return view('modulos/tejido/itema-viejo');});
 Route::get('/tejido/itema-nuevo', function () { return view('modulos/tejido/itema-nuevo');});
 Route::get('/tejido/programar-requerimientos', function () { return view('modulos/tejido/programar-requerimientos');});
-
 //ruta para llegar a la vista dinamica de los telares de jacquard-sulzer
 Route::get('/tejido/jacquard-sulzer/{telar}', [PlaneacionController::class, 'mostrarTelarSulzer'])->name('tejido.mostrarTelarSulzer');
 Route::get('/modulos/tejido/telares/ordenes-programadas/{telar}', [PlaneacionController::class, 'mostrarOrdenesProgramadas'])->name('tejido.mostrarOrdenesProgramadas');
@@ -56,8 +55,8 @@ Route::get('/ultimos-requerimientos', [RequerimientoController::class, 'obtenerR
 
 
 
-//Route::get('/alta-usuarios', function () { return view('alta_usuarios');});//BORRAR UNA VEZ CREADO EL CONTROLLER
 
+//Route::get('/alta-usuarios', function () { return view('alta_usuarios');});//BORRAR UNA VEZ CREADO EL CONTROLLER
 Route::get('/usuarios/create', [UsuarioController::class, 'create'])->name('usuarios.create');
 Route::post('/usuarios', [UsuarioController::class, 'store'])->name('usuarios.store');
 
@@ -74,12 +73,7 @@ Route::get('/calendarios', [PlaneacionController::class, 'calendarios'])->name('
 Route::get('/aplicaciones', [PlaneacionController::class, 'aplicaciones'])->name('planeacion.aplicaciones');
 
 
-
-
-
 Route::put('/tejido-en-proceso/{id}', [PlaneacionController::class, 'update'])->name('tejido_scheduling.update');
-
-
 
 // Rutas de catálogos
 Route::resource('telares', CatalagoTelarController::class);

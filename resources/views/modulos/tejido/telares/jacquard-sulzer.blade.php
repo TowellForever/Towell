@@ -359,40 +359,34 @@
 <script>
     document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
         checkbox.addEventListener('change', function () {
-            let fila = this.closest('tr');
+            let fila = this.closest('tr'); // Obtener la fila actual
             let fecha = fila.closest('table').querySelector('th').innerText.replace('Fecha: ', '');
-            let valorCheckbox = this.value; // Captura el valor del checkbox
             let metros = document.getElementById('metros').value;
             let julioR = String(document.getElementById('julio_reserv').value);
             let metros_pie = document.getElementById('metros_pie').value;
             let julioR_pie = String(document.getElementById('julio_reserv_pie').value);
-            let valorCheckbox2 = this.value; // Captura el valor del checkbox
-            let rizo = 0; // Inicializamos la variable rizo
-            let pie = 0;  // Inicializamos la variable pie
+            let valorCheckbox = this.value;
+            let rizo = 0, pie = 0;
 
-                             // Asumiendo que $datos es un array de objetos y tienes múltiples valores de "Cuenta"
-                             let datos1 = @json($datos); // Convertimos el objeto PHP $datos en un array de JavaScript
-                             // Ejemplo: acceder a "Cuenta" de un elemento específico, por ejemplo el primero
-                             let cuentaRizo = datos1[0].Cuenta; // Accede al primer objeto y luego su propiedad Orden_Prod
- 
-                             // Asumiendo que $datos es un array de objetos y tienes múltiples valores de "Calibre_Pie"
-                             let datos2 = @json($datos); // Convertimos el objeto PHP $datos en un array de JavaScript
-                             // Ejemplo: acceder a "Orden_Prod" de un elemento específico, por ejemplo el primero
-                             let cuentaPie = datos2[0].Calibre_Pie; // Accede al primer objeto y luego su propiedad Calibre_Pie
- 
-                             // Asumiendo que $datos es un array de objetos y tienes múltiples valores de "Orden_Prod"
-                             let datos = @json($datos); // Convertimos el objeto PHP $datos en un array de JavaScript
-                             // Ejemplo: acceder a "Orden_Prod" de un elemento específico, por ejemplo el primero
-                             let ordenProd = datos[0].Orden_Prod; // Accede al primer objeto y luego su propiedad Orden_Prod
-                             let telar = @json($telar);
+            let datos = @json($datos);
+            let cuentaRizo = datos[0].Cuenta;
+            let cuentaPie = datos[0].Calibre_Pie;
+            let ordenProd = datos[0].Orden_Prod;
+            let telar = @json($telar);
 
-            //detectamos que fue marcado, RIZO o PIE
-            // Condicional para incrementar rizo o pie dependiendo del valor del checkbox
-            if (valorCheckbox2.startsWith('rizo')) {
-                rizo = 1; // Si el valor comienza con 'rizo', se suma 1 a rizo
-            } else if (valorCheckbox2.startsWith('pie')) {
-                pie = 1; // Si el valor comienza con 'pie', se suma 1 a pie
+            // 🔹 Detectar si es Rizo o Pie
+            if (valorCheckbox.startsWith('rizo')) {
+                rizo = 1;
+                // 🔹 Desmarcar todos los checkboxes de tipo "rizo" antes de marcar el nuevo
+                document.querySelectorAll('input[type="checkbox"][value^="rizo"]').forEach(cb => cb.checked = false);
+            } else if (valorCheckbox.startsWith('pie')) {
+                pie = 1;
+                // 🔹 Desmarcar todos los checkboxes de tipo "pie" antes de marcar el nuevo
+                document.querySelectorAll('input[type="checkbox"][value^="pie"]').forEach(cb => cb.checked = false);
             }
+
+            // 🔹 Marcar solo el checkbox seleccionado
+            this.checked = true;
 
             axios.post('/guardar-requerimiento', {
                 cuenta_rizo: cuentaRizo,
@@ -403,7 +397,7 @@
                 metros_pie: metros_pie,
                 julio_reserv_pie: julioR_pie,
                 orden_prod: ordenProd,
-                valor: valorCheckbox, // Enviamos el valor del checkbox al backend
+                valor: valorCheckbox,
                 rizo,
                 pie,
                 telar
@@ -412,12 +406,19 @@
             })
             .then(response => {
                 console.log(response.data.message);
-                location.reload(); // Recargar la página automáticamente
-                // Desmarcar checkboxes anteriores
-                document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-                    if (cb !== checkbox) cb.checked = false;
-                });
 
+                // 🔹 Mostrar mensaje flotante de éxito
+                let msg = document.createElement('div');
+                msg.textContent = "Datos actualizados correctamente";
+                msg.style.position = "fixed";
+                msg.style.bottom = "10px";
+                msg.style.right = "10px";
+                msg.style.backgroundColor = "green";
+                msg.style.color = "white";
+                msg.style.padding = "10px";
+                msg.style.borderRadius = "5px";
+                document.body.appendChild(msg);
+                setTimeout(() => msg.remove(), 2000); // Eliminar mensaje después de 3s
             })
             .catch(error => {
                 console.error('Error:', error.response ? error.response.data : error.message);
