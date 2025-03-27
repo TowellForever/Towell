@@ -90,6 +90,26 @@ class PlaneacionController extends Controller
         return view('modulos/tejido/telares/jacquard-sulzer', compact('telar', 'datos'));
     }
 
+    public function obtenerOrdenesProgramadas($Telar)
+    {
+        try {
+            // Buscar las órdenes programadas para el telar, con 'en_proceso' igual a 0
+            $ordenes = Planeacion::where('numero_telar', $Telar)
+                            ->where('en_proceso', 0)
+                            ->get();
+    
+            // Verificar si existen órdenes
+            if ($ordenes->isEmpty()) {
+                return back()->with('error', 'No hay órdenes para este telar.');
+            }
+    
+            return view('ordenes.index', compact('ordenes', 'Telar'));
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error al cargar las órdenes: ' . $e->getMessage());
+        }
+    }
+    
+    
 
 
 

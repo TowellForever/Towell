@@ -87,4 +87,5 @@ class RequerimientoController extends Controller
     
         return response()->json($requerimientos);
     }    
+
 }

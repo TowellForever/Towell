@@ -349,7 +349,7 @@
     </table>
 
     <div class="flex justify-center mt-6 w-80">
-        <a href=""><button class="bg-blue-800 text-white font-bold py-2 px-6 rounded hover:bg-blue-900">
+        <a href="{{ route('ordenes.programadas', ['telar' => $telar]) }}"><button class="bg-blue-800 text-white font-bold py-2 px-6 rounded hover:bg-blue-900">
             Órdenes Programadas
         </button></a>
     </div>

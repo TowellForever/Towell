@@ -52,7 +52,7 @@ Route::get('/tejido/jacquard-sulzer/{telar}', [PlaneacionController::class, 'mos
 Route::get('/modulos/tejido/telares/ordenes-programadas/{telar}', [PlaneacionController::class, 'mostrarOrdenesProgramadas'])->name('tejido.mostrarOrdenesProgramadas');
 Route::post('/guardar-requerimiento', [RequerimientoController::class, 'store']);
 Route::get('/ultimos-requerimientos', [RequerimientoController::class, 'obtenerRequerimientosActivos']);
-
+Route::get('/ordenes-programadas/{telar}', [PlaneacionController::class, 'obtenerOrdenesProgramadas'])->name('ordenes.programadas');
 
 
 

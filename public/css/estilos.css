@@ -418,3 +418,42 @@ button:hover {
         padding: 4px 8px; /* Ajustar el padding para reducir el espacio interno */
         white-space: nowrap; /* Evitar que el texto se rompa en varias líneas */
     }
+
+    .nombreApp {
+        position: absolute; /* Se coloca sobre otros elementos */
+        top: 10px; /* Ajusta la distancia desde la parte superior */
+        left: 50%; /* Lo lleva al centro */
+        transform: translateX(-50%); /* Centra el texto exactamente */
+        font-size: 18px; /* Tamaño de texto adecuado */
+        font-weight: bold; /* Texto en negrita */
+        color: white; /* Color llamativo */
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra para mejor visibilidad */
+        background: rgba(0, 0, 0, 0.2); /* Fondo semi-transparente opcional */
+        padding: 5px 15px; /* Espaciado interno */
+        border-radius: 10px; /* Bordes redondeados */
+    }
+
+    .botonesApp {
+        position: absolute; /* Se coloca sobre otros elementos */
+        top: 60px; /* Ajusta la distancia desde la parte superior */
+        left: 26%; /* Lo lleva al centro */
+        transform: translateX(-50%); /* Centra el texto exactamente */
+   
+    }
+    
+    /* Estilos para pantallas grandes (computadoras) */
+@media (min-width: 1025px) {
+    .botonesApp {
+        left: 34%; /* Centra en pantallas grandes */
+        transform: translateX(-50%);
+        top: 60px;
+    }
+}
+
+/* Estilos para tablets */
+@media (max-width: 1024px) {
+    .botonesApp {
+        left: 26%; /* Mantiene los estilos de tablet */
+        top: 60px;
+    }
+}
