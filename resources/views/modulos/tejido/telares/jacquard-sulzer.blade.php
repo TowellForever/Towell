@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="container">
+<div class="">
     <h1 class="text-center text-black font-bold text-2xl mb-4">
         {{ str_replace('-', ' ', 'JACQUARD SULZER') }} - {{ $telar }}
     </h1>
@@ -77,10 +77,10 @@
                     <div class="flex">
                         <div class="flex">
                             <div class="mr-4">
-                                <b><br><br><br>Cuentas: <br>
+                                <b><br><br>Cuentas: <br>
                                 </b> 
-                                <b>RIZO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b><label id="cuenta-rizo"> {{ $dato->Cuenta }}</label>  
-                                <b>PIE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b> <label id="cuenta-pie" >{{ $dato->Calibre_Pie }}</label>                                                      
+                                <b>RIZO </b><label id="cuenta-rizo"> {{ $dato->Cuenta }}</label>  <br>
+                                <b>PIE</b> <label id="cuenta-pie" >{{ $dato->Calibre_Pie }}</label>                                                      
                             </div>
                             <div class="mr-4" >
                                 <b id="fecha"></b> 

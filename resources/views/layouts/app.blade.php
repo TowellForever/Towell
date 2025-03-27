@@ -74,7 +74,7 @@
     </nav>
 
     <!-- Contenido de la página -->
-    <main class="flex-grow container mx-auto p-6">
+    <main class="">
         @yield('content')
     </main>
 
