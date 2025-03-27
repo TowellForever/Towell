@@ -15,7 +15,7 @@
         </thead>
         <tbody class="bg-white text-black">
             @foreach($datos as $dato)
-                <tr>
+                <tr class="text-sm">
                     <td class=" p-2">     
                         <b>Orden:</b> {{ $dato->Orden_Prod }} 
                         <br><b>Cuenta Rizo:</b> {{ $dato->Cuenta }}
@@ -77,17 +77,16 @@
                     <div class="flex">
                         <div class="flex">
                             <div class="mr-4">
-                                <b><br><br>Tipo: &nbsp;&nbsp;&nbsp;
+                                <b><br><br><br>Cuentas: <br>
                                 </b> 
-                                <b>Cuenta:</b>
-                                <br><b>RIZO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b><label id="cuenta-rizo"> {{ $dato->Cuenta }}</label>  
-                                <br><b>PIE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b> <label id="cuenta-pie" >{{ $dato->Calibre_Pie }}</label>                                                      
+                                <b>RIZO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b><label id="cuenta-rizo"> {{ $dato->Cuenta }}</label>  
+                                <b>PIE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b> <label id="cuenta-pie" >{{ $dato->Calibre_Pie }}</label>                                                      
                             </div>
                             <div class="mr-4" >
-                                <b id="fecha">Fecha:</b> 
-                                <br><b>Turno:</b> {{ '' }}
+                                <b id="fecha"></b> 
+                                <!--<br><b>Turno:</b> {{ '' }}
                                 <br><b>Metros:</b> <br><input type="text" id="metros" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <br><input type="text" id="metros_pie" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <br><input type="text" id="metros_pie" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">-->
                             </div>
                         </div>                        
                 
@@ -328,7 +327,7 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <table class="ml-4 border-2">
+                       <!-- <table class="ml-4 border-2">
                             <thead>
                                 <tr>
                                     <th colspan="1" class="text-center border">JULIO RESERVADO</th>
@@ -342,7 +341,7 @@
                                     </td>                           
                                 </tr>
                             </tbody>
-                        </table>
+                        </table>-->
                     </div>
                 </td>
             </tr>
@@ -361,10 +360,10 @@
         checkbox.addEventListener('change', function () {
             let fila = this.closest('tr'); // Obtener la fila actual
             let fecha = fila.closest('table').querySelector('th').innerText.replace('Fecha: ', '');
-            let metros = document.getElementById('metros').value;
-            let julioR = String(document.getElementById('julio_reserv').value);
-            let metros_pie = document.getElementById('metros_pie').value;
-            let julioR_pie = String(document.getElementById('julio_reserv_pie').value);
+            //let metros = document.getElementById('metros').value;
+            //let julioR = String(document.getElementById('julio_reserv').value);
+            //let metros_pie = document.getElementById('metros_pie').value;
+            //let julioR_pie = String(document.getElementById('julio_reserv_pie').value);
             let valorCheckbox = this.value;
             let rizo = 0, pie = 0;
 
@@ -392,10 +391,10 @@
                 cuenta_rizo: cuentaRizo,
                 cuenta_pie: cuentaPie,
                 fecha: fecha,
-                metros: metros,
-                julio_reserv: julioR,
-                metros_pie: metros_pie,
-                julio_reserv_pie: julioR_pie,
+                //metros: metros,
+                //julio_reserv: julioR,
+                //metros_pie: metros_pie,
+                //julio_reserv_pie: julioR_pie,
                 orden_prod: ordenProd,
                 valor: valorCheckbox,
                 rizo,
@@ -461,18 +460,18 @@
                         let fecha = req.fecha_hora_creacion.split(' ')[0]; // Solo la fecha (sin hora)
                         fechaServidor = req.fecha;
                     }
-                    if (req.metros) {
+                    /*if (req.metros) {
                         document.getElementById('metros').value = req.metros;
-                    }
-                    if (req.julio_reserv) {
+                    }*/
+                    /*if (req.julio_reserv) {
                         document.getElementById('julio_reserv').value = req.julio_reserv;
-                    }
-                    if (req.metros_pie) {
+                    }*/
+                    /*if (req.metros_pie) {
                         document.getElementById('metros_pie').value = req.metros_pie;
-                    }
-                    if (req.julio_reserv_pie) {
+                    }*/
+                    /*if (req.julio_reserv_pie) {
                         document.getElementById('julio_reserv_pie').value = req.julio_reserv_pie;
-                    }
+                    }*/
     
                     // Convertir los valores de `req.valor` en un Set para mejor búsqueda
                     let valoresReq = new Set(req.valor ? req.valor.split(',').map(v => v.trim()) : []);

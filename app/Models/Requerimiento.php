@@ -16,14 +16,14 @@ class Requerimiento extends Model
         'telar',
         'cuenta_rizo', 
         'cuenta_pie', 
-        'metros', 
-        'julio_reserv',           // Añadir a $fillable
+        //'metros', 
+        //'julio_reserv',           // Añadir a $fillable
         'status', 
         'orden_prod',             // Añadir a $fillable
         'valor',
         'fecha',
-        'metros_pie',
-        'julio_reserv_pie',
+        //'metros_pie',
+        //'julio_reserv_pie',
         'fecha_hora_creacion',    // Añadir a $fillable
         'fecha_hora_modificado',  // Añadir a $fillable
         'rizo',

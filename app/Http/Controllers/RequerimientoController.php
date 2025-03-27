@@ -55,13 +55,13 @@ class RequerimientoController extends Controller
             'cuenta_rizo' => $request->cuenta_rizo,
             'cuenta_pie' => $request->cuenta_pie,
             'fecha'=>$request->fecha,
-            'metros' => $request->metros,
-            'julio_reserv' => $request->julio_reserv,
+            //'metros' => $request->metros,
+            //'julio_reserv' => $request->julio_reserv,
             'status' => 'activo', // El nuevo registro será activo
             'orden_prod' => $request->orden_prod,
             'valor'=>$request->valor,
-            'metros_pie'=>$request->metros_pie,
-            'julio_reserv_pie'=>$request->julio_reserv_pie,
+            //'metros_pie'=>$request->metros_pie,
+            //'julio_reserv_pie'=>$request->julio_reserv_pie,
             'fecha_hora_creacion' => now(), // Fecha actual
             'rizo'=>$request->rizo,
             'pie'=>$request->pie,
