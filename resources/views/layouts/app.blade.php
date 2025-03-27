@@ -38,8 +38,9 @@
     <link rel="stylesheet" href="{{ asset('css/estilos.css') }}">
 </head>
 <body class="min-h-screen flex flex-col">
-    <img src="/storage/fondosTowell/TOWELLIN.png" alt="Towelling" class="absolute top-2 right-2 w-[120px] z-0">
-
+    <a href="/produccionProceso" class="text-3xl font-extrabold">
+        <img src="/storage/fondosTowell/TOWELLIN.png" alt="Towelling" class="absolute top-2 right-2 w-[120px] z-0">
+    </a>
     <!-- Navbar -->
     <nav class="bg-blue-350 text-white p-4">
         <div class="container mx-auto flex justify-between items-center">
