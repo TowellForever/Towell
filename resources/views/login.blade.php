@@ -26,6 +26,30 @@
                 background-position: 0% 50%;
             }
         }
+
+        #qr-video-container {
+            position: fixed; /* Se mantiene fijo en toda la pantalla */
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro semitransparente */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999; /* Asegura que esté por encima de todo */
+            display: none; /* Oculto por defecto */
+        }
+
+        #qr-video {
+            width: 80vw;  
+            max-width: 400px;
+            height: auto;
+            border: 5px solid white;
+            border-radius: 10px;
+            background: black;
+        }
+
     </style>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -101,7 +125,10 @@
                     <button type="button" id="qr-button">Accesar por QR</button>
                 </div>
 
-                <video id="qr-video" style="display:none;"></video>
+                <div id="qr-video-container">
+                    <video id="qr-video" autoplay></video>
+                </div>
+                
 
             </form>
 
@@ -156,7 +183,7 @@
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('name').value = data.nombre || "";
-                    const fotoUrl = data.foto ? `/storage/${data.foto}` : ''; // Ruta de la foto, asegurándose de que sea válida
+                    const fotoUrl = data.foto ? `/images/${data.foto}` : ''; // Ruta de la foto, asegurándose de que sea válida
                     const photoPreview = document.getElementById('photo-preview');
                     const photoImage = document.getElementById('photo-image');
                     
@@ -199,14 +226,15 @@
 
     
     <script>
-        const qrButton = document.getElementById('qr-button');
+       const qrButton = document.getElementById('qr-button');
+        const qrVideoContainer = document.getElementById('qr-video-container');
         const qrVideo = document.getElementById('qr-video');
 
         qrButton.addEventListener('click', function() {
             navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
                 .then(function(stream) {
                     qrVideo.srcObject = stream;
-                    qrVideo.style.display = 'block';
+                    qrVideoContainer.style.display = 'flex'; // Muestra el contenedor oscuro con el video
                     qrVideo.play();
 
                     const interval = setInterval(() => {
@@ -222,6 +250,7 @@
 
                             if (qrCode) {
                                 clearInterval(interval);
+                                qrVideoContainer.style.display = 'none'; // Oculta el video al leer el código
 
                                 // Enviar el número de empleado al backend para autenticación
                                 fetch('/login-qr', {

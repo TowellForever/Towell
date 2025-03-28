@@ -20,7 +20,7 @@
     <a href="{{ url($modulo['ruta']) }}" class="block">
         <div class="bg-white shadow-lg rounded-xl p-2 flex flex-col justify-between items-center transition-transform transform hover:scale-105 h-40 min-h-[150px]">
             <div class="flex-grow flex items-center justify-center">
-                <img src="{{ asset('storage/fotos_tejido/' . $modulo['imagen']) }}" 
+                <img src="{{ asset('images/fotos_tejido/' . $modulo['imagen']) }}" 
                 alt="{{ $modulo['nombre'] }}" 
                 class="h-32 w-32 object-cover rounded-lg">
             </div>

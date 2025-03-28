@@ -39,7 +39,7 @@
 </head>
 <body class="min-h-screen flex flex-col">
     <a href="/produccionProceso" class="text-3xl font-extrabold">
-        <img src="/storage/fondosTowell/TOWELLIN.png" alt="Towelling" class="absolute top-2 right-2 w-[80px] z-0">
+        <img src="{{ asset('images/fondosTowell/TOWELLIN.png') }} " alt="Towelling" class="absolute top-2 right-2 w-[80px] z-0">
     </a>
     <a href="{{ route('telares.falla') }}" class="absolute top-2 right-20  z-0 btn btn-danger text-sm">Reportar Falla</a>
     <!-- Navbar -->
@@ -48,7 +48,7 @@
             <div class="container mx-auto flex justify-between items-center relative">
                 <!-- Logo Towell -->
                 <a href="/produccionProceso" class="text-3xl font-extrabold">
-                    <img src="/storage/fondosTowell/logo_towell2.png" alt="Logo_Towell" class="absolute top-10 left-2 w-[150px] z-0">
+                    <img src="{{ asset('images/fondosTowell/logo_towell2.png') }} " alt="Logo_Towell" class="absolute top-10 left-2 w-[150px] z-0">
                 </a>
         
                 @if (!isset($ocultarBotones) || !$ocultarBotones)
@@ -70,7 +70,7 @@
                         </button>
                     </div>
                 @endif
-        
+    
                 <!-- Nombre del usuario -->
                 <p class="nombreApp text-black font-bold uppercase z-2 text-sm top-2">
                     {{ Auth::User()->nombre }}
@@ -78,7 +78,6 @@
             </div>
         </nav>
     
-
     <!-- Contenido de la página -->
     <main class="">
         @yield('content')

@@ -441,3 +441,26 @@ button:hover {
    
     }
     
+    #qr-video-container {
+        position: fixed; /* Se mantiene fijo en la pantalla */
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semitransparente */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000; /* Asegura que esté por encima de todo */
+        display: none; /* Oculto por defecto */
+    }
+    
+    #qr-video {
+        width: 80vw;  /* Ajusta el tamaño del video */
+        max-width: 400px;
+        height: auto;
+        border: 5px solid white;
+        border-radius: 10px;
+        background: black;
+    }
+    

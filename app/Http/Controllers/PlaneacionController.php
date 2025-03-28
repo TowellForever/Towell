@@ -103,39 +103,10 @@ class PlaneacionController extends Controller
                 return back()->with('error', 'No hay órdenes para este telar.');
             }
     
-            return view('ordenes.index', compact('ordenes', 'Telar'));
+            return view('login', compact('ordenes', 'Telar'));
         } catch (\Exception $e) {
             return back()->with('error', 'Error al cargar las órdenes: ' . $e->getMessage());
         }
-    }
-    
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //el siguiente metodo aun está en desuso
-    public function mostrarOrdenesProramadas($telar)
-    {
-         // Buscar el registro en proceso para este telar
-        $datos = DB::table('TEJIDO_SCHEDULING')
-        ->where('en_proceso', 1)
-        ->where('telar', $telar)
-        ->get();
-
-        // Retornar la vista con los datos del telar
-        return view('modulos/tejido/telares/jacquard-sulzer', compact('telar', 'datos'));
     }
 
 

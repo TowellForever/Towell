@@ -20,7 +20,7 @@
             <a href="{{ route('tejido.mostrarTelarSulzer', ['telar' => $modulo['nombre']]) }}" class="block">
                 <div class="bg-white shadow-lg rounded-lg p-2 flex flex-col justify-between items-center transition-transform transform hover:scale-105 h-48 min-h-[120px]">
                     <div class="flex-grow flex items-center justify-center">
-                        <img src="{{ asset('storage/fotos_tejido/' . $modulo['imagen']) }}" 
+                        <img src="{{ asset('images/fotos_tejido/' . $modulo['imagen']) }}"  
                         alt="{{ $modulo['nombre'] }}" 
                         class="h-32 w-32 object-cover rounded-lg">
                     </div>
