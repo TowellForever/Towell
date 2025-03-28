@@ -18,16 +18,17 @@
 
         @foreach ($modulos as $modulo)
             <a href="{{ route('tejido.mostrarTelarSulzer', ['telar' => $modulo['nombre']]) }}" class="block">
-                <div class="bg-white shadow-lg rounded-2xl p-4 flex flex-col justify-between items-center transition-transform transform hover:scale-105 h-60">
+                <div class="bg-white shadow-lg rounded-lg p-2 flex flex-col justify-between items-center transition-transform transform hover:scale-105 h-48 min-h-[120px]">
                     <div class="flex-grow flex items-center justify-center">
                         <img src="{{ asset('storage/fotos_tejido/' . $modulo['imagen']) }}" 
                         alt="{{ $modulo['nombre'] }}" 
-                        class="h-36 w-36 object-cover rounded-lg">
+                        class="h-32 w-32 object-cover rounded-lg">
                     </div>
-                    <h2 class="text-lg font-semibold text-center mt-3">{{ $modulo['nombre'] }}</h2>
+                    <h2 class="text-sm font-semibold text-center mt-2">{{ $modulo['nombre'] }}</h2>
                 </div>
             </a>
         @endforeach
+
     </div>
 </div>
 @endsection

@@ -435,25 +435,9 @@ button:hover {
 
     .botonesApp {
         position: absolute; /* Se coloca sobre otros elementos */
-        top: 60px; /* Ajusta la distancia desde la parte superior */
-        left: 26%; /* Lo lleva al centro */
+        top: 45px; /* Ajusta la distancia desde la parte superior */
+        left: 50%; /* Lo lleva al centro */
         transform: translateX(-50%); /* Centra el texto exactamente */
    
     }
     
-    /* Estilos para pantallas grandes (computadoras) */
-@media (min-width: 1025px) {
-    .botonesApp {
-        left: 34%; /* Centra en pantallas grandes */
-        transform: translateX(-50%);
-        top: 60px;
-    }
-}
-
-/* Estilos para tablets */
-@media (max-width: 1024px) {
-    .botonesApp {
-        left: 26%; /* Mantiene los estilos de tablet */
-        top: 60px;
-    }
-}

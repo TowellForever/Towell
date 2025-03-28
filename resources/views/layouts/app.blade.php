@@ -39,40 +39,45 @@
 </head>
 <body class="min-h-screen flex flex-col">
     <a href="/produccionProceso" class="text-3xl font-extrabold">
-        <img src="/storage/fondosTowell/TOWELLIN.png" alt="Towelling" class="absolute top-2 right-2 w-[120px] z-0">
+        <img src="/storage/fondosTowell/TOWELLIN.png" alt="Towelling" class="absolute top-2 right-2 w-[80px] z-0">
     </a>
+    <a href="{{ route('telares.falla') }}" class="absolute top-2 right-20  z-0 btn btn-danger text-sm">Reportar Falla</a>
     <!-- Navbar -->
-    <nav class="bg-blue-350 text-white p-4">
-        <div class="container mx-auto flex justify-between items-center">
-            <!-- Logo Towell -->
-            <a href="/produccionProceso" class="text-3xl font-extrabold">
-                <img src="/storage/fondosTowell/logo_towell2.png" alt="Logo_Towell" class="absolute top-10 left-2 w-[200px] z-0">
-            </a>
-
-            <!-- Botones de navegación -->
-            <div class="flex gap-4 justify-center items-center ml-60 z-1 botonesApp">
-                <!-- Botón Atrás -->
-                <button onclick="history.back()" class="bg-white text-blue-500 font-bold py-2 px-4 rounded-lg shadow-md hover:bg-gray-300 transition duration-300 flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polygon points="11 19 2 12 11 5 11 19"></polygon>
-                        <polygon points="22 19 13 12 22 5 22 19"></polygon>
-                    </svg>
-                </button>
-                <!-- Botón Adelante -->
-                <button onclick="history.forward()" class="bg-white text-blue-500 font-bold py-2 px-4 rounded-lg shadow-md hover:bg-gray-300 transition duration-300 flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polygon points="13 19 22 12 13 5 13 19"></polygon>
-                        <polygon points="2 19 11 12 2 5 2 19"></polygon>
-                    </svg>
-                </button>
+    <!-- Navbar -->
+        <nav class="bg-blue-350 text-white mb-10">
+            <div class="container mx-auto flex justify-between items-center relative">
+                <!-- Logo Towell -->
+                <a href="/produccionProceso" class="text-3xl font-extrabold">
+                    <img src="/storage/fondosTowell/logo_towell2.png" alt="Logo_Towell" class="absolute top-10 left-2 w-[150px] z-0">
+                </a>
+        
+                @if (!isset($ocultarBotones) || !$ocultarBotones)
+                    <!-- Botones de navegación -->
+                    <div class="flex gap-4 justify-center items-center z-1 botonesApp  md:gap-4 md:items-center lg:flex-row lg:gap-6 lg:ml-0">
+                        <!-- Botón Atrás -->
+                        <button onclick="history.back()" class="bg-white text-blue-500 font-bold py-2 px-4 rounded-lg shadow-md hover:bg-gray-300 transition duration-300 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="11 19 2 12 11 5 11 19"></polygon>
+                                <polygon points="22 19 13 12 22 5 22 19"></polygon>
+                            </svg>
+                        </button>
+                        <!-- Botón Adelante -->
+                        <button onclick="history.forward()" class="bg-white text-blue-500 font-bold py-2 px-4 rounded-lg shadow-md hover:bg-gray-300 transition duration-300 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="13 19 22 12 13 5 13 19"></polygon>
+                                <polygon points="2 19 11 12 2 5 2 19"></polygon>
+                            </svg>
+                        </button>
+                    </div>
+                @endif
+        
+                <!-- Nombre del usuario -->
+                <p class="nombreApp text-black font-bold uppercase z-2 text-sm top-2">
+                    {{ Auth::User()->nombre }}
+                </p>
             </div>
-
-            <!-- Nombre del usuario -->
-            <p class="nombreApp text-black font-bold uppercase z-2">
-                {{ Auth::User()->nombre }}
-            </p>
-        </div>
-    </nav>
+        </nav>
+    
 
     <!-- Contenido de la página -->
     <main class="">
