@@ -80,8 +80,7 @@ Route::resource('telares', CatalagoTelarController::class);
 Route::resource('eficiencia', CatalagoEficienciaController::class);
 Route::resource('velocidad', CatalagoVelocidadController::class);
 
-
-
+Route::get('/falla', function () { return view('falla');})->name('telares.falla');
 
 
 
