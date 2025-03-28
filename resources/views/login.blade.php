@@ -9,23 +9,18 @@
 
     <style>
         body {
-            background: linear-gradient(135deg, #00b4d8, #0096c7, #0077b6, #023e8a, #03045e);
-            background-size: 500% 500%;
-            animation: gradientAnimation 8s ease-in-out infinite;
+            background: linear-gradient(135deg,  #bfc2c3, #e8f0f2, #262a30);
+            background-size: 300% 300%;
+            animation: gradientAnimation 5s ease infinite;
+            position: relative; /* Para que el pseudo-elemento se posicione respecto al body */
         }
 
         @keyframes gradientAnimation {
             0% {
                 background-position: 0% 50%;
             }
-            25% {
-                background-position: 50% 100%;
-            }
             50% {
                 background-position: 100% 50%;
-            }
-            75% {
-                background-position: 50% 0%;
             }
             100% {
                 background-position: 0% 50%;
