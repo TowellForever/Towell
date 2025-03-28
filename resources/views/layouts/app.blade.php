@@ -41,7 +41,7 @@
     <a href="/produccionProceso" class="text-3xl font-extrabold">
         <img src="{{ asset('images/fondosTowell/TOWELLIN.png') }} " alt="Towelling" class="absolute top-2 right-2 w-[80px] z-0">
     </a>
-    <a href="{{ route('telares.falla') }}" class="absolute top-2 right-20  z-0 btn btn-danger text-sm">Reportar Falla</a>
+    <a href="{{ route('telares.falla') }}" class="absolute top-2 right-20  z-3 btn btn-danger text-sm">Reportar Falla</a>
     <!-- Navbar -->
     <!-- Navbar -->
         <nav class="bg-blue-350 text-white mb-10">

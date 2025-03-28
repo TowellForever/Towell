@@ -10,12 +10,8 @@ use App\Http\Controllers\UsuarioController;
 use App\Models\Usuario;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('bienvenida');
-});
-
 //Rutas de login
-Route::get('/login', function () { return view('login'); });
+Route::get('/', function () { return view('login'); });
 Route::post('/login', [AuthController::class, 'login']);
 // Ruta para obtener el nombre y la foto del empleado
 Route::get('/obtener-nombre/{noEmpleado}', function ($noEmpleado) {
