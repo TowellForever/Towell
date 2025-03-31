@@ -9,6 +9,8 @@ use App\Http\Controllers\RequerimientoController;
 use App\Http\Controllers\UsuarioController;
 use App\Models\Usuario;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ReporteFallaController;
+use App\Http\Controllers\WhatsAppController;
 
 //Rutas de login
 Route::get('/', function () { return view('login'); });
@@ -78,6 +80,12 @@ Route::resource('velocidad', CatalagoVelocidadController::class);
 
 Route::get('/falla', function () { return view('falla');})->name('telares.falla');
 
+//twilio
+// Ruta para mostrar el formulario (GET)
+Route::get('/reportar', function () {return view('reportar');})->name('reportar.falla.form');
+Route::post('/reportar-falla', [ReporteFallaController::class, 'enviarReporte'])->name('reportar.falla');
 
-
+//WhatsApp Business
+Route::get('/whatsapp', function () {return view('whatsapp');});
+Route::post('/send-whatsapp', [WhatsAppController::class, 'sendMessage']);
 
