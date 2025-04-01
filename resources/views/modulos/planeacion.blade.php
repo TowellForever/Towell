@@ -1,39 +1,57 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="flex justify-between mb-1 w-1/5">
+    <div class="flex justify-center mb-1 w-1/5">
         <!-- Botón de búsqueda (lupa) -->
-        <div class="w-20 text-left">
-            <button id="search-toggle" class="p-2 rounded-full bg-blue-500 text-white hover:bg-blue-600">
-                <i class="fas fa-search text-3xl"></i>
-            </button>
-        </div>
-
+        <button id="search-toggle" class="p-2 w-20 rounded-full bg-blue-500 text-white hover:bg-blue-600">
+            <i class="fas fa-search text-3xl"></i>
+        </button>
+    
         <!-- Botón de restablecer (cruz o refresh) -->
-        <div class="w-auto text-right">
+        <div class="w-auto text-left">
             <button id="reset-search" class="p-3 rounded-full bg-red-500 text-white hover:bg-red-600">
                 Restablecer búsqueda
             </button>
         </div>
     </div>
 
-    <!-- Formulario de búsqueda que estará oculto inicialmente -->
-    <div id="search-form" class="mb-6 hidden w-1/2 ml-0">
-        <form action="{{ route('planeacion.index') }}" method="GET" class="flex justify-center gap-4">
-            <!-- Select para escoger la columna -->
-            <select name="column" class="form-control">
-                <option value="">Selecciona una columna</option>
-                @foreach($headers as $header)
-                    <option value="{{ $header }}">{{ $header }}</option>
-                @endforeach
-            </select>
+    <!-- Modal -->
+    <div id="search-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+            <h2 class="text-xl font-bold mb-4">Búsqueda Avanzada</h2>
+            
+            <form action="{{ route('planeacion.index') }}" method="GET" class="flex flex-col gap-4">
+                <!-- Select para escoger la primera columna -->
+                <div class="flex gap-4 items-center">
+                    <select name="column[]" class="form-control p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Selecciona una columna</option>
+                        @foreach($headers as $header)
+                            <option value="{{ $header }}">{{ $header }}</option>
+                        @endforeach
+                    </select>
+                    <input type="text" name="value[]" class="form-control p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Valor a buscar">
+                </div>
+                
+                <!-- Contenedor para filtros adicionales -->
+                <div id="additional-filters"></div>
+                
+                <!-- Botón para agregar más filtros -->
+                <!-- Botón para agregar más filtros -->
+                <button type="button" id="add-filter" class="w-1/3 block mx-auto bg-gray-700 text-white px-3 py-1.5 rounded-md hover:bg-gray-800 transition duration-300 text-sm shadow">
+                    Agregar Otro Filtro
+                </button>
 
-            <!-- Input para el valor de búsqueda -->
-            <input type="text" name="value" class="form-control " placeholder="Valor a buscar">
-            <!-- Botón de buscar -->
-            <button type="submit" class="btn btn-primary w-60">Buscar</button>
-        </form>
+                <!-- Botón de buscar -->
+                <button type="submit" class="block mx-auto w-1/5  bg-blue-600 text-white px-3 py-1.5 rounded-md hover:bg-blue-700 transition duration-300 shadow">
+                    Buscar
+                </button>
+            </form>
+            
+            <!-- Botón para cerrar el modal -->
+            <button id="close-modal" class="block mx-auto w-1/5 mt-4 px-3 py-1.5 bg-red-500 text-white rounded-lg hover:bg-red-600">Cerrar</button>
+        </div>
     </div>
+
     <div class=" mx-auto text-sm">
         <h1 class="text-3xl font-bold text-center mb-6">PLANEACIÓN</h1>
         <div class="table-container relative">
@@ -197,12 +215,44 @@
     });
 
     </script>
-     <!-- Script para mostrar/ocultar el formulario de búsqueda -->
-     <script>
-        document.getElementById("search-toggle").addEventListener("click", function() {
-            let searchForm = document.getElementById("search-form");
-            searchForm.classList.toggle("hidden");
+
+    <script>
+        // Mostrar modal
+        document.getElementById('search-toggle').addEventListener('click', function() {
+            document.getElementById('search-modal').classList.remove('hidden');
         });
+
+        // Cerrar modal
+        document.getElementById('close-modal').addEventListener('click', function() {
+            document.getElementById('search-modal').classList.add('hidden');
+        });
+
+        // Agregar más filtros
+        document.getElementById('add-filter').addEventListener('click', function() {
+            const newFilter = `
+                <div class="flex gap-4 items-center mt-4 bg-gray-100 p-3 rounded-lg shadow-md">
+                    <select name="column[]" class="form-control p-2 border border-gray-400 rounded-md text-gray-800 focus:ring-2 focus:ring-blue-400">
+                        <option value="">Selecciona una columna</option>
+                        @foreach($headers as $header)
+                            <option value="{{ $header }}">{{ $header }}</option>
+                        @endforeach
+                    </select>
+
+                    <input type="text" name="value[]" class="form-control p-2 border border-gray-400 rounded-md text-gray-800 focus:ring-2 focus:ring-blue-400" placeholder="Ingrese el valor">
+
+                    <button type="button" class="w-1/5 remove-filter bg-gray-700 text-white px-3 py-1.5 rounded-md hover:bg-red-600 transition" onclick="removeFilter(this)">
+                        X
+                    </button>
+                </div>
+
+            `;
+            document.getElementById('additional-filters').insertAdjacentHTML('beforeend', newFilter);
+        });
+
+        // Eliminar filtro
+        function removeFilter(button) {
+            button.parentElement.remove();
+        }
     </script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -211,6 +261,5 @@
             });
         });
     </script>
-    
     
 @endsection

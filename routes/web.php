@@ -85,7 +85,7 @@ Route::get('/usuarios/create', [UsuarioController::class, 'create'])->name('usua
 Route::post('/usuarios', [UsuarioController::class, 'store'])->name('usuarios.store');
 
 //RUTAS DEL MODULO planeacion
-// Ruta de recursos para Planeacion
+// Ruta de RECURSOS para Planeacion
 Route::resource('planeacion', PlaneacionController::class);
 //RUTAS de CATALAGOS (3 catalagos), se usaron rutas de recursos para manejar las operaciones CRUD
 Route::resource('telares', CatalagoTelarController::class);

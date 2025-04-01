@@ -23,22 +23,26 @@ class PlaneacionController extends Controller
             'Dias_jornada_completa', 'Horas', 'Std/Hrefectivo', 'Inicio_Tejido', 'Calc4', 'Calc5', 'Calc6', 'Fin_Tejido', 
             'Fecha_Compromiso', 'Fecha_Compromiso1', 'Entrega', 'Dif_vs_Compromiso', 'en_proceso'
         ];
-    
+        
         $query = DB::table('TEJIDO_SCHEDULING');
         
+        // Filtrar registros de acuerdo a los filtros recibidos
         if ($request->has('column') && $request->has('value')) {
-            $column = $request->input('column');
-            $value = $request->input('value');
-            if (in_array($column, $headers)) {
-                $query->where($column, 'like', '%' . $value . '%');
+            $columns = $request->input('column');
+            $values = $request->input('value');
+    
+            foreach ($columns as $index => $column) {
+                if (in_array($column, $headers) && isset($values[$index])) {
+                    $query->where($column, 'like', '%' . $values[$index] . '%');
+                }
             }
         }
-    
+        
+        // Obtener los registros filtrados
         $datos = $query->get();
-    
+        
         return view('modulos/planeacion', compact('datos', 'headers'));
-    }
-    
+    }    
 
     public function calendarios()
     {
