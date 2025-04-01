@@ -47,13 +47,13 @@ class UsuarioController extends Controller
         // Definir los módulos y sus rutas
         $modulos = [
             ['nombre' => 'Planeación', 'imagen' => 'planeacion.png', 'ruta' => route('planeacion.index'), 'permiso' => 'planeacion'],
-            ['nombre' => 'Urdido', 'imagen' => 'urdido.jpg', 'ruta' => '#', 'permiso' => 'urdido'],
-            ['nombre' => 'Engomado', 'imagen' => 'engomado.jpg', 'ruta' => '#', 'permiso' => 'engomado'],
+            ['nombre' => 'Urdido', 'imagen' => 'urdido.jpg', 'ruta' => '/modulo-urdido', 'permiso' => 'urdido'],
+            ['nombre' => 'Engomado', 'imagen' => 'engomado.jpg', 'ruta' => '/modulo-engomado', 'permiso' => 'engomado'],
             ['nombre' => 'Tejido', 'imagen' => 'tejido.jpg', 'ruta' => '/modulo-tejido', 'permiso' => 'tejido'],
-            ['nombre' => 'Atadores', 'imagen' => 'Atadores.jpg', 'ruta' => '#', 'permiso' => 'atadores'],
-            ['nombre' => 'Tejedores', 'imagen' => 'tejedores.jpg', 'ruta' => '#', 'permiso' => 'tejedores'],
-            ['nombre' => 'Mantenimiento', 'imagen' => 'mantenimiento.png', 'ruta' => '#', 'permiso' => 'mantenimiento'],
-            ['nombre' => 'Configuración', 'imagen' => 'configuracion.png', 'ruta' => '#', 'permiso' => 'configuracion'],
+            ['nombre' => 'Atadores', 'imagen' => 'Atadores.jpg', 'ruta' => '/modulo-atadores', 'permiso' => 'atadores'],
+            ['nombre' => 'Tejedores', 'imagen' => 'tejedores.jpg', 'ruta' => '/modulo-tejedores', 'permiso' => 'tejedores'],
+            ['nombre' => 'Mantenimiento', 'imagen' => 'mantenimiento.png', 'ruta' => '/modulo-mantenimiento', 'permiso' => 'mantenimiento'],
+            ['nombre' => 'Configuración', 'imagen' => 'configuracion.png', 'ruta' => '/modulo-configuracion', 'permiso' => 'configuracion'],
         ];
     
         // Filtrar los módulos según los permisos del usuario

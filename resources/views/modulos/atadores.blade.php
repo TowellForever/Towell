@@ -2,17 +2,17 @@
 
 @section('content')
 <div class="container mx-auto p-6">
-    <h1 class="text-3xl font-bold text-center mb-10">URDIDO</h1>
+    <h1 class="text-3xl font-bold text-center mb-10">ATADORES</h1>
     
     <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
         @php
             $modulos = [
-                ['nombre' => 'Urdido 1', 'imagen' => 'urdido.jpg', 'ruta' => '/urdido/urdidoTemporal'],
-                ['nombre' => 'Urdido 2', 'imagen' => 'urdido.jpg', 'ruta' => '/urdido/urdidoTemporal'],
-                ['nombre' => 'Urdido 3', 'imagen' => 'urdido.jpg', 'ruta' => '/urdido/urdidoTemporal'],
-                ['nombre' => 'Urdido 4', 'imagen' => 'urdido.jpg', 'ruta' => '/urdido/urdidoTemporal'],
-                ['nombre' => 'Urdido 5', 'imagen' => 'urdido.jpg', 'ruta' => '/urdido/urdidoTemporal'],
-                ['nombre' => 'Programar Requerimientos', 'imagen' => 'urdido.jpg', 'ruta' => '/urdido/programar-requerimientos']
+                ['nombre' => 'Atador 1', 'imagen' => 'Atadores.jpg', 'ruta' => '/atadores/atadores1'],
+                ['nombre' => 'Atador 2', 'imagen' => 'Atadores.jpg', 'ruta' => '/atadores/atadores2'],
+                ['nombre' => 'Atador 3', 'imagen' => 'Atadores.jpg', 'ruta' => '/atadores/atadores3'],
+                ['nombre' => 'Atador 4', 'imagen' => 'Atadores.jpg', 'ruta' => '/atadores/atadores4'],
+                ['nombre' => 'Atador 5', 'imagen' => 'Atadores.jpg', 'ruta' => '/atadores/atadores5'],
+                ['nombre' => 'Programar Requerimientos', 'imagen' => 'engomado.jpg', 'ruta' => '/engomado/programar-requerimientos']
             ];
         @endphp
 

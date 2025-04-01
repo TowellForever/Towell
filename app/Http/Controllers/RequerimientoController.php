@@ -74,11 +74,11 @@ class RequerimientoController extends Controller
 
     public function obtenerRequerimientosActivos()
     {
-        $fechaHoy = now()->toDateString(); // Fecha actual
+        $fechaHoy = now()->toDateString() ; // Fecha actual
     
         // Filtrar por el valor de 'rizo' o 'pie'
         $requerimientos = Requerimiento::where('status', 'activo')
-            ->whereDate('fecha_hora_creacion', $fechaHoy) // Filtrar por la fecha actual
+            //->whereDate('fecha_hora_creacion', $fechaHoy) // Filtrar por la fecha actual
             ->where(function ($query) {
                 $query->where('rizo', 1) // Si 'rizo' es 1
                       ->orWhere('pie', 1); // O si 'pie' es 1
