@@ -8,49 +8,63 @@ class WhatsAppController extends Controller
 {
     public function sendMessage(Request $request)
     {
-        // Tu número de teléfono de prueba
-        $phoneNumber = '522214125380'; // Reemplaza con el número correcto
-        $accessToken = 'EAAQtu7d8DzoBOzQ8gWqtgy3ZCjLZCE0SYlrfEgT7bxIh8qZBgJMSAMrwrH9edgt9xM4OQpQgcOCBkTqGBOwlZCTJ99SwoS81S8nlrHTjcCuSFNSBZCzBAFSZCgzd1PnZBcJujAzq4IEPPuz5RawZCrJ842YkTgMBZB34O1AFGVoHocwelrsuu41k2zhsn3kZBLytHC83UZCnVZBzwblcSx9hhx4Yj3CbkW079ZCH2IeZA4'; // Tu token de acceso
+        // Lista de números de teléfono a los que se enviará el mensaje
+        $phoneNumbers = ['522214125380', '522221130412'];
+        $accessToken = 'EAAQtu7d8DzoBOZBeQi1zEZAH3sfKcWZBCv7HVHAPQqUq1GLaMax3Mtrr1ZA2Seojfol9niZBGlGz6Dra3vv9PcBwzpgQMrcVlsYHZAMiZBBSwZAeZB63C9HZBHIAuDZASZAqdpg0S4qhjSRYILHfiZBv05weh4lGfAzZCWQKo8ZAo9PwY11v2oweyQfvt1kcMk2zCxaWqyjxRNk3YLR8ijb5tadwupGsOtpGWAKxsdRJKEZD'; // Reemplaza con tu token
     
-        // Obtener el mensaje del formulario
-        $message = $request->input('message'); // Asegúrate de que el campo se llame 'message'
-    
-        if (!$message) {
-            return response()->json(['status' => 'El mensaje no puede estar vacío'], 400);
-        }
-    
-        // Definir la URL de la API de WhatsApp
-        $url = 'https://graph.facebook.com/v14.0/607016819162527/messages'; // Reemplaza con el ID de tu número
-    
-        // Definir la plantilla de mensaje (asegúrate de que la plantilla esté aprobada)
-        $templateName = 'hello_world'; // Reemplaza con el nombre de tu plantilla
-        $languageCode = 'en_US'; // El código de idioma (puede ser 'es_MX' para español)
-    
-        // Realizar la solicitud POST para enviar el mensaje
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $accessToken,
-        ])->post($url, [
-            'messaging_product' => 'whatsapp',
-            'to' => $phoneNumber,
-            'type' => 'template',
-            'template' => [
-                'name' => $templateName, // Nombre de la plantilla
-                'language' => ['code' => $languageCode] // Código de idioma
-            ],
+        // Validación de los datos
+        $request->validate([
+            'telar' => 'required',
+            'falla_numero' => 'required',
+            'falla' => 'required',
+            'usuario' => 'required',
         ]);
     
-        // Verifica la respuesta de la API
-        if ($response->successful()) {
-            // Si la respuesta es exitosa, devuelve un mensaje de éxito
-            return response()->json(['status' => 'Mensaje enviado correctamente']);
-        } else {
-            // Si hubo un error, muestra el código de error y la respuesta de la API
-            $errorDetails = $response->json(); // Captura detalles de error
-            return response()->json([
-                'status' => 'Error al enviar el mensaje',
-                'error' => $errorDetails
-            ], 500);
+        // Capturar los datos ingresados por el usuario
+        $parameters = [
+            ['type' => 'text', 'text' => $request->telar],
+            ['type' => 'text', 'text' => $request->falla_numero],
+            ['type' => 'text', 'text' => $request->falla],
+            ['type' => 'text', 'text' => $request->usuario],
+        ];
+    
+        // Definir la URL de la API de WhatsApp
+        $url = 'https://graph.facebook.com/v14.0/607016819162527/messages';
+    
+        // Nombre de la plantilla y código de idioma
+        $templateName = 'prueba_variables'; // Reemplaza con el nombre real de la plantilla
+        $languageCode = 'en_US';
+    
+        // Variable para almacenar respuestas
+        $responses = [];
+    
+        // Enviar el mensaje a cada número en la lista
+        foreach ($phoneNumbers as $phoneNumber) {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken,
+            ])->post($url, [
+                'messaging_product' => 'whatsapp',
+                'to' => $phoneNumber,
+                'type' => 'template',
+                'template' => [
+                    'name' => $templateName,
+                    'language' => ['code' => $languageCode],
+                    'components' => [[
+                        'type' => 'body',
+                        'parameters' => $parameters
+                    ]]
+                ],
+            ]);
+    
+            // Guardar la respuesta para cada número
+            $responses[] = [
+                'number' => $phoneNumber,
+                'status' => $response->successful() ? 'Mensaje enviado' : 'Error',
+                'response' => $response->json()
+            ];
         }
-    }
+    
+        return response()->json(['results' => $responses]);
+    }    
     
 }
