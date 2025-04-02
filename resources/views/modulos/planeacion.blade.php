@@ -111,7 +111,7 @@
                                                 // Si tiene decimales, formatearlo a dos decimales
                                                 $formattedValue = number_format($value, 2, '.', '');
                                             }
-                                        } elseif (strtotime($value)) {
+                                        } elseif (strtotime($value) && !in_array($header, ['Calibre_Rizo'])) {
                                             // Si es una fecha, formatearla como "día-mes-año"
                                             $formattedValue = \Carbon\Carbon::parse($value)->format('d-m-Y');
                                         } else {
