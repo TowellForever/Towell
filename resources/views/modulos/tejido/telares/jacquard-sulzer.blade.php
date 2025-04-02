@@ -26,7 +26,7 @@
                     </td>
                     <td class=" p-2">
                             <b>No Flog:</b> {{ $dato->Id_Flog }} 
-                        <br><b>Cuenta Pie:</b> {{ $dato->Calibre_Pie }}
+                        <br><b>Cuenta Pie:</b> {{ $dato->Cuenta_Pie }}
                         <br><b>Trama 5:</b> {{ number_format($dato->CALIBRE_C4, 2) }}
                         <br><b>Producido:</b> {{ '---' }}
                         <br>

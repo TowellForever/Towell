@@ -98,30 +98,36 @@
                                     </form>
                                 </td>
                                 @foreach($headers as $header)
-                                    @if($header !== 'en_proceso') {{-- Evita mostrar la columna "en_proceso" OTRA VEZ --}}
-                                        @php
-                                            $value = $registro->$header; // Obtener el valor del campo
-
-                                            // Verificamos el tipo de dato para darle formato
-                                            if (is_numeric($value)) {
-                                                // Si es un número, lo mostramos sin decimales
-                                                $formattedValue = number_format($value, 0);
-                                            } elseif (strtotime($value)) {
-                                                // Si es una fecha, la formateamos como "día-mes-año"
-                                                $formattedValue = \Carbon\Carbon::parse($value)->format('d-m-Y');
+                                @if($header !== 'en_proceso') {{-- Evita mostrar la columna "en_proceso" OTRA VEZ --}}
+                                    @php
+                                        $value = $registro->$header; // Obtener el valor del campo
+                            
+                                        // Excluir ciertos campos numéricos tratados como cadenas
+                                        if (is_numeric($value)) {
+                                            // Si el valor es entero, convertirlo sin decimales
+                                            if (intval($value) == $value) {
+                                                $formattedValue = intval($value);
                                             } else {
-                                                // Si es texto, lo dejamos tal cual
-                                                $formattedValue = $value;
+                                                // Si tiene decimales, formatearlo a dos decimales
+                                                $formattedValue = number_format($value, 2, '.', '');
                                             }
-                                        @endphp
-
-                                        <td class="small">{{ $formattedValue }}</td>
-                                    @endif
-                                @endforeach                   
+                                        } elseif (strtotime($value)) {
+                                            // Si es una fecha, formatearla como "día-mes-año"
+                                            $formattedValue = \Carbon\Carbon::parse($value)->format('d-m-Y');
+                                        } else {
+                                            // Si es texto, dejarlo tal cual
+                                            $formattedValue = $value;
+                                        }
+                                    @endphp
+                            
+                                    <td class="small">{{ $formattedValue }}</td>
+                                @endif
+                            @endforeach
+                            
+                                           
                             </tr>
                         @endforeach
-                    </tbody>                    
-                                                                     
+                    </tbody>                                              
                 </table>
             </div>
             <!--SEGUNDO CONTENEDOR para botones-->
