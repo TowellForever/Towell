@@ -3,7 +3,7 @@
 @section('content')
     <div class="flex justify-center mb-1 w-1/5">
         <!-- Botón de búsqueda (lupa) -->
-        <button id="search-toggle" class="p-2 w-20 rounded-full bg-blue-500 text-white hover:bg-blue-600">
+        <button id="search-toggle" class="p-2 w-20 rounded-full bg-blue-500 text-white hover:bg-blue-600 mr-5">
             <i class="fas fa-search text-3xl"></i>
         </button>
     
@@ -33,7 +33,8 @@
                 </div>
                 
                 <!-- Contenedor para filtros adicionales -->
-                <div id="additional-filters"></div>
+                <div id="additional-filters" class="max-h-60 overflow-y-auto p-2 border border-gray-300 rounded-lg"></div>
+
                 
                 <!-- Botón para agregar más filtros -->
                 <!-- Botón para agregar más filtros -->
@@ -61,18 +62,17 @@
                         <tr class="plane-thead-tr text-white text-sm">
                             @php
                             $headers = [
-                                'Cuenta', 'Salon', 'Telar', 'Ultimo', 'Cambios_Hilo', 'Maquina', 'Ancho', 'Eficiencia_Std', 'Velocidad_STD', 'Calibre_Rizo', 'Calibre_Pie', 'Calendario',
+                                'en_proceso', 'Cuenta', 'Salon', 'Telar', 'Ultimo', 'Cambios_Hilo', 'Maquina', 'Ancho', 'Eficiencia_Std', 'Velocidad_STD', 'Calibre_Rizo', 'Calibre_Pie', 'Calendario',
                                 'Clave_Estilo', 'Tamano', 'Estilo_Alternativo', 'Nombre_Producto', 'Saldos', 'Fecha_Captura', 'Orden_Prod', 'Fecha_Liberacion', 'Id_Flog', 'Descrip',
                                 'Aplic', 'Obs', 'Tipo_Ped', 'Tiras', 'Peine', 'Largo_Crudo', 'Peso_Crudo', 'Luchaje', 'CALIBRE_TRA', 'Dobladillo', 'PASADAS_TRAMA', 'PASADAS_C1',
                                 'PASADAS_C2', 'PASADAS_C3', 'PASADAS_C4', 'PASADAS_C5', 'ancho_por_toalla', 'COLOR_TRAMA', 'CALIBRE_C1', 'Clave_Color_C1', 'COLOR_C1', 'CALIBRE_C2',
                                 'Clave_Color_C2', 'COLOR_C2', 'CALIBRE_C3', 'Clave_Color_C3', 'COLOR_C3', 'CALIBRE_C4', 'Clave_Color_C4', 'COLOR_C4', 'CALIBRE_C5', 'Clave_Color_C5',
                                 'COLOR_C5', 'Plano', 'Cuenta_Pie', 'Clave_Color_Pie', 'Color_Pie', 'Peso____(gr_/_m²)', 'Dias_Ef', 'Prod_(Kg)/Día', 'Std/Dia', 'Prod_(Kg)/Día1',
                                 'Std_(Toa/Hr)_100%', 'Dias_jornada_completa', 'Horas', 'Std/Hrefectivo', 'Inicio_Tejido', 'Calc4', 'Calc5', 'Calc6', 'Fin_Tejido', 'Fecha_Compromiso',
-                                'Fecha_Compromiso1', 'Entrega', 'Dif_vs_Compromiso','en_proceso'
+                                'Fecha_Compromiso1', 'Entrega', 'Dif_vs_Compromiso',
                             ];
                         @endphp                        
-                            <th class="plane-th border border-gray-400 p-4 relative">En proceso
-                            </th>
+
                             @foreach($headers as $index => $header)
                                 <th class="plane-th border border-gray-400 p-4 relative" data-index="{{ $index }}">
                                     {{ $header }}
@@ -98,25 +98,26 @@
                                     </form>
                                 </td>
                                 @foreach($headers as $header)
-                                @php
-                                    $value = $registro->$header; // Obtener el valor del campo
-                            
-                                    // Verificamos el tipo de dato para darle formato
-                                    if (is_numeric($value)) {
-                                        // Si es un número, lo mostramos sin decimales
-                                        $formattedValue = number_format($value, 0);
-                                    } elseif (strtotime($value)) {
-                                        // Si es una fecha, la formateamos como "día-mes-año"
-                                        $formattedValue = \Carbon\Carbon::parse($value)->format('d-m-Y');
-                                    } else {
-                                        // Si es texto, lo dejamos tal cual
-                                        $formattedValue = $value;
-                                    }
-                                @endphp
-                            
-                                <td class="small">{{ $formattedValue }}</td>
-                            @endforeach
-                                                       
+                                    @if($header !== 'en_proceso') {{-- Evita mostrar la columna "en_proceso" OTRA VEZ --}}
+                                        @php
+                                            $value = $registro->$header; // Obtener el valor del campo
+
+                                            // Verificamos el tipo de dato para darle formato
+                                            if (is_numeric($value)) {
+                                                // Si es un número, lo mostramos sin decimales
+                                                $formattedValue = number_format($value, 0);
+                                            } elseif (strtotime($value)) {
+                                                // Si es una fecha, la formateamos como "día-mes-año"
+                                                $formattedValue = \Carbon\Carbon::parse($value)->format('d-m-Y');
+                                            } else {
+                                                // Si es texto, lo dejamos tal cual
+                                                $formattedValue = $value;
+                                            }
+                                        @endphp
+
+                                        <td class="small">{{ $formattedValue }}</td>
+                                    @endif
+                                @endforeach                   
                             </tr>
                         @endforeach
                     </tbody>                    
@@ -244,7 +245,6 @@
                         X
                     </button>
                 </div>
-
             `;
             document.getElementById('additional-filters').insertAdjacentHTML('beforeend', newFilter);
         });
@@ -261,5 +261,23 @@
             });
         });
     </script>
+
+    @push('styles')
+        <style>
+            .plane-table td {
+                font-size: 10px;  /* Ajustar el tamaño de la fuente */
+            }
+            .plane-table td {
+                padding: 2px 8px !important;  /* Reducir padding */
+            }
+            .plane-table th, .plane-table td {
+                width: 100px;  /* Establecer un ancho fijo más pequeño */
+            }
+            .plane-table td {
+                word-wrap: break-word;  /* Asegura que el contenido largo se divida en varias líneas */
+                white-space: normal;  /* Evitar que el texto se mantenga en una sola línea */
+            }
+        </style>
+    @endpush
     
 @endsection

@@ -36,6 +36,7 @@
         }
     </style>
     <link rel="stylesheet" href="{{ asset('css/estilos.css') }}">
+    @stack('styles') <!-- Aquí se inyectarán los estilos agregados con @push('styles') -->
 </head>
 <body class="min-h-screen flex flex-col">
     <a href="/produccionProceso" class="text-3xl font-extrabold">
