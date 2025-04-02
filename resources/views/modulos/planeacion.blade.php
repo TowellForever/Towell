@@ -86,9 +86,9 @@
                     </thead>
                     <tbody>
                         @foreach($datos as $registro)
-                            <tr>
+                            <tr class="px-1 py-0.5">
                                 <!-- Agregar checkbox 'en_proceso' -->
-                                <td>
+                                <td class="px-1 py-0.5">
                                     <form action="{{ route('tejido_scheduling.update', $registro->id) }}" method="POST">
                                         @csrf
                                         @method('PUT')
@@ -120,7 +120,7 @@
                                         }
                                     @endphp
                             
-                                    <td class="small">{{ $formattedValue }}</td>
+                                    <td class="small px-1 py-0.5">{{ $formattedValue }}</td>
                                 @endif
                             @endforeach
                             

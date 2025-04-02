@@ -44,7 +44,8 @@ Route::get('/tejido/jacquard-smith', function () { return view('modulos/tejido/j
 Route::get('/tejido/smith', function () { return view('modulos/tejido/smith');});
 Route::get('/tejido/itema-viejo', function () { return view('modulos/tejido/itema-viejo');});
 Route::get('/tejido/itema-nuevo', function () { return view('modulos/tejido/itema-nuevo');});
-Route::get('/tejido/programar-requerimientos', function () { return view('modulos/tejido/programar-requerimientos');});
+Route::get('/tejido/programar-requerimientos', [RequerimientoController::class, 'requerimientosActivos']);
+
 
 //RUTAS DEL MODULO **urdido**
 Route::get('/modulo-urdido', function () { return view('modulos/urdido');});

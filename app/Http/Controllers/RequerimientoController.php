@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Requerimiento;
+use Illuminate\Support\Facades\DB;
 
 class RequerimientoController extends Controller
 {
@@ -87,5 +88,15 @@ class RequerimientoController extends Controller
     
         return response()->json($requerimientos);
     }    
+
+    public function requerimientosActivos()
+    {
+        $requerimientos = DB::table('requerimiento')
+        ->where('status', 'activo') // Filtrar solo los registros activos
+        ->orderBy('fecha', 'asc') // Ordena por fecha más cercana
+        ->get();
+
+    return view('modulos/tejido/programar-requerimientos', compact('requerimientos'));
+    }
 
 }

@@ -369,7 +369,7 @@
 
             let datos = @json($datos);
             let cuentaRizo = datos[0].Cuenta;
-            let cuentaPie = datos[0].Calibre_Pie;
+            let cuentaPie = datos[0].Cuenta_Pie;
             let ordenProd = datos[0].Orden_Prod;
             let telar = @json($telar);
 
