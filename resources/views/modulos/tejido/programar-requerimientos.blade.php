@@ -172,6 +172,68 @@ WHERE PRODTABLE.ITEMID = 'JU-ENG-PI-C' AND INVENTDIM.INVENTBATCHID = '2611' AND 
 
 
 
+
+
+
+
+
+metodo funcional:::::::::::::::::::::
+ public function requerimientosActivos()
+    {
+        $requerimientos = DB::table('requerimiento')
+        ->where('status', 'activo') // Filtrar solo los registros activos
+        ->orderBy('fecha', 'asc') // Ordena por fecha más cercana
+        ->get();
+
+        //obtenemos los datos de la BD TI_PRO, de 2 tablas (INVENTSUM e INVENTDIM)
+         // Obtener datos de la BD TI_PRO
+         $inventarios = InventSum::join('TI_PRO.dbo.INVENTDIM', 'TI_PRO.dbo.INVENTSUM.INVENTDIMID', '=', 'TI_PRO.dbo.INVENTDIM.INVENTDIMID') // Realizar el JOIN
+         ->where('TI_PRO.dbo.INVENTSUM.POSTEDQTY', '>', 0) // Filtro para POSTEDQTY > 0
+         ->where('TI_PRO.dbo.INVENTSUM.DATAAREAID', 'PRO') // Filtro para DATAAREAID = 'PRO'
+         ->where('TI_PRO.dbo.INVENTDIM.INVENTLOCATIONID', 'A-JUL/TELA') 
+         ->select(
+             'TI_PRO.dbo.INVENTSUM.ITEMID',
+             'TI_PRO.dbo.INVENTSUM.POSTEDQTY',
+             'TI_PRO.dbo.INVENTSUM.POSTEDVALUE',
+             'TI_PRO.dbo.INVENTSUM.DEDUCTED',
+             'TI_PRO.dbo.INVENTSUM.RECEIVED',
+             'TI_PRO.dbo.INVENTSUM.RESERVPHYSICAL',
+             'TI_PRO.dbo.INVENTSUM.RESERVORDERED',
+             'TI_PRO.dbo.INVENTSUM.ONORDER',
+             'TI_PRO.dbo.INVENTSUM.ORDERED',
+             'TI_PRO.dbo.INVENTSUM.QUOTATIONISSUE',
+             'TI_PRO.dbo.INVENTSUM.QUOTATIONRECEIPT',
+             'TI_PRO.dbo.INVENTSUM.INVENTDIMID',
+             'TI_PRO.dbo.INVENTSUM.CLOSED',
+             'TI_PRO.dbo.INVENTSUM.REGISTERED',
+             'TI_PRO.dbo.INVENTSUM.PICKED',
+             'TI_PRO.dbo.INVENTSUM.AVAILORDERED',
+             'TI_PRO.dbo.INVENTSUM.AVAILPHYSICAL',
+             'TI_PRO.dbo.INVENTSUM.PHYSICALVALUE',
+             'TI_PRO.dbo.INVENTSUM.ARRIVED',
+             'TI_PRO.dbo.INVENTSUM.PHYSICALINVENT',
+             'TI_PRO.dbo.INVENTSUM.CLOSEDQTY',
+             'TI_PRO.dbo.INVENTSUM.LASTUPDDATEPHYSICAL',
+             'TI_PRO.dbo.INVENTSUM.LASTUPDDATEEXPECTED',
+             'TI_PRO.dbo.INVENTSUM.DATAAREAID',
+             'TI_PRO.dbo.INVENTSUM.RECVERSION',
+             'TI_PRO.dbo.INVENTSUM.RECID',
+             'TI_PRO.dbo.INVENTDIM.INVENTDIMID',
+             'TI_PRO.dbo.INVENTDIM.INVENTBATCHID',
+             'TI_PRO.dbo.INVENTDIM.WMSLOCATIONID',
+             'TI_PRO.dbo.INVENTDIM.INVENTSERIALID',
+             'TI_PRO.dbo.INVENTDIM.INVENTLOCATIONID',
+             'TI_PRO.dbo.INVENTDIM.CONFIGID',
+             'TI_PRO.dbo.INVENTDIM.INVENTSIZEID',
+             'TI_PRO.dbo.INVENTDIM.INVENTCOLORID',
+             'TI_PRO.dbo.INVENTDIM.DATAAREAID AS DIM_DATAAREAID', // Alias para distinguir el campo DATAAREAID de INVENTDIM
+             'TI_PRO.dbo.INVENTDIM.RECVERSION AS DIM_RECVERSION', // Alias para distinguir el campo RECVERSION de INVENTDIM
+             'TI_PRO.dbo.INVENTDIM.RECID AS DIM_RECID' // Alias para distinguir el campo RECID de INVENTDIM
+         )
+         ->get();
+
+    return view('modulos/tejido/programar-requerimientos', compact('requerimientos','inventarios'));
+    }
 -->
 
 @endsection
