@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\InventDim;
+use App\Models\InventSum;
 use Illuminate\Http\Request;
 use App\Models\Requerimiento;
 use Illuminate\Support\Facades\DB;
@@ -91,12 +93,45 @@ class RequerimientoController extends Controller
 
     public function requerimientosActivos()
     {
+        // Consultar los requerimientos activos
         $requerimientos = DB::table('requerimiento')
-        ->where('status', 'activo') // Filtrar solo los registros activos
-        ->orderBy('fecha', 'asc') // Ordena por fecha más cercana
-        ->get();
-
-    return view('modulos/tejido/programar-requerimientos', compact('requerimientos'));
+            ->where('status', 'activo') // Filtrar solo los registros activos
+            ->orderBy('fecha', 'asc') // Ordena por fecha más cercana
+            ->get();
+    
+        // Obtener los datos de la BD TI_PRO con los joins y filtros correspondientes
+        $inventarios = DB::connection('sqlsrv_ti')
+            ->table('TI_PRO.dbo.INVENTSUM as INVENTSUM')
+            ->join('TI_PRO.dbo.INVENTDIM as INVENTDIM', 'INVENTSUM.INVENTDIMID', '=', 'INVENTDIM.INVENTDIMID')
+            ->join('TI_PRO.dbo.PRODTABLE as PRODTABLE', function ($join) {
+                $join->on('PRODTABLE.INVENTDIMID', '=', 'INVENTDIM.INVENTDIMID')
+                     ->where('PRODTABLE.PRODSTATUS', 7)
+                     ->where('PRODTABLE.DATAAREAID', 'PRO');
+            })
+            ->join('TI_PRO.dbo.INVENTDIM as INVENTDIM1', function ($join) {
+                $join->on('INVENTDIM.INVENTBATCHID', '=', 'INVENTDIM1.INVENTBATCHID')
+                     ->on('INVENTDIM.INVENTSERIALID', '=', 'INVENTDIM1.INVENTSERIALID');
+            })
+            ->where('INVENTSUM.POSTEDQTY', '>', 0)
+            ->where('INVENTSUM.DATAAREAID', 'PRO')
+            ->where('INVENTDIM.INVENTLOCATIONID', 'A-JUL/TELA')
+            ->select([
+                'INVENTSUM.ITEMID',
+                'INVENTSUM.POSTEDQTY',
+                'INVENTDIM.CONFIGID',
+                'INVENTDIM.INVENTSIZEID',
+                'INVENTDIM.INVENTCOLORID',
+                'INVENTDIM.INVENTLOCATIONID',
+                'INVENTDIM.INVENTBATCHID',
+                'INVENTDIM.WMSLOCATIONID',
+                'INVENTDIM.INVENTSERIALID',
+                'PRODTABLE.MTS',
+                'PRODTABLE.REALDATE'
+            ])
+            ->get();
+    
+        return view('modulos/tejido/programar-requerimientos', compact('requerimientos', 'inventarios'));
     }
+     
 
 }

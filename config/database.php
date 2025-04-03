@@ -111,6 +111,20 @@ return [
             // 'encrypt' => env('DB_ENCRYPT', 'yes'),
             'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'true'),
         ],
+        
+        'sqlsrv_ti' => [
+            'driver' => 'sqlsrv',
+            'host' => env('DB_HOST_TIPRO', '192.168.2.28'), // Asegúrate de que este es el host correcto
+            'port' => env('DB_PORT_TIPRO', '1433'),
+            'database' => env('DB_DATABASE_TIPRO', 'TI_PRO'),
+            'username' => env('DB_USERNAME_TIPRO', 'AX'),
+            'password' => env('DB_PASSWORD_TIPRO', 'TWPL-sql2k8'),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'trust_server_certificate' => true, // Permite confiar en el certificado del servidor
+        ],
+
 
     ],
 
