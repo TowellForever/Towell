@@ -45,6 +45,8 @@ Route::get('/tejido/smith', function () { return view('modulos/tejido/smith');})
 Route::get('/tejido/itema-viejo', function () { return view('modulos/tejido/itema-viejo');});
 Route::get('/tejido/itema-nuevo', function () { return view('modulos/tejido/itema-nuevo');});
 Route::get('/tejido/programar-requerimientos', [RequerimientoController::class, 'requerimientosActivos']);
+Route::get('/tejido/programarReq', [RequerimientoController::class, 'requerimientosAProgramar'])->name('formulario.programarRequerimientos');
+Route::post('/tejido/guardarUrdidoEngomado', [RequerimientoController::class, 'requerimientosAGuardar'])->name('orden.produccion.store');
 
 
 //RUTAS DEL MODULO **urdido**

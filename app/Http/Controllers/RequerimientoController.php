@@ -7,6 +7,8 @@ use App\Models\InventSum;
 use Illuminate\Http\Request;
 use App\Models\Requerimiento;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class RequerimientoController extends Controller
 {
@@ -108,5 +110,196 @@ class RequerimientoController extends Controller
         return view('modulos/tejido/programar-requerimientos', compact('requerimientos', 'inventarios'));
     }
      
+    public function requerimientosAProgramar(Request $request)
+    {
+        // Recuperar los valores enviados desde la vista
+        $telar = $request->input('telar');
+        $tipo = $request->input('tipo');
+    
+        // Buscar el requerimiento activo con coincidencia de telar y tipo (rizo o pie)
+        $requerimiento = DB::table('requerimiento')
+            ->where('telar', $telar)
+            ->where('status', 'activo')
+            ->where(function ($query) use ($tipo) {
+                if ($tipo === 'Rizo') {
+                    $query->where('rizo', 1);
+                } elseif ($tipo === 'Pie') {
+                    $query->where('pie', 1);
+                }
+            })
+            ->first();
+    
+        // Si no hay requerimiento, mandar mensaje de error
+        if (!$requerimiento) {
+            return redirect()->back()->with('error', 'No se encontró un requerimiento activo con los criterios indicados.');
+        }
+    
+        // 👉 Buscar el valor del salón desde la tabla TEJIDO_SCHEDULING según el telar
+        $datos = DB::table('TEJIDO_SCHEDULING')
+        ->where('telar', $telar)
+        ->select('salon', 'telar')
+        ->first();    
+    
+        // Retornar vista con requerimiento y salón
+        return view('modulos.tejido.programarUrdidoEngomado', compact('requerimiento', 'datos'));
+    }
+    
+    public function requerimientosAGuardar(Request $request)
+    {
+        // Generar un folio único
+        $folio = Str::uuid()->toString();
+    
+        // Guardar los datos en la tabla urdido_engomado
+        DB::table('urdido_engomado')->insert([
+            'folio' => $folio,
+            'cuenta' => $request->input('cuenta'),
+            'urdido' => $request->input('urdido'),
+            'proveedor' => $request->input('proveedor'),
+            'tipo' => $request->input('tipo'),
+            'destino' => $request->input('destino'),
+            'metros' => $request->input('metros'),
+            'nucleo' => $request->input('nucleo'),
+            'no_telas' => $request->input('no_telas'),
+            'balonas' => $request->input('balonas'),
+            'metros_tela' => $request->input('metros_tela'),
+            'cuendados_mini' => $request->input('cuendados_mini'),
+            'observaciones' => $request->input('observaciones'),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+    
+        // Guardar los datos de Construcción Urdido (recibimos arrays de "no_julios" y "hilos")
+        $no_julios = $request->input('no_julios');
+        $hilos = $request->input('hilos');
+    
+        for ($i = 0; $i < count($no_julios); $i++) {
+            DB::table('construccion_urdido')->insert([
+                'folio' => $folio,
+                'no_julios' => $no_julios[$i],
+                'hilos' => $hilos[$i],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+    
+        return view('modulos/tejido/programarUrdidoEngomado')->with('success', 'Orden de producción creada con éxito.');
+    }
+    
+    /*
+    REVISAR EL FUNCIONAMIENTO
+
+        public function requerimientosAGuardar(Request $request)
+    {
+        // Validación de los datos recibidos
+        $validator = Validator::make($request->all(), [
+            'cuenta' => 'required|string|max:255',
+            'urdido' => 'required|string|max:255',
+            'proveedor' => 'required|string|max:255',
+            'tipo' => 'required|string|in:rizo,pie', // Asegurarse de que el tipo sea válido
+            'destino' => 'required|string|max:255',
+            'metros' => 'required|numeric',
+            'nucleo' => 'required|string|max:255',
+            'no_telas' => 'required|integer',
+            'balonas' => 'required|integer',
+            'metros_tela' => 'required|numeric',
+            'cuendados_mini' => 'required|numeric',
+            'observaciones' => 'nullable|string',
+            'no_julios' => 'required|array', // Debe ser un array de valores
+            'hilos' => 'required|array', // Debe ser un array de valores
+            'telar' => 'required|string|max:255',
+        ]);
+    
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+    
+        // Generar un folio único
+        $folio = Str::uuid()->toString();
+    
+        // Iniciar transacción para asegurar que todas las operaciones se realicen correctamente
+        DB::beginTransaction();
+    
+        try {
+            // Guardar los datos en la tabla urdido_engomado
+            DB::table('urdido_engomado')->insert([
+                'folio' => $folio,
+                'cuenta' => $request->input('cuenta'),
+                'urdido' => $request->input('urdido'),
+                'proveedor' => $request->input('proveedor'),
+                'tipo' => $request->input('tipo'),
+                'destino' => $request->input('destino'),
+                'metros' => $request->input('metros'),
+                'nucleo' => $request->input('nucleo'),
+                'no_telas' => $request->input('no_telas'),
+                'balonas' => $request->input('balonas'),
+                'metros_tela' => $request->input('metros_tela'),
+                'cuendados_mini' => $request->input('cuendados_mini'),
+                'observaciones' => $request->input('observaciones'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+    
+            // Guardar los datos de Construcción Urdido
+            $no_julios = $request->input('no_julios');
+            $hilos = $request->input('hilos');
+    
+            for ($i = 0; $i < count($no_julios); $i++) {
+                DB::table('construccion_urdido')->insert([
+                    'folio' => $folio,
+                    'no_julios' => $no_julios[$i],
+                    'hilos' => $hilos[$i],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+    
+            // Buscar el registro en la tabla requerimiento
+            $registro = DB::table('requerimiento')
+                ->where('status', 'activo')
+                ->where(function ($query) use ($request) {
+                    // Condición para el tipo 'rizo' o 'pie'
+                    if ($request->input('tipo') === 'rizo') {
+                        $query->where('cuenta_rizo', $request->input('cuenta'));
+                    } elseif ($request->input('tipo') === 'pie') {
+                        $query->where('cuenta_pie', $request->input('cuenta'));
+                    }
+                })
+                ->where('telar', $request->input('telar')) // Asegurarse que coincida el telar
+                ->first();
+    
+            // Si se encuentra el registro, se actualiza el campo orden_prod
+            if ($registro) {
+                DB::table('requerimiento')
+                    ->where('telar', $request->input('telar'))
+                    ->where(function ($query) use ($request) {
+                        if ($request->input('tipo') === 'rizo') {
+                            $query->where('cuenta_rizo', $request->input('cuenta'));
+                        } elseif ($request->input('tipo') === 'pie') {
+                            $query->where('cuenta_pie', $request->input('cuenta'));
+                        }
+                    })
+                    ->where('status', 'activo')
+                    ->update(['orden_prod' => $folio]);
+            } else {
+                return redirect()->back()->with('error', 'No se encontró un registro válido en requerimiento.');
+            }
+    
+            // Confirmar la transacción
+            DB::commit();
+    
+            // Retornar a la vista con un mensaje de éxito
+            return view('modulos/tejido/programarUrdidoEngomado')->with('success', 'Orden de producción creada con éxito.');
+    
+        } catch (\Exception $e) {
+            // Si ocurre un error, revertir la transacción
+            DB::rollBack();
+    
+            // Puedes agregar un mensaje de error o simplemente devolver un error genérico
+            return redirect()->back()->with('error', 'Hubo un error al guardar la orden de producción: ' . $e->getMessage());
+        }
+    }
+    */
+    
+    
 
 }
