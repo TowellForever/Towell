@@ -186,6 +186,26 @@ class RequerimientoController extends Controller
     }
     
     /*
+
+    Nueva consulta:
+    // Intentar actualizar directamente
+    $updatedRows = DB::table('requerimiento')
+        ->where('status', 'activo')
+        ->where('telar', $request->input('telar'))
+        ->where(function ($query) use ($request) {
+            if ($request->input('tipo') === 'Rizo') {
+                $query->where('cuenta_rizo', $request->input('cuenta'));
+            } elseif ($request->input('tipo') === 'Pie') {
+                $query->where('cuenta_pie', $request->input('cuenta'));
+            }
+        })
+        ->update(['orden_prod' => $folio]);
+
+    if ($updatedRows === 0) {
+        return redirect()->back()->with('error', 'No se encontró un registro válido en requerimiento para actualizar.');
+    }
+
+************************************************************************************************************************
     REVISAR EL FUNCIONAMIENTO
 
         public function requerimientosAGuardar(Request $request)
