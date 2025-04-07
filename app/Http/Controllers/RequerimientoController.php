@@ -98,6 +98,7 @@ class RequerimientoController extends Controller
         // Consultar los requerimientos activos
         $requerimientos = DB::table('requerimiento')
             ->where('status', 'activo') // Filtrar solo los registros activos
+            ->where('orden_prod','')
             ->orderBy('fecha', 'asc') // Ordena por fecha más cercana
             ->get();
     
@@ -139,13 +140,13 @@ class RequerimientoController extends Controller
         ->where('telar', $telar)
         ->select('salon', 'telar')
         ->first();    
-    
         // Retornar vista con requerimiento y salón
         return view('modulos.tejido.programarUrdidoEngomado', compact('requerimiento', 'datos'));
     }
     
     public function requerimientosAGuardar(Request $request)
     {
+        //dd($request);
         // Generar un folio único
         $folio = Str::uuid()->toString();
     
@@ -181,8 +182,40 @@ class RequerimientoController extends Controller
                 'updated_at' => now(),
             ]);
         }
+
+            //actualizo el campo orden_prod en la tabla REQUERIMIENTO
+            // Intentar actualizar directamente
+            $updatedRows = DB::table('requerimiento')
+                ->where('status', 'activo')
+                ->where('telar', (string) $request->input('telar'))
+                ->where(function ($query) use ($request) {
+                    if ($request->input('tipo') === 'Rizo') {
+                        $query->where('rizo', 1);
+                    } elseif ($request->input('tipo') === 'Pie') {
+                        $query->where('pie', 1);
+                    }
+                })
+                ->update(['orden_prod' => $folio]);
+
+            if ($updatedRows === 0) {
+                return redirect()->back()->with('error', 'No se encontró un registro válido en requerimiento para actualizar.');
+            }
+
+            //regreso a la pagina de programar reqwuerimientos y tambien envio los 2 objetos para llenar ambas tablas
+            // Consultar los requerimientos activos
+            $requerimientos = DB::table('requerimiento')
+            ->where('status', 'activo') // Filtrar solo los registros activos
+            ->where('orden_prod','')
+            ->orderBy('fecha', 'asc') // Ordena por fecha más cercana
+            ->get();
+
+            // Obtener los datos de la BD TI_PRO con los joins y filtros correspondientes
+            $inventarios = DB::connection('sqlsrv_ti')
+                ->table('TI_PRO.dbo.TWDISPONIBLEURDENG')
+                ->where('INVENTLOCATIONID', 'A-JUL/TELA')
+                ->get();
     
-        return view('modulos/tejido/programarUrdidoEngomado')->with('success', 'Orden de producción creada con éxito.');
+        return view('modulos/tejido/programar-requerimientos', compact('requerimientos', 'inventarios'));
     }
     
     /*

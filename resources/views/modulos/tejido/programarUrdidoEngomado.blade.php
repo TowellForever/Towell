@@ -34,7 +34,7 @@
 
                 <tr>
                     <td class="border px-1 py-0.5">
-                        <input type="text" name="cuenta" value="{{ $datos->telar ?? '' }}" class="form-input w-full h-10 px-2 py-2 border border-gray-300 rounded text-sm">
+                        <input type="text" name="telar" value=" {{$requerimiento->telar ?? ''}}" class="form-input w-full h-10 px-2 py-2 border border-gray-300 rounded text-sm">
                     </td>
                     <td class="border px-1 py-0.5">
                         <input type="text" name="cuenta" value="{{ $cuenta }}" class="form-input w-full h-10 px-2 py-2 border border-gray-300 rounded text-sm">
@@ -170,4 +170,25 @@
         </div>
     </form>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const form = document.querySelector('form[action="{{ route('orden.produccion.store') }}"]');
+
+        form.addEventListener('submit', function(e) {
+            // Opcional: evitar envío para probar
+             e.preventDefault();
+
+            const formData = new FormData(form);
+            const data = {};
+
+            for (let [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+
+            console.log("Datos enviados:", data);
+        });
+    });
+</script>
+
 @endsection
