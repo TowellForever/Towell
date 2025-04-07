@@ -38,7 +38,7 @@ a:hover {
 
 /* Estilo de botones */
 button {
-    background-color: #4CAF50;
+    background-color: #a8acad;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -49,7 +49,7 @@ button {
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #2b2b2c;
 }
 
 /* Media Queries para hacer la página responsiva */

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>@yield('title', 'TOWELL S.A DE C.V')</title>
 
     <!-- Tailwind CSS -->
@@ -34,11 +35,16 @@
                 background-position: 0% 50%;
             }
         }
+
+
+
     </style>
     <link rel="stylesheet" href="{{ asset('css/estilos.css') }}">
     @stack('styles') <!-- Aquí se inyectarán los estilos agregados con @push('styles') -->
 </head>
 <body class="min-h-screen flex flex-col">
+
+
     <a href="/produccionProceso" class="text-3xl font-extrabold">
         <img src="{{ asset('images/fondosTowell/TOWELLIN.png') }} " alt="Towelling" class="absolute top-2 right-2 w-[80px] z-0">
     </a>
@@ -88,6 +94,6 @@
     <footer class="bg-gray-800 text-white text-center p-4 mt-6">
          &copy; Towell {{ date('Y') }}. Todos los derechos reservados.
     </footer>
-
+    
 </body>
 </html>

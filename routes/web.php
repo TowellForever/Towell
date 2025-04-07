@@ -10,6 +10,7 @@ use App\Http\Controllers\UsuarioController;
 use App\Models\Usuario;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReporteFallaController;
+use App\Http\Controllers\UrdidoController;
 use App\Http\Controllers\WhatsAppController;
 
 //Rutas de login
@@ -52,6 +53,10 @@ Route::post('/tejido/guardarUrdidoEngomado', [RequerimientoController::class, 'r
 //RUTAS DEL MODULO **urdido**
 Route::get('/modulo-urdido', function () { return view('modulos/urdido');});
 Route::get('/urdido/programar-requerimientos', function () { return view('modulos/urdido/programar-requerimientos');});
+Route::get('ingresar-folio', function () {return view('modulos/urdido/ingresar_folio');})->name('ingresarFolio');
+Route::post('orden-trabajo', [UrdidoController::class, 'cargarDatosUrdido'])->name('produccion.ordenTrabajo');
+Route::post('/update-orden-urdido', [UrdidoController::class, 'updateOrdenUrdido'])->name('ordenUrdido.guardar');
+
 
 //RUTAS DEL MODULO **engomado**
 Route::get('/modulo-engomado', function () { return view('modulos/engomado');});
