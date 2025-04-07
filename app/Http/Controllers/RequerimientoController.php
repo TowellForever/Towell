@@ -145,11 +145,12 @@ class RequerimientoController extends Controller
         return view('modulos.tejido.programarUrdidoEngomado', compact('requerimiento', 'datos'));
     }
     
+    //metodo querealiza funciones de vista PROGRAMARURDIDOENGOMADO
     public function requerimientosAGuardar(Request $request)
     {
         //dd($request);
-        // Generar un folio único
-        $folio = Str::uuid()->toString();
+        // Generar un folio único usando una funcion privada, este será de 4 digitos y único
+        $folio = $this->generarFolioUnico();
     
         // Guardar los datos en la tabla urdido_engomado
         DB::table('urdido_engomado')->insert([
@@ -170,18 +171,22 @@ class RequerimientoController extends Controller
             'updated_at' => now(),
         ]);
     
-        // Guardar los datos de Construcción Urdido (recibimos arrays de "no_julios" y "hilos")
+      // Guardar los datos de Construcción Urdido (recibimos arrays de "no_julios" y "hilos")
         $no_julios = $request->input('no_julios');
         $hilos = $request->input('hilos');
-    
+
+        // Iterar solo sobre los registros con datos
         for ($i = 0; $i < count($no_julios); $i++) {
-            DB::table('construccion_urdido')->insert([
-                'folio' => $folio,
-                'no_julios' => $no_julios[$i],
-                'hilos' => $hilos[$i],
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            // Verificar si ambos campos tienen datos, si un campo del registro esta vacio, se omitirá la insercion del mismo en la BD
+            if (!empty($no_julios[$i]) && !empty($hilos[$i])) {
+                DB::table('construccion_urdido')->insert([
+                    'folio' => $folio,
+                    'no_julios' => $no_julios[$i],
+                    'hilos' => $hilos[$i],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
         }
 
             //actualizo el campo orden_prod en la tabla REQUERIMIENTO
@@ -218,6 +223,40 @@ class RequerimientoController extends Controller
     
         return view('modulos/tejido/programar-requerimientos', compact('requerimientos', 'inventarios'));
     }
+    
+    private function generarFolioUnico()
+    {
+        // Obtener el último folio que siga el patrón A###, B###, C###
+        $ultimoFolio = DB::table('requerimiento')
+            ->where('orden_prod', 'like', '%[0-9]')
+            ->orderBy('orden_prod', 'desc')
+            ->value('orden_prod');
+    
+        if ($ultimoFolio) {
+            // Extraer la letra y la parte numérica
+            $letra = substr($ultimoFolio, 0, 1); // "A", "B", etc.
+            $numero = (int) substr($ultimoFolio, 1); // "001", "123", etc.
+            
+            // Si llegamos al máximo de 999, cambiamos la letra y reiniciamos el número
+            if ($numero >= 999) {
+                $letra = chr(ord($letra) + 1); // Incrementamos la letra (A -> B, B -> C, etc.)
+                $numero = 1; // Reiniciamos el contador numérico
+            } else {
+                // Aumentamos el número
+                $numero += 1;
+            }
+        } else {
+            // Si no hay registros, empezamos con A001
+            $letra = 'A';
+            $numero = 1;
+        }
+    
+        // Formatear como A###, B###, C### (rellenando con ceros)
+        $folio = $letra . str_pad($numero, 3, '0', STR_PAD_LEFT);
+    
+        return $folio;
+    }
+    
     
     /*
 

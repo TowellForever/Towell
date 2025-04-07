@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<!--Vista del formulario para registrar datos de URDIDO y ENGOMADO, ademas Construccion JULIOS-->
 <div class="container mx-auto p-4">
     <form action="{{ route('orden.produccion.store') }}" method="POST">
         @csrf
@@ -80,48 +81,48 @@
         </table>
         <!-- Tabla 2: Construcción Urdido -->
         <h2 class="text-lg font-semibold mb-2">Construcción Urdido</h2>
-<table class="w-full text-xs border-collapse border border-gray-300 mb-4">
-    <thead>
-        <tr class="bg-gray-200 text-left">
-            <th class="border px-1 py-0.5">No. de Julios</th>
-            <th class="border px-1 py-0.5">Hilos</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td class="border px-1 py-0.5">
-                <input type="text" name="no_julios[]" class="form-input w-full h-10 px-2 py-2 border border-gray-300 rounded text-sm">
-            </td>
-            <td class="border px-1 py-0.5">
-                <input type="text" name="hilos[]" class="form-input w-full h-10 px-2 py-2 border border-gray-300 rounded text-sm">
-            </td>
-        </tr>
-        <tr>
-            <td class="border px-1 py-0.5">
-                <input type="text" name="no_julios[]" class="form-input w-full h-10 px-2 py-2 border border-gray-300 rounded text-sm">
-            </td>
-            <td class="border px-1 py-0.5">
-                <input type="text" name="hilos[]" class="form-input w-full h-10 px-2 py-2 border border-gray-300 rounded text-sm">
-            </td>
-        </tr>
-        <tr>
-            <td class="border px-1 py-0.5">
-                <input type="text" name="no_julios[]" class="form-input w-full h-10 px-2 py-2 border border-gray-300 rounded text-sm">
-            </td>
-            <td class="border px-1 py-0.5">
-                <input type="text" name="hilos[]" class="form-input w-full h-10 px-2 py-2 border border-gray-300 rounded text-sm">
-            </td>
-        </tr>
-        <tr>
-            <td class="border px-1 py-0.5">
-                <input type="text" name="no_julios[]" class="form-input w-full h-10 px-2 py-2 border border-gray-300 rounded text-sm">
-            </td>
-            <td class="border px-1 py-0.5">
-                <input type="text" name="hilos[]" class="form-input w-full h-10 px-2 py-2 border border-gray-300 rounded text-sm">
-            </td>
-        </tr>
-    </tbody>
-</table>
+        <table class="w-full text-xs border-collapse border border-gray-300 mb-4">
+            <thead>
+                <tr class="bg-gray-200 text-left">
+                    <th class="border px-1 py-0.5">No. de Julios</th>
+                    <th class="border px-1 py-0.5">Hilos</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="border px-1 py-0.5">
+                        <input type="text" name="no_julios[]" class="form-input w-full h-10 px-2 py-2 border border-gray-300 rounded text-sm">
+                    </td>
+                    <td class="border px-1 py-0.5">
+                        <input type="text" name="hilos[]" class="form-input w-full h-10 px-2 py-2 border border-gray-300 rounded text-sm">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="border px-1 py-0.5">
+                        <input type="text" name="no_julios[]" class="form-input w-full h-10 px-2 py-2 border border-gray-300 rounded text-sm">
+                    </td>
+                    <td class="border px-1 py-0.5">
+                        <input type="text" name="hilos[]" class="form-input w-full h-10 px-2 py-2 border border-gray-300 rounded text-sm">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="border px-1 py-0.5">
+                        <input type="text" name="no_julios[]" class="form-input w-full h-10 px-2 py-2 border border-gray-300 rounded text-sm">
+                    </td>
+                    <td class="border px-1 py-0.5">
+                        <input type="text" name="hilos[]" class="form-input w-full h-10 px-2 py-2 border border-gray-300 rounded text-sm">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="border px-1 py-0.5">
+                        <input type="text" name="no_julios[]" class="form-input w-full h-10 px-2 py-2 border border-gray-300 rounded text-sm">
+                    </td>
+                    <td class="border px-1 py-0.5">
+                        <input type="text" name="hilos[]" class="form-input w-full h-10 px-2 py-2 border border-gray-300 rounded text-sm">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
         
 
@@ -132,9 +133,9 @@
                 <tr class="bg-gray-200 text-left">
                     <th class="border px-1 py-0.5">Núcleo</th>
                     <th class="border px-1 py-0.5">No. de Telas</th>
-                    <th class="border px-1 py-0.5">Balonas</th>
-                    <th class="border px-1 py-0.5">Metros Tela</th>
-                    <th class="border px-1 py-0.5">Cuendados Mini</th>
+                    <th class="border px-1 py-0.5">Ancho Balonas</th>
+                    <th class="border px-1 py-0.5">Metraje de Telas</th>
+                    <th class="border px-1 py-0.5">Cuendeados Mínimo</th>
                     <th class="border px-1 py-0.5">Observaciones</th>
                 </tr>
             </thead>
