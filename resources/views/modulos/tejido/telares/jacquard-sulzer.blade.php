@@ -102,22 +102,22 @@
                                     <td class="border text-center">
                                         <div class=" font-bold">1</div>
                                         <div class="mt-2">
-                                            <label><input type="checkbox" name="rizo1" class="t1rizo" value="rizo1"> </label><br>
-                                            <label><input type="checkbox" name="pie1" class="t1pie" value="pie1"> </label>
+                                            <label><input type="checkbox" name="rizo1" class="t1rizo w-5 h-5" value="rizo1"> </label><br>
+                                            <label><input type="checkbox" name="pie1" class="t1pie w-5 h-5" value="pie1"> </label>
                                         </div>
                                     </td>                                    
                                     <td class="border text-center">
                                         <div class=" font-bold">2</div>
                                         <div class="mt-2">
-                                            <label><input type="checkbox" name="rizo2" class="t1rizo" value="rizo2"> </label><br>
-                                            <label><input type="checkbox" name="pie2" class="t1pie" value="pie2"> </label>
+                                            <label><input type="checkbox" name="rizo2" class="t1rizo w-5 h-5" value="rizo2"> </label><br>
+                                            <label><input type="checkbox" name="pie2" class="t1pie w-5 h-5" value="pie2"> </label>
                                         </div>
                                     </td>  
                                     <td class="border text-center">
                                         <div class=" font-bold">3</div>
                                         <div class="mt-2">
-                                            <label><input type="checkbox" name="rizo3" class="t1rizo" value="rizo3"> </label><br>
-                                            <label><input type="checkbox" name="pie3" class="t1pie" value="pie3"> </label>
+                                            <label><input type="checkbox" name="rizo3" class="t1rizo w-5 h-5" value="rizo3"> </label><br>
+                                            <label><input type="checkbox" name="pie3" class="t1pie w-5 h-5" value="pie3"> </label>
                                         </div>
                                     </td>  
                                 </tr>
@@ -136,22 +136,22 @@
                                     <td class="border text-center">
                                         <div class=" font-bold">1</div>
                                         <div class="mt-2">
-                                            <label><input type="checkbox" name="rizo1" class="t2rizo" value="rizo1"> </label><br>
-                                            <label><input type="checkbox" name="pie1" class="t2pie" value="pie1"> </label>
+                                            <label><input type="checkbox" name="rizo1" class="t2rizo w-5 h-5" value="rizo1"> </label><br>
+                                            <label><input type="checkbox" name="pie1" class="t2pie w-5 h-5" value="pie1"> </label>
                                         </div>
                                     </td>                                    
                                     <td class="border text-center">
                                         <div class=" font-bold">2</div>
                                         <div class="mt-2">
-                                            <label><input type="checkbox" name="rizo2" class="t2rizo" value="rizo2"> </label><br>
-                                            <label><input type="checkbox" name="pie2" class="t2pie" value="pie2"> </label>
+                                            <label><input type="checkbox" name="rizo2" class="t2rizo w-5 h-5" value="rizo2"> </label><br>
+                                            <label><input type="checkbox" name="pie2" class="t2pie w-5 h-5" value="pie2"> </label>
                                         </div>
                                     </td>  
                                     <td class="border text-center">
                                         <div class=" font-bold">3</div>
                                         <div class="mt-2">
-                                            <label><input type="checkbox" name="rizo3" class="t2rizo" value="rizo3"> </label><br>
-                                            <label><input type="checkbox" name="pie3" class="t2pie" value="pie3"> </label>
+                                            <label><input type="checkbox" name="rizo3" class="t2rizo w-5 h-5" value="rizo3"> </label><br>
+                                            <label><input type="checkbox" name="pie3" class="t2pie w-5 h-5" value="pie3"> </label>
                                         </div>
                                     </td>  
                                 </tr>
@@ -170,22 +170,22 @@
                                     <td class="border text-center">
                                         <div class=" font-bold">1</div>
                                         <div class="mt-2">
-                                            <label><input type="checkbox" name="rizo1" class="t3rizo" value="rizo1"> </label><br>
-                                            <label><input type="checkbox" name="pie1" class="t3pie" value="pie1"> </label>
+                                            <label><input type="checkbox" name="rizo1" class="t3rizo w-5 h-5 " value="rizo1"> </label><br>
+                                            <label><input type="checkbox" name="pie1" class="t3pie w-5 h-5" value="pie1"> </label>
                                         </div>
                                     </td>                                    
                                     <td class="border text-center">
                                         <div class=" font-bold">2</div>
                                         <div class="mt-2">
-                                            <label><input type="checkbox" name="rizo2" class="t3rizo" value="rizo2"> </label><br>
-                                            <label><input type="checkbox" name="pie2" class="t3pie" value="pie2"> </label>
+                                            <label><input type="checkbox" name="rizo2" class="t3rizo w-5 h-5" value="rizo2"> </label><br>
+                                            <label><input type="checkbox" name="pie2" class="t3pie w-5 h-5" value="pie2"> </label>
                                         </div>
                                     </td>  
                                     <td class="border text-center">
                                         <div class=" font-bold">3</div>
                                         <div class="mt-2">
-                                            <label><input type="checkbox" name="rizo3" class="t3rizo" value="rizo3"> </label><br>
-                                            <label><input type="checkbox" name="pie3" class="t3pie" value="pie3"> </label>
+                                            <label><input type="checkbox" name="rizo3" class="t3rizo w-5 h-5" value="rizo3"> </label><br>
+                                            <label><input type="checkbox" name="pie3" class="t3pie w-5 h-5" value="pie3"> </label>
                                         </div>
                                     </td>  
                                 </tr>
@@ -204,22 +204,22 @@
                                     <td class="border text-center"> 
                                         <div class=" font-bold">1</div>
                                         <div class="mt-2">
-                                            <label><input type="checkbox" name="rizo1" class="t4rizo" value="rizo1"> </label><br>
-                                            <label><input type="checkbox" name="pie1" class="t4pie" value="pie1" > </label>
+                                            <label><input type="checkbox" name="rizo1" class="t4rizo w-5 h-5" value="rizo1"> </label><br>
+                                            <label><input type="checkbox" name="pie1" class="t4pie w-5 h-5" value="pie1" > </label>
                                         </div>
                                     </td>                                    
                                     <td class="border text-center">
                                         <div class=" font-bold">2</div>
                                         <div class="mt-2">
-                                            <label><input type="checkbox" name="rizo2" class="t4rizo" value="rizo2"> </label><br>
-                                            <label><input type="checkbox" name="pie2" class="t4pie" value="pie2"> </label>
+                                            <label><input type="checkbox" name="rizo2" class="t4rizo w-5 h-5" value="rizo2"> </label><br>
+                                            <label><input type="checkbox" name="pie2" class="t4pie w-5 h-5" value="pie2"> </label>
                                         </div>
                                     </td>  
                                     <td class="border text-center">
                                         <div class=" font-bold">3</div>
                                         <div class="mt-2">
-                                            <label><input type="checkbox" name="rizo3" class="t4rizo" value="rizo3"> </label><br>
-                                            <label><input type="checkbox" name="pie3" class="t4pie" value="pie3"> </label>
+                                            <label><input type="checkbox" name="rizo3" class="t4rizo w-5 h-5" value="rizo3"> </label><br>
+                                            <label><input type="checkbox" name="pie3" class="t4pie w-5 h-5" value="pie3"> </label>
                                         </div>
                                     </td>  
                                 </tr>
@@ -238,22 +238,22 @@
                                     <td class="border text-center">
                                         <div class=" font-bold">1</div>
                                         <div class="mt-2">
-                                            <label><input type="checkbox" name="rizo1" class="t5rizo" value="rizo1"> </label><br>
-                                            <label><input type="checkbox" name="pie1" class="t5pie" value="pie1"> </label>
+                                            <label><input type="checkbox" name="rizo1" class="t5rizo w-5 h-5" value="rizo1"> </label><br>
+                                            <label><input type="checkbox" name="pie1" class="t5pie w-5 h-5" value="pie1"> </label>
                                         </div>
                                     </td>                                    
                                     <td class="border text-center">
                                         <div class=" font-bold">2</div>
                                         <div class="mt-2">
-                                            <label><input type="checkbox" name="rizo2" class="t5rizo" value="rizo2"> </label><br>
-                                            <label><input type="checkbox" name="pie2" class="t5pie" value="pie2"> </label>
+                                            <label><input type="checkbox" name="rizo2" class="t5rizo w-5 h-5" value="rizo2"> </label><br>
+                                            <label><input type="checkbox" name="pie2" class="t5pie w-5 h-5" value="pie2"> </label>
                                         </div>
                                     </td>  
                                     <td class="border text-center">
                                         <div class=" font-bold">3</div>
                                         <div class="mt-2">
-                                            <label><input type="checkbox" name="rizo3" class="t5rizo" value="rizo3"> </label><br>
-                                            <label><input type="checkbox" name="pie3" class="t5pie" value="pie3"> </label>
+                                            <label><input type="checkbox" name="rizo3" class="t5rizo w-5 h-5" value="rizo3"> </label><br>
+                                            <label><input type="checkbox" name="pie3" class="t5pie w-5 h-5" value="pie3"> </label>
                                         </div>
                                     </td>  
                                 </tr>
@@ -272,22 +272,22 @@
                                     <td class="border text-center">
                                         <div class=" font-bold">1</div>
                                         <div class="mt-2">
-                                            <label><input type="checkbox" name="rizo1" class="t6rizo" value="rizo1"> </label><br>
-                                            <label><input type="checkbox" name="pie1" class="t6pie" value="pie1"> </label>
+                                            <label><input type="checkbox" name="rizo1" class="t6rizo w-5 h-5" value="rizo1"> </label><br>
+                                            <label><input type="checkbox" name="pie1" class="t6pie w-5 h-5" value="pie1"> </label>
                                         </div>
                                     </td>                                    
                                     <td class="border text-center">
                                         <div class=" font-bold">2</div>
                                         <div class="mt-2">
-                                            <label><input type="checkbox" name="rizo2" class="t6rizo" value="rizo2"> </label><br>
-                                            <label><input type="checkbox" name="pie2" class="t6pie" value="pie2"> </label>
+                                            <label><input type="checkbox" name="rizo2" class="t6rizo w-5 h-5" value="rizo2"> </label><br>
+                                            <label><input type="checkbox" name="pie2" class="t6pie w-5 h-5" value="pie2"> </label>
                                         </div>
                                     </td>  
                                     <td class="border text-center">
                                         <div class=" font-bold">3</div>
                                         <div class="mt-2">
-                                            <label><input type="checkbox" name="rizo3" class="t6rizo" value="rizo3"> </label><br>
-                                            <label><input type="checkbox" name="pie3" class="t6pie" value="pie3"> </label>
+                                            <label><input type="checkbox" name="rizo3" class="t6rizo w-5 h-5" value="rizo3"> </label><br>
+                                            <label><input type="checkbox" name="pie3" class="t6pie w-5 h-5" value="pie3"> </label>
                                         </div>
                                     </td>  
                                 </tr>
@@ -306,22 +306,22 @@
                                     <td class="border text-center">
                                         <div class=" font-bold">1</div>
                                         <div class="mt-2">
-                                            <label><input type="checkbox" name="rizo1" class="t7rizo" value="rizo1"> </label><br>
-                                            <label><input type="checkbox" name="pie1" class="t7pie" value="pie1"> </label>
+                                            <label><input type="checkbox" name="rizo1" class="t7rizo w-5 h-5" value="rizo1"> </label><br>
+                                            <label><input type="checkbox" name="pie1" class="t7pie w-5 h-5" value="pie1"> </label>
                                         </div>
                                     </td>                                    
                                     <td class="border text-center">
                                         <div class=" font-bold">2</div>
                                         <div class="mt-2">
-                                            <label><input type="checkbox" name="rizo2" class="t7rizo" value="rizo2"> </label><br>
-                                            <label><input type="checkbox" name="pie2" class="t7pie" value="pie2"> </label>
+                                            <label><input type="checkbox" name="rizo2" class="t7rizo w-5 h-5" value="rizo2"> </label><br>
+                                            <label><input type="checkbox" name="pie2" class="t7pie w-5 h-5" value="pie2"> </label>
                                         </div>
                                     </td>  
                                     <td class="border text-center">
                                         <div class=" font-bold">3</div>
                                         <div class="mt-2">
-                                            <label><input type="checkbox" name="rizo3" class="t7rizo" value="rizo3"> </label><br>
-                                            <label><input type="checkbox" name="pie3" class="t7pie" value="pie3"> </label>
+                                            <label><input type="checkbox" name="rizo3" class="t7rizo w-5 h-5" value="rizo3"> </label><br>
+                                            <label><input type="checkbox" name="pie3" class="t7pie w-5 h-5" value="pie3"> </label>
                                         </div>
                                     </td>  
                                 </tr>
@@ -370,7 +370,7 @@
             let datos = @json($datos);
             let cuentaRizo = datos[0].Cuenta;
             let cuentaPie = datos[0].Cuenta_Pie;
-            let ordenProd = datos[0].Orden_Prod;
+            let ordenProd = '';
             let telar = @json($telar);
 
             // 🔹 Detectar si es Rizo o Pie

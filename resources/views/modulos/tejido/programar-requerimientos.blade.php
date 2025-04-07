@@ -50,7 +50,7 @@
                             <td class="border px-1 py-0.5">-</td> <!-- Metros nulo -->
                             <td class="border px-1 py-0.5">-</td> <!-- Mc Coy nulo -->
                             <td class="border px-1 py-0.5"></td> <!--Aqui se insertará la orden o FOLIO que se genera en la vista que sigue al presion boton Programar-->
-                            <td class="border text-center"><input type="checkbox"></td>
+                            <td class="border text-center"><input type="checkbox" class="w-5 h-5"></td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -99,7 +99,7 @@
                 <td class="border px-1 py-0.5">{{$inv->INVENTSERIALID}}</td>
                 <td class="border px-1 py-0.5">{{ number_format($inv->METROS, 0) }}</td>
                 <td class="border px-1 py-0.5">{{$inv->ITEMID}}</td>
-                <td class="border px-1 py-0.5 text-center"><input type="checkbox"></td>
+                <td class="border px-1 py-0.5 text-center"><input type="checkbox" class="w-5 h-5"></td>
             </tr>
         @endforeach
     </tbody>

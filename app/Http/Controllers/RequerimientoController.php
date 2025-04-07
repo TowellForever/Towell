@@ -63,7 +63,7 @@ class RequerimientoController extends Controller
             //'metros' => $request->metros,
             //'julio_reserv' => $request->julio_reserv,
             'status' => 'activo', // El nuevo registro será activo
-            'orden_prod' => $request->orden_prod,
+            'orden_prod' => '',
             'valor'=>$request->valor,
             //'metros_pie'=>$request->metros_pie,
             //'julio_reserv_pie'=>$request->julio_reserv_pie,
@@ -111,6 +111,7 @@ class RequerimientoController extends Controller
         return view('modulos/tejido/programar-requerimientos', compact('requerimientos', 'inventarios'));
     }
      
+    //metodo que regresa 2 objetos a la vista para llenar 2 tablas (amarillas)
     public function requerimientosAProgramar(Request $request)
     {
         // Recuperar los valores enviados desde la vista
