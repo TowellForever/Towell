@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\UrdidoEngomado;
 use App\Models\Requerimiento;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class UrdidoController extends Controller
 {
@@ -33,73 +34,27 @@ class UrdidoController extends Controller
     //mewtodo para insertar o actualizar registro de ORDEN
     public function updateOrdenUrdido(Request $request)
     {
-         // Validar los datos que llegan del formulario
-        $validated = $request->validate([
-            'folio' => 'required',
-            'id' => 'required',
-            'fecha' => 'required',
-            'turno' => 'nullable',
-            'hora_inicio' => 'nullable',
-            'hora_fin' => 'nullable',
-            'no_julio' => 'nullable',
-            'hilos' => 'nullable',
-            'peso_bruto' => 'nullable',
-            'tara' => 'nullable',
-            'peso_neto' => 'nullable',
-            'metros' => 'nullable',
-            'hilatura' => 'nullable',
-            'maquina' => 'nullable',
-            'operacion' => 'nullable',
-            'transferencia' => 'nullable',
-        ]);
-
-        // Comprobar si ya existe un registro con el mismo folio y id
-        $registroExistente = OrdenUrdido::where('folio', $request->folio)
-                                        ->where('id', $request->id)
-                                        ->first();
-
-        if ($registroExistente) {
-            // Si el registro ya existe, actualizar los campos
-            $registroExistente->update([
-                'fecha' => $request->fecha,
-                'oficial' => $request->oficial,
-                'turno' => $request->turno,
-                'hora_inicio' => $request->hora_inicio,
-                'hora_fin' => $request->hora_fin,
-                'no_julio' => $request->no_julio,
-                'hilos' => $request->hilos,
-                'peso_bruto' => $request->peso_bruto,
-                'tara' => $request->tara,
-                'peso_neto' => $request->peso_neto,
-                'metros' => $request->metros,
-                'hilatura' => $request->hilatura,
-                'maquina' => $request->maquina,
-                'operacion' => $request->operacion,
-                'transferencia' => $request->transferencia,
-            ]);
-            return response()->json(['message' => 'Registro actualizado correctamente.']);
-        } else {
-            // Si no existe, crear un nuevo registro
-            OrdenUrdido::create([
-                'folio' => $request->folio,
-                'id' => $request->id,
-                'fecha' => $request->fecha,
-                'oficial'=>$request->oficial,
-                'turno' => $request->turno,
-                'hora_inicio' => $request->hora_inicio,
-                'hora_fin' => $request->hora_fin,
-                'no_julio' => $request->no_julio,
-                'hilos' => $request->hilos,
-                'peso_bruto' => $request->peso_bruto,
-                'tara' => $request->tara,
-                'peso_neto' => $request->peso_neto,
-                'metros' => $request->metros,
-                'hilatura' => $request->hilatura,
-                'maquina' => $request->maquina,
-                'operacion' => $request->operacion,
-                'transferencia' => $request->transferencia,
-            ]);
-            return response()->json(['message' => 'Registro guardado correctamente.']);
+        $registros = $request->input('registros');
+    
+        foreach ($registros as $registro) {
+            $validated = Validator::make($registro, [
+                'folio' => 'required',
+                'id' => 'required',
+                'fecha' => 'required',
+            ])->validate();
+    
+            $existente = OrdenUrdido::where('folio', $registro['folio'])
+                ->where('id', $registro['id'])
+                ->first();
+    
+            if ($existente) {
+                $existente->update($registro);
+            } else {
+                OrdenUrdido::create($registro);
+            }
         }
+    
+        return response()->json(['message' => 'Todos los registros fueron guardados correctamente.']);
     }
+    
 }

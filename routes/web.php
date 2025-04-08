@@ -61,6 +61,7 @@ Route::post('/update-orden-urdido', [UrdidoController::class, 'updateOrdenUrdido
 //RUTAS DEL MODULO **engomado**
 Route::get('/modulo-engomado', function () { return view('modulos/engomado');});
 Route::get('/engomado/programar-requerimientos', function () { return view('modulos/engomado/programar-requerimientos');});
+Route::get('/ingresar-folio-engomado', function () {return view('modulos/engomado/ingresar_folio');})->name('ingresarFolioEngomado');
 
 //RUTAS DEL MODULO **atadores**
 Route::get('/modulo-atadores', function () { return view('modulos/atadores');});
