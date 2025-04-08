@@ -9,23 +9,19 @@
         <!-- Primera columna -->
         <div class="text-sm">
             <div class="flex items-center mb-1">
-                <label class="w-1/4 text-sm">Orden de Trabajo:</label>
+                <label class="w-1/4 text-sm">FOLIO:</label>
                 <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $requerimiento->orden_prod ?? '' }}" readonly>
             </div>
             <div class="flex items-center mb-1">
-                <label class="w-1/4 text-sm">Cuenta:</label>
+                <label class="w-1/4 text-sm">CUENTA:</label>
                 <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $urdido->cuenta ?? '' }}" readonly>
             </div>
             <div class="flex items-center mb-1">
-                <label class="w-1/4 text-sm">Urdido:</label>
+                <label class="w-1/4 text-sm">URDIDO:</label>
                 <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $urdido->urdido ?? '' }}" readonly>
             </div>
             <div class="flex items-center mb-1">
-                <label class="w-1/4 text-sm ">Calibre:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="pending">
-            </div>
-            <div class="flex items-center mb-1">
-                <label class="w-1/4 text-sm">Proveedor:</label>
+                <label class="w-1/4 text-sm">PROVEEDOR:</label>
                 <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $urdido->proveedor ?? '' }}" readonly>
             </div>
 
@@ -35,34 +31,26 @@
         <!-- Segunda columna -->
         <div class="text-sm">
             <div class="flex items-center mb-1">
-                <label class="w-1/4 text-sm ">Requerido:</label>
-                <input type="date" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ \Carbon\Carbon::parse($requerimiento->fecha ?? null)->toDateString() }}" readonly>
-            </div>
-            <div class="flex items-center mb-1">
-                <label class="w-1/4 text-sm">Tipo:</label>
+                <label class="w-1/4 text-sm">TIPO:</label>
                 <div class="flex items-center">
-                    <label class="text-sm">
+                    <label class="text-sm text-black font-semibold">
                         <input type="radio" name="tipo" value="Rizo" {{ $urdido->tipo === 'Rizo' ? 'checked' : '' }} disabled> Rizo
                     </label>
-                    <label class="text-sm ml-2">
+                    <label class="text-sm text-black font-semibold ml-4">
                         <input type="radio" name="tipo" value="Pie" {{ $urdido->tipo === 'Pie' ? 'checked' : '' }} disabled> Pie
                     </label>
-                </div>
+                </div>                
             </div>
             <div class="flex items-center mb-1">
-                <label class="w-1/4 text-sm ">Metros:</label>
+                <label class="w-1/4 text-sm ">METROS:</label>
                 <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ rtrim(rtrim($urdido->metros, '0'), '.') }}" readonly>
             </div>
             <div class="flex items-center mb-1">
-                <label class="w-1/4 text-sm ">Lote:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="pending">
+                <label class="w-1/4 text-sm ">DESTINO:</label>
+                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $urdido->destino.' '.$requerimiento->telar?? '' }}" readonly>
             </div>
             <div class="flex items-center mb-1">
-                <label class="w-1/4 text-sm ">Destino:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $urdido->destino ?? '' }}" readonly>
-            </div>
-            <div class="flex items-center mb-1">
-                <label class="w-1/4 text-sm">Ordenado por:</label>
+                <label class="w-1/4 text-sm">ORDENADO POR:</label>
                 <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="pending">
             </div>
         </div>
@@ -71,13 +59,13 @@
         <!-- Tercera columna -->
         <div>
             <!-- Tabla de Construcción -->
-            <h2 class="text font-semibold">Construcción</h2>
+            <h2 class="text font-semibold">CONSTRUCCIÓN: </h2>
             <table class="w-full border-collapse border border-gray-300  font-bold">
                 <thead>
                     <tr class="bg-gray-200 text-xs">
-                        <th class="border p-1 w-1/5 text-center font-bold">Número de Julio</th>
-                        <th class="border p-1 w-1/5 text-center font-bold">Hilos</th>
-                        <th class="border p-1 text-center font-bold">Observaciones</th>
+                        <th class="border p-1 w-1/5 text-center font-bold">No. JULIO</th>
+                        <th class="border p-1 w-1/5 text-center font-bold">HILOS</th>
+                        <th class="border p-1 text-center font-bold">OBSERVACIONES</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -96,28 +84,28 @@
 
     <!-- Tabla de Datos -->
     <h2 class="text-sm font-bold mt-2">Registro de Producción</h2>
-    <table class="w-full border-collapse border border-gray-300 mt-2">
+    <table class="w-full border-collapse border border-gray-300 mt-2 text-center">
         <thead>
             <tr class="bg-gray-200 text-xs">
-                <th class="border p-0.5" colspan="12"></th>
-                <th class="p-0.5 text-center border-2 border-black" colspan="4">Roturas</th>
+                <th class="border p-0.5" colspan="11"></th>
+                <th class="p-0.5 text-center border-2 border-black" colspan="4">ROTURAS</th>
             </tr>
             <tr class="bg-gray-200 text-xs">
-                <th class="border p-1">Fecha</th>
-                <th class="border p-1">Oficial</th>
-                <th class="border p-1">Turno</th>
-                <th class="border p-1">Hora Inicio</th>
-                <th class="border p-1">Hora Fin</th>
-                <th class="border p-1">No Julio</th>
-                <th class="border p-1">Hilos</th>
-                <th class="border p-1">Peso Bruto</th>
-                <th class="border p-1">Tara</th>
-                <th class="border p-1">Peso Neto</th>
-                <th class="border p-1">Metros</th>
-                <th class="border p-1">Hilatura</th>
-                <th class="border p-1">Máquina</th>
-                <th class="border p-1">Operación</th>
-                <th class="border p-1">Transferencia</th>
+                <th class="border p-1">FECHA</th>
+                <th class="border p-1">OFICIAL</th>
+                <th class="border p-1">TURNO</th>
+                <th class="border p-1">H. INIC.</th>
+                <th class="border p-1">H. FIN</th>
+                <th class="border p-1">No. JULIO</th>
+                <th class="border p-1">HILOS</th>
+                <th class="border p-1">Kg. BRUTO</th>
+                <th class="border p-1">TARA</th>
+                <th class="border p-1 W-30">Kg. NETO</th>
+                <th class="border p-1">METROS</th>
+                <th class="border p-1">HILAT.</th>
+                <th class="border p-1">MÁQ.</th>
+                <th class="border p-1">OPERAC.</th>
+                <th class="border p-1">TRANSF.</th>
             </tr>
         </thead>
         <tbody>
@@ -133,29 +121,37 @@
                     <tr class="text-xs">
                         <input type="hidden" name="datos[{{$registroIndex}}][id]" value="{{ $registroIndex }}">
                         <input type="hidden" name="datos[{{$registroIndex}}][folio]" value="{{ $registroConstruccion->folio ?? '' }}">
-                        <td class="border p-1">{{ $requerimiento->fecha ?? '' }}
-                            <input type="hidden" name="datos[{{$registroIndex}}][fecha]" value="{{ $requerimiento->fecha ?? '' }}">
+                        
+                        <td class="border p-1">
+                            <input class="w-24 p-1" type="date" name="datos[{{$registroIndex}}][fecha]" value="{{ $orden->fecha ? \Carbon\Carbon::parse($orden->fecha)->format('Y-m-d') : '' }}">
                         </td>
-                        <td class="border p-1">AUTO<input type="hidden" name="datos[{{$registroIndex}}][oficial]" value="AUTO"></td>
-                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][turno]" class="w-full border rounded p-1 text-xs" value="{{ $orden->turno ?? '' }}"></td>
-                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][hora_inicio]" class="w-full border rounded p-1 text-xs" value="{{ $orden->hora_inicio ?? '' }}"></td>
-                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][hora_fin]" class="w-full border rounded p-1 text-xs" value="{{ $orden->hora_fin ?? '' }}"></td>
-                        <td class="border p-1">{{ $registroConstruccion->no_julios ?? '' }}
-                            <input type="hidden" name="datos[{{$registroIndex}}][no_julio]" value="{{ $registroConstruccion->no_julios ?? '' }}">
+                        
+                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][oficial]" value="{{ $orden->oficial ?? ''}}" class="w-14 border rounded p-1 text-xs"></td>
+                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][turno]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->turno ?? '' }}"></td>
+                        <td class="border p-1">
+                            <input type="time" name="datos[{{$registroIndex}}][hora_inicio]" class="w-24 border rounded p-1 text-xs" 
+                                value="{{ isset($orden->hora_inicio) ? \Illuminate\Support\Str::limit($orden->hora_inicio, 5, '') : '' }}" step="60">
+                        </td>
+                        <td class="border p-1">
+                            <input type="time" name="datos[{{$registroIndex}}][hora_fin]" class="w-24 border rounded p-1 text-xs" 
+                                value="{{ isset($orden->hora_fin) ? \Illuminate\Support\Str::limit($orden->hora_fin, 5, '') : '' }}" step="60">
+                        </td>                        
+                        <td class="border p-1 w-30">
+                            <input class="w-10 border rounded p-1 text-xs" type="text" name="datos[{{$registroIndex}}][no_julio]" value="{{ $registroConstruccion->no_julios ?? '' }}">
                         </td>
                         <td class="border p-1">{{ $registroConstruccion->hilos ?? '' }}
                             <input type="hidden" name="datos[{{$registroIndex}}][hilos]" value="{{ $registroConstruccion->hilos ?? '' }}">
                         </td>
-                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][peso_bruto]" class="w-full border rounded p-1 text-xs" value="{{ $orden->peso_bruto ?? '' }}"></td>
+                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][peso_bruto]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->peso_bruto ?? '' }}"></td>
                         <td class="border p-1">AUTO<input type="hidden" name="datos[{{$registroIndex}}][tara]" value="AUTO"></td>
                         <td class="border p-1">AUTO<input type="hidden" name="datos[{{$registroIndex}}][peso_neto]" value="AUTO"></td>
                         <td class="border p-1">{{ rtrim(rtrim($urdido->metros ?? '', '0'), '.') }}
                             <input type="hidden" name="datos[{{$registroIndex}}][metros]" value="{{ rtrim(rtrim($urdido->metros ?? '', '0'), '.') }}">
                         </td>
-                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][hilatura]" class="w-full border rounded p-1 text-xs" value="{{ $orden->hilatura ?? '' }}"></td>
-                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][maquina]" class="w-full border rounded p-1 text-xs" value="{{ $orden->maquina ?? '' }}"></td>
-                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][operacion]" class="w-full border rounded p-1 text-xs" value="{{ $orden->operacion ?? '' }}"></td>
-                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][transferencia]" class="w-full border rounded p-1 text-xs" value="{{ $orden->transferencia ?? '' }}"></td>
+                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][hilatura]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->hilatura ?? '' }}"></td>
+                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][maquina]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->maquina ?? '' }}"></td>
+                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][operacion]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->operacion ?? '' }}"></td>
+                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][transferencia]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->transferencia ?? '' }}"></td>
                     </tr>
                 @endfor
             @endforeach
