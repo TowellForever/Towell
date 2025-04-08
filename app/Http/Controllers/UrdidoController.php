@@ -20,13 +20,14 @@ class UrdidoController extends Controller
         $urdido = UrdidoEngomado::where('folio', $folio)->first();
         $construccion = ConstruccionUrdido::where('folio', $folio)->get(); // Usamos get() también para la construcción
         $requerimiento = Requerimiento::where('orden_prod', $folio)->first();
+        $ordenUrdido = OrdenUrdido::where('folio', $folio)->get(); //obtenemos los registros que van en la tabla de Registro de Produccion
 
-        if (!$urdido || !$construccion || !$requerimiento) {
+        if (!$urdido || !$construccion || !$requerimiento||!$ordenUrdido) {
             return redirect()->route('ingresarFolio')->withErrors('No se encontraron datos para el folio proporcionado.');
         }
 
         // Pasar los datos a la vista
-        return view('modulos/urdido', compact('urdido', 'construccion', 'requerimiento'));
+        return view('modulos/urdido', compact('urdido', 'construccion', 'requerimiento','ordenUrdido'));
     }
 
     //mewtodo para insertar o actualizar registro de ORDEN

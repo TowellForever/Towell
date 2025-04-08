@@ -101,34 +101,38 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($construccion as $registroConstruccion)
-            <tr class="text-xs">
-                <!-- ID oculto que incrementa con cada iteración -->
-                <input type="hidden" value="{{ $loop->iteration }}" id="id">
-                <input type="hidden" value="{{ $registroConstruccion->folio }}" id="folio">
-                <td class="border p-1" id="fecha">{{ $requerimiento->fecha ?? '' }}</td>
-                <td class="border p-1" id="oficial">AUTO</td>
-                <td class="border p-1"><input type="text" class="w-full border rounded p-1 text-xs" value="" id="turno"></td>
-                <td class="border p-1"><input type="text" class="w-full border rounded p-1 text-xs" value="" id="hora_inicio"></td>
-                <td class="border p-1"><input type="text" class="w-full border rounded p-1 text-xs" value="" id="hora_fin"></td>
-                <td class="border p-1" id="no_julio">{{ $registroConstruccion->no_julios ?? '' }}</td>
-                <td class="border p-1" id="hilos">{{ $registroConstruccion->hilos ?? '' }}</td>
-                <td class="border p-1"><input type="text" class="w-full border rounded p-1 text-xs" value="" id="peso_bruto"></td>
-                <td class="border p-1" id="tara">AUTO</td>
-                <td class="border p-1" id="peso_neto">AUTO</td>
-                <td class="border p-1" id="metros">{{ rtrim(rtrim($urdido->metros, '0'), '.') }}</td>
-                <td class="border p-1"><input type="text" class="w-full border rounded p-1 text-xs" value="" id="hilatura"></td>
-                <td class="border p-1"><input type="text" class="w-full border rounded p-1 text-xs" value="" id="maquina"></td>
-                <td class="border p-1"><input type="text" class="w-full border rounded p-1 text-xs" value="" id="operacion"></td>
-                <td class="border p-1"><input type="text" class="w-full border rounded p-1 text-xs" value="" id="transferencia"></td>
-                <td class="border p-1">
-                    <!-- Botón de guardar con data-id vacío (se llenará luego si es necesario) -->
-                    <button class="btn btn-primary save-btn">Guardar</button>
-                </td>
-            </tr>
-            @endforeach
-            
+            @for($i = 0; $i < count($ordenUrdido); $i++)
+                @php
+                    $orden = $ordenUrdido[$i];
+                    $registroConstruccion = $construccion[$i] ?? null;
+                @endphp
+                <tr class="text-xs">
+                    <input type="hidden" value="{{ $i + 1 }}" id="id">
+                    <input type="hidden" value="{{ $registroConstruccion->folio ?? '' }}" id="folio">
+        
+                    <td class="border p-1" id="fecha">{{ $requerimiento->fecha ?? '' }}</td>
+                    <td class="border p-1" id="oficial">AUTO</td>
+                    <td class="border p-1"><input type="text" class="w-full border rounded p-1 text-xs" value="{{ $orden->turno ?? '' }}" id="turno"></td>
+                    <td class="border p-1"><input type="text" class="w-full border rounded p-1 text-xs" value="{{ $orden->hora_inicio ?? '' }}" id="hora_inicio"></td>
+                    <td class="border p-1"><input type="text" class="w-full border rounded p-1 text-xs" value="{{ $orden->hora_fin ?? '' }}" id="hora_fin"></td>
+                    <td class="border p-1" id="no_julio">{{ $registroConstruccion->no_julios ?? '' }}</td>
+                    <td class="border p-1" id="hilos">{{ $registroConstruccion->hilos ?? '' }}</td>
+                    <td class="border p-1"><input type="text" class="w-full border rounded p-1 text-xs" value="{{ $orden->peso_bruto ?? '' }}" id="peso_bruto"></td>
+                    <td class="border p-1" id="tara">AUTO</td>
+                    <td class="border p-1" id="peso_neto">AUTO</td>
+                    <td class="border p-1" id="metros">{{ rtrim(rtrim($urdido->metros ?? '', '0'), '.') }}</td>
+                    <td class="border p-1"><input type="text" class="w-full border rounded p-1 text-xs" value="{{ $orden->hilatura ?? '' }}" id="hilatura"></td>
+                    <td class="border p-1"><input type="text" class="w-full border rounded p-1 text-xs" value="{{ $orden->maquina ?? '' }}" id="maquina"></td>
+                    <td class="border p-1"><input type="text" class="w-full border rounded p-1 text-xs" value="{{ $orden->operacion ?? '' }}" id="operacion"></td>
+                    <td class="border p-1"><input type="text" class="w-full border rounded p-1 text-xs" value="{{ $orden->transferencia ?? '' }}" id="transferencia"></td>
+                    <td class="border p-1">
+                        <button class="btn btn-primary save-btn">Guardar</button>
+                    </td>
+                </tr>
+            @endfor
         </tbody>
+        
+        
     </table>
 </div>
 
