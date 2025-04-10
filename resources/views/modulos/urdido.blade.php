@@ -119,7 +119,7 @@
                         $registroIndex++;
                     @endphp
                     <tr class="text-xs">
-                        <input type="hidden" name="datos[{{$registroIndex}}][id]" value="{{ $registroIndex }}">
+                        <input type="hidden" name="datos[{{$registroIndex}}][id2]" value="{{ $registroIndex }}">
                         <input type="hidden" name="datos[{{$registroIndex}}][folio]" value="{{ $registroConstruccion->folio ?? '' }}">
                         <td class="border p-1">
                             <input class="w-24 p-1" type="date" name="datos[{{$registroIndex}}][fecha]" value="{{ $orden ? \Carbon\Carbon::parse($orden->fecha)->format('Y-m-d') : '' }}">

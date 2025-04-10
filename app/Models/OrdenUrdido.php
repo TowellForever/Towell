@@ -12,9 +12,10 @@ class OrdenUrdido extends Model
 
     // Desactivar los timestamps automáticos
     public $timestamps = false;
+    public $incrementing = false; // Solo si id2 no es auto-incremental
 
     protected $fillable = [
-        'id',
+        'id2',
         'folio',
         'fecha',
         'oficial',

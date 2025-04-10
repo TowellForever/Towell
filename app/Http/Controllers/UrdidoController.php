@@ -36,34 +36,33 @@ class UrdidoController extends Controller
     //mewtodo para insertar o actualizar registro de ORDEN
     public function updateOrdenUrdido(Request $request)
     {
-        //Log::info('Datos recibidos:', $request->all());
-
+        // Obtener los registros del request
         $registros = $request->input('registros');
-    
+        
         foreach ($registros as $registro) {
-            
+            // Validar los datos
             $validated = Validator::make($registro, [
                 'folio' => 'required',
-                'id' => 'required',
+                'id2' => 'required', // Validar que id2 esté presente
                 'fecha' => 'required',
             ])->validate();
-
-             
-            // Asegúrate de que el folio y el id coincidan con lo esperado
-            //Log::info("Buscando registro con folio: {$registro['folio']} y id: {$registro['id']}");
     
-            $existente = OrdenUrdido::where('folio', $registro['folio'])
-                ->where('id', $registro['id'])
+            // Buscar si ya existe un registro con el mismo 'id2' y 'folio'
+            $existente = OrdenUrdido::where('id2', $registro['id2'])    
+                ->where('folio', $registro['folio'])
                 ->first();
-    
+            
+            // Si existe, actualizamos el registro
             if ($existente) {
                 $existente->update($registro);
             } else {
+                // Si no existe, creamos un nuevo registro
                 OrdenUrdido::create($registro);
             }
         }
-
+    
         return response()->json(['message' => 'Todos los registros fueron guardados correctamente.']);
     }
+    
     
 }

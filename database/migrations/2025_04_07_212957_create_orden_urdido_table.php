@@ -12,7 +12,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('orden_urdido', function (Blueprint $table) {
-            $table->string('id'); // Campo ID
+            $table->string('id2'); // Campo ID
             $table->string('fecha');
             $table->string('oficial');
             $table->string('turno');
