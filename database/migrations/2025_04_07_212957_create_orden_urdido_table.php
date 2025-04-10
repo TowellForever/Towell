@@ -12,6 +12,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('orden_urdido', function (Blueprint $table) {
+            $table->id(); // ID autoincremental (puedes cambiarlo si deseas usar id2 como clave)
             $table->string('id2'); // Campo ID
             $table->string('fecha');
             $table->string('oficial');

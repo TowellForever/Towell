@@ -54,13 +54,7 @@
 <div class="flex items-center justify-center min-h-screen bg-gradient-to-br text-white">
     <div class="glass-card w-full max-w-md p-8" id="card">
         <h1 class="text-2xl font-semibold text-center mb-6 tracking-wide">Ingresar Orden de Trabajo</h1>
-
-        <!-- Loader -->
-        <div class="loader" id="loader">
-            <div></div>
-        </div>
-
-        <form id="folioForm" action="{{ route('produccion.ordenTrabajo') }}" method="POST" class="space-y-4">
+        <form id="folioForm" action="{{ route('produccion.ordenTrabajoEngomado') }}" method="POST" class="space-y-4">
             @csrf
             <div>
                 <label for="folio" class="block mb-1 text-sm font-medium">Orden de Trabajo</label>
@@ -82,10 +76,4 @@
     </div>
 </div>
 
-<script>
-    document.getElementById('folioForm').addEventListener('submit', function () {
-        const card = document.getElementById('card');
-        card.classList.add('loading');
-    });
-</script>
 @endsection
