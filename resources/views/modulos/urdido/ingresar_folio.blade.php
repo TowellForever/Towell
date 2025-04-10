@@ -55,11 +55,6 @@
     <div class="glass-card w-full max-w-md p-8" id="card">
         <h1 class="text-2xl font-semibold text-center mb-6 tracking-wide">Ingresar Orden de Trabajo</h1>
 
-        <!-- Loader -->
-        <div class="loader" id="loader">
-            <div></div>
-        </div>
-
         <form id="folioForm" action="{{ route('produccion.ordenTrabajo') }}" method="POST" class="space-y-4">
             @csrf
             <div>
@@ -82,10 +77,4 @@
     </div>
 </div>
 
-<script>
-    document.getElementById('folioForm').addEventListener('submit', function () {
-        const card = document.getElementById('card');
-        card.classList.add('loading');
-    });
-</script>
 @endsection

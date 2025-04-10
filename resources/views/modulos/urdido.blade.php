@@ -143,13 +143,15 @@
                             <select class="w-24 border rounded p-1 text-xs" name="datos[{{$registroIndex}}][no_julio]" id="no_julio_{{$registroIndex}}" onchange="updateValues({{$registroIndex}})">
                                 <option value="">Seleccionar</option>
                                 @foreach($julios as $julio)
-                                    <option value="{{ $julio->no_julio }}" data-tara="{{ $julio->tara }}" data-tipo="{{ $julio->tipo }}">
+                                    <option value="{{ $julio->no_julio }}" 
+                                        data-tara="{{ $julio->tara }}" 
+                                        data-tipo="{{ $julio->tipo }}"
+                                        @if($julio->no_julio == $orden->no_julio) selected @endif>
                                         {{ $julio->no_julio }}
                                     </option>
                                 @endforeach
                             </select>
-                        </td>  
-
+                        </td>
                         
 
                         <td class="border p-1">{{ $registroConstruccion->hilos ?? '' }}

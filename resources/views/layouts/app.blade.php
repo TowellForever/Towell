@@ -36,14 +36,13 @@
             }
         }
 
-
-
     </style>
     <link rel="stylesheet" href="{{ asset('css/estilos.css') }}">
     @stack('styles') <!-- Aquí se inyectarán los estilos agregados con @push('styles') -->
 </head>
 <body class="min-h-screen flex flex-col">
-
+     <!-- Incluir el loader global -->
+     @include('layouts.globalLoader')
 
     <a href="/produccionProceso" class="text-3xl font-extrabold">
         <img src="{{ asset('images/fondosTowell/TOWELLIN.png') }} " alt="Towelling" class="absolute top-2 right-2 w-[80px] z-0">
@@ -88,12 +87,24 @@
     <!-- Contenido de la página -->
     <main class="">
         @yield('content')
+         <!-- JavaScript para mostrar/ocultar el loader -->
+
     </main>
 
     <!-- Footer -->
     <footer class="bg-gray-800 text-white text-center p-4 mt-6">
-         &copy; Towell {{ date('Y') }}. Todos los derechos reservados.
+        &copy; Towell {{ date('Y') }}. Todos los derechos reservados.
     </footer>
     
-</body>
-</html>
+    <script>
+        // Muestra el loader cuando la página empieza a cargar
+        document.addEventListener('DOMContentLoaded', function() {
+            const loader = document.getElementById('globalLoader');
+            loader.style.display = 'none'; // Oculta el loader cuando la página se carga
+        });
+    
+        // Puedes agregar más scripts para mostrar el loader durante eventos específicos (AJAX, formularios, etc.)
+    </script>
+    </body>
+    </html>
+    
