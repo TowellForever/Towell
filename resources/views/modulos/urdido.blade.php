@@ -233,6 +233,7 @@
         });
 
     </script>
+    <!--script para actualizar datos en tiempo real en 2 campos de la 2da tabla (tara y peso neto)-->
     <script>
         function updateValues(registroIndex) {
             // Obtener el select y la opción seleccionada
