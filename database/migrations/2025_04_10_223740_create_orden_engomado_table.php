@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('orden_engomado', function (Blueprint $table) {
             $table->id(); // ID autoincremental (puedes cambiarlo si deseas usar id2 como clave)
-            $table->string('id2')->unique(); // ID personalizado
+            $table->string('id2'); // ID personalizado
             $table->string('folio')->nullable();
             $table->date('fecha')->nullable();
             $table->string('oficial')->nullable();

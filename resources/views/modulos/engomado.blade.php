@@ -3,34 +3,33 @@
 @section('content')
 <div class="container mx-auto p-2 bg-white shadow-lg rounded-lg mt-1">
     <h1 class="text-3xl font-bold text-center mb-2">Proceso de Producción de Engomado</h1>
-    
     <!-- Formulario -->
     <form class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2">
         <!-- Primera columna -->
         <div class="text-sm">
             <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">Orden de Trabajo:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{ $urdido->folio ?? '' }}" />
+                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{ $requerimiento->orden_prod ?? '' }}" />
             </div>
             <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">Cuenta:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{ $urdido->cuenta ?? '' }}" />
+                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{ $engomadoUrd->cuenta ?? '' }}" />
             </div>
             <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">Urdido:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{ $urdido->urdido ?? '' }}" />
+                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{ $engomadoUrd->urdido ?? '' }}" />
             </div>
             <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">Núcleo:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{ $urdido->nucleo ?? '' }}" />
+                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{ $engomadoUrd->nucleo ?? '' }}" />
             </div>
             <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">Cuendeados Mínimo:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{ $urdido->cuendados_mini ?? ''}}" />
+                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{ $engomadoUrd->cuendados_mini ?? ''}}" />
             </div>
             <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">Destino:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{ $urdido->destino ?? '' }}" />
+                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{ $engomadoUrd->destino ?? '' }}" />
             </div>
         </div>
         
@@ -41,12 +40,12 @@
             </div>
         
             <label class="w-1/4 text-sm">Tipo:</label>
-                <label class="text-sm text-black font-semibold"><input type="radio" name="tipo" value="Rizo" {{ $urdido->tipo === 'Rizo' ? 'checked' : '' }} disabled> Rizo</label>
-                <label class="text-sm text-black font-semibold ml-4"><input type="radio" name="tipo" value="Pie" {{ $urdido->tipo === 'Pie' ? 'checked' : '' }} disabled> Pie</label>
+                <label class="text-sm text-black font-semibold"><input type="radio" name="tipo" value="Rizo" {{ $engomadoUrd->tipo === 'Rizo' ? 'checked' : '' }} disabled> Rizo</label>
+                <label class="text-sm text-black font-semibold ml-4"><input type="radio" name="tipo" value="Pie" {{ $engomadoUrd->tipo === 'Pie' ? 'checked' : '' }} disabled> Pie</label>
         
             <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">Ancho Balonas:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{ $urdido->balonas ?? ''}}">
+                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{ $engomadoUrd->balonas ?? ''}}">
             </div>
         
             <div class="flex items-center mb-1">
@@ -56,7 +55,7 @@
         
             <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">Observaciones:</label>
-                <textarea class="w-2/6 border rounded p-1 text-xs h-20" aria-valuetext="{{$urdido->observaciones ?? ''}}"></textarea>
+                <textarea class="w-2/6 border rounded p-1 text-xs h-20">{{ $engomadoUrd->observaciones ?? '' }}</textarea>
             </div>
         </div>
         
@@ -68,17 +67,17 @@
         
             <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">Metraje de la Tela:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{$urdido->metros_tela ?? ''}}">
+                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{$engomadoUrd->metros_tela ?? ''}}">
             </div>
         
             <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">Proveedor:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{ $urdido->proveedor ?? ''}}">
+                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{ $engomadoUrd->proveedor ?? ''}}">
             </div>
         
             <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">Número de Telas:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{$urdido->no_telas ?? ''}}">
+                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{$engomadoUrd->no_telas ?? ''}}">
             </div>
         
             <div class="flex items-center mb-1">
@@ -116,14 +115,14 @@
             @php
                 $registroIndex = 0;
             @endphp
-                @for($i = 0; $i < $urdido->no_telas; $i++)
+                @for($i = 0; $i < $engomadoUrd->no_telas; $i++)
                     @php
-                        $orden = $ordenEngomado[$registroIndex] ?? null;
+                        $orden = $engomado[$registroIndex] ?? null;
                         $registroIndex++;
                     @endphp
                     <tr class="text-xs">
                         <input type="hidden" name="datos[{{$registroIndex}}][id2]" value="{{ $registroIndex }}">
-                        <input type="hidden" name="datos[{{$registroIndex}}][folio]" value="{{ $urdido->folio ?? '' }}">
+                        <input type="hidden" name="datos[{{$registroIndex}}][folio]" value="{{ $requerimiento->orden_prod ?? '' }}">
                         <td class="border p-1">
                             <input class="w-24 p-1" type="date" name="datos[{{$registroIndex}}][fecha]" value="{{ $orden ? \Carbon\Carbon::parse($orden->fecha)->format('Y-m-d') : '' }}">
                         </td>          
@@ -147,7 +146,7 @@
                                     <option value="{{ $julio->no_julio }}" 
                                         data-tara="{{ $julio->tara }}" 
                                         data-tipo="{{ $julio->tipo }}"
-                                        @if($julio->no_julio == $urdido->no_julio) selected @endif>
+                                        @if($julio->no_julio == $orden->no_julio) selected @endif>
                                         {{ $julio->no_julio }}
                                     </option>
                                 @endforeach
@@ -165,8 +164,8 @@
                             <input class="w-14 p-1 text-xs" type="text" name="datos[{{$registroIndex}}][peso_neto]" id="peso_neto_{{$registroIndex}}" value="{{ $orden->peso_neto ?? ''}}" readonly>
                         </td>
 
-                        <td class="border p-1">{{ rtrim(rtrim($urdido->metros ?? '', '0'), '.') }}
-                            <input type="hidden" name="datos[{{$registroIndex}}][metros]" value="{{ rtrim(rtrim($urdido->metros ?? '', '0'), '.') }}">
+                        <td class="border p-1">{{ rtrim(rtrim($engomadoUrd->metros ?? '', '0'), '.') }}
+                            <input type="hidden" name="datos[{{$registroIndex}}][metros]" value="{{ rtrim(rtrim($engomadoUrd->metros ?? '', '0'), '.') }}">
                         </td>
                         <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][temp_canoa_1]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->temp_canoa_1 ?? '' }}"></td>
                         <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][temp_canoa_2]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->temp_canoa_2 ?? '' }}"></td>

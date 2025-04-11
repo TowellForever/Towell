@@ -20,13 +20,18 @@ class EngomadoController extends Controller
         $folio = $request->folio;
 
         // Obtener los datos de las tres tablas basadas en el folio
-        $urdido = UrdidoEngomado::where('folio', $folio)->first();
+        $engomadoUrd = UrdidoEngomado::where('folio', $folio)->first();
         $julios = Julio::all();
         $engomado = OrdenEngomado::where('folio', $folio)->get();
-
+        $requerimiento = Requerimiento::where('orden_prod', $folio)->first();
+        //Log::info('Data:', $request->all());
+        //Log::info('Data:', $engomadoUrd->toArray());
+        //Log::info('Data:', $julios->toArray());
+        Log::info('Data:', $engomado->toArray());
+        //Log::info('Data:', $requerimiento->toArray());
 
         // Pasar los datos a la vista
-        return view('modulos/engomado', compact('urdido','julios','engomado'));
+        return view('modulos/engomado', compact('engomadoUrd','julios','engomado','requerimiento'));
     }
 
      //mewtodo para insertar o actualizar registro de ORDEN
