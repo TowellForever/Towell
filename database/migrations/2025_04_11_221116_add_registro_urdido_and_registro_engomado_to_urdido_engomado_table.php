@@ -23,6 +23,4 @@ return new class extends Migration
             $table->dropColumn(['registro_urdido', 'registro_engomado']);
         });
     }
-    
-    
 };

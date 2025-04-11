@@ -71,6 +71,7 @@ Route::post('/finalizar-engomado', [EngomadoController::class, 'finalizarEngomad
 //RUTAS DEL MODULO **atadores**
 Route::get('/modulo-atadores', function () { return view('modulos/atadores');});
 Route::get('/atadores/programar-requerimientos', function () { return view('modulos/atadores/programar-requerimientos');});
+Route::get('/atadores-programar', function () { return view('modulos/atadores/programar');});
 
 //RUTAS DEL MODULO **tejedores**
 Route::get('/modulo-tejedores', function () { return view('modulos/tejedores');});
