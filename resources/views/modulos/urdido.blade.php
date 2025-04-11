@@ -3,6 +3,7 @@
 @section('content')
 <div class="container mx-auto p-6 bg-white shadow-lg rounded-lg mt-2">
     <h1 class="text-3xl font-bold text-center mb-2">ORDEN DE URDIDO</h1>
+    <div id="finalizadoOverlay">FINALIZADO</div>
 
     <!-- Formulario -->
     <form class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2">
@@ -188,40 +189,45 @@
         <button id="guardarTodo" class="ml-10 btn bg-blue-600 text-white w-20 h-9 hover:bg-blue-400">Guardar Todo</button>
     </div>
 </div>
-<script>
-    document.getElementById('finalizar').addEventListener('click', function () {
-        let folio = document.getElementById('folio').value
-    
-        if (!folio) {
-            alert("No se encontró el folio.");
-            return;
-        }
-    
-        if (!confirm("¿Estás seguro que deseas finalizar este urdido?")) return;
-    
-        fetch('/finalizar-urdido', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({
-                folio: folio
+    <script>
+        document.getElementById('finalizar').addEventListener('click', function () {
+            let folio = document.getElementById('folio').value;
+
+            if (!folio) {
+                alert("No se encontró el folio.");
+                return;
+            }
+
+            if (!confirm("¿Estás seguro que deseas finalizar este urdido?")) return;
+
+            fetch('/finalizar-urdido', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ folio: folio })
             })
-        })
-        .then(res => res.json())
-        .then(data => {
-            alert(data.message);
-            // Si quieres deshabilitar el botón o recargar:
-            document.getElementById('finalizar').disabled = true;
-            document.getElementById('finalizar').innerText = 'Finalizado';
-        })
-        .catch(err => {
-            console.error(err);
-            alert("Ocurrió un error al finalizar el urdido.");
+            .then(res => res.json())
+            .then(data => {
+                // Mostrar mensaje pantalla completa
+                const overlay = document.getElementById('finalizadoOverlay');
+                overlay.classList.add('active');
+
+                setTimeout(() => {
+                    overlay.classList.remove('active');
+                }, 3000); // 3 segundos
+
+                // Opcional: deshabilitar botón
+                document.getElementById('finalizar').disabled = true;
+                document.getElementById('finalizar').innerText = 'Finalizado';
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Ocurrió un error al finalizar el urdido.");
+            });
         });
-    });
-    </script>    
+    </script>  
 
     <script>
         document.getElementById("guardarTodo").addEventListener("click", function () {
@@ -300,6 +306,31 @@
 
     </script>
     
-
+@push('styles')
+<style>
+    #finalizadoOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 4rem;
+        font-weight: bold;
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        pointer-events: none;
+    }
+    #finalizadoOverlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+</style>
+@endpush
 
 @endsection

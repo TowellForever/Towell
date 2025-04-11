@@ -73,7 +73,6 @@
                 <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $engomadoUrd->cuendados_mini ?? ''}}" />
             </div>
         </div>
-        
     </form>
     
     <!-- Tabla de Datos -->
