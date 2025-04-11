@@ -10,7 +10,7 @@
         <div class="text-sm">
             <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">FOLIO:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $requerimiento->orden_prod ?? '' }}" readonly>
+                <input id="folio" type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $requerimiento->orden_prod ?? '' }}" readonly>
             </div>
             <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">CUENTA:</label>
@@ -137,8 +137,6 @@
                                 value="{{ isset($orden->hora_fin) ? \Illuminate\Support\Str::limit($orden->hora_fin, 5, '') : '' }}" step="60">
                         </td> 
 
-
-
                         <td class="border p-1 w-30">
                             <select class="w-24 border rounded p-1 text-xs" name="datos[{{$registroIndex}}][no_julio]" id="no_julio_{{$registroIndex}}" onchange="updateValues({{$registroIndex}})">
                                 <option value="">Seleccionar</option>
@@ -146,7 +144,7 @@
                                     <option value="{{ $julio->no_julio }}" 
                                         data-tara="{{ $julio->tara }}" 
                                         data-tipo="{{ $julio->tipo }}"
-                                        @if($julio->no_julio == $orden->no_julio) selected @endif>
+                                        @if(!is_null($orden) && $julio->no_julio == $orden->no_julio) selected @endif>
                                         {{ $julio->no_julio }}
                                     </option>
                                 @endforeach
@@ -183,11 +181,47 @@
             @endforeach
         </tbody>
     </table>
-    
     <div class="mt-4 text-right">
-        <button id="guardarTodo" class="btn bg-blue-600 text-white w-20 h-9 hover:bg-blue-400">Guardar Todo</button>
+        @if ($urdido->estatus_urdido == 'en_proceso')
+            <button id="finalizar" class="btn bg-red-600 text-white w-20 h-9 hover:bg-red-400">Finalizar</button>
+         @endif
+        <button id="guardarTodo" class="ml-10 btn bg-blue-600 text-white w-20 h-9 hover:bg-blue-400">Guardar Todo</button>
     </div>
 </div>
+<script>
+    document.getElementById('finalizar').addEventListener('click', function () {
+        let folio = document.getElementById('folio').value
+    
+        if (!folio) {
+            alert("No se encontró el folio.");
+            return;
+        }
+    
+        if (!confirm("¿Estás seguro que deseas finalizar este urdido?")) return;
+    
+        fetch('/finalizar-urdido', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({
+                folio: folio
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert(data.message);
+            // Si quieres deshabilitar el botón o recargar:
+            document.getElementById('finalizar').disabled = true;
+            document.getElementById('finalizar').innerText = 'Finalizado';
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Ocurrió un error al finalizar el urdido.");
+        });
+    });
+    </script>    
 
     <script>
         document.getElementById("guardarTodo").addEventListener("click", function () {

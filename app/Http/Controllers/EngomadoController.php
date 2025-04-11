@@ -21,7 +21,7 @@ class EngomadoController extends Controller
 
         // Obtener los datos de las tres tablas basadas en el folio
         $engomadoUrd = UrdidoEngomado::where('folio', $folio)->first();
-        $julios = Julio::all();
+        $julios = Julio::where('tipo', 'engomado')->get();
         $engomado = OrdenEngomado::where('folio', $folio)->get();
         $requerimiento = Requerimiento::where('orden_prod', $folio)->first();
         //Log::info('Data:', $request->all());
@@ -39,28 +39,54 @@ class EngomadoController extends Controller
      {
          // Obtener los registros del request
          $registros = $request->input('registros');
-         
+         $generales = $request->input('generales');
+     
+         if ($generales && isset($generales['folio'])) {
+             // Guardar o actualizar los datos generales en la tabla urdido_engomado
+             \App\Models\UrdidoEngomado::updateOrCreate(
+                 ['folio' => $generales['folio']], // condición
+                 $generales // datos a actualizar
+             );
+         }
+     
          foreach ($registros as $registro) {
-             // Validar los datos
              $validated = Validator::make($registro, [
                  'folio' => 'required',
-                 'id2' => 'required', // Validar que id2 esté presente
+                 'id2' => 'required',
              ])->validate();
      
-             // Buscar si ya existe un registro con el mismo 'id2' y 'folio'
-             $existente = OrdenEngomado::where('id2', $registro['id2'])    
+             $existente = \App\Models\OrdenEngomado::where('id2', $registro['id2'])    
                  ->where('folio', $registro['folio'])
                  ->first();
-             
-             // Si existe, actualizamos el registro
+     
              if ($existente) {
                  $existente->update($registro);
              } else {
-                 // Si no existe, creamos un nuevo registro
-                 OrdenEngomado::create($registro);
+                 \App\Models\OrdenEngomado::create($registro);
              }
          }
      
-         return response()->json(['message' => 'Todos los registros fueron guardados correctamente.']);
+         return response()->json(['message' => 'Registros y datos generales guardados correctamente.']);
      }
+     
+     public function finalizarEngomado(Request $request)
+    {
+        $folio = $request->input('folio');
+
+        if (!$folio) {
+            return response()->json(['message' => 'Folio no proporcionado.'], 400);
+        }
+
+        $registro = \App\Models\UrdidoEngomado::where('folio', $folio)->first();
+
+        if (!$registro) {
+            return response()->json(['message' => 'Registro no encontrado.'], 404);
+        }
+
+        $registro->estatus_engomado = 'finalizado';
+        $registro->save();
+
+        return response()->json(['message' => 'Estatus actualizado a FINALIZADO.']);
+    }
+
 }

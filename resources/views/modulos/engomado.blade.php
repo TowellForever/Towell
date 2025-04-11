@@ -9,80 +9,68 @@
         <div class="text-sm">
             <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">Orden de Trabajo:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{ $requerimiento->orden_prod ?? '' }}" />
+                <input id="folio" name="folio" type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $requerimiento->orden_prod ?? '' }}" />
             </div>
             <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">Cuenta:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{ $engomadoUrd->cuenta ?? '' }}" />
+                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $engomadoUrd->cuenta ?? '' }}" />
             </div>
             <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">Urdido:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{ $engomadoUrd->urdido ?? '' }}" />
-            </div>
-            <div class="flex items-center mb-1">
-                <label class="w-1/4 text-sm">Núcleo:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{ $engomadoUrd->nucleo ?? '' }}" />
-            </div>
-            <div class="flex items-center mb-1">
-                <label class="w-1/4 text-sm">Cuendeados Mínimo:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{ $engomadoUrd->cuendados_mini ?? ''}}" />
+                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $engomadoUrd->urdido ?? '' }}" />
             </div>
             <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">Destino:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{ $engomadoUrd->destino ?? '' }}" />
+                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $engomadoUrd->destino.' '.$requerimiento->telar?? '' }}" />
+            </div>
+            <div class="flex items-center mb-1">
+                <label class="w-1/4 text-sm">Proveedor:</label>
+                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $engomadoUrd->proveedor ?? ''}}">
             </div>
         </div>
         
         <div class="text-sm">
             <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">Engomado:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs">
+                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" name="engomado" value="{{ $engomadoUrd->engomado ?? ''}}">
             </div>
-        
             <label class="w-1/4 text-sm">Tipo:</label>
-                <label class="text-sm text-black font-semibold"><input type="radio" name="tipo" value="Rizo" {{ $engomadoUrd->tipo === 'Rizo' ? 'checked' : '' }} disabled> Rizo</label>
-                <label class="text-sm text-black font-semibold ml-4"><input type="radio" name="tipo" value="Pie" {{ $engomadoUrd->tipo === 'Pie' ? 'checked' : '' }} disabled> Pie</label>
-        
+                <label class="text-sm text-black font-bold"><input type="radio" name="tipo" value="Rizo" {{ $engomadoUrd->tipo === 'Rizo' ? 'checked' : '' }} disabled> Rizo</label>
+                <label class="text-sm text-black font-bold ml-4"><input type="radio" name="tipo" value="Pie" {{ $engomadoUrd->tipo === 'Pie' ? 'checked' : '' }} disabled> Pie</label>
+            <div class="flex items-center mb-1 mt-2">
+                <label class="w-1/4 text-sm">Núcleo:</label>
+                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $engomadoUrd->nucleo ?? '' }}" />
+            </div>
+            <div class="flex items-center mb-1">
+                <label class="w-1/4 text-sm">No. De Telas:</label>
+                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{$engomadoUrd->no_telas ?? ''}}">
+            </div>
             <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">Ancho Balonas:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{ $engomadoUrd->balonas ?? ''}}">
+                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $engomadoUrd->balonas ?? ''}}">
             </div>
-        
             <div class="flex items-center mb-1">
-                <label class="w-1/4 text-sm">Sólidos:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs">
-            </div>
-        
-            <div class="flex items-center mb-1">
-                <label class="w-1/4 text-sm">Observaciones:</label>
-                <textarea class="w-2/6 border rounded p-1 text-xs h-20">{{ $engomadoUrd->observaciones ?? '' }}</textarea>
+                <label class="w-1/4 text-sm">Mts. De Telas:</label>
+                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{$engomadoUrd->metros_tela ?? ''}}">
             </div>
         </div>
-        
+
         <div class="text-sm">
             <div class="flex items-center mb-1">
-                <label class="w-1/4 text-sm">Fecha:</label>
-                <input type="date" class="w-2/6 border rounded p-1 text-xs">
-            </div>
-        
-            <div class="flex items-center mb-1">
-                <label class="w-1/4 text-sm">Metraje de la Tela:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{$engomadoUrd->metros_tela ?? ''}}">
-            </div>
-        
-            <div class="flex items-center mb-1">
-                <label class="w-1/4 text-sm">Proveedor:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{ $engomadoUrd->proveedor ?? ''}}">
-            </div>
-        
-            <div class="flex items-center mb-1">
-                <label class="w-1/4 text-sm">Número de Telas:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs" value="{{$engomadoUrd->no_telas ?? ''}}">
-            </div>
-        
-            <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">Color:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs">
+                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" name="color" value="{{ $engomadoUrd->color ?? ''}}">
+            </div>      
+            <div class="flex items-center mb-1">
+                <label class="w-1/4 text-sm">Sólidos:</label>
+                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" name="solidos" value="{{ $engomadoUrd->solidos ?? ''}}">
+            </div>
+            <div class="flex items-center mb-1">
+                <label class="w-1/4 text-sm">Observaciones:</label>
+                <textarea class="w-2/6 border rounded p-1 text-xs h-20 font-bold" name="observaciones">{{ $engomadoUrd->observaciones ?? '' }}</textarea>
+            </div>
+            <div class="flex items-center mb-1">
+                <label class="w-1/4 text-sm">Cuendeados Mín.:</label>
+                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $engomadoUrd->cuendados_mini ?? ''}}" />
             </div>
         </div>
         
@@ -146,7 +134,7 @@
                                     <option value="{{ $julio->no_julio }}" 
                                         data-tara="{{ $julio->tara }}" 
                                         data-tipo="{{ $julio->tipo }}"
-                                        @if($julio->no_julio == $orden->no_julio) selected @endif>
+                                        @if(!is_null($orden) && $julio->no_julio == $orden->no_julio) selected @endif>
                                         {{ $julio->no_julio }}
                                     </option>
                                 @endforeach
@@ -177,15 +165,59 @@
         </tbody>
     </table>
     <div class="mt-4 text-right">
-      <button id="guardarTodo" class="btn bg-blue-600 text-white w-20 h-9 hover:bg-blue-400">Guardar Todo</button>
+        @if ($engomadoUrd->estatus_engomado == 'en_proceso')
+            <button id="finalizar" class="btn bg-red-600 text-white w-20 h-9 hover:bg-red-400">Finalizar</button>
+        @endif
+        <button id="guardarTodo" class="btn bg-blue-600 text-white w-20 h-9 hover:bg-blue-400">Guardar Todo</button>
     </div>
 </div>
 
+<script>
+    document.getElementById('finalizar').addEventListener('click', function () {
+        let folio = document.getElementById('folio').value
+    
+        if (!folio) {
+            alert("No se encontró el folio.");
+            return;
+        }
+    
+        if (!confirm("¿Estás seguro que deseas finalizar este urdido?")) return;
+    
+        fetch('/finalizar-engomado', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({
+                folio: folio
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert(data.message);
+            // Si quieres deshabilitar el botón o recargar:
+            document.getElementById('finalizar').disabled = true;
+            document.getElementById('finalizar').innerText = 'Finalizado';
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Ocurrió un error al finalizar el urdido.");
+        });
+    });
+    </script>   
     <script>
         document.getElementById("guardarTodo").addEventListener("click", function () {
             // Obtener todos los inputs de tipo name="datos[..]"
             const inputs = document.querySelectorAll('input[name^="datos"], select[name^="datos"]');
             let formData = {};
+            let camposGenerales = {
+                color: document.querySelector('input[name="color"]').value,
+                solidos: document.querySelector('input[name="solidos"]').value,
+                observaciones: document.querySelector('textarea[name="observaciones"]').value,
+                folio: document.querySelector('input[name="folio"]').value,
+                engomado: document.querySelector('input[name="engomado"]').value
+            };
 
             // Agrupar inputs por índice
             inputs.forEach(input => {
@@ -214,7 +246,10 @@
                     "Content-Type": "application/json",
                     "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
                 },
-                body: JSON.stringify({ registros: Object.values(formData) })
+                body: JSON.stringify({ 
+                registros: Object.values(formData), 
+                generales: camposGenerales // ← agregamos los campos generales aquí
+                })
             })
             .then(response => response.json())
             .then(data => {

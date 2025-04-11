@@ -33,6 +33,12 @@ class UrdidoEngomado extends Model
         'metros_tela',
         'cuendados_mini',
         'observaciones',
+        'estatus_urdido',
+        'estatus_engomado',
+        'engomado',
+        'color',
+        'solidos'
+
     ];
 
     // Si se desea definir el tipo de dato de los campos, se puede hacer

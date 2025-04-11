@@ -23,7 +23,7 @@ class UrdidoController extends Controller
         $construccion = ConstruccionUrdido::where('folio', $folio)->get(); // Usamos get() también para la construcción
         $requerimiento = Requerimiento::where('orden_prod', $folio)->first();
         $ordenUrdido = OrdenUrdido::where('folio', $folio)->get(); //obtenemos los registros que van en la tabla de Registro de Produccion
-        $julios = Julio::all();
+        $julios = Julio::where('tipo', 'urdido')->get();
 
         if (!$urdido || !$construccion || !$requerimiento||!$ordenUrdido||!$julios) {
             return redirect()->route('ingresarFolio')->withErrors('No se encontraron datos para el folio proporcionado.');
@@ -64,5 +64,25 @@ class UrdidoController extends Controller
         return response()->json(['message' => 'Todos los registros fueron guardados correctamente.']);
     }
     
+    public function finalizarUrdido(Request $request)
+    {
+        $folio = $request->input('folio');
+
+        if (!$folio) {
+            return response()->json(['message' => 'Folio no proporcionado.'], 400);
+        }
+
+        $registro = \App\Models\UrdidoEngomado::where('folio', $folio)->first();
+
+        if (!$registro) {
+            return response()->json(['message' => 'Registro no encontrado.'], 404);
+        }
+
+        $registro->estatus_urdido = 'finalizado';
+        $registro->save();
+
+        return response()->json(['message' => 'Estatus actualizado a FINALIZADO.']);
+    }
+
     
 }

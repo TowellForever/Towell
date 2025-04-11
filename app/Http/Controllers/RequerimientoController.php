@@ -145,7 +145,9 @@ class RequerimientoController extends Controller
         return view('modulos.tejido.programarUrdidoEngomado', compact('requerimiento', 'datos'));
     }
     
-    //metodo querealiza funciones de vista PROGRAMARURDIDOENGOMADO
+   /* metodo querealiza funciones de vista PROGRAMARURDIDOENGOMADO**********************************************************************************
+    ***********************************************************************************************************************************************
+     */
     public function requerimientosAGuardar(Request $request)
     {
         //dd($request);
@@ -169,6 +171,12 @@ class RequerimientoController extends Controller
             'observaciones' => $request->input('observaciones'),
             'created_at' => now(),
             'updated_at' => now(),
+            'estatus_urdido'=>'en_proceso',
+            'estatus_engomado'=>'en_proceso',
+            'engomado'=>'',
+            'color'=>'',
+            'solidos'=>'',
+
         ]);
     
       // Guardar los datos de Construcción Urdido (recibimos arrays de "no_julios" y "hilos")

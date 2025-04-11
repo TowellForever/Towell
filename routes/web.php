@@ -57,6 +57,8 @@ Route::get('/urdido/programar-requerimientos', function () { return view('modulo
 Route::get('ingresar-folio', function () {return view('modulos/urdido/ingresar_folio');})->name('ingresarFolio');
 Route::post('orden-trabajo', [UrdidoController::class, 'cargarDatosUrdido'])->name('produccion.ordenTrabajo');
 Route::post('/update-orden-urdido', [UrdidoController::class, 'updateOrdenUrdido'])->name('ordenUrdido.guardar');
+Route::post('/finalizar-urdido', [UrdidoController::class, 'finalizarUrdido']);
+
 
 //RUTAS DEL MODULO **engomado**
 Route::get('/modulo-engomado', function () { return view('modulos/engomado');});
@@ -64,6 +66,7 @@ Route::get('/engomado/programar-requerimientos', function () { return view('modu
 Route::get('/ingresar-folio-engomado', function () {return view('modulos/engomado/ingresar_folio');})->name('ingresarFolioEngomado');
 Route::post('/orden-trabajo-engomado', [EngomadoController::class, 'cargarDatosEngomado'])->name('produccion.ordenTrabajoEngomado');
 Route::post('/update-orden-engomado', [EngomadoController::class, 'updateOrdenEngomado'])->name('ordenEngomado.guardar');
+Route::post('/finalizar-engomado', [EngomadoController::class, 'finalizarEngomado']);
 
 //RUTAS DEL MODULO **atadores**
 Route::get('/modulo-atadores', function () { return view('modulos/atadores');});
