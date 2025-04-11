@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ConstruccionUrdido;
 use App\Models\Julio;
+use App\Models\Oficial;
 use App\Models\OrdenUrdido;
 use Illuminate\Http\Request;
 use App\Models\UrdidoEngomado;
@@ -24,13 +25,14 @@ class UrdidoController extends Controller
         $requerimiento = Requerimiento::where('orden_prod', $folio)->first();
         $ordenUrdido = OrdenUrdido::where('folio', $folio)->get(); //obtenemos los registros que van en la tabla de Registro de Produccion
         $julios = Julio::where('tipo', 'urdido')->get();
+        $oficiales = Oficial::all();
 
-        if (!$urdido || !$construccion || !$requerimiento||!$ordenUrdido||!$julios) {
+        if (!$urdido || !$construccion || !$requerimiento||!$ordenUrdido||!$julios||!$oficiales) {
             return redirect()->route('ingresarFolio')->withErrors('No se encontraron datos para el folio proporcionado.');
         }
 
         // Pasar los datos a la vista
-        return view('modulos/urdido', compact('urdido', 'construccion', 'requerimiento','ordenUrdido','julios'));
+        return view('modulos/urdido', compact('urdido', 'construccion', 'requerimiento','ordenUrdido','julios','oficiales'));
     }
 
     //mewtodo para insertar o actualizar registro de ORDEN

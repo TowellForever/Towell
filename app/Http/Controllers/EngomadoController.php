@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ConstruccionUrdido;
 use App\Models\Julio;
+use App\Models\Oficial;
 use App\Models\OrdenEngomado;
 use App\Models\OrdenUrdido;
 use App\Models\Requerimiento;
@@ -24,6 +25,7 @@ class EngomadoController extends Controller
         $julios = Julio::where('tipo', 'engomado')->get();
         $engomado = OrdenEngomado::where('folio', $folio)->get();
         $requerimiento = Requerimiento::where('orden_prod', $folio)->first();
+        $oficiales = Oficial::all();
         //Log::info('Data:', $request->all());
         //Log::info('Data:', $engomadoUrd->toArray());
         //Log::info('Data:', $julios->toArray());
@@ -31,7 +33,7 @@ class EngomadoController extends Controller
         //Log::info('Data:', $requerimiento->toArray());
 
         // Pasar los datos a la vista
-        return view('modulos/engomado', compact('engomadoUrd','julios','engomado','requerimiento'));
+        return view('modulos/engomado', compact('engomadoUrd','julios','engomado','requerimiento','oficiales'));
     }
 
      //mewtodo para insertar o actualizar registro de ORDEN

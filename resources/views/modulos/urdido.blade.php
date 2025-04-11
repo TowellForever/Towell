@@ -27,7 +27,6 @@
             </div>
 
         </div>
-        
 
         <!-- Segunda columna -->
         <div class="text-sm">
@@ -55,7 +54,6 @@
                 <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="pending">
             </div>
         </div>
-
 
         <!-- Tercera columna -->
         <div>
@@ -117,6 +115,7 @@
                 @for($i = 0; $i < $registroConstruccion->no_julios; $i++)
                     @php
                         $orden = $ordenUrdido[$registroIndex] ?? null;
+                        $oficial = $oficiales[$registroIndex] ?? null;
                         $registroIndex++;
                     @endphp
                     <tr class="text-xs">
@@ -127,7 +126,19 @@
 
                         </td>
                                               
-                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][oficial]" value="{{ $orden->oficial ?? ''}}" class="w-14 border rounded p-1 text-xs"></td>
+                        <td class="border p-1 w-30">
+                            <select class="w-24 border rounded p-1 text-xs" name="datos[{{$registroIndex}}][oficial]" id="oficial_{{$registroIndex}}" onchange="updateOficialTipo({{$registroIndex}})">
+                                <option value="">Seleccionar</option>
+                                @foreach($oficiales as $of)
+                                    <option value="{{ $of->oficial }}" 
+                                        data-tipo="{{ $of->tipo }}"
+                                        @if(!empty($orden) && $of->oficial == $orden->oficial) selected @endif>
+                                        {{ $of->oficial }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </td>
+                        
                         <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][turno]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->turno ?? '' }}"></td>
                         <td class="border p-1">
                             <input type="time" name="datos[{{$registroIndex}}][hora_inicio]" class="w-24 border rounded p-1 text-xs" 
@@ -151,7 +162,6 @@
                                 @endforeach
                             </select>
                         </td>
-                        
 
                         <td class="border p-1">{{ $registroConstruccion->hilos ?? '' }}
                             <input type="hidden" name="datos[{{$registroIndex}}][hilos]" value="{{ $registroConstruccion->hilos ?? '' }}">
@@ -168,8 +178,6 @@
                             <input class="w-14 p-1 text-xs" type="text" name="datos[{{$registroIndex}}][peso_neto]" id="peso_neto_{{$registroIndex}}" value="{{ $orden->peso_neto ?? ''}}" readonly>
                         </td>
 
-
-
                         <td class="border p-1">{{ rtrim(rtrim($urdido->metros ?? '', '0'), '.') }}
                             <input type="hidden" name="datos[{{$registroIndex}}][metros]" value="{{ rtrim(rtrim($urdido->metros ?? '', '0'), '.') }}">
                         </td>
@@ -185,10 +193,24 @@
     <div class="mt-4 text-right">
         @if ($urdido->estatus_urdido == 'en_proceso')
             <button id="finalizar" class="btn bg-red-600 text-white w-20 h-9 hover:bg-red-400">Finalizar</button>
-         @endif
-        <button id="guardarTodo" class="ml-10 btn bg-blue-600 text-white w-20 h-9 hover:bg-blue-400">Guardar Todo</button>
+            <button id="guardarTodo" class="ml-10 btn bg-blue-600 text-white w-20 h-9 hover:bg-blue-400">Guardar</button>
+        @endif
     </div>
-</div>
+    </div>
+
+    <script>
+        function updateOficialTipo(index) {
+            const select = document.getElementById('oficial_' + index);
+            const tipo = select.options[select.selectedIndex].getAttribute('data-tipo');
+
+            // Si quieres llenar otro input con ese tipo, podrías hacer algo como:
+            const tipoInput = document.getElementById('tipo_oficial_' + index);
+            if (tipoInput) {
+                tipoInput.value = tipo;
+            }
+        }
+    </script>
+
     <script>
         document.getElementById('finalizar').addEventListener('click', function () {
             let folio = document.getElementById('folio').value;

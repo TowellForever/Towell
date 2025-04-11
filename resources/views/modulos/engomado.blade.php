@@ -9,23 +9,23 @@
         <div class="text-sm">
             <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">Orden de Trabajo:</label>
-                <input id="folio" name="folio" type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $requerimiento->orden_prod ?? '' }}" />
+                <input id="folio" name="folio" type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $requerimiento->orden_prod ?? '' }}" readonly/>
             </div>
             <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">Cuenta:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $engomadoUrd->cuenta ?? '' }}" />
+                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $engomadoUrd->cuenta ?? '' }}" readonly/>
             </div>
             <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">Urdido:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $engomadoUrd->urdido ?? '' }}" />
+                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $engomadoUrd->urdido ?? '' }}" readonly/>
             </div>
             <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">Destino:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $engomadoUrd->destino.' '.$requerimiento->telar?? '' }}" />
+                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $engomadoUrd->destino.' '.$requerimiento->telar?? '' }}" readonly/>
             </div>
             <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">Proveedor:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $engomadoUrd->proveedor ?? ''}}">
+                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $engomadoUrd->proveedor ?? ''}}"readonly>
             </div>
         </div>
         
@@ -39,23 +39,31 @@
                 <label class="text-sm text-black font-bold ml-4"><input type="radio" name="tipo" value="Pie" {{ $engomadoUrd->tipo === 'Pie' ? 'checked' : '' }} disabled> Pie</label>
             <div class="flex items-center mb-1 mt-2">
                 <label class="w-1/4 text-sm">Núcleo:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $engomadoUrd->nucleo ?? '' }}" />
+                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $engomadoUrd->nucleo ?? '' }}"readonly />
             </div>
             <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">No. De Telas:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{$engomadoUrd->no_telas ?? ''}}">
+                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{$engomadoUrd->no_telas ?? ''}}"readonly>
             </div>
             <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">Ancho Balonas:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $engomadoUrd->balonas ?? ''}}">
+                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $engomadoUrd->balonas ?? ''}}"readonly>
             </div>
             <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">Mts. De Telas:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{$engomadoUrd->metros_tela ?? ''}}">
+                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{$engomadoUrd->metros_tela ?? ''}}"readonly>
             </div>
         </div>
 
         <div class="text-sm">
+            <div class="flex items-center mb-1">
+                <label class="w-1/4 text-sm">Cuendeados Mín.:</label>
+                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $engomadoUrd->cuendados_mini ?? ''}}" />
+            </div>
+            <div class="flex items-center mb-1">
+                <label class="w-1/4 text-sm">Observaciones:</label>
+                <textarea class="w-2/6 border rounded p-1 text-xs h-20 font-bold" name="observaciones">{{ $engomadoUrd->observaciones ?? '' }}</textarea>
+            </div>
             <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">Color:</label>
                 <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" name="color" value="{{ $engomadoUrd->color ?? ''}}">
@@ -63,14 +71,6 @@
             <div class="flex items-center mb-1">
                 <label class="w-1/4 text-sm">Sólidos:</label>
                 <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" name="solidos" value="{{ $engomadoUrd->solidos ?? ''}}">
-            </div>
-            <div class="flex items-center mb-1">
-                <label class="w-1/4 text-sm">Observaciones:</label>
-                <textarea class="w-2/6 border rounded p-1 text-xs h-20 font-bold" name="observaciones">{{ $engomadoUrd->observaciones ?? '' }}</textarea>
-            </div>
-            <div class="flex items-center mb-1">
-                <label class="w-1/4 text-sm">Cuendeados Mín.:</label>
-                <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="{{ $engomadoUrd->cuendados_mini ?? ''}}" />
             </div>
         </div>
     </form>
@@ -113,8 +113,18 @@
                         <td class="border p-1">
                             <input class="w-24 p-1" type="date" name="datos[{{$registroIndex}}][fecha]" value="{{ $orden ? \Carbon\Carbon::parse($orden->fecha)->format('Y-m-d') : '' }}">
                         </td>          
-                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][oficial]" value="{{ $orden->oficial ?? ''}}" class="w-14 border rounded p-1 text-xs"></td>
-                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][turno]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->turno ?? '' }}"></td>
+                        <td class="border p-1 w-30">
+                            <select class="w-24 border rounded p-1 text-xs" name="datos[{{$registroIndex}}][oficial]" id="oficial_{{$registroIndex}}" onchange="updateOficialTipo({{$registroIndex}})">
+                                <option value="">Seleccionar</option>
+                                @foreach($oficiales as $of)
+                                    <option value="{{ $of->oficial }}" 
+                                        data-tipo="{{ $of->tipo }}"
+                                        @if(!empty($orden) && $of->oficial == $orden->oficial) selected @endif>
+                                        {{ $of->oficial }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </td>                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][turno]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->turno ?? '' }}"></td>
                         <td class="border p-1">
                             <input type="time" name="datos[{{$registroIndex}}][hora_inicio]" class="w-24 border rounded p-1 text-xs" 
                                 value="{{ isset($orden->hora_inicio) ? \Illuminate\Support\Str::limit($orden->hora_inicio, 5, '') : '' }}" step="60">
@@ -166,8 +176,8 @@
     <div class="mt-4 text-right">
         @if ($engomadoUrd->estatus_engomado == 'en_proceso')
             <button id="finalizar" class="btn bg-red-600 text-white w-20 h-9 hover:bg-red-400">Finalizar</button>
+            <button id="guardarTodo" class="btn bg-blue-600 text-white w-20 h-9 hover:bg-blue-400">Guardar</button>
         @endif
-        <button id="guardarTodo" class="btn bg-blue-600 text-white w-20 h-9 hover:bg-blue-400">Guardar Todo</button>
     </div>
 </div>
 
@@ -290,5 +300,19 @@
             document.getElementById('peso_neto_' + registroIndex).value = pesoNeto.toFixed(2); // Mostrar con 2 decimales
         }
 
+    </script>
+
+    
+    <script>
+        function updateOficialTipo(index) {
+            const   select = document.getElementById('oficial_' + index);
+            const tipo = select.options[select.selectedIndex].getAttribute('data-tipo');
+
+            // Si quieres llenar otro input con ese tipo, podrías hacer algo como:
+            const tipoInput = document.getElementById('tipo_oficial_' + index);
+            if (tipoInput) {
+                tipoInput.value = tipo;
+            }
+        }
     </script>
 @endsection
