@@ -7,9 +7,7 @@
     <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
         @php
             $modulos = [
-                ['nombre' => 'Programar', 'imagen' => 'Atadores.jpg', 'ruta' => '/atadores-programar'],
-                ['nombre' => 'Submódulo 2', 'imagen' => 'Atadores.jpg', 'ruta' => '/atadores/atadores2'],
-                ['nombre' => 'Programar Requerimientos', 'imagen' => 'engomado.jpg', 'ruta' => '/engomado/programar-requerimientos']
+                ['nombre' => 'Programación', 'imagen' => 'Atadores.jpg', 'ruta' => '/atadores-juliosAtados'],
             ];
         @endphp
         @foreach ($modulos as $modulo)

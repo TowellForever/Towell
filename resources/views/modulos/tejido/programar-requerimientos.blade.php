@@ -9,11 +9,11 @@
         <!-- Tabla 1: Requerimiento desde Dynamics AX -->
         <div class="bg-white shadow-md rounded-lg p-2 custom-scroll">
             <h2 class="text-lg font-bold bg-yellow-200 text-center py-2">Programación de Requerimientos</h2>
+            <div class="flex justify-end mt-2 mb-2">
+                <button class="px-3 w-1/6 py-1 text-xs bg-green-500 text-white rounded shadow hover:bg-green-600">Programar</button>
+            </div>
             <div class="overflow-y-auto max-h-60 "> <!-- Contenedor con scroll -->
                 <!-- Tabla 1: Programación de Requerimientos -->
-                <div class="flex justify-end mt-2 mb-2">
-                    <button class="px-3 w-1/6 py-1 text-xs bg-green-500 text-white rounded shadow hover:bg-green-600">Programar</button>
-                </div>
             <table class="w-full text-xs border-collapse border border-gray-300 requerimientos">
                 <thead>
                     <tr class="bg-gray-200 text-left">
