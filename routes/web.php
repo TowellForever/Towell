@@ -118,8 +118,6 @@ Route::resource('telares', CatalagoTelarController::class);
 Route::resource('eficiencia', CatalagoEficienciaController::class);
 Route::resource('velocidad', CatalagoVelocidadController::class);
 
-Route::get('/falla', function () { return view('falla');})->name('telares.falla');
-
 //twilio
 // Ruta para mostrar el formulario (GET)
 Route::get('/reportar', function () {return view('reportar');})->name('reportar.falla.form');
@@ -128,4 +126,9 @@ Route::post('/reportar-falla', [ReporteFallaController::class, 'enviarReporte'])
 //WhatsApp Business
 Route::get('/whatsapp', function () {return view('whatsapp');});
 Route::post('/send-whatsapp', [WhatsAppController::class, 'sendMessage']);
+//Route::get('/whatsapp2', function () {return view('whatsapp2');});
+Route::get('/whatsapp2', [WhatsAppController::class, 'mensajeFallas'])->name('telares.falla');
+Route::post('/send-whatsapp2', [WhatsAppController::class, 'enviarMensaje']);
+Route::post('/send-failSMS', [ReporteFallaController::class, 'enviarSMS']);
+
 

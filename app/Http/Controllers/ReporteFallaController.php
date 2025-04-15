@@ -25,4 +25,16 @@ class ReporteFallaController extends Controller
 
         return back()->with('success', 'Reporte enviado con éxito.');
     }
+
+    public function enviarSMSWA (Request $request)
+    {
+        $request->validate([
+            'telefono' => 'required',
+            'mensaje' => 'required|string|max:1600',
+        ]);
+    
+        $this->twilioService->sendMessage($request->telefono, $request->mensaje);
+    
+        return response()->json(['success' => true]);
+    }
 }

@@ -11,6 +11,7 @@ class TwilioService
     public function __construct()
     {
         $this->twilio = new Client(config('services.twilio.sid'), config('services.twilio.token'));
+
     }
 
     public function sendMessage($to, $message)
