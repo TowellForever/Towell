@@ -215,7 +215,12 @@ class RequerimientoController extends Controller
                 return redirect()->back()->with('error', 'No se encontró un registro válido en requerimiento para actualizar.');
             }
 
-            //regreso a la pagina de programar reqwuerimientos y tambien envio los 2 objetos para llenar ambas tablas
+    
+            return view('modulos/tejido/FolioEnPantalla')->with('folio', $folio); //envio el folio generado para mostrar al usuario su Orden de Trabajo
+    }
+
+    public function regresoAProgramarRequerimientos(){
+        //regreso a la pagina de programar reqwuerimientos y tambien envio los 2 objetos para llenar ambas tablas
             // Consultar los requerimientos activos
             $requerimientos = DB::table('requerimiento')
             ->where('status', 'activo') // Filtrar solo los registros activos
@@ -228,8 +233,8 @@ class RequerimientoController extends Controller
                 ->table('TI_PRO.dbo.TWDISPONIBLEURDENG')
                 ->where('INVENTLOCATIONID', 'A-JUL/TELA')
                 ->get();
-    
-        return view('modulos/tejido/programar-requerimientos', compact('requerimientos', 'inventarios'));
+
+                return view('modulos/tejido/programar-requerimientos', compact('requerimientos', 'inventarios'));
     }
     
     private function generarFolioUnico()

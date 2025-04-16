@@ -124,7 +124,8 @@
                                     </option>
                                 @endforeach
                             </select>
-                        </td>                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][turno]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->turno ?? '' }}"></td>
+                        </td>                        
+                        <td class="border p-1"><input type="text" inputmode="numeric" pattern="[0-9]*" name="datos[{{$registroIndex}}][turno]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->turno ?? '' }}"></td>
                         <td class="border p-1">
                             <input type="time" name="datos[{{$registroIndex}}][hora_inicio]" class="w-24 border rounded p-1 text-xs" 
                                 value="{{ isset($orden->hora_inicio) ? \Illuminate\Support\Str::limit($orden->hora_inicio, 5, '') : '' }}" step="60">
@@ -134,7 +135,7 @@
                                 value="{{ isset($orden->hora_fin) ? \Illuminate\Support\Str::limit($orden->hora_fin, 5, '') : '' }}" step="60">
                         </td> 
 
-                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][tiempo]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->tiempo ?? '' }}"></td>
+                        <td class="border p-1"><input type="text" inputmode="numeric" pattern="[0-9]*" name="datos[{{$registroIndex}}][tiempo]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->tiempo ?? '' }}"></td>
 
                         <td class="border p-1 w-30">
                             <select class="w-24 border rounded p-1 text-xs" name="datos[{{$registroIndex}}][no_julio]" id="no_julio_{{$registroIndex}}" onchange="updateValues({{$registroIndex}})">
@@ -151,7 +152,7 @@
                         </td>
                         
                         <td class="border p-1">
-                            <input class="w-10 border rounded p-1 text-xs" type="text" name="datos[{{$registroIndex}}][peso_bruto]" value="{{ $orden->peso_bruto ?? '' }}" id="peso_bruto_{{$registroIndex}}" onchange="updatePesoNeto({{$registroIndex}})">
+                            <input class="w-10 border rounded p-1 text-xs" type="text" inputmode="numeric" pattern="[0-9]*" name="datos[{{$registroIndex}}][peso_bruto]" value="{{ $orden->peso_bruto ?? '' }}" id="peso_bruto_{{$registroIndex}}" onchange="updatePesoNeto({{$registroIndex}})">
                         </td>
                         
                         <td class="border p-1">
@@ -164,11 +165,11 @@
                         <td class="border p-1">{{ rtrim(rtrim($engomadoUrd->metros ?? '', '0'), '.') }}
                             <input type="hidden" name="datos[{{$registroIndex}}][metros]" value="{{ rtrim(rtrim($engomadoUrd->metros ?? '', '0'), '.') }}">
                         </td>
-                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][temp_canoa_1]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->temp_canoa_1 ?? '' }}"></td>
-                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][temp_canoa_2]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->temp_canoa_2 ?? '' }}"></td>
-                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][temp_canoa_3]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->temp_canoa_3 ?? '' }}"></td>
-                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][humedad]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->humedad ?? '' }}"></td>
-                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][roturas]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->roturas ?? '' }}"></td>
+                        <td class="border p-1"><input type="text" inputmode="numeric" pattern="[0-9]*" name="datos[{{$registroIndex}}][temp_canoa_1]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->temp_canoa_1 ?? '' }}"></td>
+                        <td class="border p-1"><input type="text" inputmode="numeric" pattern="[0-9]*" name="datos[{{$registroIndex}}][temp_canoa_2]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->temp_canoa_2 ?? '' }}"></td>
+                        <td class="border p-1"><input type="text" inputmode="numeric" pattern="[0-9]*" name="datos[{{$registroIndex}}][temp_canoa_3]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->temp_canoa_3 ?? '' }}"></td>
+                        <td class="border p-1"><input type="text" inputmode="numeric" pattern="[0-9]*" name="datos[{{$registroIndex}}][humedad]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->humedad ?? '' }}"></td>
+                        <td class="border p-1"><input type="text" inputmode="numeric" pattern="[0-9]*" name="datos[{{$registroIndex}}][roturas]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->roturas ?? '' }}"></td>
                     </tr>
                 @endfor
         </tbody>

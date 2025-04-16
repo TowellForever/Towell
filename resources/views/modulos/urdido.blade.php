@@ -139,7 +139,7 @@
                             </select>
                         </td>
                         
-                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][turno]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->turno ?? '' }}"></td>
+                        <td class="border p-1"><input type="text" inputmode="numeric" pattern="[0-9]*" name="datos[{{$registroIndex}}][turno]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->turno ?? '' }}"></td>
                         <td class="border p-1">
                             <input type="time" name="datos[{{$registroIndex}}][hora_inicio]" class="w-24 border rounded p-1 text-xs" 
                                 value="{{ isset($orden->hora_inicio) ? \Illuminate\Support\Str::limit($orden->hora_inicio, 5, '') : '' }}" step="60">
@@ -168,7 +168,7 @@
                         </td>
                         
                         <td class="border p-1">
-                            <input class="w-10 border rounded p-1 text-xs" type="text" name="datos[{{$registroIndex}}][peso_bruto]" value="{{ $orden->peso_bruto ?? '' }}" id="peso_bruto_{{$registroIndex}}" onchange="updatePesoNeto({{$registroIndex}})">
+                            <input class="w-10 border rounded p-1 text-xs" type="text" inputmode="numeric" pattern="[0-9]*" name="datos[{{$registroIndex}}][peso_bruto]" value="{{ $orden->peso_bruto ?? '' }}" id="peso_bruto_{{$registroIndex}}" onchange="updatePesoNeto({{$registroIndex}})">
                         </td>
                         
                         <td class="border p-1">
@@ -181,10 +181,10 @@
                         <td class="border p-1">{{ rtrim(rtrim($urdido->metros ?? '', '0'), '.') }}
                             <input type="hidden" name="datos[{{$registroIndex}}][metros]" value="{{ rtrim(rtrim($urdido->metros ?? '', '0'), '.') }}">
                         </td>
-                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][hilatura]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->hilatura ?? '' }}"></td>
-                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][maquina]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->maquina ?? '' }}"></td>
-                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][operacion]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->operacion ?? '' }}"></td>
-                        <td class="border p-1"><input type="text" name="datos[{{$registroIndex}}][transferencia]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->transferencia ?? '' }}"></td>
+                        <td class="border p-1"><input type="text" inputmode="numeric" pattern="[0-9]*" name="datos[{{$registroIndex}}][hilatura]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->hilatura ?? '' }}"></td>
+                        <td class="border p-1"><input type="text" inputmode="numeric" pattern="[0-9]*" name="datos[{{$registroIndex}}][maquina]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->maquina ?? '' }}"></td>
+                        <td class="border p-1"><input type="text" inputmode="numeric" pattern="[0-9]*" name="datos[{{$registroIndex}}][operacion]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->operacion ?? '' }}"></td>
+                        <td class="border p-1"><input type="text" inputmode="numeric" pattern="[0-9]*" name="datos[{{$registroIndex}}][transferencia]" class="w-10 border rounded p-1 text-xs" value="{{ $orden->transferencia ?? '' }}"></td>
                     </tr>
                 @endfor
             @endforeach
@@ -196,7 +196,21 @@
             <button id="guardarTodo" class="ml-10 btn bg-blue-600 text-white w-20 h-9 hover:bg-blue-400">Guardar</button>
         @endif
     </div>
+</div>
+
+    <!-- Modal de error -->
+    <div id="modalErrores" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg w-96 p-6">
+            <h2 class="text-lg font-semibold mb-4 text-red-600">Campos faltantes</h2>
+            <div id="contenidoErrores" class="text-sm text-gray-700 whitespace-pre-line"></div>
+            <div class="mt-6 text-right">
+                <button onclick="cerrarModalErrores()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                    Aceptar
+                </button>
+            </div>
+        </div>
     </div>
+
 
     <script>
         function updateOficialTipo(index) {
@@ -253,9 +267,9 @@
 
     <script>
         document.getElementById("guardarTodo").addEventListener("click", function () {
-            // Obtener todos los inputs de tipo name="datos[..]"
             const inputs = document.querySelectorAll('input[name^="datos"], select[name^="datos"]');
             let formData = {};
+            let erroresPorFila = {};
 
             // Agrupar inputs por índice
             inputs.forEach(input => {
@@ -268,16 +282,36 @@
                         formData[index] = {};
                     }
 
-                    // Verificar si es un select para agregar el valor seleccionado
-                    if (input.tagName.toLowerCase() === "select") {
-                        formData[index][key] = input.options[input.selectedIndex].value; // Valor de la opción seleccionada
-                    } else {
-                        formData[index][key] = input.value;
+                    // Obtener valor
+                    let value = input.tagName.toLowerCase() === "select"
+                        ? input.options[input.selectedIndex].value
+                        : input.value.trim();
+
+                    formData[index][key] = value;
+
+                    // Validar campos vacíos (excepto los que sí pueden estar vacíos)
+                    const camposOpcionales = ['tara', 'peso_neto']; // Agrega aquí más si lo necesitas
+                    if (!value && !camposOpcionales.includes(key)) {
+                        if (!erroresPorFila[index]) {
+                            erroresPorFila[index] = [];
+                        }
+                        erroresPorFila[index].push(key);
                     }
                 }
             });
 
-            // Enviar los datos al servidor
+            // Mostrar errores si hay campos vacíos
+            if (Object.keys(erroresPorFila).length > 0) {
+                let mensaje = "Por favor completa los campos faltantes en las siguientes filas:\n\n";
+                for (const index in erroresPorFila) {
+                    mensaje += `<hr><strong>Fila ${parseInt(index)}:</strong> ${erroresPorFila[index].join(', ')}<br>`;
+                }
+                mostrarModalErrores(mensaje);
+
+                return; // No continúa con el fetch
+            }
+
+            // Enviar los datos si todo está bien
             fetch("{{ route('ordenUrdido.guardar') }}", {
                 method: "POST",
                 headers: {
@@ -292,11 +326,22 @@
             })
             .catch(error => {
                 console.error("Error:", error);
-                alert("Error al guardar los registros.");
+                alert("Ocurrió un error al guardar los datos.");
             });
         });
-
     </script>
+
+    <script>
+        function mostrarModalErrores(mensaje) {
+            document.getElementById("contenidoErrores").innerHTML = mensaje;
+            document.getElementById("modalErrores").classList.remove("hidden");
+        }
+
+        function cerrarModalErrores() {
+            document.getElementById("modalErrores").classList.add("hidden");
+        }
+    </script>
+
     <!--script para actualizar datos en tiempo real en 2 campos de la 2da tabla (tara y peso neto)-->
     <script>
         function updateValues(registroIndex) {
@@ -327,6 +372,7 @@
         }
 
     </script>
+
     
 @push('styles')
 <style>

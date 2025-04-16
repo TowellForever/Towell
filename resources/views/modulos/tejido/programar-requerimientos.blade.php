@@ -98,7 +98,7 @@
                 <td class="border px-1 py-0.5">{{$inv->WMSLOCATIONID}}</td>
                 <td class="border px-1 py-0.5">{{$inv->INVENTSERIALID}}</td>
                 <td class="border px-1 py-0.5">{{ number_format($inv->METROS, 0) }}</td>
-                <td class="border px-1 py-0.5">{{$inv->ITEMID}}</td>
+                <td class="border px-1 py-0.5">12/05/2025</td>
                 <td class="border px-1 py-0.5 text-center"><input type="checkbox" class="w-5 h-5"></td>
             </tr>
         @endforeach

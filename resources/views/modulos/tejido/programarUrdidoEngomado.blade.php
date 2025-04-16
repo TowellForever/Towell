@@ -75,60 +75,37 @@
         </table>
         
         <div class="flex space-x-1">
-            <!-- Columna 1: Datos Urdido -->
-            <div class="w-1/4 p-1">
-                <!-- Tabla 3: Construcción Urdido -->
-                <h2 class="text-sm  font-bold mb-1">Construcción Urdido</h2>
-                <div class="flex ">
-                    <table class="w-1/3 text-sm border-collapse border border-gray-300 mb-4">
+            <!-- Columna 1: Datos de JULIOS, tablita con 2 columnas -->
+            <div class="w-1/6 p-1">
+                <h2 class="text-sm font-bold">Construcción Urdido</h2>
+                <div class="flex">
+                    <table class="w-full text-xs border-collapse border border-gray-300 mb-4">
                         <thead class="h-10">
                             <tr class="bg-gray-200 text-center">
-                                <th class="border px-1 py-0.5">No. de Julios</th>
-                                <th class="border px-1 py-0.5">Hilos</th>
+                                <th class="border px-1 py-0.5 ">No. Julios</th>
+                                <th class="border px-1 py-0.5 ">Hilos</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="border px-1 py-0.5">
-                                    <input type="text" name="no_julios[]" class="form-input px-1 py-1 text-xs border border-gray-300 rounded">
-                                </td>
-                                <td class="border px-1 py-0.5">
-                                    <input type="text" name="hilos[]" class="form-input  px-1 py-1 text-xs border border-gray-300 rounded">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="border px-1 py-0.5">
-                                    <input type="text" name="no_julios[]" class="form-input w- px-1 py-1 text-xs border border-gray-300 rounded">
-                                </td>
-                                <td class="border px-1 py-0.5">
-                                    <input type="text" name="hilos[]" class="form-input w- px-1 py-1 text-xs border border-gray-300 rounded">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="border px-1 py-0.5">
-                                    <input type="text" name="no_julios[]" class="form-input  px-1 py-1 text-xs border border-gray-300 rounded">
-                                </td>
-                                <td class="border px-1 py-0.5">
-                                    <input type="text" name="hilos[]" class="form-input px-1 py-1 text-xs border border-gray-300 rounded">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="border px-1 py-0.5">
-                                    <input type="text" name="no_julios[]" class="form-input  px-1 py-1 text-xs border border-gray-300 rounded">
-                                </td>
-                                <td class="border px-1 py-0.5">
-                                    <input type="text" name="hilos[]" class="form-input  px-1 py-1 text-xs border border-gray-300 rounded">
-                                </td>
-                            </tr>
+                            @for($i = 0; $i < 4; $i++)
+                                <tr>
+                                    <td class="border px-1 py-0.5">
+                                        <input type="text" inputmode="numeric" pattern="[0-9]*" name="no_julios[]" class="form-input px-1 py-0.5 text-[10px] border border-gray-300 rounded w-full">
+                                    </td>
+                                    <td class="border px-1 py-0.5">
+                                        <input type="text" inputmode="numeric" pattern="[0-9]*" name="hilos[]" class="form-input px-1 py-0.5 text-[10px] border border-gray-300 rounded w-full">
+                                    </td>
+                                </tr>
+                            @endfor
                         </tbody>
                     </table>
                 </div>
-
             </div>
-        
+
             <!-- Columna 2: Datos Engomado -->
-            <div class="w-3/4 p-1">
-                <h2 class="text-sm font-bold mb-1">Datos Engomado</h2>
+            <div class="w-5/6 p-1">
+                <h2 class="text-sm font-bold">Datos Engomado</h2><br class="block md:hidden "><!-- Solo se muestra en pantallas pequeñas -->
+                
                 <table class="w-full text-xs border-collapse border border-gray-300 mb-1">
                     <thead class="h-10">
                         <tr class="bg-gray-200 text-left">
@@ -146,7 +123,7 @@
                                 <input type="text" name="nucleo" class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded">
                             </td>
                             <td class="border px-1 py-0.5">
-                                <input type="text" name="no_telas" class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded">
+                                <input type="text" inputmode="numeric" pattern="[0-9]*" name="no_telas" class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded">
                             </td>
                             <td class="border px-1 py-0.5">
                                 <input type="text" name="balonas" class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded">

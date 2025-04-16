@@ -89,7 +89,7 @@
                             </div>
                             <div class="flex items-center">
                                 <label for="inputTurno" class="w-28 text-xs text-gray-600 font-medium">TURNO:</label>
-                                <input type="text" name="turno" id="inputTurno" class="w-20 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" >
+                                <input type="text" inputmode="numeric" pattern="[0-9]*" name="turno" id="inputTurno" class="w-20 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" >
                             </div>
                             <div class="flex items-center">
                                 <label for="inputClaveAtador" class="w-28 text-xs text-gray-600 font-medium">CLAVE ATADOR:</label>
@@ -97,7 +97,7 @@
                             </div>
                             <div class="flex items-center">
                                 <label for="inputNumJulio" class="w-28 text-xs text-gray-600 font-medium">N° JULIO:</label>
-                                <input type="text" name="num_julio" id="inputNumJulio" class="w-20 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" >
+                                <input type="text" inputmode="numeric" pattern="[0-9]*" name="num_julio" id="inputNumJulio" class="w-20 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" >
                             </div>
                             <div class="flex items-center">
                                 <label for="inputOrden" class="w-28 text-xs text-gray-600 font-medium">ORDEN:</label>
@@ -121,7 +121,7 @@
                             </div>
                             <div class="flex items-center">
                                 <label for="inputObservacionesMermaKg" class="w-28 text-xs text-gray-600 font-medium">MERMA KG:</label>
-                                <input type="text" name="observaciones_merma_kg" id="inputMermaKg" class="w-20 border border-gray-300 px-1 py-1 text-xs rounded-md bg-gray-50" >
+                                <input type="text" inputmode="numeric" pattern="[0-9]*" name="observaciones_merma_kg" id="inputMermaKg" class="w-20 border border-gray-300 px-1 py-1 text-xs rounded-md bg-gray-50" >
                             </div>
                             <p class="text-xs font-semibold text-red-700 bg-red-100 border-l-4 border-red-500 p-3 rounded-md shadow-sm">
                                 NOTA: OBLIGATORIO, CADA ATADOR DEBE UTILIZAR LA ATADORA USTER (VERDE) AL MENOS EN 3 ATADOS COMPLETOS EN LA SEMANA Y REGISTRARLO.
@@ -137,7 +137,10 @@
                             <label for="inputHoraParo" class="w-28 text-xs text-gray-600 font-medium">HORA DE PARO:</label>
                             <input type="time" name="hora_paro" id="inputHoraParo" class="w-20 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" >
                         </div>
-
+                        <div class="flex items-center">
+                            <label for="inputHoraParo" class="w-28 text-xs text-gray-600 font-medium">HORA ARRANQUE:</label>
+                            <input type="time" name="hora_paro" id="inputHoraParo" class="w-20 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" >
+                        </div>
                         <div class="flex items-center">
                             <label for="inputGruaHubtex" class="w-40 text-xs text-gray-600 font-medium">GRUA HUBTEX:</label>
                             <input type="radio" name="atadora" id="inputGruaHubtex" value="GRUA HUBTEX" class="w-10 h-10 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500">
