@@ -29,8 +29,12 @@ class EngomadoController extends Controller
         //Log::info('Data:', $request->all());
         //Log::info('Data:', $engomadoUrd->toArray());
         //Log::info('Data:', $julios->toArray());
-        Log::info('Data:', $engomado->toArray());
+        //Log::info('Data:', $engomado->toArray());
         //Log::info('Data:', $requerimiento->toArray());
+
+        if (!$engomadoUrd||!$julios ||!$engomado||!$requerimiento||!$oficiales) {
+            return redirect()->route('ingresarFolio')->withErrors('No se encontraron datos para el folio proporcionado.');
+        }
 
         // Pasar los datos a la vista
         return view('modulos/engomado', compact('engomadoUrd','julios','engomado','requerimiento','oficiales'));

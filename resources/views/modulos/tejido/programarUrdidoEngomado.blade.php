@@ -3,8 +3,34 @@
 @section('content')
 <!-- Vista del formulario para registrar datos de URDIDO y ENGOMADO, además Construcción JULIOS -->
 <div class="mt-3 mb-20 p-1">
+    {{-- Mostrar errores de validación --}}
     <form action="{{ route('orden.produccion.store') }}" method="POST">
         @csrf
+                {{-- Mostrar errores de validación --}}
+                @if ($errors->any())
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+                        <strong class="font-bold">Lo sentimos, ocurrió un problema:</strong>
+                        <ul class="list-disc pl-5 mt-2">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                {{-- Mostrar mensaje de error personalizado --}}
+                @if (session('error'))
+                    <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative mb-4">
+                        <strong class="font-bold">Advertencia:</strong> {{ session('error') }}
+                    </div>
+                @endif
+
+                {{-- Mostrar mensaje de éxito --}}
+                @if (session('success'))
+                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
+                        <strong class="font-bold">¡Operación exitosa!</strong> {{ session('success') }}
+                    </div>
+                @endif
         <h2 class="text-sm font-bold mb-1">Datos Urdido</h2>
         <table class="w-full text-xs border-collapse border border-gray-300 mb-4 ">
             <thead class="h-10">
@@ -152,24 +178,41 @@
     </form>
 </div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const form = document.querySelector('form[action="{{ route('orden.produccion.store') }}"]');
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const form = document.querySelector('form[action="{{ route('orden.produccion.store') }}"]');
 
-        form.addEventListener('submit', function(e) {
-            // Opcional: evitar envío para probar
-             e.preventDefault();
+            form.addEventListener('submit', function(e) {
+                // Opcional: evitar envío para probar
+                e.preventDefault();
 
-            const formData = new FormData(form);
-            const data = {};
+                const formData = new FormData(form);
+                const data = {};
 
-            for (let [key, value] of formData.entries()) {
-                data[key] = value;
-            }
+                for (let [key, value] of formData.entries()) {
+                    data[key] = value;
+                }
 
-            console.log("Datos enviados:", data);
+                console.log("Datos enviados:", data);
+            });
         });
-    });
-</script>
+    </script>
+
+    {{-- También mostrar alertas como pop-up en pantalla --}}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            @if(session('error'))
+                alert("⚠️ {{ session('error') }}");
+            @endif
+
+            @if(session('success'))
+                alert("✅ {{ session('success') }}");
+            @endif
+
+            @if ($errors->any())
+                alert("⚠️ Por favor, revisa los errores del formulario.");
+            @endif
+        });
+    </script>
 
 @endsection

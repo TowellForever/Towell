@@ -57,7 +57,7 @@
         <form id="folioForm" action="{{ route('produccion.ordenTrabajoEngomado') }}" method="POST" class="space-y-4">
             @csrf
             <div>
-                <label for="folio" class="block mb-1 text-sm font-medium">Orden de Trabajo</label>
+                <label for="folio" class="block mb-1 text-sm font-medium">Orden de Trabajo:</label>
                 <input 
                     type="text" 
                     name="folio" 

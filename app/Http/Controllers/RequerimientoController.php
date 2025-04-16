@@ -150,55 +150,78 @@ class RequerimientoController extends Controller
      */
     public function requerimientosAGuardar(Request $request)
     {
-        //dd($request);
-        // Generar un folio único usando una funcion privada, este será de 4 digitos y único
-        $folio = $this->generarFolioUnico();
+        try {
+            // Validación básica: puedes hacerlo con reglas o de forma manual
+            $request->validate([
+                'cuenta' => 'required',
+                'urdido' => 'required',
+                'proveedor' => 'required',
+                'tipo' => 'required',
+                'destino' => 'required',
+                'metros' => 'required|numeric',
+                'nucleo' => 'required',
+                'no_telas' => 'required|integer',
+                // puedes agregar más campos si necesitas
+            ], [
+                'cuenta.required' => 'El campo cuenta es obligatorio.',
+                'urdido.required' => 'El campo urdido es obligatorio.',
+                'proveedor.required' => 'El campo proveedor es obligatorio.',
+                'tipo.required' => 'El campo tipo es obligatorio.',
+                'destino.required' => 'El campo destino es obligatorio.',
+                'metros.required' => 'El campo metros es obligatorio.',
+                'metros.numeric' => 'El campo metros debe ser un número.',
+                'nucleo.required' => 'El campo núcleo es obligatorio.',
+                'no_telas.required' => 'El campo número de telas es obligatorio.',
+                'no_telas.integer' => 'El campo número de telas debe ser un número entero.',
+            ]);
+            
     
-        // Guardar los datos en la tabla urdido_engomado
-        DB::table('urdido_engomado')->insert([
-            'folio' => $folio,
-            'cuenta' => $request->input('cuenta'),
-            'urdido' => $request->input('urdido'),
-            'proveedor' => $request->input('proveedor'),
-            'tipo' => $request->input('tipo'),
-            'destino' => $request->input('destino'),
-            'metros' => $request->input('metros'),
-            'nucleo' => $request->input('nucleo'),
-            'no_telas' => $request->input('no_telas'),
-            'balonas' => $request->input('balonas'),
-            'metros_tela' => $request->input('metros_tela'),
-            'cuendados_mini' => $request->input('cuendados_mini'),
-            'observaciones' => $request->input('observaciones'),
-            'created_at' => now(),
-            'updated_at' => now(),
-            'estatus_urdido'=>'en_proceso',
-            'estatus_engomado'=>'en_proceso',
-            'engomado'=>'',
-            'color'=>'',
-            'solidos'=>'',
-
-        ]);
-    
-      // Guardar los datos de Construcción Urdido (recibimos arrays de "no_julios" y "hilos")
-        $no_julios = $request->input('no_julios');
-        $hilos = $request->input('hilos');
-
-        // Iterar solo sobre los registros con datos
-        for ($i = 0; $i < count($no_julios); $i++) {
-            // Verificar si ambos campos tienen datos, si un campo del registro esta vacio, se omitirá la insercion del mismo en la BD
-            if (!empty($no_julios[$i]) && !empty($hilos[$i])) {
-                DB::table('construccion_urdido')->insert([
-                    'folio' => $folio,
-                    'no_julios' => $no_julios[$i],
-                    'hilos' => $hilos[$i],
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
+            // Validar que los arrays existan y tengan la misma longitud
+            if (!is_array($request->no_julios) || !is_array($request->hilos)) {
+                return redirect()->back()->with('error', 'Datos de construcción inválidos.');
             }
-        }
-
-            //actualizo el campo orden_prod en la tabla REQUERIMIENTO
-            // Intentar actualizar directamente
+    
+            $folio = $this->generarFolioUnico();
+    
+            // Insertar en urdido_engomado
+            DB::table('urdido_engomado')->insert([
+                'folio' => $folio,
+                'cuenta' => $request->input('cuenta'),
+                'urdido' => $request->input('urdido'),
+                'proveedor' => $request->input('proveedor'),
+                'tipo' => $request->input('tipo'),
+                'destino' => $request->input('destino'),
+                'metros' => $request->input('metros'),
+                'nucleo' => $request->input('nucleo'),
+                'no_telas' => $request->input('no_telas'),
+                'balonas' => $request->input('balonas'),
+                'metros_tela' => $request->input('metros_tela'),
+                'cuendados_mini' => $request->input('cuendados_mini'),
+                'observaciones' => $request->input('observaciones'),
+                'created_at' => now(),
+                'updated_at' => now(),
+                'estatus_urdido' => 'en_proceso',
+                'estatus_engomado' => 'en_proceso',
+                'engomado' => '',
+                'color' => '',
+                'solidos' => '',
+            ]);
+    
+            $no_julios = $request->input('no_julios');
+            $hilos = $request->input('hilos');
+    
+            for ($i = 0; $i < count($no_julios); $i++) {
+                if (!empty($no_julios[$i]) && !empty($hilos[$i])) {
+                    DB::table('construccion_urdido')->insert([
+                        'folio' => $folio,
+                        'no_julios' => $no_julios[$i],
+                        'hilos' => $hilos[$i],
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
+    
             $updatedRows = DB::table('requerimiento')
                 ->where('status', 'activo')
                 ->where('telar', (string) $request->input('telar'))
@@ -210,14 +233,23 @@ class RequerimientoController extends Controller
                     }
                 })
                 ->update(['orden_prod' => $folio]);
-
+    
             if ($updatedRows === 0) {
                 return redirect()->back()->with('error', 'No se encontró un registro válido en requerimiento para actualizar.');
             }
-
     
-            return view('modulos/tejido/FolioEnPantalla')->with('folio', $folio); //envio el folio generado para mostrar al usuario su Orden de Trabajo
+            return view('modulos/tejido/FolioEnPantalla')->with('folio', $folio);
+    
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Validación fallida
+            return redirect()->back()->withErrors($e->validator)->withInput();
+        } catch (\Exception $e) {
+            // Otro tipo de error: DB, lógica, etc.
+            \Log::error('Error al guardar requerimientos: '.$e->getMessage()); // opcional: log para debug
+            return redirect()->back()->with('error', 'Ocurrió un error inesperado al guardar los datos. Intenta nuevamente.');
+        }
     }
+    
 
     public function regresoAProgramarRequerimientos(){
         //regreso a la pagina de programar reqwuerimientos y tambien envio los 2 objetos para llenar ambas tablas
