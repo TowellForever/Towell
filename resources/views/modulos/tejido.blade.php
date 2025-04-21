@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto p-6">
-    <h1 class="text-3xl font-bold text-center mb-10">TEJIDO</h1>
+<div class="container mx-auto">
+    <h1 class="text-3xl font-bold text-center -mt-4">TEJIDO</h1>
     
     <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
         @php

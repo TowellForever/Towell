@@ -1,8 +1,8 @@
 @extends('layouts.app', ['ocultarBotones' => true])
 
 @section('content')
-<div class="container mx-auto p-6" id="globalLoader">
-    <h1 class="text-3xl font-bold text-center mb-10">PRODUCCIÓN EN PROCESO</h1>
+<div class="container mx-auto" id="globalLoader">
+    <h1 class="text-3xl font-bold text-center -mt-4 mb-2">PRODUCCIÓN EN PROCESO</h1>
 
     @if (count($modulos) === 1)
         <!-- Si solo hay un módulo permitido, redirigir automáticamente -->

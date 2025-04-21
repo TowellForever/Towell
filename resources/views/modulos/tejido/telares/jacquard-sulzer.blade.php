@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="">
-    <br><h1 class="text-center text-black font-bold text-2xl mb-4">
+    <br><h1 class="text-center text-black font-bold text-2xl -mt-4">
         {{ str_replace('-', ' ', 'JACQUARD SULZER') }} - {{ $telar }}
     </h1>
 

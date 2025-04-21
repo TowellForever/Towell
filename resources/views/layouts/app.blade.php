@@ -45,21 +45,24 @@
      @include('layouts.globalLoader')
 
     <a href="/produccionProceso" class="text-3xl font-extrabold">
-        <img src="{{ asset('images/fondosTowell/TOWELLIN.png') }} " alt="Towelling" class="absolute top-2 right-2 w-[80px] z-0">
+        <img src="{{ asset('images/fondosTowell/TOWELLIN.png') }} " alt="Towelling" class="absolute top-1 right-2 w-[36px] z-1">
     </a>
-    <a href="{{ route('telares.falla') }}" class="absolute top-2 right-20  z-3 btn btn-danger text-sm">Reportar Falla</a>
+
+    <!-- Nombre del usuario -->
+    <p class="nombreApp text-black font-bold uppercase z-2 text-xs top-1">{{ Auth::User()->nombre }}</p>
+
+    <a href="{{ route('telares.falla') }}" class="absolute top-1 right-20 z-1 btn btn-danger text-sm">Reportar Falla</a>
     <!-- Navbar -->
-    <!-- Navbar -->
-        <nav class="bg-blue-350 text-white mb-10">
+        <nav class="bg-blue-350 text-white ">
             <div class="container mx-auto flex justify-between items-center relative">
                 <!-- Logo Towell -->
                 <a href="/produccionProceso" class="text-3xl font-extrabold">
-                    <img src="{{ asset('images/fondosTowell/logo_towell2.png') }} " alt="Logo_Towell" class="absolute top-10 left-2 w-[150px] z-0">
+                    <img src="{{ asset('images/fondosTowell/logo_towell2.png') }} " alt="Logo_Towell" class="absolute top-1 left-2 w-[120px] z-1">
                 </a>
         
                 @if (!isset($ocultarBotones) || !$ocultarBotones)
                     <!-- Botones de navegación -->
-                    <div class="flex gap-4 justify-center items-center z-1 botonesApp  md:gap-4 md:items-center lg:flex-row lg:gap-6 lg:ml-0">
+                    <div class="flex gap-4 justify-center items-center z-5 botonesApp  md:gap-4 md:items-center lg:flex-row lg:gap-6 lg:ml-0">
                         <!-- Botón Atrás -->
                         <button onclick="history.back()" class="bg-white text-blue-500 font-bold py-2 px-4 rounded-lg shadow-md hover:bg-gray-300 transition duration-300 flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -67,6 +70,7 @@
                                 <polygon points="22 19 13 12 22 5 22 19"></polygon>
                             </svg>
                         </button>
+
                         <!-- Botón Adelante -->
                         <button onclick="history.forward()" class="bg-white text-blue-500 font-bold py-2 px-4 rounded-lg shadow-md hover:bg-gray-300 transition duration-300 flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -77,10 +81,6 @@
                     </div>
                 @endif
     
-                <!-- Nombre del usuario -->
-                <p class="nombreApp text-black font-bold uppercase z-2 text-sm top-2">
-                    {{ Auth::User()->nombre }}
-                </p>
             </div>
         </nav>
     
@@ -88,11 +88,10 @@
     <main class="">
         @yield('content')
          <!-- JavaScript para mostrar/ocultar el loader -->
-
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white text-center p-4 mt-6">
+    <footer class="bg-gray-800 text-white text-center p-3 mt-16">
         &copy; Towell {{ date('Y') }}. Todos los derechos reservados.
     </footer>
     

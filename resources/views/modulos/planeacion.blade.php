@@ -54,7 +54,7 @@
     </div>
 
     <div class=" mx-auto text-sm">
-      <h1 class="text-3xl font-bold text-center mb-6">PLANEACIÓN</h1>
+      <h1 class="text-3xl font-bold text-center -mt-8">PLANEACIÓN</h1>
         <div class="table-container relative">
             <div class="table-container-plane table-wrapper bg-white shadow-lg rounded-lg p-1">
                 <table class="celP plane-table border border-gray-300">

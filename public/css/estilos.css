@@ -11,7 +11,7 @@
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 18px 18px 24px 18px; /* reajustamos el padding para dejar mas espacio entre el titulo y la barra de arriba (navbar)*/
 }
 
 /* Encabezados globales */
@@ -393,7 +393,7 @@ button:hover {
     .nombreApp {
         position: absolute; /* Se coloca sobre otros elementos */
         top: 10px; /* Ajusta la distancia desde la parte superior */
-        left: 50%; /* Lo lleva al centro */
+        left: 70%; /* Lo lleva al centro */
         transform: translateX(-50%); /* Centra el texto exactamente */
         font-size: 18px; /* Tamaño de texto adecuado */
         font-weight: bold; /* Texto en negrita */
@@ -406,10 +406,9 @@ button:hover {
 
     .botonesApp {
         position: absolute; /* Se coloca sobre otros elementos */
-        top: 45px; /* Ajusta la distancia desde la parte superior */
+        top: 4px; /* Ajusta la distancia desde la parte superior */
         left: 50%; /* Lo lleva al centro */
         transform: translateX(-50%); /* Centra el texto exactamente */
-   
     }
     
     #qr-video-container {

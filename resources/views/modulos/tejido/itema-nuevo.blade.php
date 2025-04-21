@@ -2,9 +2,9 @@
 
 @section('content')
 <div class="container mx-auto p-6">
-    <h1 class="text-3xl font-bold text-center mb-10">ITEMA NUEVO</h1>
+    <h1 class="text-3xl font-bold text-center -mt-6 mb-2">ITEMA NUEVO</h1>
     
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-2 md:grid-cols-6 gap-3">
         @php
             $modulos = [
                 ['nombre' => '299', 'imagen' => 'itema_nuevo.jpg'],
