@@ -234,7 +234,7 @@
                 return;
             }
 
-            if (!confirm("¿Estás seguro que deseas finalizar este urdido?")) return;
+            if (!confirm("¿Está seguro de finalizar este urdido?")) return;
 
             fetch('/finalizar-urdido', {
                 method: 'POST',
@@ -375,30 +375,30 @@
 
     
 @push('styles')
-<style>
-    #finalizadoOverlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.8);
-        color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 4rem;
-        font-weight: bold;
-        z-index: 9999;
-        opacity: 0;
-        transition: opacity 0.5s ease;
-        pointer-events: none;
-    }
-    #finalizadoOverlay.active {
-        opacity: 1;
-        pointer-events: auto;
-    }
-</style>
+    <style>
+        #finalizadoOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 4rem;
+            font-weight: bold;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+        #finalizadoOverlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
 @endpush
 
 @endsection

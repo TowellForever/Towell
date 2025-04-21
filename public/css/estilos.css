@@ -348,7 +348,7 @@ button:hover {
     .table-container {
         display: flex;
         justify-content: space-between; /* Esto separa los dos elementos */
-        gap: 20px; /* Espacio entre la tabla y los botones */
+        gap: 10px; /* Espacio entre la tabla y los botones */
         margin-bottom: 20px;
     }
     /* Establecer que el encabezado de la tabla sea fijo */
@@ -377,42 +377,13 @@ button:hover {
     .plane-thead-tr {
         position: sticky;
         top: 0; /* Se fija en la parte superior cuando se desplaza */
-        background-color: #1d546f; /* Verde Excel */
+        background-color: #12a60a; /* Verde Excel */
         z-index: 10;
-    }
-
-    .plane-th {
-        white-space: nowrap;
-        vertical-align: top; /* Alinea el texto arriba */
-    }
-
-    /* Contenedor para los botones en columna */
-    .button-column {
-        display: flex;
-        flex-direction: column; /* Los botones estarán apilados en columna */
-        gap: 10px; /* Espacio entre los botones */
-        width: 200px; /* Define el ancho de la columna de botones */
-    }
-
-    /* Estilos para los botones */
-    .button-plane {
-        background-color: #3490dc; /* Fondo azul */
-        color: white; /* Color del texto */
-        padding: 10px 20px; /* Espaciado interno */
-        border-radius: 8px; /* Bordes redondeados */
-        text-decoration: none; /* Elimina el subrayado */
-        font-weight: bold;
-        transition: background-color 0.3s ease; /* Efecto de transición */
-        text-align: center; /* Centra el texto en cada botón */
-    }
-
-    .button-plane:hover {
-        background-color: #2779bd; /* Cambio de color en hover */
     }
 
     /* Establecer el comportamiento de las celdas */
     table.celP td {
-        max-height: 50px; /* Ajusta esta altura según lo necesites */
+        max-height: 10px; /* Ajusta esta altura según lo necesites */
         overflow: hidden; /* Ocultar el contenido que exceda la altura */
         text-overflow: ellipsis; /* Agregar puntos suspensivos a contenido largo */
         padding: 4px 8px; /* Ajustar el padding para reducir el espacio interno */

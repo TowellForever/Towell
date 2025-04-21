@@ -3,13 +3,13 @@
 @section('content')
     <div class="flex justify-center mb-1 w-1/5">
         <!-- Botón de búsqueda (lupa) -->
-        <button id="search-toggle" class="p-2 w-20 rounded-full bg-blue-500 text-white hover:bg-blue-600 mr-5">
+        <button id="search-toggle" class="p-1 w-16 rounded-full bg-blue-500 text-white hover:bg-blue-600 mr-5">
             <i class="fas fa-search text-3xl"></i>
         </button>
     
         <!-- Botón de restablecer (cruz o refresh) -->
         <div class="w-auto text-left">
-            <button id="reset-search" class="p-3 rounded-full bg-red-500 text-white hover:bg-red-600">
+            <button id="reset-search" class="p-2 rounded-full bg-red-500 text-white hover:bg-red-600 mt-2 text-xs">
                 Restablecer búsqueda
             </button>
         </div>
@@ -54,12 +54,12 @@
     </div>
 
     <div class=" mx-auto text-sm">
-        <h1 class="text-3xl font-bold text-center mb-6">PLANEACIÓN</h1>
+      <h1 class="text-3xl font-bold text-center mb-6">PLANEACIÓN</h1>
         <div class="table-container relative">
-            <div class="table-container-plane table-wrapper bg-white shadow-lg rounded-lg p-2">
+            <div class="table-container-plane table-wrapper bg-white shadow-lg rounded-lg p-1">
                 <table class="celP plane-table border border-gray-300">
                     <thead>
-                        <tr class="plane-thead-tr text-white text-sm">
+                        <tr class="plane-thead-tr text-white text-xs">
                             @php
                             $headers = [
                                 'en_proceso', 'Cuenta', 'Salon', 'Telar', 'Ultimo', 'Cambios_Hilo', 'Maquina', 'Ancho', 'Eficiencia_Std', 'Velocidad_STD', 'Calibre_Rizo', 'Calibre_Pie', 'Calendario',
@@ -74,11 +74,11 @@
                         @endphp                        
 
                             @foreach($headers as $index => $header)
-                                <th class="plane-th border border-gray-400 p-4 relative" data-index="{{ $index }}">
+                                <th class="plane-th border border-gray-400 pt-2 pr-4 pb-4 pl-4 relative" data-index="{{ $index }}">
                                     {{ $header }}
-                                    <div class="absolute top-12 right-0 flex">
-                                        <button class="toggle-column bg-red-500 text-white text-xs px-1 py-0.5" data-index="{{ $index }}">⛔</button>
-                                        <button class="pin-column bg-blue-500 text-white text-xs px-1 py-0.5 ml-1" data-index="{{ $index }}">📌</button>
+                                    <div class="absolute top-6 right-0 flex">
+                                        <button class="toggle-column bg-red-500 text-white text-xs px-0.5 py-0.5" data-index="{{ $index }}">⛔</button>
+                                        <button class="pin-column bg-blue-500 text-white text-xs px-0.5 py-0.5 ml-0.5" data-index="{{ $index }}">📌</button>
                                     </div>
                                 </th>
                             @endforeach
@@ -133,11 +133,11 @@
             <!--SEGUNDO CONTENEDOR para botones-->
             <!-- Botones alineados a la derecha -->
             <div class="button-column mb-4">
-                <a href="{{ route('telares.index') }}" class="button-plane ml-2">Catálogo Telares</a>
-                <a href="{{ route('eficiencia.index') }}" class="button-plane ml-2">Catálogo Eficiencia STD</a>
-                <a href="{{ route('velocidad.index') }}" class="button-plane ml-2">Catálogo Velocidad STD</a>
-                <a href="{{ route('planeacion.calendarios') }}" class="button-plane ml-2">Calendarios</a>
-                <a href="{{ route('planeacion.aplicaciones') }}" class="button-plane ml-2">Aplicaciones</a>
+                <a href="{{ route('telares.index') }}" class="button-plane ">CATÁLAGO TELARES</a>
+                <a href="{{ route('eficiencia.index') }}" class="button-plane">CATÁLAGO EFICIENCIA STD</a>
+                <a href="{{ route('velocidad.index') }}" class="button-plane">CATÁLAGO VELOCIDAD STD</a>
+                <a href="{{ route('planeacion.calendarios') }}" class="button-plane ">CALENDARIOS</a>
+                <a href="{{ route('planeacion.aplicaciones') }}" class="button-plane">APLICACIONES</a>
             </div>
         </div>
     </div>
@@ -282,6 +282,32 @@
             .plane-table td {
                 word-wrap: break-word;  /* Asegura que el contenido largo se divida en varias líneas */
                 white-space: normal;  /* Evitar que el texto se mantenga en una sola línea */
+            }
+
+             /* Contenedor para los botones en columna */
+            .button-column {
+                display: flex;
+                flex-direction: column; /* Los botones estarán apilados en columna */
+                gap: 8px; /* Espacio entre los botones */
+                width: 100px; /* Define el ancho de la columna de botones */
+                margin-right: 4px;
+                font-size: 10px !important;
+            }
+
+            /* Estilos para los botones */
+            .button-plane {
+                background-color: #0876d1; /* Fondo azul */
+                color: white; /* Color del texto */
+                padding: 6px 10px; /* Espaciado interno */
+                border-radius: 8px; /* Bordes redondeados */
+                text-decoration: none; /* Elimina el subrayado */
+                font-weight: bold;
+                transition: background-color 0.3s ease; /* Efecto de transición */
+                text-align: center; /* Centra el texto en cada botón */
+            }
+
+            .button-plane:hover {
+                background-color: #2779bd; /* Cambio de color en hover */
             }
         </style>
     @endpush

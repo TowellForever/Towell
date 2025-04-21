@@ -191,7 +191,7 @@
             return;
         }
     
-        if (!confirm("¿Estás seguro que deseas finalizar este urdido?")) return;
+        if (!confirm("¿Está seguro de finalizar este urdido?")) return;
     
         fetch('/finalizar-engomado', {
             method: 'POST',
