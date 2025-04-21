@@ -17,24 +17,26 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Estilos personalizados -->
     <style>
-        body {
-            background: linear-gradient(135deg, #099ff6, #c2e7ff, #0857be);
-            background-size: 300% 300%;
-            animation: gradientAnimation 5s ease infinite;
-            position: relative; /* Para que el pseudo-elemento se posicione respecto al body */
-        }
+body {
+    background: linear-gradient(135deg, #099ff6, #c2e7ff, #0857be);
+    background-size: 300% 300%;
+    animation: gradientAnimation 5s ease infinite;
+    position: relative;
+    overflow: hidden; /* Para que los círculos no se salgan del body */
+}
 
-        @keyframes gradientAnimation {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
+/* Animación del fondo */
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
 
     </style>
     <link rel="stylesheet" href="{{ asset('css/estilos.css') }}">
@@ -95,6 +97,8 @@
     <!-- Footer -->
     <footer class="bg-gray-800 text-white text-center p-3 mt-16">
         &copy; Towell {{ date('Y') }}. Todos los derechos reservados.
+        <!-- Nombre del usuario -->
+        <p class=" sm:block md:hidden text-white font-bold uppercase text-sm"> {{ Auth::user()->nombre }}</p>
     </footer>
     
     <script>
@@ -106,6 +110,7 @@
     
         // Puedes agregar más scripts para mostrar el loader durante eventos específicos (AJAX, formularios, etc.)
     </script>
+
     </body>
     </html>
     

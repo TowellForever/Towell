@@ -90,6 +90,7 @@ Route::get('/urdido/urdidoTemporal', function () { return view('modulos/urdido/u
 //ruta para llegar a la vista dinamica de los telares de jacquard-sulzer*************************************************************
 //***********************************************************************************************************************************
 Route::get('/tejido/jacquard-sulzer/{telar}', [PlaneacionController::class, 'mostrarTelarSulzer'])->name('tejido.mostrarTelarSulzer');
+//el método de arriba sirve para mstrar la informacion de un telar individualmente (telar-informacion-individual)
 Route::get('/modulos/tejido/telares/ordenes-programadas/{telar}', [PlaneacionController::class, 'mostrarOrdenesProgramadas'])->name('tejido.mostrarOrdenesProgramadas');
 Route::post('/guardar-requerimiento', [RequerimientoController::class, 'store']);
 

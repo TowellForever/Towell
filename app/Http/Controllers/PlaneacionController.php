@@ -91,7 +91,7 @@ class PlaneacionController extends Controller
         ->get();
 
         // Retornar la vista con los datos del telar
-        return view('modulos/tejido/telares/jacquard-sulzer', compact('telar', 'datos'));
+        return view('modulos/tejido/telares/telar-informacion-individual', compact('telar', 'datos'));
     }
 
     public function obtenerOrdenesProgramadas($Telar)
