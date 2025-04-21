@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container mx-auto" id="globalLoader">
-    <h1 class="text-3xl font-bold text-center -mt-4 mb-2">PRODUCCIÓN EN PROCESO</h1>
+    <h1 class="text-3xl font-bold text-center sm:mt-2 md:-mt-4 mb-2">PRODUCCIÓN EN PROCESO</h1>
 
     @if (count($modulos) === 1)
         <!-- Si solo hay un módulo permitido, redirigir automáticamente -->

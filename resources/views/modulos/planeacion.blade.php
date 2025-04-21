@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="flex justify-center mb-1 w-1/5">
+    <div class="flex justify-center sm:mt-4 mb-1 w-1/5">
         <!-- Botón de búsqueda (lupa) -->
         <button id="search-toggle" class="p-1 w-16 rounded-full bg-blue-500 text-white hover:bg-blue-600 mr-5">
             <i class="fas fa-search text-3xl"></i>

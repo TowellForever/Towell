@@ -49,7 +49,9 @@
     </a>
 
     <!-- Nombre del usuario -->
-    <p class="nombreApp text-black font-bold uppercase z-2 text-xs top-1">{{ Auth::User()->nombre }}</p>
+    <p class="hidden md:block nombreApp text-black font-bold uppercase text-xs">
+        {{ Auth::user()->nombre }}
+    </p>
 
     <a href="{{ route('telares.falla') }}" class="absolute top-1 right-20 z-1 btn btn-danger text-sm">Reportar Falla</a>
     <!-- Navbar -->

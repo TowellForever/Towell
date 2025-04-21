@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <h1 class="text-3xl font-bold text-center -mt-4 mb-2">JACQUARD SULZER</h1>
+    <h1 class="text-3xl font-bold text-center sm:mt-2 md:-mt-4 mb-2">JACQUARD SULZER</h1>
     
     <div class="grid grid-cols-2 md:grid-cols-6 gap-3">
         @php
