@@ -350,10 +350,10 @@ button:hover {
         justify-content: space-between; /* Esto separa los dos elementos */
         gap: 10px; /* Espacio entre la tabla y los botones */
         margin-bottom: 20px;
+        max-height: 240px; /* Ajusta la altura según necesites */
     }
     /* Establecer que el encabezado de la tabla sea fijo */
     .table-container-plane {
-        max-height: 2000px; /* Ajusta la altura según necesites */
         overflow-y: auto;
         overflow-x: auto;
         position: relative;

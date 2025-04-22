@@ -59,7 +59,7 @@
             <div class="table-container-plane table-wrapper bg-white shadow-lg rounded-lg p-1">
                 <table class="celP plane-table border border-gray-300">
                     <thead>
-                        <tr class="plane-thead-tr text-white text-xs">
+                        <tr class="plane-thead-tr text-white">
                             @php
                             $headers = [
                                 'en_proceso', 'Cuenta', 'Salon', 'Telar', 'Ultimo', 'Cambios_Hilo', 'Maquina', 'Ancho', 'Eficiencia_Std', 'Velocidad_STD', 'Calibre_Rizo', 'Calibre_Pie', 'Calendario',
@@ -84,9 +84,9 @@
                             @endforeach
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="">
                         @foreach($datos as $registro)
-                            <tr class="px-1 py-0.5">
+                            <tr class="px-1 py-0.5 text-sm">
                                 <!-- Agregar checkbox 'en_proceso' -->
                                 <td class="px-1 py-0.5">
                                     <form action="{{ route('tejido_scheduling.update', $registro->id) }}" method="POST">
