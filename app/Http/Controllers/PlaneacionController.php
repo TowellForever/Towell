@@ -94,23 +94,17 @@ class PlaneacionController extends Controller
         return view('modulos/tejido/telares/telar-informacion-individual', compact('telar', 'datos'));
     }
 
-    public function obtenerOrdenesProgramadas($Telar)
+    public function obtenerOrdenesProgramadas($telar)
     {
-        try {
-            // Buscar las órdenes programadas para el telar, con 'en_proceso' igual a 0
-            $ordenes = Planeacion::where('numero_telar', $Telar)
-                            ->where('en_proceso', 0)
-                            ->get();
-    
-            // Verificar si existen órdenes
-            if ($ordenes->isEmpty()) {
-                return back()->with('error', 'No hay órdenes para este telar.');
-            }
-    
-            return view('login', compact('ordenes', 'Telar'));
-        } catch (\Exception $e) {
-            return back()->with('error', 'Error al cargar las órdenes: ' . $e->getMessage());
-        }
+            // Traemos solo los registros en_proceso = 0 para este telar
+            $ordenes = Planeacion::where('telar', $telar)
+                        ->where('en_proceso', 0)
+                        ->get();
+
+
+            // retornamos la vista correcta (no 'login')
+            return view('modulos/tejido/telares/ordenes-programadas', compact('ordenes', 'telar'));
+
     }
 
 

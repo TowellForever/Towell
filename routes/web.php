@@ -95,7 +95,8 @@ Route::get('/modulos/tejido/telares/ordenes-programadas/{telar}', [PlaneacionCon
 Route::post('/guardar-requerimiento', [RequerimientoController::class, 'store']);
 
 Route::get('/ultimos-requerimientos', [RequerimientoController::class, 'obtenerRequerimientosActivos']);
-Route::get('/ordenes-programadas/{telar}', [PlaneacionController::class, 'obtenerOrdenesProgramadas'])->name('ordenes.programadas');
+Route::get('/ordenes-programadas-dinamica/{telar}', [PlaneacionController::class, 'obtenerOrdenesProgramadas'])->name('ordenes.programadas');
+
 
 //Route::get('/alta-usuarios', function () { return view('alta_usuarios');});//BORRAR UNA VEZ CREADO EL CONTROLLER
 Route::get('/usuarios/create', [UsuarioController::class, 'create'])->name('usuarios.create');
