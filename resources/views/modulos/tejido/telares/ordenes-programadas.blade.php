@@ -21,21 +21,21 @@
                         <br><b>Trama 4:</b> {{ number_format($dato->CALIBRE_C3, 2) }}
                         <br><b>Artículo:</b> {{ $dato->Articulo }}
                         <br><b>Pedido:</b> {{ $dato->Tipo_Ped }}
-                        <br><b>Fin:</b> {{ $dato->Fin_Tejido }}
+                        <br><b>Fin:</b> {{ \Carbon\Carbon::parse($dato->Fin_Tejido)->format('d/m/Y') }}
                     </td>
                     <td class="border p-2">
                         <b>No Flog:</b> {{ $dato->Id_Flog }} 
                         <br><b>Cuenta Pie:</b> {{ $dato->Calibre_Pie }}
                         <br><b>Trama 5:</b> {{ number_format($dato->CALIBRE_C4, 2) }}
                         <br><b>Producido:</b> {{ $dato->Producido }}
-                        <br><b>Fecha de Compromiso Tejido:</b> {{ $dato->Fecha_Compromiso }}
+                        <br><b>Fecha de Compromiso Tejido:</b> {{ \Carbon\Carbon::parse($dato->Fecha_Compromiso)->format('d/m/Y') }}
                     </td>
                     <td class="border p-2">
                         <b>Trama 1:</b> {{ number_format($dato->CALIBRE_TRA, 2) }}
                         <br><b>Trama 6:</b> {{ number_format($dato->CALIBRE_C5 , 2) }}
                         <br><b>Número de Tiras:</b> {{ $dato->Tiras }}
                         <br><b>Producción (KG)/Día:</b> {{ $dato->Prod_KG_Dia }}
-                        <br><b>Fecha de Compromiso Cliente:</b> {{ $dato->Fecha_Compromiso1 }}
+                        <br><b>Fecha de Compromiso Cliente:</b> {{ \Carbon\Carbon::parse($dato->Fecha_Compromiso1)->format('d/m/Y') }}
                     </td>
                     <td class="border p-2">
                         <b>Cliente:</b> {{ $dato->Cliente }}
