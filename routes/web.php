@@ -134,3 +134,5 @@ Route::post('/send-whatsapp2', [WhatsAppController::class, 'enviarMensaje']);
 Route::post('/send-failSMS', [ReporteFallaController::class, 'enviarSMS']);
 
 
+//RUTA TEMPORAL DE PRUEBAS ALEATORIAS en JS o PHP...
+Route::get('/urldeprueba', function () {return view ('test-view');});
