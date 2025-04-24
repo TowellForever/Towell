@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AtadorController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CalendarioController;
 use App\Http\Controllers\CatalagoEficienciaController;
 use App\Http\Controllers\CatalagoTelarController;
 use App\Http\Controllers\CatalagoVelocidadController;
@@ -109,9 +110,11 @@ Route::resource('planeacion', PlaneacionController::class);
 Route::resource('telares', CatalagoTelarController::class);
 Route::resource('eficiencia', CatalagoEficienciaController::class);
 Route::resource('velocidad', CatalagoVelocidadController::class);
-// ✅ NUEVAS RUTAS de planeacion
+
+// ✅ NUEVAS RUTAS de PLANEACION
 Route::get('/calendarios', [PlaneacionController::class, 'calendarios'])->name('planeacion.calendarios');
 Route::get('/aplicaciones', [PlaneacionController::class, 'aplicaciones'])->name('planeacion.aplicaciones');
+Route::post('/calendarios/update-inline', [CalendarioController::class, 'updateInline'])->name('calendarios.update.inline');
 
 Route::put('/tejido-en-proceso/{id}', [PlaneacionController::class, 'update'])->name('tejido_scheduling.update');
 

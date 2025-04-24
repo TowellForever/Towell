@@ -89,7 +89,7 @@
                             <tr class="px-1 py-0.5 text-sm">
                                 <!-- Agregar checkbox 'en_proceso' -->
                                 <td class="px-1 py-0.5">
-                                    <form action="{{ route('tejido_scheduling.update', $registro->id) }}" method="POST">
+                                    <form action="{{ route('tejido_scheduling.update', $registro->num_registro) }}" method="POST">
                                         @csrf
                                         @method('PUT')
                                         <input type="checkbox" name="en_proceso" value="1"

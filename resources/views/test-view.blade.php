@@ -35,7 +35,7 @@
   const rawData = Array.from({length: 100}, (_, i) => ({
     id: i + 1,
     order: 'ORD-' + String(i + 1).padStart(4, '0'),
-    client: ['ACME','Globex','Initech','Umbrella'][i % 4],
+    client: ['ACME','Apple','Xiaomi','Umbrella'][i % 4],
     status: i % 2 === 0 ? 'Programada' : 'En Proceso',
     quantity: Math.floor(Math.random() * 1000)
   }));

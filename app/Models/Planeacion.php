@@ -18,4 +18,9 @@ class Planeacion extends Model
         'Std_(Toa/Hr)_100%', 'Dias_jornada_completa', 'Horas', 'Std/Hrefectivo', 'Inicio_Tejido', 'Calc4', 'Calc5', 'Calc6', 'Fin_Tejido', 'Fecha_Compromiso',
         'Fecha_Compromiso1', 'Entrega', 'Dif_vs_Compromiso', 'en_proceso'
     ];
+
+    public function calendario()
+    {
+        return $this->hasOne(Calendario::class, 'cal_id', 'num_registro');
+    }
 }

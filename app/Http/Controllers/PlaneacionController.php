@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Calendario;
 use App\Models\Planeacion; // Asegúrate de importar el modelo Planeacion
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -46,7 +47,8 @@ class PlaneacionController extends Controller
 
     public function calendarios()
     {
-        return view('/catalagos/calendarios');
+        $calendarios = Calendario::all();
+        return view('/catalagos/calendarios', compact('calendarios'));
     }
     
     public function aplicaciones()
