@@ -56,10 +56,10 @@ class PlaneacionController extends Controller
         return view('/catalagos/aplicaciones');
     }
     
-    public function update(Request $request, $id)
+    public function update(Request $request, $num_registro)
     {
         // Buscar el registro por Id
-        $registro = Planeacion::where('Id', $id)->first();
+        $registro = Planeacion::where('num_registro', $num_registro)->first();
     
         if (!$registro) {
             return redirect()->route('planeacion.index')->with('error', 'Registro no encontrado');

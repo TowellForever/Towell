@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Planeacion extends Model
 {
     public $timestamps = false; // Deshabilitar el manejo automático de created_at y updated_at
-    protected $table = 'TEJIDO_SCHEDULING'; // Asegúrate de usar el nombre correcto de tu tabla
+    protected $table = 'TEJIDO_SCHEDULING'; // si no lo tienes ya
+    protected $primaryKey = 'num_registro'; // pon aquí tu clave real
+    public $incrementing = false; // si no es autoincremental
     protected $fillable = [
         'Cuenta', 'Salon', 'Telar', 'Ultimo', 'Cambios_Hilo', 'Maquina', 'Ancho', 'Eficiencia_Std', 'Velocidad_STD', 'Calibre_Rizo', 'Calibre_Pie', 'Calendario',
         'Clave_Estilo', 'Tamano', 'Estilo_Alternativo', 'Nombre_Producto', 'Saldos', 'Fecha_Captura', 'Orden_Prod', 'Fecha_Liberacion', 'Id_Flog', 'Descrip',

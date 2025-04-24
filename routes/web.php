@@ -116,7 +116,7 @@ Route::get('/calendarios', [PlaneacionController::class, 'calendarios'])->name('
 Route::get('/aplicaciones', [PlaneacionController::class, 'aplicaciones'])->name('planeacion.aplicaciones');
 Route::post('/calendarios/update-inline', [CalendarioController::class, 'updateInline'])->name('calendarios.update.inline');
 
-Route::put('/tejido-en-proceso/{id}', [PlaneacionController::class, 'update'])->name('tejido_scheduling.update');
+Route::put('/tejido-en-proceso/{num_registro}', [PlaneacionController::class, 'update'])->name('tejido_scheduling.update');
 
 // Rutas de catálogos
 Route::resource('telares', CatalagoTelarController::class);

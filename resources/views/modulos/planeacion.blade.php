@@ -144,6 +144,52 @@
                 <a href="{{ route('planeacion.aplicaciones') }}" class="button-plane">APLICACIONES</a>
             </div>
         </div>
+        <div class="text-center">
+            <div class="table-wrapper bg-white shadow-lg rounded-lg p-1">
+                <table class="w-full border border-gray-300">
+                    <thead>
+                        <tr class="plane-thead-tr text-white">
+                            <th class="plane-th border border-gray-400 pt-2 pr-2 pb-2 pl-2 relative" >No. Registro</th>
+                            <th class="plane-th border border-gray-400 pt-2 pr-2 pb-2 pl-2 relative">Fecha</th>
+                            <th class="plane-th border border-gray-400 pt-2 pr-2 pb-2 pl-2 relative">Tipo Movimiento</th>
+                            <th class="plane-th border border-gray-400 pt-2 pr-2 pb-2 pl-2 relative">Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>001</td>
+                            <td>2025-04-20</td>
+                            <td>Entrada</td>
+                            <td>150</td>
+                        </tr>
+                        <tr>
+                            <td>002</td>
+                            <td>2025-04-21</td>
+                            <td>Salida</td>
+                            <td>50</td>
+                        </tr>
+                        <tr>
+                            <td>003</td>
+                            <td>2025-04-22</td>
+                            <td>Entrada</td>
+                            <td>200</td>
+                        </tr>
+                        <tr>
+                            <td>004</td>
+                            <td>2025-04-23</td>
+                            <td>Salida</td>
+                            <td>70</td>
+                        </tr>
+                        <tr>
+                            <td>005</td>
+                            <td>2025-04-24</td>
+                            <td>Entrada</td>
+                            <td>120</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
     <!--SCRIPT que sirve para ocultar y fijar columnas de la tabla-->
     <script>
