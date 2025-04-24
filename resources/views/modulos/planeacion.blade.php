@@ -98,11 +98,13 @@
                                     </form>
                                 </td>
                                 @foreach($headers as $header)
-                                @if($header !== 'en_proceso') {{-- Evita mostrar la columna "en_proceso" OTRA VEZ --}}
+                                    @if($header !== 'en_proceso') {{-- Evita mostrar la columna "en_proceso" OTRA VEZ --}}
                                     @php
                                         $value = $registro->$header; // Obtener el valor del campo
-                            
-                                        // Excluir ciertos campos numéricos tratados como cadenas
+                                    
+                                        // Lista de campos que deben mostrar fecha + hora
+                                        $camposConHora = ['Inicio_Tejido', 'Calc5', 'Fin_Tejido', 'Entrega'];
+                                    
                                         if (is_numeric($value)) {
                                             // Si el valor es entero, convertirlo sin decimales
                                             if (intval($value) == $value) {
@@ -112,19 +114,21 @@
                                                 $formattedValue = number_format($value, 2, '.', '');
                                             }
                                         } elseif (strtotime($value) && !in_array($header, ['Calibre_Rizo'])) {
-                                            // Si es una fecha, formatearla como "día-mes-año"
-                                            $formattedValue = \Carbon\Carbon::parse($value)->format('d-m-Y');
+                                            if (in_array($header, $camposConHora)) {
+                                                // Fecha con hora y minutos: "d-m-Y H:i"
+                                                $formattedValue = \Carbon\Carbon::parse($value)->format('d-m-Y H:i');
+                                            } else {
+                                                // Solo fecha: "d-m-Y"
+                                                $formattedValue = \Carbon\Carbon::parse($value)->format('d-m-Y');
+                                            }
                                         } else {
                                             // Si es texto, dejarlo tal cual
                                             $formattedValue = $value;
                                         }
                                     @endphp
-                            
-                                    <td class="small px-1 py-0.5">{{ $formattedValue }}</td>
-                                @endif
-                            @endforeach
-                            
-                                           
+                                        <td class="small px-1 py-0.5">{{ $formattedValue }}</td>
+                                    @endif
+                                @endforeach         
                             </tr>
                         @endforeach
                     </tbody>                                              
