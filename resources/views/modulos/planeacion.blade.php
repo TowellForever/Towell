@@ -144,20 +144,23 @@
                 <a href="{{ route('planeacion.aplicaciones') }}" class="button-plane">APLICACIONES</a>
             </div>
         </div>
-        <div class="text-center w-1/4">
+        <div class="text-center">
             <div class="table-wrapper bg-white shadow-lg rounded-lg p-1">
-                <table id="tablaTipoMovimientos" class="w-full border border-gray-300">
-                    <thead>
-                        <tr class="plane-thead-tr text-white">
-                          <th class="plane-th border border-gray-400 pt-2 pr-2 pb-2 pl-2 relative">Fecha</th>
-                          <th class="plane-th border border-gray-400 pt-2 pr-2 pb-2 pl-2 relative">Tipo Movimiento</th>
-                          <th class="plane-th border border-gray-400 pt-2 pr-2 pb-2 pl-2 relative">Cantidad</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                    </tbody>
-                </table>
+              <table id="tablaTipoMovimientos" class="w-full border border-gray-300 text-xs table-fixed">
+                <thead>
+                  <tr id="filaFechas" class="bg-gray-800 text-white text-center">
+                    <th class="border border-gray-400 px-2 py-1 font-semibold text-sm w-24">Fecha</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr id="filaTipoMov" class="bg-gray-100 text-gray-700">
+                    <td class="border border-gray-300 px-2 py-1 font-medium text-sm w-24">Tipo Movimiento</td>
+                  </tr>
+                  <tr id="filaCantidad" class="bg-white text-gray-800">
+                    <td class="border border-gray-300 px-2 py-1 font-medium text-sm w-24">Cantidad</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
         </div>
     </div>
@@ -287,57 +290,73 @@
             });
         });
     </script>
-
+<!--*******************************************************************************************************************************************************************************************
+*********************************************************************************************************************************************************************************************-->
     <!--SCRIPTS que implentan el funcionamiento de la tabla TIPO DE MOVIMIENTOS, se selecciona un registro, se obtiene el valor de num_registro y con 
         ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
 
       <script>
         let filaSeleccionada = null;
-        let numRegistroSeleccionado = null;
-    
+        let numRegistroSeleccionado = null;  //variables globales
+
         document.addEventListener("DOMContentLoaded", function () {
+            const hoy = new Date();
+            const filaFechas = document.getElementById("filaFechas");
+            const filaTipoMov = document.getElementById("filaTipoMov");
+            const filaCantidad = document.getElementById("filaCantidad");
+
+            const fechas = [];
+
+            for (let i = 0; i < 30; i++) {
+                const fecha = new Date(hoy);
+                fecha.setDate(hoy.getDate() + i);
+                const fechaFormateada = fecha.toLocaleDateString("es-MX", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    //year: "2-digit"
+                });
+                fechas.push(fechaFormateada);
+
+                // Agregar celdas vacías al header y a las filas
+                filaFechas.innerHTML += `<th class="border border-gray-300">${fechaFormateada}</th>`;
+                filaTipoMov.innerHTML += `<td class="border border-gray-300"></td>`;
+                filaCantidad.innerHTML += `<td class="border border-gray-300"></td>`;
+            }
+
+            // Evento click en las filas de tablaPlaneacion
             const filas = document.querySelectorAll("#tablaPlaneacion tbody tr");
-    
             filas.forEach(fila => {
                 fila.addEventListener("click", function () {
                     if (filaSeleccionada) {
                         filaSeleccionada.classList.remove("fila-seleccionada");
                     }
-    
                     this.classList.add("fila-seleccionada");
                     filaSeleccionada = this;
-    
+
                     const numRegistro = this.getAttribute('data-num-registro');
                     numRegistroSeleccionado = numRegistro;
-    
-                    console.log("num_registro seleccionado:", numRegistroSeleccionado);
-    
-                    // Llamar a backend
+
                     fetch(`/planeacion/tipo-movimientos/${numRegistroSeleccionado}`)
                         .then(res => res.json())
                         .then(data => {
-                            // Limpiar tabla
-                            const tbody = document.querySelector("#tablaTipoMovimientos tbody");
-                            tbody.innerHTML = '';
-    
-                            if (data.length === 0) {
-                                tbody.innerHTML = '<tr><td colspan="4" class="text-center text-gray-500">Sin resultados</td></tr>';
-                                return;
-                            }
-    
-                            // Llenar tabla con los resultados
-                            data.forEach(item => {
-                              const fecha = new Date(item.fecha);
-                              const fechaFormateada = `${fecha.getDate().toString().padStart(2, '0')}-${(fecha.getMonth()+1).toString().padStart(2, '0')}-${fecha.getFullYear().toString()}`;
+                            // Limpiar las celdas (excepto los encabezados)
+                            const celdasTipoMov = filaTipoMov.querySelectorAll("td:not(:first-child)");
+                            const celdasCantidad = filaCantidad.querySelectorAll("td:not(:first-child)");
+                            celdasTipoMov.forEach(celda => celda.textContent = "");
+                            celdasCantidad.forEach(celda => celda.textContent = "");
 
-                                const fila = `
-                                    <tr>
-                                        <td>${fechaFormateada}</td>
-                                        <td>${item.tipo_mov}</td>
-                                        <td>${item.cantidad}</td>
-                                    </tr>
-                                `;
-                                tbody.insertAdjacentHTML('beforeend', fila);
+                            data.forEach(item => {
+                                const fechaItem = new Date(item.fecha).toLocaleDateString("es-MX", {
+                                    day: "2-digit",
+                                    month: "2-digit",
+                                    //year: "2-digit"
+                                });
+
+                                const index = fechas.indexOf(fechaItem);
+                                if (index !== -1) {
+                                    filaTipoMov.cells[index + 2].textContent = item.tipo_mov;
+                                    filaCantidad.cells[index + 2].textContent = item.cantidad;
+                                }
                             });
                         })
                         .catch(err => {
@@ -390,8 +409,13 @@
                 background-color: #2779bd; /* Cambio de color en hover */
             }
 
+            #tablaPlaneacion tbody tr:hover {
+                background-color: #fef08a; /* Amarillo suave */
+                cursor: pointer;
+            }
+
             .fila-seleccionada {
-                background-color: #fff9c4 !important; /* Azul pastel */
+                background-color: #fde047 !important; /* Amarillo más intenso al hacer clic */
             }
         </style>
     @endpush

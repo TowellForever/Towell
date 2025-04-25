@@ -114,7 +114,6 @@ class PlaneacionController extends Controller
             ->table('Produccion.dbo.tipo_movimientos')
             ->where('tej_num', $tej_num)
             ->select('tej_num', 'fecha', 'tipo_mov', 'cantidad')
-            ->orderBy('fecha', 'desc')
             ->get();
 
         return response()->json($movimientos);
