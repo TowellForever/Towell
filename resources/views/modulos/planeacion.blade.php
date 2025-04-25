@@ -86,7 +86,7 @@
                     </thead>
                     <tbody class="">
                         @foreach($datos as $registro)
-                            <tr class="px-1 py-0.5 text-sm">
+                            <tr class="px-1 py-0.5 text-sm" data-num-registro="{{ $registro->num_registro }}"">
                                 <!-- Agregar checkbox 'en_proceso' -->
                                 <td class="px-1 py-0.5">
                                     <form action="{{ route('tejido_scheduling.update', $registro->num_registro) }}" method="POST">
@@ -144,48 +144,18 @@
                 <a href="{{ route('planeacion.aplicaciones') }}" class="button-plane">APLICACIONES</a>
             </div>
         </div>
-        <div class="text-center">
+        <div class="text-center w-1/4">
             <div class="table-wrapper bg-white shadow-lg rounded-lg p-1">
                 <table id="tablaTipoMovimientos" class="w-full border border-gray-300">
                     <thead>
                         <tr class="plane-thead-tr text-white">
-                            <th class="plane-th border border-gray-400 pt-2 pr-2 pb-2 pl-2 relative" >No. Registro</th>
-                            <th class="plane-th border border-gray-400 pt-2 pr-2 pb-2 pl-2 relative">Fecha</th>
-                            <th class="plane-th border border-gray-400 pt-2 pr-2 pb-2 pl-2 relative">Tipo Movimiento</th>
-                            <th class="plane-th border border-gray-400 pt-2 pr-2 pb-2 pl-2 relative">Cantidad</th>
+                          <th class="plane-th border border-gray-400 pt-2 pr-2 pb-2 pl-2 relative">Fecha</th>
+                          <th class="plane-th border border-gray-400 pt-2 pr-2 pb-2 pl-2 relative">Tipo Movimiento</th>
+                          <th class="plane-th border border-gray-400 pt-2 pr-2 pb-2 pl-2 relative">Cantidad</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>001</td>
-                            <td>2025-04-20</td>
-                            <td>Entrada</td>
-                            <td>150</td>
-                        </tr>
-                        <tr>
-                            <td>002</td>
-                            <td>2025-04-21</td>
-                            <td>Salida</td>
-                            <td>50</td>
-                        </tr>
-                        <tr>
-                            <td>003</td>
-                            <td>2025-04-22</td>
-                            <td>Entrada</td>
-                            <td>200</td>
-                        </tr>
-                        <tr>
-                            <td>004</td>
-                            <td>2025-04-23</td>
-                            <td>Salida</td>
-                            <td>70</td>
-                        </tr>
-                        <tr>
-                            <td>005</td>
-                            <td>2025-04-24</td>
-                            <td>Entrada</td>
-                            <td>120</td>
-                        </tr>
+
                     </tbody>
                 </table>
             </div>
@@ -318,6 +288,66 @@
         });
     </script>
 
+    <!--SCRIPTS que implentan el funcionamiento de la tabla TIPO DE MOVIMIENTOS, se selecciona un registro, se obtiene el valor de num_registro y con 
+        ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
+
+      <script>
+        let filaSeleccionada = null;
+        let numRegistroSeleccionado = null;
+    
+        document.addEventListener("DOMContentLoaded", function () {
+            const filas = document.querySelectorAll("#tablaPlaneacion tbody tr");
+    
+            filas.forEach(fila => {
+                fila.addEventListener("click", function () {
+                    if (filaSeleccionada) {
+                        filaSeleccionada.classList.remove("fila-seleccionada");
+                    }
+    
+                    this.classList.add("fila-seleccionada");
+                    filaSeleccionada = this;
+    
+                    const numRegistro = this.getAttribute('data-num-registro');
+                    numRegistroSeleccionado = numRegistro;
+    
+                    console.log("num_registro seleccionado:", numRegistroSeleccionado);
+    
+                    // Llamar a backend
+                    fetch(`/planeacion/tipo-movimientos/${numRegistroSeleccionado}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            // Limpiar tabla
+                            const tbody = document.querySelector("#tablaTipoMovimientos tbody");
+                            tbody.innerHTML = '';
+    
+                            if (data.length === 0) {
+                                tbody.innerHTML = '<tr><td colspan="4" class="text-center text-gray-500">Sin resultados</td></tr>';
+                                return;
+                            }
+    
+                            // Llenar tabla con los resultados
+                            data.forEach(item => {
+                              const fecha = new Date(item.fecha);
+                              const fechaFormateada = `${fecha.getDate().toString().padStart(2, '0')}-${(fecha.getMonth()+1).toString().padStart(2, '0')}-${fecha.getFullYear().toString()}`;
+
+                                const fila = `
+                                    <tr>
+                                        <td>${fechaFormateada}</td>
+                                        <td>${item.tipo_mov}</td>
+                                        <td>${item.cantidad}</td>
+                                    </tr>
+                                `;
+                                tbody.insertAdjacentHTML('beforeend', fila);
+                            });
+                        })
+                        .catch(err => {
+                            console.error("Error al obtener movimientos:", err);
+                        });
+                });
+            });
+        });
+    </script>
+
     @push('styles')
         <style>
             .plane-table td {
@@ -358,6 +388,10 @@
 
             .button-plane:hover {
                 background-color: #2779bd; /* Cambio de color en hover */
+            }
+
+            .fila-seleccionada {
+                background-color: #fff9c4 !important; /* Azul pastel */
             }
         </style>
     @endpush

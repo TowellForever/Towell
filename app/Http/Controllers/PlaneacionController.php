@@ -109,5 +109,16 @@ class PlaneacionController extends Controller
 
     }
 
+    public function obtenerPorTejNum($tej_num){
+        $movimientos = DB::connection('sqlsrv') // Asegúrate que esta conexión apunte a `Produccion`
+            ->table('Produccion.dbo.tipo_movimientos')
+            ->where('tej_num', $tej_num)
+            ->select('tej_num', 'fecha', 'tipo_mov', 'cantidad')
+            ->orderBy('fecha', 'desc')
+            ->get();
+
+        return response()->json($movimientos);
+    }
+
 
 }
