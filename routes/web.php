@@ -7,6 +7,7 @@ use App\Http\Controllers\CatalagoEficienciaController;
 use App\Http\Controllers\CatalagoTelarController;
 use App\Http\Controllers\CatalagoVelocidadController;
 use App\Http\Controllers\EngomadoController;
+use App\Http\Controllers\ModelosController;
 use App\Http\Controllers\PlaneacionController;
 use App\Http\Controllers\RequerimientoController;
 use App\Http\Controllers\UsuarioController;
@@ -137,6 +138,19 @@ Route::post('/send-whatsapp', [WhatsAppController::class, 'sendMessage']);
 Route::get('/whatsapp2', [WhatsAppController::class, 'mensajeFallas'])->name('telares.falla');
 Route::post('/send-whatsapp2', [WhatsAppController::class, 'enviarMensaje']);
 Route::post('/send-failSMS', [ReporteFallaController::class, 'enviarSMS']);
+
+// MODELOS ***************************************************************************************************************************
+Route::resource('modelos', ModelosController::class);
+/* 
+Verbo HTTP | URI | Acción del Controller | Nombre de ruta
+GET | /modelos | index() | modelos.index
+GET | /modelos/create | create() | modelos.create
+POST | /modelos | store() | modelos.store
+GET | /modelos/{id} | show() | modelos.show
+GET | /modelos/{id}/edit | edit() | modelos.edit
+PUT/PATCH | /modelos/{id} | update() | modelos.update
+DELETE | /modelos/{id} | destroy() | modelos.destroy
+*/
 
 
 //RUTA TEMPORAL DE PRUEBAS ALEATORIAS en JS o PHP...
