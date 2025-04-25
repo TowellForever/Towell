@@ -53,11 +53,11 @@
         </div>
     </div>
 
-    <div class=" mx-auto text-sm">
+    <div class=" mx-auto text-sm overflow-y-auto max-h-screen">
       <h1 class="text-3xl font-bold text-center -mt-8">PLANEACIÓN</h1>
         <div class="table-container relative">
             <div class="table-container-plane table-wrapper bg-white shadow-lg rounded-lg p-1">
-                <table class="celP plane-table border border-gray-300">
+                <table id="tablaPlaneacion" class="celP plane-table border border-gray-300">
                     <thead>
                         <tr class="plane-thead-tr text-white">
                             @php
@@ -146,7 +146,7 @@
         </div>
         <div class="text-center">
             <div class="table-wrapper bg-white shadow-lg rounded-lg p-1">
-                <table class="w-full border border-gray-300">
+                <table id="tablaTipoMovimientos" class="w-full border border-gray-300">
                     <thead>
                         <tr class="plane-thead-tr text-white">
                             <th class="plane-th border border-gray-400 pt-2 pr-2 pb-2 pl-2 relative" >No. Registro</th>

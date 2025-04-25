@@ -53,9 +53,10 @@
                 @foreach($calendarios as $cal)
                   <tr class="text-center" data-cal-id="{{ $cal->cal_id }}">
                       <td class="hidden">{{ $cal->cal_id }}</td>
-                      <td class="border border-gray-300 px-2 py-1">{{ \Carbon\Carbon::parse($cal->fecha_inicio)->format('d-m-Y H:i') }}</td>
-                      <td class="border border-gray-300 px-2 py-1">{{ \Carbon\Carbon::parse($cal->fecha_fin)->format('d-m-Y H:i') }}</td>
-                      <td class="border border-gray-300 px-2 py-1">{{ $cal->total_horas }}</td>
+                      <td class="border border-gray-300 px-2 py-1">  {{ \Carbon\Carbon::parse($cal->fecha_inicio)->format('d-m-Y H:i') }}</td>
+                      <td class="border border-gray-300 px-2 py-1">  {{ \Carbon\Carbon::parse($cal->fecha_fin)->format('d-m-Y H:i') }}</td>
+                      <td class="border border-gray-300 px-2 py-1">  {{ number_format($cal->total_horas, 2) }}
+                    </td>
                   </tr>
               @endforeach            
             </tbody>
