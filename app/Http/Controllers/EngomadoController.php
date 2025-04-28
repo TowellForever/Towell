@@ -95,4 +95,9 @@ class EngomadoController extends Controller
         return response()->json(['message' => 'Estatus actualizado a FINALIZADO.']);
     }
 
+    //Metodo para la impresion de Urdido Engomado
+    public function imprimirFolio (){
+        
+    }
+
 }

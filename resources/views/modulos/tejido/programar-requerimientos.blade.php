@@ -111,6 +111,7 @@
     </div>
 
 </div>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const requerimientosRows = document.querySelectorAll("tbody tr");
@@ -135,7 +136,6 @@
         });
     });
 </script>
-
 <script>
     // Función para actualizar los inputs ocultos al hacer clic en la fila
     function seleccionarFila(row) {

@@ -29,5 +29,12 @@
     window.onpopstate = function () {
         history.go(1);
     };
+
+    // Script para abrir automáticamente nueva pestaña
+    window.onload = function() {
+        let folio = @json($folio); // pasa el folio de PHP a JS seguro
+        let url = "{{ url('/imprimir-folio') }}/" + folio;
+        window.open(url, '_blank');
+    };
 </script>
 @endsection
