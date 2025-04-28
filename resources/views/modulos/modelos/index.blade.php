@@ -75,11 +75,37 @@
                 @foreach ($modelos as $modelo)
                     <tr>
                         @foreach ($modelo->getFillable() as $field)
-                            <td class="border border-gray-300 px-2 py-1">{{ $modelo->$field }}</td>
+                            @php
+                                $value = $modelo->$field;
+            
+                                // Campos que necesitan quitar ".0"
+                                $fieldsSinDecimal = ['RASEMA', 'Telar_Actual', 'Clave_Modelo', 'CUENTA', 'PASADAS'];
+                                
+                                // Campos de fecha
+                                $fieldsFecha = ['Fecha_Orden','Fecha_Cumplimiento'];
+            
+                                // Campos que requieren 2 decimales
+                                $fieldsDosDecimales = ['Rizo', 'No#_De_Marbetes', 'C11', 'C21', 'Hilo5', 'Hilo6', 'KG_x_Dia', 'Densidad', 'Pzas_Dia__pasadas', 'Pzas_Día_formula', 'DIF', 'EFIC#', 'Rev', 'TIRAS1', 'PASADAS5', 'A', 'B', 'C', 'COMPROBAR modelos duplicados'];
+            
+                                // Campo que requiere 3 decimales
+                                $fieldsTresDecimales = ['Hilo4'];
+            
+                                // Formatear según el campo
+                                if (in_array($field, $fieldsSinDecimal)) {
+                                    $value = is_numeric($value) ? intval($value) : $value;
+                                } elseif (in_array($field, $fieldsFecha)) {
+                                    $value = \Carbon\Carbon::parse($value)->format('d-m-y');
+                                } elseif (in_array($field, $fieldsDosDecimales)) {
+                                    $value = is_numeric($value) ? number_format($value, 2) : $value;
+                                } elseif (in_array($field, $fieldsTresDecimales)) {
+                                    $value = is_numeric($value) ? number_format($value, 3) : $value;
+                                }
+                            @endphp
+                            <td class="border border-gray-300 px-2 py-1">{{ $value }}</td>
                         @endforeach
                     </tr>
                 @endforeach
-            </tbody>
+            </tbody>            
         </table>
     </div>
 </div>
