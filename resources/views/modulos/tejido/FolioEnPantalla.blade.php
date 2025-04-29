@@ -33,7 +33,7 @@
     // Script para abrir automáticamente nueva pestaña
     window.onload = function() {
         let folio = @json($folio); // pasa el folio de PHP a JS seguro
-        let url = "{{ url('/imprimir-folio') }}/" + folio;
+        let url = "{{ url('/imprimir-orden') }}/" + folio;
         window.open(url, '_blank');
     };
 </script>

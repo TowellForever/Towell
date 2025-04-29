@@ -70,8 +70,8 @@ Route::get('/ingresar-folio-engomado', function () {return view('modulos/engomad
 Route::post('/orden-trabajo-engomado', [EngomadoController::class, 'cargarDatosEngomado'])->name('produccion.ordenTrabajoEngomado');
 Route::post('/update-orden-engomado', [EngomadoController::class, 'updateOrdenEngomado'])->name('ordenEngomado.guardar');
 Route::post('/finalizar-engomado', [EngomadoController::class, 'finalizarEngomado']);
-//Route::get('/imprimir-folio/{folio}', function ($folio) { return view('modulos\tejido\imprimir-orden-UrdEng', compact('folio')); })->name('imprimir.folio');
-Route::get('/impresion' ,function() { return view('modulos\tejido\imprimir-orden-UrdEng');});
+Route::get('/imprimir-orden/{folio}' , [EngomadoController::class, 'imprimirOrdenUE'])->name('imprimir.orden');
+    
 
 //RUTAS DEL MODULO **atadores**
 Route::get('/modulo-atadores', function () { return view('modulos/atadores');});

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ConstruccionJulios;
 use App\Models\ConstruccionUrdido;
 use App\Models\Julio;
 use App\Models\Oficial;
@@ -96,8 +97,15 @@ class EngomadoController extends Controller
     }
 
     //Metodo para la impresion de Urdido Engomado
-    public function imprimirFolio (){
-        
+    public function imprimirOrdenUE ($folio){
+        //el FOLIO esta llegando como parte de la url, no como un objto que se trata con REQUEST.
+             // escribir $folio = $request; Eso guarda todo el objeto Request en la variable $folio, lo cual no tiene sentido a menos que luego vayas a manipular el request completo con ese nombre (lo cual es confuso y no recomendado). 
+        $orden = UrdidoEngomado::where('folio',$folio)->first();
+        $julios = ConstruccionJulios::where('folio',$folio)->get(); //julios dados de alta en programacion-requerimientos
+
+
+        return view('modulos\tejido\imprimir-orden-UrdEng', compact('folio','orden','julios'));
     }
+
 
 }
