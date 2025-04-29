@@ -136,12 +136,13 @@
             </div>
             <!--SEGUNDO CONTENEDOR para botones-->
             <!-- Botones alineados a la derecha -->
-            <div class="button-column mb-4">
-                <a href="{{ route('telares.index') }}" class="button-plane ">CATÁLAGO TELARES</a>
-                <a href="{{ route('eficiencia.index') }}" class="button-plane">CATÁLAGO EFICIENCIA STD</a>
-                <a href="{{ route('velocidad.index') }}" class="button-plane">CATÁLAGO VELOCIDAD STD</a>
-                <a href="{{ route('planeacion.calendarios') }}" class="button-plane ">CALENDARIOS</a>
-                <a href="{{ route('planeacion.aplicaciones') }}" class="button-plane">APLICACIONES</a>
+            <div class="button-column mb-4 text-xs">
+                <a href="{{ route('telares.index') }}" class=" button-plane">CATÁLAGO TELARES 📑</a>
+                <a href="{{ route('eficiencia.index') }}" class="button-plane">CATÁLAGO EFICIENCIA STD 📑</a>
+                <a href="{{ route('velocidad.index') }}" class="button-plane">CATÁLAGO VELOCIDAD STD 📑</a>
+                <a href="{{ route('planeacion.calendarios') }}" class="button-plane ">CALENDARIOS 🗓️</a>
+                <a href="{{ route('planeacion.aplicaciones') }}" class="button-plane">APLICACIONES 🧩</a>
+                <a href="{{ route('planeacion.create') }}" class="button-plane">NUEVO REGISTRO 📝</a>
             </div>
         </div>
         <div class="text-center">
@@ -373,7 +374,7 @@
                 font-size: 10px;  /* Ajustar el tamaño de la fuente */
             }
             .plane-table td {
-                padding: 2px 8px !important;  /* Reducir padding */
+                padding: 1px 2px !important;  /* Reducir padding */
             }
             .plane-table th, .plane-table td {
                 width: 100px;  /* Establecer un ancho fijo más pequeño */
@@ -387,18 +388,18 @@
             .button-column {
                 display: flex;
                 flex-direction: column; /* Los botones estarán apilados en columna */
-                gap: 8px; /* Espacio entre los botones */
+                gap: 4px; /* Espacio entre los botones */
                 width: 100px; /* Define el ancho de la columna de botones */
                 margin-right: 4px;
-                font-size: 10px !important;
+                font-size: 8px !important;
             }
 
             /* Estilos para los botones */
             .button-plane {
                 background-color: #0876d1; /* Fondo azul */
                 color: white; /* Color del texto */
-                padding: 6px 10px; /* Espaciado interno */
-                border-radius: 8px; /* Bordes redondeados */
+                padding: 1px 2px; /* Espaciado interno */
+                border-radius: 6px; /* Bordes redondeados */
                 text-decoration: none; /* Elimina el subrayado */
                 font-weight: bold;
                 transition: background-color 0.3s ease; /* Efecto de transición */

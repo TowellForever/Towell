@@ -109,7 +109,7 @@ Route::post('/usuarios', [UsuarioController::class, 'store'])->name('usuarios.st
 //RUTAS DEL MODULO planeacion
 // Ruta de RECURSOS para Planeacion
 Route::resource('planeacion', PlaneacionController::class);
-//RUTAS de CATALAGOS (3 catalagos), se usaron rutas de recursos para manejar las operaciones CRUD
+//RUTAS de CATALAGOS (3 catalagos), se usaron rutas de recursos para manejar las operaciones CRUD ¡IMPORTANTE!
 Route::resource('telares', CatalagoTelarController::class);
 Route::resource('eficiencia', CatalagoEficienciaController::class);
 Route::resource('velocidad', CatalagoVelocidadController::class);
@@ -119,8 +119,6 @@ Route::get('/calendarios', [PlaneacionController::class, 'calendarios'])->name('
 Route::get('/aplicaciones', [PlaneacionController::class, 'aplicaciones'])->name('planeacion.aplicaciones');
 Route::post('/calendarios/update-inline', [CalendarioController::class, 'updateInline'])->name('calendarios.update.inline');
 Route::get('/planeacion/tipo-movimientos/{id}', [PlaneacionController::class, 'obtenerPorTejNum']);
-
-
 Route::put('/tejido-en-proceso/{num_registro}', [PlaneacionController::class, 'update'])->name('tejido_scheduling.update');
 
 // Rutas de catálogos

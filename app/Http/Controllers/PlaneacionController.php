@@ -43,7 +43,15 @@ class PlaneacionController extends Controller
         $datos = $query->get();
         
         return view('modulos/planeacion', compact('datos', 'headers'));
-    }    
+    }   
+    // para la creacion de este registro, no fue necesario hacer que se digitaran todos los datos, dado que la mayoria son calculos
+    public function create(){
+        return view('TEJIDO-SCHEDULING.create-form');
+    }
+
+    public function store(){
+        
+    }
 
     public function calendarios()
     {
@@ -118,6 +126,8 @@ class PlaneacionController extends Controller
 
         return response()->json($movimientos);
     }
+
+
 
 
 }
