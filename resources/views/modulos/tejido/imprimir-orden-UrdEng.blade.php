@@ -5,17 +5,18 @@
     <title>ORDEN DE URDIDO Y ENGOMADO</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ asset('css/estilos.css') }}">
-</head>
 
+</head>
 <body class="bg-white impresion-UE">
     <div class="border border-black p-1 ">
         <div class="flex justify-between items-center mb-1">
             <div>
-                <h1 class="font-bold text-2xl">Towell</h1>
+                <img src="{{ asset('images/fondosTowell/logo_towell2.png') }}" alt="Logo Towell" style="width: 2cm;">
+                
             </div>
             <p class="font-bold text-lg text-sm">ORDEN DE URDIDO Y ENGOMADO</p>
-            <div class="text-right">
-                <p class="text-sm">No. FOLIO: <span class="font-bold text-red-600">{{ $folio  }}</span></p>
+            <div class="text-right mr-2">
+                <p class="text-sm">No. FOLIO: <span class="font-bold text-red-600">{{ $folio }}</span></p>
             </div>
         </div>
     
@@ -26,18 +27,26 @@
             </div>
             <div>
                 <p><strong>CUENTA:</strong> {{ $orden->cuenta ?? ''}}</p>
+                
+                
                 <p class="flex items-center space-x-6">
                     <strong class="mr-2">TIPO:</strong>
                     <label class="inline-flex items-center space-x-1">
-                        <input type="checkbox" class="form-checkbox text-black w-5 h-5" {{ $orden->tipo === 'Rizo' ? 'checked' : '' }} disabled>
+                        <input type="checkbox" class="w-5 h-5 border-black" 
+                               style="background-color: blue;" 
+                               {{ $orden->tipo === 'Rizo' ? 'checked' : '' }} disabled>
                         <span>RIZO</span>
                     </label>
-
+                
                     <label class="inline-flex items-center space-x-1">
-                        <input type="checkbox" class="form-checkbox text-black w-5 h-5" {{ $orden->tipo === 'Pie' ? 'checked' : '' }} disabled>
+                        <input type="checkbox" class="w-5 h-5 border-black" 
+                               style="color: blue;" 
+                              {{ $orden->tipo === 'Pie' ? 'checked' : '' }} disabled>
                         <span>PIE</span>
                     </label>
-                </p>
+                </p>  
+                
+                
             </div>
             <div>
                 <p><strong>ORDENADO POR:</strong>_____________</p>
@@ -79,32 +88,56 @@
         <!-- Tabla principal -->
         <div class="w-full overflow-x-auto">
           <table class="border border-collapse border-black mb-1 text-center w-full">
-              <thead class="leading-none">
-                  <tr>
-                      <th colspan="11"></th>
-                      <th class="border border-black p-[1px] bg-gray-50" colspan="4">ROTURAS</th>
-                  </tr>
-                  <tr class="bg-gray-200">
-                      @php
-                          $headers = [
-                              'FECHA', 'OFICIAL', 'TURNO', 'H. INIC.', 'H. FIN.', 'No. JULIO', 'HILOS', 
-                              'Kg. BRUTO', 'TARA', 'Kg. NETO', 'METROS', 'HILAT.', 'MAQ.', 'OPERAC.', 'TRANSF.'
-                          ];
-                      @endphp
-                      @foreach ($headers as $header)
-                          <th class="border border-black p-[1px] whitespace-nowrap">{{ $header }}</th>
-                      @endforeach
-                  </tr>
-              </thead>
-              <tbody class="leading-none">
-                  @for ($i = 0; $i < 10; $i++)
-                      <tr>
-                          @for ($j = 0; $j < 15; $j++)
-                              <td class="border border-black p-[5px] whitespace-nowrap">&nbsp;</td>
-                          @endfor
-                      </tr>
-                  @endfor
-              </tbody>
+            <thead class="leading-none">
+                <tr>
+                    <th colspan="11"></th>
+                    <th class="border border-black p-[1px] bg-gray-50" colspan="4">ROTURAS</th>
+                </tr>
+                <tr class="bg-gray-200">
+                    @php
+                        $headers = [
+                            'FECHA', 'OFICIAL', 'TURNO', 'H. INIC.', 'H. FIN.', 'No. JULIO', 'HILOS', 
+                            'Kg. BRUTO', 'TARA', 'Kg. NETO', 'METROS', 'HILAT.', 'MAQ.', 'OPERAC.', 'TRANSF.'
+                        ];
+                    @endphp
+                    @foreach ($headers as $index => $header)
+                    <th class="border border-black p-[1px] whitespace-nowrap 
+                    {{ $index === 0 ? 'w-20' : '' }}
+                    {{ $index === 1 ? 'w-20' : '' }}  
+                    {{ $index === 2 ? 'w-5' : '' }}
+                    {{ $index === 3 ? 'w-15' : '' }}
+                    {{ $index === 4 ? 'w-15' : '' }}
+                    {{ $index === 5 ? 'w-8' : '' }}
+                    {{ $index === 7 ? 'w-10' : '' }}
+                    {{ $index === 8 ? 'w-16' : '' }}
+                    {{ $index === 9 ? 'w-10' : '' }}
+                    {{ $index === 11 ? 'w-5' : '' }}
+                    {{ $index === 12 ? 'w-5' : '' }}
+                    {{ $index === 13 ? 'w-5' : '' }}
+                    {{ $index === 14 ? 'w-5' : '' }}
+                     ">
+                            {{ $header }}
+                        </th>
+                    @endforeach
+                </tr>
+            </thead>
+            <tbody class="leading-none">
+                @for ($i = 0; $i < 10; $i++)
+                    <tr>
+                        @for ($j = 0; $j < 15; $j++)
+                            <td class="border border-black p-[5px] whitespace-nowrap 
+                            {{ $j === 0 ? 'w-32' : '' }}
+                            {{ $j === 2 ? 'w-5' : '' }}
+                            {{ $j === 5 ? 'w-5' : '' }}
+                            {{ $j === 7 ? 'w-10' : '' }}
+                            {{ $j === 9 ? 'w-10' : '' }}
+                            {{ $j === 11 ? 'w-5' : '' }}
+                             ">&nbsp;</td>
+                        @endfor
+                    </tr>
+                @endfor
+            </tbody>
+            
           </table>
       </div>
         @php
@@ -135,7 +168,7 @@
             </tbody>
         </table>
 
-        <div class=" grid grid-cols-3 gap-3 justify-between text-center">
+        <div class=" grid grid-cols-6 gap-6 justify-between text-left">
             <div>
                 <p><strong>NÚCLEO:</strong> {{ $orden->nucleo }}</p>
                 <p><strong>NO. TELAS:</strong> {{ $orden->no_telas }}</p>
@@ -146,19 +179,25 @@
             </div>
             <div>
                 <p><strong>CUENDEADOS MÍNIMO:</strong>{{ $orden->cuendados_mini }}</p>
-                <p><strong>OBSERVACIONES:</strong> {{ $orden->observaciones }}</p>
+            </div>
+            <div class="col-span-3">
+                <p class="max-w-xl line-clamp-2">
+                    <strong>OBSERVACIONES:</strong> Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quae aliquid vel dolores pariatur exercitationem, illum nihil ex excepturi debitis suscipit praesentium repellendus labore ea inventore recusandae atque voluptatem, quisquam repellat.
+                </p>
             </div>
         </div>
     </div>
     <!--SEGUNDA IMPRESION DE LA ORDEN URDIDO Y ENGOMADO-->
-    <div class="border border-black p-1 mt-[1px]">
+    <br>
+    <div class="border border-black p-1 ">
         <div class="flex justify-between items-center mb-1">
             <div>
-                <h1 class="font-bold text-2xl">Towell</h1>
+                <img src="{{ asset('images/fondosTowell/logo_towell2.png') }}" alt="Logo Towell" style="width: 2cm;">
+                
             </div>
             <p class="font-bold text-lg text-sm">ORDEN DE URDIDO Y ENGOMADO</p>
-            <div class="text-right">
-                <p class="text-sm">No. FOLIO: <span class="font-bold text-red-600">{{ $folio  }}</span></p>
+            <div class="text-right mr-2">
+                <p class="text-sm">No. FOLIO: <span class="font-bold text-red-600">{{ $folio }}</span></p>
             </div>
         </div>
     
@@ -169,18 +208,26 @@
             </div>
             <div>
                 <p><strong>CUENTA:</strong> {{ $orden->cuenta ?? ''}}</p>
+                
+                
                 <p class="flex items-center space-x-6">
                     <strong class="mr-2">TIPO:</strong>
                     <label class="inline-flex items-center space-x-1">
-                        <input type="checkbox" class="form-checkbox text-black w-5 h-5" {{ $orden->tipo === 'Rizo' ? 'checked' : '' }} disabled>
+                        <input type="checkbox" class="w-5 h-5 border-black" 
+                               style="background-color: blue;" 
+                               {{ $orden->tipo === 'Rizo' ? 'checked' : '' }} disabled>
                         <span>RIZO</span>
                     </label>
-
+                
                     <label class="inline-flex items-center space-x-1">
-                        <input type="checkbox" class="form-checkbox text-black w-5 h-5" {{ $orden->tipo === 'Pie' ? 'checked' : '' }} disabled>
+                        <input type="checkbox" class="w-5 h-5 border-black" 
+                               style="color: blue;" 
+                              {{ $orden->tipo === 'Pie' ? 'checked' : '' }} disabled>
                         <span>PIE</span>
                     </label>
-                </p>
+                </p>  
+                
+                
             </div>
             <div>
                 <p><strong>ORDENADO POR:</strong>_____________</p>
@@ -222,32 +269,56 @@
         <!-- Tabla principal -->
         <div class="w-full overflow-x-auto">
           <table class="border border-collapse border-black mb-1 text-center w-full">
-              <thead class="leading-none">
-                  <tr>
-                      <th colspan="11"></th>
-                      <th class="border border-black p-[1px] bg-gray-50" colspan="4">ROTURAS</th>
-                  </tr>
-                  <tr class="bg-gray-200">
-                      @php
-                          $headers = [
-                              'FECHA', 'OFICIAL', 'TURNO', 'H. INIC.', 'H. FIN.', 'No. JULIO', 'HILOS', 
-                              'Kg. BRUTO', 'TARA', 'Kg. NETO', 'METROS', 'HILAT.', 'MAQ.', 'OPERAC.', 'TRANSF.'
-                          ];
-                      @endphp
-                      @foreach ($headers as $header)
-                          <th class="border border-black p-[1px] whitespace-nowrap">{{ $header }}</th>
-                      @endforeach
-                  </tr>
-              </thead>
-              <tbody class="leading-none">
-                  @for ($i = 0; $i < 10; $i++)
-                      <tr>
-                          @for ($j = 0; $j < 15; $j++)
-                              <td class="border border-black p-[5px] whitespace-nowrap">&nbsp;</td>
-                          @endfor
-                      </tr>
-                  @endfor
-              </tbody>
+            <thead class="leading-none">
+                <tr>
+                    <th colspan="11"></th>
+                    <th class="border border-black p-[1px] bg-gray-50" colspan="4">ROTURAS</th>
+                </tr>
+                <tr class="bg-gray-200">
+                    @php
+                        $headers = [
+                            'FECHA', 'OFICIAL', 'TURNO', 'H. INIC.', 'H. FIN.', 'No. JULIO', 'HILOS', 
+                            'Kg. BRUTO', 'TARA', 'Kg. NETO', 'METROS', 'HILAT.', 'MAQ.', 'OPERAC.', 'TRANSF.'
+                        ];
+                    @endphp
+                    @foreach ($headers as $index => $header)
+                    <th class="border border-black p-[1px] whitespace-nowrap 
+                    {{ $index === 0 ? 'w-20' : '' }}
+                    {{ $index === 1 ? 'w-20' : '' }}  
+                    {{ $index === 2 ? 'w-5' : '' }}
+                    {{ $index === 3 ? 'w-15' : '' }}
+                    {{ $index === 4 ? 'w-15' : '' }}
+                    {{ $index === 5 ? 'w-8' : '' }}
+                    {{ $index === 7 ? 'w-10' : '' }}
+                    {{ $index === 8 ? 'w-16' : '' }}
+                    {{ $index === 9 ? 'w-10' : '' }}
+                    {{ $index === 11 ? 'w-5' : '' }}
+                    {{ $index === 12 ? 'w-5' : '' }}
+                    {{ $index === 13 ? 'w-5' : '' }}
+                    {{ $index === 14 ? 'w-5' : '' }}
+                     ">
+                            {{ $header }}
+                        </th>
+                    @endforeach
+                </tr>
+            </thead>
+            <tbody class="leading-none">
+                @for ($i = 0; $i < 10; $i++)
+                    <tr>
+                        @for ($j = 0; $j < 15; $j++)
+                            <td class="border border-black p-[5px] whitespace-nowrap 
+                            {{ $j === 0 ? 'w-32' : '' }}
+                            {{ $j === 2 ? 'w-5' : '' }}
+                            {{ $j === 5 ? 'w-5' : '' }}
+                            {{ $j === 7 ? 'w-10' : '' }}
+                            {{ $j === 9 ? 'w-10' : '' }}
+                            {{ $j === 11 ? 'w-5' : '' }}
+                             ">&nbsp;</td>
+                        @endfor
+                    </tr>
+                @endfor
+            </tbody>
+            
           </table>
       </div>
         @php
@@ -278,7 +349,7 @@
             </tbody>
         </table>
 
-        <div class=" grid grid-cols-3 gap-3 justify-between text-center">
+        <div class=" grid grid-cols-6 gap-6 justify-between text-left">
             <div>
                 <p><strong>NÚCLEO:</strong> {{ $orden->nucleo }}</p>
                 <p><strong>NO. TELAS:</strong> {{ $orden->no_telas }}</p>
@@ -289,7 +360,11 @@
             </div>
             <div>
                 <p><strong>CUENDEADOS MÍNIMO:</strong>{{ $orden->cuendados_mini }}</p>
-                <p><strong>OBSERVACIONES:</strong> {{ $orden->observaciones }}</p>
+            </div>
+            <div class="col-span-3">
+                <p class="max-w-xl line-clamp-2">
+                    <strong>OBSERVACIONES:</strong> Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quae aliquid vel dolores pariatur exercitationem, illum nihil ex excepturi debitis suscipit praesentium repellendus labore ea inventore recusandae atque voluptatem, quisquam repellat.
+                </p>
             </div>
         </div>
     </div>
