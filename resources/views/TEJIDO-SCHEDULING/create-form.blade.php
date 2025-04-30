@@ -141,7 +141,7 @@
 </div>
 <!--SCRIPS JS ********************************************************************************************************************************-->
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () { // esta funcion will working con AX
         const flogSelect = document.getElementById('no_flog');
         const descInput = document.getElementById('descrip');
 
@@ -152,7 +152,7 @@
         });
     });
 </script>
-
+<!-- el siguiente script es para hacer 2 selects (CLAVE AX y NOMBRE MODELO): todas las opciones son de la BD de la tabla MODELOS -->
 <script>
     $(document).ready(function () {
         // PRIMER SELECT: CLAVE_AX
@@ -175,7 +175,7 @@
                         })
                     };
                 },
-                cache: true
+                cache: true //Habilita el almacenamiento en caché de las respuestas para evitar solicitudes repetidas.
             }
         });
 
@@ -183,7 +183,7 @@
         $('#clave_ax').on('select2:select', function (e) {
             const claveAX = e.params.data.id;
 
-            // Limpiar opciones previas
+            //Limpiar opciones previas
             $('#nombre_modelo').empty().trigger('change');
 
             $.ajax({
@@ -256,11 +256,10 @@
     });
 </script>
 
-
 <script>
     const telaresData = @json($telares); //Paso los telares al JS como objeto
 </script>
-
+<!--Script en el que se acomodan los datos del registro de Telar enviado por el back-->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const telarSelect = document.getElementById('telar');
