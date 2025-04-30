@@ -63,24 +63,48 @@
         </div>
 
         <div class="flex items-center">
-            <label for="tamano" class="w-20 font-medium text-gray-700">TRAMA 1:</label>
-            <input type="text" name="trama_1" id="trama_1" class=" border border-gray-300 rounded px-2 py-1" >
+            <label for="calibre_1" class="w-20 font-medium text-gray-700">CALIBRE 1:</label>
+            <input type="text" name="calibre_1" id="calibre_1" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
         <div class="flex items-center">
-            <label for="tamano" class="w-20 font-medium text-gray-700">TRAMA 2:</label>
-            <input type="text" name="trama_2" id="trama_2" class=" border border-gray-300 rounded px-2 py-1" >
+            <label for="color_1" class="w-20 font-medium text-gray-700">COLOR 1:</label>
+            <input type="text" name="color_1" id="color_1" class=" border border-gray-300 rounded px-2 py-1" >
+        </div>
+
+        <div class="flex items-center">
+            <label for="calibre_2" class="w-20 font-medium text-gray-700">CALIBRE 2:</label>
+            <input type="text" name="calibre_2" id="calibre_2" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
         <div class="flex items-center">
-            <label for="tamano" class="w-20 font-medium text-gray-700">TRAMA 3:</label>
-            <input type="text" name="trama_3" id="trama_3" class=" border border-gray-300 rounded px-2 py-1" >
+            <label for="color_2" class="w-20 font-medium text-gray-700">COLOR 2:</label>
+            <input type="text" name="color_2" id="color_2" class=" border border-gray-300 rounded px-2 py-1" >
+        </div>
+
+        <div class="flex items-center">
+            <label for="calibre_3" class="w-20 font-medium text-gray-700">CALIBRE 3:</label>
+            <input type="text" name="calibre_3" id="calibre_3" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
         <div class="flex items-center">
-            <label for="tamano" class="w-20 font-medium text-gray-700">TRAMA 4:</label>
-            <input type="text" name="trama_4" id="trama_4" class=" border border-gray-300 rounded px-2 py-1" >
+            <label for="color_3" class="w-20 font-medium text-gray-700">COLOR 3:</label>
+            <input type="text" name="color_3" id="color_3" class=" border border-gray-300 rounded px-2 py-1" >
+        </div>
+
+        <div class="flex items-center">
+            <label for="calibre_4" class="w-20 font-medium text-gray-700">CALIBRE 4:</label>
+            <input type="text" name="calibre_4" id="calibre_4" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
         <div class="flex items-center">
-            <label for="tamano" class="w-20 font-medium text-gray-700">TRAMA 5:</label>
-            <input type="text" name="trama_5" id="trama_5" class=" border border-gray-300 rounded px-2 py-1" >
+            <label for="color_4" class="w-20 font-medium text-gray-700">COLOR 4:</label>
+            <input type="text" name="color_4" id="color_4" class=" border border-gray-300 rounded px-2 py-1" >
+        </div>
+
+        <div class="flex items-center">
+            <label for="calibre_5" class="w-20 font-medium text-gray-700">CALIBRE 5:</label>
+            <input type="text" name="calibre_5" id="calibre_5" class=" border border-gray-300 rounded px-2 py-1" >
+        </div>
+        <div class="flex items-center">
+            <label for="color_5" class="w-20 font-medium text-gray-700">COLOR 5:</label>
+            <input type="text" name="color_5" id="color_5" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
 
         <div class="flex items-center">
@@ -192,9 +216,36 @@
                     .then(data => {
                         if (data) {
                             console.log('Modelo encontrado:', data);
-                            // Aquí acomodo los campos como requiera
-                            // $('#trama_1').val(data.Trama_1 ?? '');
-                            // $('#trama_2').val(data.Trama_2 ?? '');
+                            // Aquí acomodo los campos como requiera, son los datos que envio el BACK como JSON (registro encontrado en modelos)
+                            $('#calibre_1').val((data.Hilo ?? '').toString().replace(/\.0$/, ''));
+                            $('#color_1').val((data.OBS ?? '').toString().replace(/\.0$/, ''));
+                            $('#calibre_2').val((data.Hilo1 ?? '').toString().replace(/\.0$/, ''));
+                            $('#color_2').val((data.OBS1 ?? '').toString().replace(/\.0$/, ''));
+                            $('#calibre_3').val((data.Hilo2 ?? '').toString().replace(/\.0$/, ''));
+                            $('#color_3').val((data.OBS2 ?? '').toString().replace(/\.0$/, ''));
+                            $('#calibre_4').val((data.Hilo3 ?? '').toString().replace(/\.0$/, ''));
+                            $('#color_4').val((data.OBS3 ?? '').toString().replace(/\.0$/, ''));
+                            $('#calibre_5').val((data.Hilo4 ?? '').toString().replace(/\.0$/, ''));
+                            $('#color_5').val((data.OBS4 ?? '').toString().replace(/\.0$/, ''));
+                            // Fechas
+                            function formatearFecha(fechaBruta) {
+                                if (fechaBruta) {
+                                    const fecha = new Date(fechaBruta);
+                                    const año = fecha.getFullYear();
+                                    const mes = String(fecha.getMonth() + 1).padStart(2, '0'); // Mes de 2 dígitos
+                                    const dia = String(fecha.getDate()).padStart(2, '0'); // Día de 2 dígitos
+                                    return `${año}-${mes}-${dia}`;
+                                }
+                                return '';
+                            }
+
+                            // Formatear y asignar las fechas al input
+                            $('#fecha_scheduling').val(formatearFecha(data.Fecha_Compromiso));
+                            $('#fecha_inv').val(formatearFecha(data.Fecha_Orden));
+                            $('#fecha_cliente').val(formatearFecha(data.Fecha_Cumplimiento));
+
+                            //$('#fecha_compromiso_tejido').val((data.X ?? '' ));
+                            
                         } else {
                             console.warn('No se encontró el modelo con esos datos');
                         }
@@ -231,39 +282,6 @@
                 document.getElementById('calibre_pie').value = '';
             }
         });
-    });
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const claveAxInput = document.getElementById('clave_ax');
-        const nombreModeloInput = document.getElementById('nombre_modelo');
-
-        function buscarDetalleModelo() {
-            const claveAx = claveAxInput.value;
-            const nombreModelo = nombreModeloInput.value;
-
-            if (claveAx && nombreModelo) {console.log('Buscando con:', claveAx, nombreModelo);
-
-                fetch(`/modelo/detalle?clave_ax=${claveAx}&nombre_modelo=${encodeURIComponent(nombreModelo)}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data) {
-                            // Aquí tú haces el acomodo
-                            console.log('Modelo encontrado:', data);
-                            // Ejemplo:
-                            // document.getElementById('trama_1').value = data.Trama_1 ?? '';
-                            // document.getElementById('trama_2').value = data.Trama_2 ?? '';
-                        } else {
-                            console.warn('No se encontró el modelo con esos datos');
-                        }
-                    })
-                    .catch(error => console.error('Error al obtener detalle del modelo:', error));
-            }
-        }
-
-        // Puedes llamar a la función cuando lo necesites, por ejemplo con un botón o al cambiar de campo
-        // Aquí te dejo un ejemplo si quieres activarlo al salir del input de nombre_modelo
-        nombreModeloInput.addEventListener('change', buscarDetalleModelo);
     });
 </script>
 
