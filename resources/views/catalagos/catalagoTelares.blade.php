@@ -17,10 +17,10 @@
                 <input type="text" name="nombre" class="form-control" placeholder="Buscar por nombre" value="{{ request('nombre') }}">
             </div>
             <div class="col-md-2">
-                <input type="text" name="cuenta" class="form-control" placeholder="Buscar por cuenta" value="{{ request('cuenta') }}">
+                <input type="text" name="cuenta" class="form-control" placeholder="Buscar por cuenta" value="{{ request('rizo') }}">
             </div>
             <div class="col-md-2">
-                <input type="text" name="piel" class="form-control" placeholder="Buscar por piel" value="{{ request('piel') }}">
+                <input type="text" name="piel" class="form-control" placeholder="Buscar por piel" value="{{ request('pie') }}">
             </div>
             <div class="col-md-2">
                 <input type="text" name="ancho" class="form-control" placeholder="Buscar por ancho" value="{{ request('ancho') }}">
@@ -58,7 +58,7 @@
                 <th onclick="sortTable(0, this)">Salón</th>
                 <th onclick="sortTable(1, this)">Telar</th>
                 <th onclick="sortTable(2, this)">Nombre</th>
-                <th onclick="sortTable(3, this)">Cuenta</th>
+                <th onclick="sortTable(3, this)">Rizo</th>
                 <th onclick="sortTable(4, this)">Piel</th>
                 <th onclick="sortTable(5, this)">Ancho</th>
             </tr>
@@ -69,8 +69,8 @@
                     <td class="bg-white">{{ $telar->salon }}</td>
                     <td class="bg-white">{{ $telar->telar }}</td>
                     <td class="bg-white">{{ $telar->nombre }}</td>
-                    <td class="bg-white">{{ $telar->cuenta }}</td>
-                    <td class="bg-white">{{ $telar->piel }}</td>
+                    <td class="bg-white">{{ $telar->rizo }}</td>
+                    <td class="bg-white">{{ $telar->pie }}</td>
                     <td class="bg-white">{{ $telar->ancho }}</td>
                 </tr>
             @endforeach

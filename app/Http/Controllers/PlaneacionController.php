@@ -44,9 +44,13 @@ class PlaneacionController extends Controller
         
         return view('modulos/planeacion', compact('datos', 'headers'));
     }   
+
     // para la creacion de este registro, no fue necesario hacer que se digitaran todos los datos, dado que la mayoria son calculos
     public function create(){
-        return view('TEJIDO-SCHEDULING.create-form');
+        $flogs = DB::table('TEJIDO_SCHEDULING')->select('Id_Flog', 'Descrip')->get();
+
+
+        return view('TEJIDO-SCHEDULING.create-form',compact('flogs'));
     }
 
     public function store(){
@@ -127,6 +131,18 @@ class PlaneacionController extends Controller
         return response()->json($movimientos);
     }
 
+    public function buscarModelos(Request $request)
+    {
+        $search = $request->input('q');
+
+        $resultados = DB::table('MODELOS')
+            ->select('CLAVE_MODELO', 'Modelo') 
+            ->where('CLAVE_MODELO', 'like', "%{$search}%")
+            ->limit(20)
+            ->get();
+
+        return response()->json($resultados);
+    }
 
 
 

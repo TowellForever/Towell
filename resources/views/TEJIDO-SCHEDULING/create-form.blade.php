@@ -8,42 +8,76 @@
 
         <div class="flex items-center">
             <label for="no_flog" class="w-20 font-medium text-gray-700">No. FLOG:</label>
-            <input type="text" name="no_flog" id="no_flog" class=" border border-gray-300 rounded px-2 py-1" required>
+            <select name="no_flog" id="no_flog" class="border border-gray-300 rounded px-2 py-1 w-full text-sm" required>
+                <option value="">-- SELECCIONA --</option>
+                @foreach($flogs as $flog)
+                    <option value="{{ $flog->Id_Flog }}" data-desc="{{ $flog->Descrip }}">{{ $flog->Id_Flog }}</option>
+                @endforeach
+            </select>
         </div>
+        <div class="flex items-center">
+            <label for="descrip" class="w-20 font-medium text-gray-700">DESCRIPCIÓN:</label>
+            <input type="text" name="descripcion" id="descrip" class="border border-gray-300 rounded px-2 py-1" readonly>
+        </div>        
 
         <div class="flex items-center">
             <label for="telar" class="w-20 font-medium text-gray-700">TELAR:</label>
             <input type="text" name="telar" id="telar" class=" border border-gray-300 rounded px-2 py-1" required>
         </div>
 
-        <div class="flex items-center">
-            <label for="modelo" class="w-32 font-medium text-gray-700">CLAVE MODELO:</label>
-            <select name="modelo" id="modelo" class="border border-gray-300 rounded px-2 py-1 w-full text-sm" required>
-                <option value="">-- Selecciona --</option>
-                <option value="1023">1023</option>
-                <option value="2845">2845</option>
-                <option value="3917">3917</option>
-                <option value="4768">4768</option>
-                <option value="5592">5592</option>
-            </select>
-        </div>        
-
-        <div class="flex items-center">
-            <label for="modelo" class="w-24 font-medium text-gray-700">NOMBRE:</label>
-            <select name="modelo" id="modelo" class="border border-gray-300 rounded px-2 py-1 w-full text-sm" required>
-                <option value="">-- Selecciona --</option>
-                <option value="ALFA">ALFA</option>
-                <option value="BETA">BETA</option>
-                <option value="GAMMA">GAMMA</option>
-                <option value="OMEGA">OMEGA</option>
-                <option value="DELTA">DELTA</option>
-            </select>
+        <div class="flex items-center mb-4">
+            <label for="clave_modelo" class="w-32 font-medium text-gray-700">CLAVE MODELO:</label>
+            <select id="clave_modelo" name="clave_modelo" class="w-full border border-gray-300 rounded px-2 py-1 select2-modelos" ></select>
         </div>
         
-
+        <div class="flex items-center">
+            <label for="nombre_modelo" class="w-24 font-medium text-gray-700">NOMBRE MODELO:</label>
+            <input type="text" id="nombre_modelo" name="nombre_modelo" class="w-full border border-gray-300 rounded px-2 py-1" readonly>
+        </div>
+        
+        
         <div class="flex items-center">
             <label for="tamano" class="w-20 font-medium text-gray-700">TAMAÑO:</label>
             <input type="text" name="tamano" id="tamano" class=" border border-gray-300 rounded px-2 py-1" required>
+        </div>
+
+        <div class="flex items-center">
+            <label for="tamano" class="w-20 font-medium text-gray-700">CUENTA RIZO:</label>
+            <input type="text" name="cuenta_rizo" id="cuenta_rizo" class=" border border-gray-300 rounded px-2 py-1" required>
+        </div>
+        <div class="flex items-center">
+            <label for="tamano" class="w-20 font-medium text-gray-700">CALIBRE RIZO:</label>
+            <input type="text" name="calibre_pie" id="calibre_pie" class=" border border-gray-300 rounded px-2 py-1" required>
+        </div>
+
+        <div class="flex items-center">
+            <label for="tamano" class="w-20 font-medium text-gray-700">CUENTA PIE:</label>
+            <input type="text" name="cuenta_pie" id="cuenta_pie" class=" border border-gray-300 rounded px-2 py-1" required>
+        </div>
+        <div class="flex items-center">
+            <label for="tamano" class="w-20 font-medium text-gray-700">CUENTA PIE:</label>
+            <input type="text" name="calibre_pie" id="calibre_pie" class=" border border-gray-300 rounded px-2 py-1" required>
+        </div>
+
+        <div class="flex items-center">
+            <label for="tamano" class="w-20 font-medium text-gray-700">TRAMA 1:</label>
+            <input type="text" name="trama_1" id="trama_1" class=" border border-gray-300 rounded px-2 py-1" >
+        </div>
+        <div class="flex items-center">
+            <label for="tamano" class="w-20 font-medium text-gray-700">TRAMA 2:</label>
+            <input type="text" name="trama_2" id="trama_2" class=" border border-gray-300 rounded px-2 py-1" >
+        </div>
+        <div class="flex items-center">
+            <label for="tamano" class="w-20 font-medium text-gray-700">TRAMA 3:</label>
+            <input type="text" name="trama_3" id="trama_3" class=" border border-gray-300 rounded px-2 py-1" >
+        </div>
+        <div class="flex items-center">
+            <label for="tamano" class="w-20 font-medium text-gray-700">TRAMA 4:</label>
+            <input type="text" name="trama_4" id="trama_4" class=" border border-gray-300 rounded px-2 py-1" >
+        </div>
+        <div class="flex items-center">
+            <label for="tamano" class="w-20 font-medium text-gray-700">TRAMA 5:</label>
+            <input type="text" name="trama_5" id="trama_5" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
 
         <div class="flex items-center">
@@ -78,5 +112,53 @@
         </div>
     </form>
 </div>
-<BR></BR><BR></BR><BR></BR>
+<!--SCRIPS JS ********************************************************************************************************************************-->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const flogSelect = document.getElementById('no_flog');
+        const descInput = document.getElementById('descrip');
+
+        flogSelect.addEventListener('change', function () {
+            const selected = flogSelect.options[flogSelect.selectedIndex];
+            const descripcion = selected.getAttribute('data-desc');
+            descInput.value = descripcion || '';
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#clave_modelo').select2({
+            placeholder: '-- Selecciona CLAVE MODELO --',
+            ajax: {
+                url: '{{ route("modelos.buscar") }}',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return { q: params.term };
+                },
+                processResults: function (data) {
+    return {
+        results: data.map(function (item) {
+            let clave = parseInt(item.CLAVE_MODELO); // Elimina .0
+            return {
+                id: clave,
+                text: clave,
+                nombre: item.Modelo
+            };
+        })
+    };
+},
+
+                cache: true
+            }
+        });
+
+        $('#clave_modelo').on('select2:select', function (e) {
+            var data = e.params.data;
+            $('#nombre_modelo').val(data.nombre);
+        });
+    });
+</script>
+
 @endsection
