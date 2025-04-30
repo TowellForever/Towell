@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Calendario;
+use App\Models\CatalagoTelar;
 use App\Models\Planeacion; // Asegúrate de importar el modelo Planeacion
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -48,10 +49,12 @@ class PlaneacionController extends Controller
     // para la creacion de este registro, no fue necesario hacer que se digitaran todos los datos, dado que la mayoria son calculos
     public function create(){
         $flogs = DB::table('TEJIDO_SCHEDULING')->select('Id_Flog', 'Descrip')->get();
+        $telares = DB::table('catalago_telares')->get();
 
 
-        return view('TEJIDO-SCHEDULING.create-form',compact('flogs'));
+        return view('TEJIDO-SCHEDULING.create-form',compact('flogs','telares'));
     }
+
 
     public function store(){
         
@@ -131,19 +134,47 @@ class PlaneacionController extends Controller
         return response()->json($movimientos);
     }
 
+    // funcionando?
     public function buscarModelos(Request $request)
     {
         $search = $request->input('q');
 
         $resultados = DB::table('MODELOS')
-            ->select('CLAVE_MODELO', 'Modelo') 
-            ->where('CLAVE_MODELO', 'like', "%{$search}%")
+            ->select('CLAVE_AX')
+            ->where('CLAVE_AX', 'like', "%{$search}%")
+            ->distinct()
             ->limit(20)
             ->get();
 
         return response()->json($resultados);
     }
 
+    // Nuevo método para obtener modelos por CLAVE_AX
+    public function obtenerModelosPorClave(Request $request)
+    {
+        $clave = $request->input('clave_ax');
+
+        $modelos = DB::table('MODELOS')
+            ->select('Modelo')
+            ->where('CLAVE_AX', $clave)
+            ->get();
+
+        return response()->json($modelos);
+    }
+
+    public function buscarDetalleModelo(Request $request)
+    {
+        $clave = $request->input('clave_ax');
+        $modelo = $request->input('nombre_modelo');
+    
+        $detalle = DB::table('MODELOS')
+            ->where('CLAVE_AX', $clave)
+            ->where('Modelo', $modelo)
+            ->first();
+    
+        return response()->json($detalle);
+    }
+    
 
 
 }

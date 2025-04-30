@@ -22,19 +22,22 @@
 
         <div class="flex items-center">
             <label for="telar" class="w-20 font-medium text-gray-700">TELAR:</label>
-            <input type="text" name="telar" id="telar" class=" border border-gray-300 rounded px-2 py-1" required>
+            <select name="telar" id="telar" class="border border-gray-300 rounded px-2 py-1 w-full text-sm" required>
+                <option value="">-- SELECCIONA --</option>
+                @foreach($telares as $telar)
+                    <option value="{{ $telar->telar }}"> {{ $telar->telar }}</option>
+                @endforeach
+            </select>
         </div>
 
         <div class="flex items-center mb-4">
-            <label for="clave_modelo" class="w-32 font-medium text-gray-700">CLAVE MODELO:</label>
-            <select id="clave_modelo" name="clave_modelo" class="w-full border border-gray-300 rounded px-2 py-1 select2-modelos" ></select>
+            <label for="clave_ax" class="w-32 font-medium text-gray-700">CLAVE AX:</label>
+            <select id="clave_ax" name="clave_ax" class="w-full border border-gray-300 rounded px-2 py-1 select2-modelos" ></select>
         </div>
-        
         <div class="flex items-center">
             <label for="nombre_modelo" class="w-24 font-medium text-gray-700">NOMBRE MODELO:</label>
             <input type="text" id="nombre_modelo" name="nombre_modelo" class="w-full border border-gray-300 rounded px-2 py-1" readonly>
         </div>
-        
         
         <div class="flex items-center">
             <label for="tamano" class="w-20 font-medium text-gray-700">TAMAÑO:</label>
@@ -55,7 +58,7 @@
             <input type="text" name="cuenta_pie" id="cuenta_pie" class=" border border-gray-300 rounded px-2 py-1" required>
         </div>
         <div class="flex items-center">
-            <label for="tamano" class="w-20 font-medium text-gray-700">CUENTA PIE:</label>
+            <label for="tamano" class="w-20 font-medium text-gray-700">CALIBRE PIE:</label>
             <input type="text" name="calibre_pie" id="calibre_pie" class=" border border-gray-300 rounded px-2 py-1" required>
         </div>
 
@@ -128,8 +131,9 @@
 
 <script>
     $(document).ready(function () {
-        $('#clave_modelo').select2({
-            placeholder: '-- Selecciona CLAVE MODELO --',
+        // PRIMER SELECT: CLAVE_AX
+        $('#clave_ax').select2({
+            placeholder: '-- Selecciona CLAVE AX --',
             ajax: {
                 url: '{{ route("modelos.buscar") }}',
                 dataType: 'json',
@@ -138,26 +142,128 @@
                     return { q: params.term };
                 },
                 processResults: function (data) {
-    return {
-        results: data.map(function (item) {
-            let clave = parseInt(item.CLAVE_MODELO); // Elimina .0
-            return {
-                id: clave,
-                text: clave,
-                nombre: item.Modelo
-            };
-        })
-    };
-},
-
+                    return {
+                        results: data.map(function (item) {
+                            return {
+                                id: item.CLAVE_AX,
+                                text: item.CLAVE_AX
+                            };
+                        })
+                    };
+                },
                 cache: true
             }
         });
 
-        $('#clave_modelo').on('select2:select', function (e) {
-            var data = e.params.data;
-            $('#nombre_modelo').val(data.nombre);
+        // SEGUNDO SELECT: nombre_modelo depende del valor seleccionado en clave_ax
+        $('#clave_ax').on('select2:select', function (e) {
+            const claveAX = e.params.data.id;
+
+            // Limpiar opciones previas
+            $('#nombre_modelo').empty().trigger('change');
+
+            $.ajax({
+                url: '{{ route("modelos.porClave") }}',
+                data: { clave_ax: claveAX },
+                success: function (data) {
+                    const opciones = data.map(item => ({
+                        id: item.Modelo,
+                        text: item.Modelo
+                    }));
+
+                    $('#nombre_modelo').select2({
+                        data: opciones,
+                        placeholder: '-- Selecciona un modelo --'
+                    });
+                }
+            });
         });
+
+        // 🧠 Cuando el usuario selecciona un modelo, lanzamos la búsqueda del detalle
+        $('#nombre_modelo').on('select2:select', function (e) {
+            const claveAx = $('#clave_ax').val();
+            const nombreModelo = e.params.data.id;
+
+            if (claveAx && nombreModelo) {
+                console.log('Buscando con:', claveAx, nombreModelo);
+
+                fetch(`/modelo/detalle?clave_ax=${claveAx}&nombre_modelo=${encodeURIComponent(nombreModelo)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data) {
+                            console.log('Modelo encontrado:', data);
+                            // Aquí acomodo los campos como requiera
+                            // $('#trama_1').val(data.Trama_1 ?? '');
+                            // $('#trama_2').val(data.Trama_2 ?? '');
+                        } else {
+                            console.warn('No se encontró el modelo con esos datos');
+                        }
+                    })
+                    .catch(error => console.error('Error al obtener detalle del modelo:', error));
+            }
+        });
+    });
+</script>
+
+
+<script>
+    const telaresData = @json($telares); //Paso los telares al JS como objeto
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const telarSelect = document.getElementById('telar');
+
+        telarSelect.addEventListener('change', function () {
+            const selectedTelar = this.value;
+
+            const telar = telaresData.find(t => t.telar === selectedTelar);
+
+            if (telar) {
+                document.getElementById('cuenta_rizo').value = telar.rizo ?? '';
+                document.getElementById('cuenta_pie').value = telar.pie ?? '';
+                document.getElementById('calibre_rizo').value = telar.calibre_rizo ?? '';
+                document.getElementById('calibre_pie').value = telar.calibre_pie ?? '';
+            } else {
+                document.getElementById('cuenta_rizo').value = '';
+                document.getElementById('cuenta_pie').value = '';
+                document.getElementById('calibre_rizo').value = '';
+                document.getElementById('calibre_pie').value = '';
+            }
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const claveAxInput = document.getElementById('clave_ax');
+        const nombreModeloInput = document.getElementById('nombre_modelo');
+
+        function buscarDetalleModelo() {
+            const claveAx = claveAxInput.value;
+            const nombreModelo = nombreModeloInput.value;
+
+            if (claveAx && nombreModelo) {console.log('Buscando con:', claveAx, nombreModelo);
+
+                fetch(`/modelo/detalle?clave_ax=${claveAx}&nombre_modelo=${encodeURIComponent(nombreModelo)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data) {
+                            // Aquí tú haces el acomodo
+                            console.log('Modelo encontrado:', data);
+                            // Ejemplo:
+                            // document.getElementById('trama_1').value = data.Trama_1 ?? '';
+                            // document.getElementById('trama_2').value = data.Trama_2 ?? '';
+                        } else {
+                            console.warn('No se encontró el modelo con esos datos');
+                        }
+                    })
+                    .catch(error => console.error('Error al obtener detalle del modelo:', error));
+            }
+        }
+
+        // Puedes llamar a la función cuando lo necesites, por ejemplo con un botón o al cambiar de campo
+        // Aquí te dejo un ejemplo si quieres activarlo al salir del input de nombre_modelo
+        nombreModeloInput.addEventListener('change', buscarDetalleModelo);
     });
 </script>
 

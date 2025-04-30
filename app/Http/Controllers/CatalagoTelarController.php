@@ -69,5 +69,12 @@ class CatalagoTelarController extends Controller
         // Redirigir a la página de índice o donde desees
         return redirect()->route('telares.index')->with('success', 'Telar agregado exitosamente!');
     }
+
+        public function show($id)
+    {
+        // Solo para evitar el error
+        return redirect()->route('telares.index');
+    }
+
     
 }
