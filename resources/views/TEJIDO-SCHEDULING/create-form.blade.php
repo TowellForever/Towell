@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="mx-auto p-3 bg-white shadow rounded-lg mt-6">
+<div class="mx-auto p-3 bg-white shadow rounded-lg mt-6 overflow-y-auto max-h-[600px]">
     <h1 class="text-xl font-bold mb-4 text-gray-800 text-center">NUEVO REGISTRO TEJIDO SCHEDULING</h1>
     <form action="{{ route('planeacion.store') }}" method="POST" class="grid grid-cols-4 gap-x-8 gap-y-4 fs-11">
         @csrf
@@ -172,6 +172,23 @@
             </button>
         </div>
     </form>
+
+    <button onclick="mostrarDataTelarEnTextarea()" class="w-1/6 mt-2 px-4 py-2 bg-blue-500 text-white rounded">
+      Mostrar datos del telar
+    </button>
+
+    <button onclick="mostrarDataModeloEnTextarea()" class="w-1/6 mt-2 px-4 py-2 bg-blue-500 text-white rounded">
+      Mostrar datos del modelo
+    </button>
+  
+    <div class="mt-1">
+      <label for="datos_comodin" class="block text-lg font-semibold text-gray-800 mb-2">DATOS COMODÍN:</label>
+      <textarea id="datos_comodin" name="datos_comodin"
+          class="w-full h-[300px] border border-gray-300 rounded-lg p-4 text-sm font-mono resize-y bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+          placeholder="Aquí aparecerán los datos extraídos...">
+        </textarea>
+    </div>
+  
 </div>
 
 <!--SCRIPS JS ********************************************************************************************************************************-->
@@ -189,6 +206,7 @@
 </script>
 <!-- el siguiente script es para hacer 2 selects (CLAVE AX y NOMBRE MODELO): todas las opciones son de la BD de la tabla MODELOS -->
 <script>
+  let dataModelo = null;
     $(document).ready(function () {
         // PRIMER SELECT: CLAVE_AX
         $('#clave_ax').select2({
@@ -252,18 +270,18 @@
                         if (data) {
                             console.log('Modelo encontrado:', data);
                             // Aquí acomodo los campos como requiera, son los datos que envio el BACK como JSON (registro encontrado en modelos)
-                            $('#trama_0').val((data.Tra ?? '').toString().replace(/\.0$/, ''));
-                            //$('#color_0').val((data.OBS. ?? '').toString().replace(/\.0$/, ''));
-                            $('#calibre_1').val((data.Hilo ?? '').toString().replace(/\.0$/, ''));
-                            $('#color_1').val((data.OBS ?? '').toString().replace(/\.0$/, ''));
-                            $('#calibre_2').val((data.Hilo1 ?? '').toString().replace(/\.0$/, ''));
-                            $('#color_2').val((data.OBS1 ?? '').toString().replace(/\.0$/, ''));
-                            $('#calibre_3').val((data.Hilo2 ?? '').toString().replace(/\.0$/, ''));
-                            $('#color_3').val((data.OBS2 ?? '').toString().replace(/\.0$/, ''));
-                            $('#calibre_4').val((data.Hilo3 ?? '').toString().replace(/\.0$/, ''));
-                            $('#color_4').val((data.OBS3 ?? '').toString().replace(/\.0$/, ''));
-                            $('#calibre_5').val((data.Hilo4 ?? '').toString().replace(/\.0$/, ''));
-                            $('#color_5').val((data.OBS4 ?? '').toString().replace(/\.0$/, ''));
+                            $('#trama_0').val((data.Hilo ?? '').toString().replace(/\.0$/, ''));
+                            $('#color_0').val((data.OBS ?? '').toString().replace(/\.0$/, ''));
+                            $('#calibre_1').val((data.Hilo1 ?? '').toString().replace(/\.0$/, ''));
+                            $('#color_1').val((data.OBS1 ?? '').toString().replace(/\.0$/, ''));
+                            $('#calibre_2').val((data.Hilo2 ?? '').toString().replace(/\.0$/, ''));
+                            $('#color_2').val((data.OBS2 ?? '').toString().replace(/\.0$/, ''));
+                            $('#calibre_3').val((data.Hilo3 ?? '').toString().replace(/\.0$/, ''));
+                            $('#color_3').val((data.OBS3 ?? '').toString().replace(/\.0$/, ''));
+                            $('#calibre_4').val((data.Hilo4 ?? '').toString().replace(/\.0$/, ''));
+                            $('#color_4').val((data.OBS4 ?? '').toString().replace(/\.0$/, ''));
+                            $('#calibre_5').val((data.Hilo5 ?? '').toString().replace(/\.0$/, ''));
+                            $('#color_5').val((data.OBS5 ?? '').toString().replace(/\.0$/, ''));
                             // Fechas
                             function formatearFecha(fechaBruta) {
                                 if (fechaBruta) {
@@ -282,7 +300,10 @@
                             $('#fecha_cliente').val(formatearFecha(data.Fecha_Cumplimiento));
 
                             //$('#fecha_compromiso_tejido').val((data.X ?? '' ));
-                            
+
+
+                          // Aquí guardamos todo el objeto (registro) de MODELOS encontrado
+                          dataModelo = data; 
                         } else {
                             console.warn('No se encontró el modelo con esos datos');
                         }
@@ -304,6 +325,7 @@
 </script>
 <!--Script en el que se acomodan los datos del registro de Telar enviado por el back-->
 <script>
+  let dataTelar = null; // variables globales, no importa si el DOM no esta cargado
     document.addEventListener('DOMContentLoaded', function () {
         const telarSelect = document.getElementById('telar');
 
@@ -317,6 +339,7 @@
                 document.getElementById('cuenta_pie').value = telar.pie ?? '';
                 document.getElementById('calibre_rizo').value = telar.calibre_rizo ?? '';
                 document.getElementById('calibre_pie').value = telar.calibre_pie ?? '';
+                dataTelar = telar;
             } else {
                 document.getElementById('cuenta_rizo').value = '';
                 document.getElementById('cuenta_pie').value = '';
@@ -341,6 +364,33 @@ Escucha cuando el usuario escribe en cantidad y actualiza saldo con el mismo val
 </script>
 
 
+
+
+
+
+
+
+<!-- scripts TEMPORALES para mostrar varibles globales, BORRAR!!!!! DESPUÉS-->
+<script>
+  function mostrarDataTelarEnTextarea() {
+      if (dataTelar) {
+          const textarea = document.getElementById('datos_comodin');
+          textarea.value = JSON.stringify(dataTelar, null, 2); // Formateado bonito
+      } else {
+          alert('No hay datos del telar seleccionados.');
+      }
+  }
+</script>
+<script>
+  function mostrarDataModeloEnTextarea() {
+      if (dataModelo) {
+          const textarea = document.getElementById('datos_comodin');
+          textarea.value = JSON.stringify(dataModelo, null, 2); // Formateado bonito
+      } else {
+          alert('No hay datos del modelo seleccionados.');
+      }
+  }
+</script>
 
 
 
