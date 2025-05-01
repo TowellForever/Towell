@@ -143,6 +143,7 @@
                 <a href="{{ route('planeacion.calendarios') }}" class="button-plane ">CALENDARIOS 🗓️</a>
                 <a href="{{ route('planeacion.aplicaciones') }}" class="button-plane">APLICACIONES 🧩</a>
                 <a href="{{ route('planeacion.create') }}" class="button-plane">NUEVO REGISTRO 📝</a>
+                <a href="{{ route('modelos.index') }}" class="button-plane-2">MODELOS 🛠️</a>
             </div>
         </div>
         <div class="text-center">
@@ -397,6 +398,16 @@
             /* Estilos para los botones */
             .button-plane {
                 background-color: #0876d1; /* Fondo azul */
+                color: white; /* Color del texto */
+                padding: 1px 2px; /* Espaciado interno */
+                border-radius: 6px; /* Bordes redondeados */
+                text-decoration: none; /* Elimina el subrayado */
+                font-weight: bold;
+                transition: background-color 0.3s ease; /* Efecto de transición */
+                text-align: center; /* Centra el texto en cada botón */
+            }
+            .button-plane-2 {
+                background-color: #fab43c; /* Fondo azul */
                 color: white; /* Color del texto */
                 padding: 1px 2px; /* Espaciado interno */
                 border-radius: 6px; /* Bordes redondeados */

@@ -45,25 +45,34 @@
         </div>
 
         <div class="flex items-center">
-            <label for="tamano" class="w-20 font-medium text-gray-700">CUENTA RIZO:</label>
+            <label for="cuenta_rizo" class="w-20 font-medium text-gray-700">CUENTA RIZO:</label>
             <input type="text" name="cuenta_rizo" id="cuenta_rizo" class=" border border-gray-300 rounded px-2 py-1" required>
         </div>
         <div class="flex items-center">
-            <label for="tamano" class="w-20 font-medium text-gray-700">CALIBRE RIZO:</label>
-            <input type="text" name="calibre_pie" id="calibre_pie" class=" border border-gray-300 rounded px-2 py-1" required>
+            <label for="calibre_rizo" class="w-20 font-medium text-gray-700">CALIBRE RIZO:</label>
+            <input type="text" name="calibre_rizo" id="calibre_rizo" class=" border border-gray-300 rounded px-2 py-1" required>
         </div>
 
         <div class="flex items-center">
-            <label for="tamano" class="w-20 font-medium text-gray-700">CUENTA PIE:</label>
+            <label for="cuenta_pie" class="w-20 font-medium text-gray-700">CUENTA PIE:</label>
             <input type="text" name="cuenta_pie" id="cuenta_pie" class=" border border-gray-300 rounded px-2 py-1" required>
         </div>
         <div class="flex items-center">
-            <label for="tamano" class="w-20 font-medium text-gray-700">CALIBRE PIE:</label>
+            <label for="calibre_pie" class="w-20 font-medium text-gray-700">CALIBRE PIE:</label>
             <input type="text" name="calibre_pie" id="calibre_pie" class=" border border-gray-300 rounded px-2 py-1" required>
         </div>
 
         <div class="flex items-center">
-            <label for="calibre_1" class="w-20 font-medium text-gray-700">CALIBRE 1:</label>
+            <label for="trama_0" class="w-20 font-medium text-gray-700">TRAMA:</label>
+            <input type="text" name="trama_0" id="trama_0" class=" border border-gray-300 rounded px-2 py-1" >
+        </div>
+        <div class="flex items-center">
+            <label for="color_0" class="w-20 font-medium text-gray-700">COLOR:</label>
+            <input type="text" name="color_0" id="color_0" class=" border border-gray-300 rounded px-2 py-1" >
+        </div>
+
+        <div class="flex items-center">
+            <label for="calibre_1" class="w-20 font-medium text-gray-700">TRAMA 1:</label>
             <input type="text" name="calibre_1" id="calibre_1" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
         <div class="flex items-center">
@@ -72,7 +81,7 @@
         </div>
 
         <div class="flex items-center">
-            <label for="calibre_2" class="w-20 font-medium text-gray-700">CALIBRE 2:</label>
+            <label for="calibre_2" class="w-20 font-medium text-gray-700">TRAMA 2:</label>
             <input type="text" name="calibre_2" id="calibre_2" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
         <div class="flex items-center">
@@ -81,7 +90,7 @@
         </div>
 
         <div class="flex items-center">
-            <label for="calibre_3" class="w-20 font-medium text-gray-700">CALIBRE 3:</label>
+            <label for="calibre_3" class="w-20 font-medium text-gray-700">TRAMA 3:</label>
             <input type="text" name="calibre_3" id="calibre_3" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
         <div class="flex items-center">
@@ -90,7 +99,7 @@
         </div>
 
         <div class="flex items-center">
-            <label for="calibre_4" class="w-20 font-medium text-gray-700">CALIBRE 4:</label>
+            <label for="calibre_4" class="w-20 font-medium text-gray-700">TRAMA 4:</label>
             <input type="text" name="calibre_4" id="calibre_4" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
         <div class="flex items-center">
@@ -99,7 +108,7 @@
         </div>
 
         <div class="flex items-center">
-            <label for="calibre_5" class="w-20 font-medium text-gray-700">CALIBRE 5:</label>
+            <label for="calibre_5" class="w-20 font-medium text-gray-700">TRAMA 5:</label>
             <input type="text" name="calibre_5" id="calibre_5" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
         <div class="flex items-center">
@@ -111,6 +120,11 @@
             <label for="cantidad" class="w-20 font-medium text-gray-700">CANTIDAD:</label>
             <input type="number" name="cantidad" id="cantidad" class=" border border-gray-300 rounded px-2 py-1" required>
         </div>
+        
+        <div class="flex items-center">
+            <label for="saldos" class="w-20 font-medium text-gray-700">SALDOS:</label>
+            <input type="text" name="saldo" id="saldo" class=" border border-gray-300 rounded px-2 py-1" required>
+        </div>
 
         <div class="flex items-center">
             <label for="fecha_scheduling" class="w-20 font-medium text-gray-700">FECHA SCHEDULING:</label>
@@ -118,8 +132,8 @@
         </div>
 
         <div class="flex items-center">
-            <label for="fecha_inv" class="w-20 font-medium text-gray-700">FECHA INV:</label>
-            <input type="date" name="fecha_inv" id="fecha_inv" class=" border border-gray-300 rounded px-2 py-1" required>
+            <label for="fecha_inn" class="w-20 font-medium text-gray-700">FECHA INN:</label>
+            <input type="date" name="fecha_inn" id="fecha_inn" class=" border border-gray-300 rounded px-2 py-1" required>
         </div>
 
         <div class="flex items-center">
@@ -132,6 +146,26 @@
             <input type="date" name="fecha_cliente" id="fecha_cliente" class=" border border-gray-300 rounded px-2 py-1" required>
         </div>
 
+        <div class="flex items-center">
+            <label for="day_scheduling" class="w-20 font-medium text-gray-700">DAY SCHEDULING:</label>
+            <input type="date" name="day_scheduling" id="day_scheduling" class=" border border-gray-300 rounded px-2 py-1" required>
+        </div>
+
+        <div class="flex items-center">
+          <label for="fecha_inicio" class="w-20 font-medium text-gray-700">FECHA INICIO:</label>
+          <input type="date" name="fecha_inicio" id="fecha_inicio" class=" border border-gray-300 rounded px-2 py-1" required>
+      </div>
+
+      <div class="flex items-center">
+        <label for="fecha_fin" class="w-20 font-medium text-gray-700">FECHA FIN:</label>
+        <input type="date" name="fecha_fin" id="fecha_fin" class=" border border-gray-300 rounded px-2 py-1" required>
+      </div>
+
+      <div class="flex items-center">
+          <label for="fecha_entrega" class="w-20 font-medium text-gray-700">FECHA ENTREGA:</label>
+          <input type="date" name="fecha_entrega" id="fecha_entrega" class=" border border-gray-300 rounded px-2 py-1" required>
+      </div>
+
         <div class="col-span-4 text-right mt-4 ">
             <button type="submit" class="w-1/6 bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700 text-sm">
                 GUARDAR
@@ -139,6 +173,7 @@
         </div>
     </form>
 </div>
+
 <!--SCRIPS JS ********************************************************************************************************************************-->
 <script>
     document.addEventListener("DOMContentLoaded", function () { // esta funcion will working con AX
@@ -217,6 +252,8 @@
                         if (data) {
                             console.log('Modelo encontrado:', data);
                             // Aquí acomodo los campos como requiera, son los datos que envio el BACK como JSON (registro encontrado en modelos)
+                            $('#trama_0').val((data.Tra ?? '').toString().replace(/\.0$/, ''));
+                            //$('#color_0').val((data.OBS. ?? '').toString().replace(/\.0$/, ''));
                             $('#calibre_1').val((data.Hilo ?? '').toString().replace(/\.0$/, ''));
                             $('#color_1').val((data.OBS ?? '').toString().replace(/\.0$/, ''));
                             $('#calibre_2').val((data.Hilo1 ?? '').toString().replace(/\.0$/, ''));
@@ -254,6 +291,12 @@
             }
         });
     });
+
+    $('#nombre_modelo').on('select2:select', function (e) {
+          const valor = e.params.data.text; // o .id si tu valor está ahí
+          const parteAntesDelGuion = valor.split('-')[0].trim();
+          $('#tamano').val(parteAntesDelGuion);
+      });
 </script>
 
 <script>
@@ -283,5 +326,22 @@
         });
     });
 </script>
+<!-- 
+Escucha cuando el usuario escribe en cantidad y actualiza saldo con el mismo valor en tiempo real.
+-->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+      const cantidadInput = document.getElementById('cantidad');
+      const saldoInput = document.getElementById('saldo');
+
+      cantidadInput.addEventListener('input', function () {
+          saldoInput.value = cantidadInput.value;
+      });
+  });
+</script>
+
+
+
+
 
 @endsection

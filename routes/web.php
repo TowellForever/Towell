@@ -114,7 +114,7 @@ Route::resource('telares', CatalagoTelarController::class);
 Route::resource('eficiencia', CatalagoEficienciaController::class);
 Route::resource('velocidad', CatalagoVelocidadController::class);
 
-// ✅ NUEVAS RUTAS de PLANEACION
+// ✅ NUEVAS RUTAS de PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION
 Route::get('/calendarios', [PlaneacionController::class, 'calendarios'])->name('planeacion.calendarios');
 Route::get('/aplicaciones', [PlaneacionController::class, 'aplicaciones'])->name('planeacion.aplicaciones');
 Route::post('/calendarios/update-inline', [CalendarioController::class, 'updateInline'])->name('calendarios.update.inline');
