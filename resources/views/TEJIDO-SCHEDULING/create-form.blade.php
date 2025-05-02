@@ -6,18 +6,16 @@
     <form action="{{ route('planeacion.store') }}" method="POST" class="grid grid-cols-4 gap-x-8 gap-y-4 fs-11">
         @csrf
 
-        <div class="flex items-center">
-            <label for="no_flog" class="w-20 font-medium text-gray-700">No. FLOG:</label>
-            <select name="no_flog" id="no_flog" class="  border border-gray-300 rounded px-2 py-1" required>
+        <div class="col-span-1 grid grid-cols-1 items-center">
+            <label for="no_flog" class="w-20 font-medium text-gray-700">No FLOG:</label>
+            <select id="no_flog" name="no_flog" class=" border border-gray-300 rounded px-2 py-1 select2-flog">
                 <option value="">-- SELECCIONA --</option>
-                @foreach($flogs as $flog)
-                    <option value="{{ $flog->Id_Flog }}" data-desc="{{ $flog->Descrip }}">{{ $flog->Id_Flog }}</option>
-                @endforeach
             </select>
         </div>
+        
         <div class="flex items-center">
             <label for="descrip" class="w-20 font-medium text-gray-700">DESCRIPCIÓN:</label>
-            <input type="text" name="descripcion" id="descrip" class="border border-gray-300 rounded px-2 py-1" readonly>
+            <input type="text" name="descripcion" id="descrip" class=" border border-gray-300 rounded px-2 py-1" readonly>
         </div>        
 
         <div class="flex items-center">
@@ -177,7 +175,11 @@
 
     <button onclick="mostrarDataModeloEnTextarea()" class="w-1/6 mt-2 px-4 py-2 bg-blue-500 text-white rounded">
       Mostrar datos del modelo
-    </button>
+    </button> 
+
+    <button onclick="mostrarDataFLOGEnTextarea()" class="w-1/6 mt-2 px-4 py-2 bg-blue-500 text-white rounded">
+        Mostrar datos del modelo
+      </button>
   
     <div class="mt-1">
       <label for="datos_comodin" class="block text-lg font-semibold text-gray-800 mb-2">DATOS COMODÍN:</label>
@@ -361,6 +363,49 @@ Escucha cuando el usuario escribe en cantidad y actualiza saldo con el mismo val
   });
 </script>
 
+<script>
+    let dataFlog = null; // almacena los datos encontrados de acuerdo a lo que haya seleccionado el usuario en No. FLOG
+    $(document).ready(function () {
+        // SELECT2 para No FLOG
+        $('#no_flog').select2({
+            placeholder: '-- Selecciona No FLOG --',
+            ajax: {
+                url: '{{ route("flog.buscar") }}', // La nueva ruta que vas a crear
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        q: params.term // término de búsqueda
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data.map(function (item) {
+                            return {
+                                id: item.IDFLOG,
+                                text: `${item.IDFLOG} | ${item.TIPOPEDIDO} | ${item.NAMEPROYECT} | ${item.ESTADOFLOG} | ${item.CUSTNAME}`
+                            };
+                        
+                        })
+                    };
+                },
+                cache: true
+            },
+            minimumInputLength: 2
+        });
+    });
+
+    $('#no_flog').on('select2:select', function (e) {
+    const selectedData = e.params.data;
+
+    // Extraer y mostrar NAMEPROYECT en el input #descrip
+    const nameProyect = selectedData.text.split('|')[2]?.trim() || '';
+    $('#descrip').val(nameProyect);
+
+    // También puedes guardar el objeto si deseas usarlo después
+    dataFlog = selectedData;
+});
+</script>
 
 <!-- scripts TEMPORALES para mostrar varibles globales, BORRAR!!!!! DESPUÉS-->
 <script>
@@ -383,6 +428,16 @@ Escucha cuando el usuario escribe en cantidad y actualiza saldo con el mismo val
       }
   }
 </script>
+<script>
+    function mostrarDataFLOGEnTextarea() {
+        if (dataFlog) {
+            const textarea = document.getElementById('datos_comodin');
+            textarea.value = JSON.stringify(dataFlog, null, 2); // Formateado bonito
+        } else {
+            alert('No hay datos del modelo seleccionados.');
+        }
+    }
+  </script>
 
 
 @endsection

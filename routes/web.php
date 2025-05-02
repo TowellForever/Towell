@@ -155,6 +155,8 @@ GET | /modelos/{id}/edit | edit() | modelos.edit
 PUT/PATCH | /modelos/{id} | update() | modelos.update
 DELETE | /modelos/{id} | destroy() | modelos.destroy
 */
+Route::get('/flogs/buscar', [App\Http\Controllers\ModelosController::class, 'buscarFlogso'])->name('flog.buscar');
+
 
 
 //RUTA TEMPORAL DE PRUEBAS ALEATORIAS en JS o PHP...

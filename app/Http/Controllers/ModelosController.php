@@ -29,6 +29,29 @@ class ModelosController extends Controller
   
       return view('modulos.modelos.index', compact('modelos', 'fillableFields')); //modulos.modelos.index ponemos punto en lugar de slash, usando la convencion correcta de laravel
   }
+
+  //metodos para FLOGS
+  public function buscarFlogso(Request $request){
+    $query = $request->input('q');
+
+    $resultados = DB::connection('sqlsrv_ti')
+    ->table('TWFLOGSTABLE')
+    ->select('IDFLOG', 'TIPOPEDIDO', 'NAMEPROYECT', 'ESTADOFLOG', 'CUSTNAME')
+    ->whereIn('ESTADOFLOG', [3, 4, 5, 21])
+    ->where('DATAAREAID', 'pro')
+    ->where(function ($queryBuilder) use ($query) {
+        $queryBuilder->where('IDFLOG', 'LIKE', '%' . $query . '%')
+            ->orWhere('TIPOPEDIDO', 'LIKE', '%' . $query . '%')
+            ->orWhere('NAMEPROYECT', 'LIKE', '%' . $query . '%')
+            ->orWhere('CUSTNAME', 'LIKE', '%' . $query . '%');
+    })
+    ->orderBy('IDFLOG', 'asc') // Orden alfabético
+    ->limit(10)
+    ->get();
+
+    return response()->json($resultados);
+  }
+
   
 }
 
