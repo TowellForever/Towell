@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Calendario;
 use App\Models\CatalagoTelar;
+use App\Models\Modelos;
 use App\Models\Planeacion; // Asegúrate de importar el modelo Planeacion
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -48,16 +49,115 @@ class PlaneacionController extends Controller
 
     //MODELOS MODELOS MODELOS para la creacion de este registro, no fue necesario hacer que se digitaran todos los datos, dado que la mayoria son calculos
     public function create(){
-        $flogs = DB::table('TEJIDO_SCHEDULING')->select('Id_Flog', 'Descrip')->get();
+        //$flogs = DB::table('TEJIDO_SCHEDULING')->select('Id_Flog', 'Descrip')->get();
         $telares = DB::table('catalago_telares')->get();
 
 
-        return view('TEJIDO-SCHEDULING.create-form',compact('flogs','telares'));
+        return view('TEJIDO-SCHEDULING.create-form',compact('telares'));
     }
 
 
-    public function store(){
-        
+    public function store(Request $request)
+    {
+        //dd($request->all()); // ✅ Imprime todos los datos del formulario
+        // Crear nuevo registro con datos actuales y dejar los demás como null
+
+        //traigo los datos faltantes para la creacion de un nuevo registro en la tabla TEJIDO_SCHEDULING
+        $telar = CatalagoTelar::where('telar', $request->telar)->first();
+
+        $modelo = Modelos::where('CLAVE_AX', $request->clave_ax)
+        //->where('Modelo', $request->nombre_modelo) PREGUNTAR SI ESTA CORRECTO
+        ->first();
+
+        dd( $modelo);
+
+
+        Planeacion::create(
+
+            [
+                'Cuenta' => $request->input('cuenta_rizo'),
+                'Salon' => $telar ? $telar->salon : null, //De esta forma se evita lanzar un error de laravel en caso de que $telar->telar sea nulo (no tenga valor)
+                'Telar'  => $request->input('telar'),
+                'Ultimo' => null,
+                'Cambios_Hilo' => null,
+                'Maquina' => null,
+                'Ancho' => null,
+                'Eficiencia_Std' => null,
+                'Velocidad_STD' => null,
+                'Calibre_Rizo'=> $request->input('calibre_rizo'),
+                'Calibre_Pie' => $request->input('calibre_pie'),
+                'Calendario' => null,
+                'Clave_Estilo' => null,
+                'Tamano' => $request->input('tamano'), 
+                'Estilo_Alternativo' => null,
+                'Nombre_Producto' => $request->input('nombre_modelo'), 
+                'Saldos' => $request->input('saldo'),
+                'Fecha_Captura' => null,
+                'Orden_Prod' => null,
+                'Fecha_Liberacion' => null,
+                'Id_Flog' => $request->input('no_flog'),
+                'Descrip' => $request->input('descripcion'),
+                'Aplic' => null,
+                'Obs' => $request->input('color_0'),
+                'Tipo_Ped' => null,
+                'Tiras' => null,
+                'Peine' => null,
+                'Largo_Crudo' => null,
+                'Peso_Crudo' => null,
+                'Luchaje' => null,
+                'CALIBRE_TRA' => $request->input('trama_0'),
+                'Dobladillo' => null,
+                'PASADAS_TRAMA' => null,
+                'PASADAS_C1' => null,
+                'PASADAS_C2' => null,
+                'PASADAS_C3' => null,
+                'PASADAS_C4' => null,
+                'PASADAS_C5' => null,
+                'ancho_por_toalla' => null,
+                'COLOR_TRAMA' => null,
+                'CALIBRE_C1' => $request->input('calibre_1'),
+                'Clave_Color_C1' => null,
+                'COLOR_C1' => $request->input('color_1'),
+                'CALIBRE_C2' => $request->input('calibre_2'),
+                'Clave_Color_C2' => null,
+                'COLOR_C2' => $request->input('color_2'),
+                'CALIBRE_C3' => $request->input('calibre_3'),
+                'Clave_Color_C3' => null,
+                'COLOR_C3' => $request->input('color_3'),
+                'CALIBRE_C4' => $request->input('calibre_4'),
+                'Clave_Color_C4' => null,
+                'COLOR_C4' => $request->input('color_4'),
+                'CALIBRE_C5' => $request->input('calibre_5'),
+                'Clave_Color_C5' => null,
+                'COLOR_C5' => $request->input('color_5'),
+                'Plano' => null,
+                'Cuenta_Pie' => $request->input('cuenta_pie'),
+                'Clave_Color_Pie' => null,
+                'Color_Pie' => null,
+                'Peso_gr_m2' => null,
+                'Dias_Ef' => null,
+                'Prod_Kg_Dia' => null,
+                'Std_Dia' => null,
+                'Prod_Kg_Dia1' => null,
+                'Std_Toa_Hr_100' => null,
+                'Dias_jornada_completa' => null,
+                'Horas' => null,
+                'Std_Hr_efectivo' => null,
+                'Inicio_Tejido' => null,
+                'Calc4' => null,
+                'Calc5' => null,
+                'Calc6' => null,
+                'Fin_Tejido' => null,
+                'Fecha_Compromiso' => null,
+                'Fecha_Compromiso1' => null,
+                'Entrega' => $request->input('fecha_entrega'),
+                'Dif_vs_Compromiso' => null,
+                'en_proceso' => null,
+                'num_registro' => null
+            // Aquí irán más campos en el futuro
+        ]);
+
+        return redirect()->route('planeacion.index')->with('success', 'Registro guardado correctamente');
     }
 
     public function calendarios()

@@ -3,7 +3,7 @@
 @section('content')
 <div class="mx-auto p-3 bg-white shadow rounded-lg mt-6 overflow-y-auto max-h-[600px]">
     <h1 class="text-xl font-bold mb-4 text-gray-800 text-center">NUEVO REGISTRO TEJIDO SCHEDULING</h1>
-    <form action="{{ route('planeacion.store') }}" method="POST" class="grid grid-cols-4 gap-x-8 gap-y-4 fs-11">
+    <form id="form-planeacion" action="{{ route('planeacion.store') }}" method="POST" class="grid grid-cols-4 gap-x-8 gap-y-4 fs-11">
         @csrf
 
         <div class="col-span-1 grid grid-cols-1 items-center">
@@ -69,7 +69,7 @@
 
         <div class="flex items-center">
             <label for="calibre_1" class="w-20 font-medium text-gray-700">TRAMA 1:</label>
-            <input type="text" name="calibre_1" id="calibre_1" class=" border border-gray-300 rounded px-2 py-1" >
+            <input type="text" name="trama_1" id="calibre_1" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
         <div class="flex items-center">
             <label for="color_1" class="w-20 font-medium text-gray-700">COLOR 1:</label>
@@ -78,7 +78,7 @@
 
         <div class="flex items-center">
             <label for="calibre_2" class="w-20 font-medium text-gray-700">TRAMA 2:</label>
-            <input type="text" name="calibre_2" id="calibre_2" class=" border border-gray-300 rounded px-2 py-1" >
+            <input type="text" name="trama_2" id="calibre_2" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
         <div class="flex items-center">
             <label for="color_2" class="w-20 font-medium text-gray-700">COLOR 2:</label>
@@ -87,7 +87,7 @@
 
         <div class="flex items-center">
             <label for="calibre_3" class="w-20 font-medium text-gray-700">TRAMA 3:</label>
-            <input type="text" name="calibre_3" id="calibre_3" class=" border border-gray-300 rounded px-2 py-1" >
+            <input type="text" name="trama_3" id="calibre_3" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
         <div class="flex items-center">
             <label for="color_3" class="w-20 font-medium text-gray-700">COLOR 3:</label>
@@ -96,7 +96,7 @@
 
         <div class="flex items-center">
             <label for="calibre_4" class="w-20 font-medium text-gray-700">TRAMA 4:</label>
-            <input type="text" name="calibre_4" id="calibre_4" class=" border border-gray-300 rounded px-2 py-1" >
+            <input type="text" name="trama_4" id="calibre_4" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
         <div class="flex items-center">
             <label for="color_4" class="w-20 font-medium text-gray-700">COLOR 4:</label>
@@ -105,7 +105,7 @@
 
         <div class="flex items-center">
             <label for="calibre_5" class="w-20 font-medium text-gray-700">TRAMA 5:</label>
-            <input type="text" name="calibre_5" id="calibre_5" class=" border border-gray-300 rounded px-2 py-1" >
+            <input type="text" name="trama_5" id="calibre_5" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
         <div class="flex items-center">
             <label for="color_5" class="w-20 font-medium text-gray-700">COLOR 5:</label>
@@ -114,52 +114,52 @@
 
         <div class="flex items-center">
             <label for="cantidad" class="w-20 font-medium text-gray-700">CANTIDAD:</label>
-            <input type="number" name="cantidad" id="cantidad" class=" border border-gray-300 rounded px-2 py-1" required>
+            <input type="number" name="cantidad" id="cantidad" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
         
         <div class="flex items-center">
             <label for="saldos" class="w-20 font-medium text-gray-700">SALDOS:</label>
-            <input type="text" name="saldo" id="saldo" class=" border border-gray-300 rounded px-2 py-1" required>
+            <input type="text" name="saldo" id="saldo" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
 
         <div class="flex items-center">
             <label for="fecha_scheduling" class="w-20 font-medium text-gray-700">FECHA SCHEDULING:</label>
-            <input type="date" name="fecha_scheduling" id="fecha_scheduling" class=" border border-gray-300 rounded px-2 py-1" required>
+            <input type="date" name="fecha_scheduling" id="fecha_scheduling" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
 
         <div class="flex items-center">
             <label for="fecha_inn" class="w-20 font-medium text-gray-700">FECHA INN:</label>
-            <input type="date" name="fecha_inn" id="fecha_inn" class=" border border-gray-300 rounded px-2 py-1" required>
+            <input type="date" name="fecha_inn" id="fecha_inn" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
 
         <div class="flex items-center">
             <label for="fecha_compromiso_tejido" class="w-20 font-medium text-gray-700">COMPROMISO TEJIDO:</label>
-            <input type="date" name="fecha_compromiso_tejido" id="fecha_compromiso_tejido" class=" border border-gray-300 rounded px-2 py-1" required>
+            <input type="date" name="fecha_compromiso_tejido" id="fecha_compromiso_tejido" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
 
         <div class="flex items-center">
             <label for="fecha_cliente" class="w-20 font-medium text-gray-700">FECHA CLIENTE:</label>
-            <input type="date" name="fecha_cliente" id="fecha_cliente" class="border border-gray-300 rounded px-2 py-1" required>
+            <input type="date" name="fecha_cliente" id="fecha_cliente" class="border border-gray-300 rounded px-2 py-1" >
         </div>
 
         <div class="flex items-center">
             <label for="day_scheduling" class="w-20 font-medium text-gray-700">DAY SCHEDULING:</label>
-            <input type="date" name="day_scheduling" id="day_scheduling" class=" border border-gray-300 rounded px-2 py-1" required>
+            <input type="date" name="day_scheduling" id="day_scheduling" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
 
         <div class="flex items-center">
           <label for="fecha_inicio" class="w-20 font-medium text-gray-700">FECHA INICIO:</label>
-          <input type="date" name="fecha_inicio" id="fecha_inicio" class=" border border-gray-300 rounded px-2 py-1" required>
+          <input type="date" name="fecha_inicio" id="fecha_inicio" class=" border border-gray-300 rounded px-2 py-1" >
       </div>
 
       <div class="flex items-center">
         <label for="fecha_fin" class="w-20 font-medium text-gray-700">FECHA FIN:</label>
-        <input type="date" name="fecha_fin" id="fecha_fin" class=" border border-gray-300 rounded px-2 py-1" required>
+        <input type="date" name="fecha_fin" id="fecha_fin" class=" border border-gray-300 rounded px-2 py-1" >
       </div>
 
       <div class="flex items-center">
           <label for="fecha_entrega" class="w-20 font-medium text-gray-700">FECHA ENTREGA:</label>
-          <input type="date" name="fecha_entrega" id="fecha_entrega" class=" border border-gray-300 rounded px-2 py-1" required>
+          <input type="date" name="fecha_entrega" id="fecha_entrega" class=" border border-gray-300 rounded px-2 py-1" >
       </div>
 
         <div class="col-span-4 text-right mt-4 ">
@@ -406,6 +406,32 @@ Escucha cuando el usuario escribe en cantidad y actualiza saldo con el mismo val
     dataFlog = selectedData;
 });
 </script>
+<!--STORE script para enviar datos al BACK, seran guardados en TEJIDO_SCHEDULING-->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("form-planeacion");
+
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+
+        axios.post("{{ route('planeacion.store') }}", formData)
+            .then(response => {
+                console.log(Object.fromEntries(formData.entries())); // Esto convierte FormData a objeto y lo muestra
+
+                alert('Registro guardado exitosamente');
+                // Opcional: redireccionar o limpiar campos
+                window.location.href = "{{ route('planeacion.index') }}";
+            })
+            .catch(error => {
+                console.error(error);
+                alert('Ocurrió un error al guardar el registro');
+            });
+    });
+});
+</script>
+
 
 <!-- scripts TEMPORALES para mostrar varibles globales, BORRAR!!!!! DESPUÉS-->
 <script>
