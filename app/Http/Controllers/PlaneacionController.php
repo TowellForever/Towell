@@ -69,7 +69,7 @@ class PlaneacionController extends Controller
         //->where('Modelo', $request->nombre_modelo) PREGUNTAR SI ESTA CORRECTO
         ->first();
 
-        dd( $modelo);
+        //dd( $modelo);
 
 
         Planeacion::create(
@@ -152,8 +152,7 @@ class PlaneacionController extends Controller
                 'Fecha_Compromiso1' => null,
                 'Entrega' => $request->input('fecha_entrega'),
                 'Dif_vs_Compromiso' => null,
-                'en_proceso' => null,
-                'num_registro' => null
+
             // Aquí irán más campos en el futuro
         ]);
 
@@ -202,12 +201,18 @@ class PlaneacionController extends Controller
     public function mostrarTelarSulzer($telar)
     {
          // Buscar el registro en proceso para este telar
-        $datos = DB::table('TEJIDO_SCHEDULING')
-        ->where('en_proceso', 1)
-        ->where('telar', $telar)
-        ->get();
+         $datos = DB::table('TEJIDO_SCHEDULING')
+         ->where('en_proceso', 1)
+         ->where('telar', $telar)
+         ->get();
+     
+        if ($datos->isEmpty()) {
+            return redirect()->back()->with('warning', 
+            "Selecciona un registro en planeación para poner en proceso y ver los datos del telar {$telar}.");
 
-        // Retornar la vista con los datos del telar
+        }     
+
+
         return view('modulos/tejido/telares/telar-informacion-individual', compact('telar', 'datos'));
     }
 
