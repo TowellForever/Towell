@@ -20,8 +20,8 @@ class ModelosController extends Controller
           foreach ($columns as $index => $column) {
               if (!empty($column) && isset($values[$index])) {
                   $query->where($column, 'like', '%' . $values[$index] . '%');
-              }
-          }
+                }
+            }
       }
   
       $modelos = $query->simplePaginate(10);

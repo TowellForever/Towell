@@ -46,7 +46,7 @@ class PlaneacionController extends Controller
         return view('modulos/planeacion', compact('datos', 'headers'));
     }   
 
-    // para la creacion de este registro, no fue necesario hacer que se digitaran todos los datos, dado que la mayoria son calculos
+    //MODELOS MODELOS MODELOS para la creacion de este registro, no fue necesario hacer que se digitaran todos los datos, dado que la mayoria son calculos
     public function create(){
         $flogs = DB::table('TEJIDO_SCHEDULING')->select('Id_Flog', 'Descrip')->get();
         $telares = DB::table('catalago_telares')->get();

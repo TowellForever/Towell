@@ -8,7 +8,7 @@
 
         <div class="flex items-center">
             <label for="no_flog" class="w-20 font-medium text-gray-700">No. FLOG:</label>
-            <select name="no_flog" id="no_flog" class="border border-gray-300 rounded px-2 py-1 w-full text-sm" required>
+            <select name="no_flog" id="no_flog" class="  border border-gray-300 rounded px-2 py-1" required>
                 <option value="">-- SELECCIONA --</option>
                 @foreach($flogs as $flog)
                     <option value="{{ $flog->Id_Flog }}" data-desc="{{ $flog->Descrip }}">{{ $flog->Id_Flog }}</option>
@@ -22,28 +22,26 @@
 
         <div class="flex items-center">
             <label for="telar" class="w-20 font-medium text-gray-700">TELAR:</label>
-            <select name="telar" id="telar" class="border border-gray-300 rounded px-2 py-1 w-full text-sm" required>
+            <select name="telar" id="telar" class="border border-gray-300 rounded px-2 py-1 text-sm" required>
                 <option value="">-- SELECCIONA --</option>
                 @foreach($telares as $telar)
                     <option value="{{ $telar->telar }}"> {{ $telar->telar }}</option>
                 @endforeach
             </select>
         </div>
-
         <div class="flex items-center mb-4">
-            <label for="clave_ax" class="w-32 font-medium text-gray-700">CLAVE AX:</label>
-            <select id="clave_ax" name="clave_ax" class="w-full border border-gray-300 rounded px-2 py-1 select2-modelos" ></select>
+            <label for="clave_ax" class="w-20 font-medium text-gray-700">CLAVE AX:</label>
+            <select id="clave_ax" name="clave_ax" class="w-34 border border-gray-300 rounded px-2 py-1 select2-modelos" ><option value="">-- ................................... --</option></select>
         </div>
         <div class="flex items-center">
-            <label for="nombre_modelo" class="w-24 font-medium text-gray-700">NOMBRE MODELO:</label>
-            <input type="text" id="nombre_modelo" name="nombre_modelo" class="w-full border border-gray-300 rounded px-2 py-1" readonly>
+            <label for="nombre_modelo" class="w-20 font-medium text-gray-700">NOMBRE MODELO:</label>
+            <input type="text" id="nombre_modelo" name="nombre_modelo" class=" border border-gray-300 rounded px-2 py-1" readonly>
         </div>
         
         <div class="flex items-center">
             <label for="tamano" class="w-20 font-medium text-gray-700">TAMAÑO:</label>
-            <input type="text" name="tamano" id="tamano" class=" border border-gray-300 rounded px-2 py-1" required>
+            <input type="text" name="tamano" id="tamano" class="border rounded px-2 py-1" required>
         </div>
-
         <div class="flex items-center">
             <label for="cuenta_rizo" class="w-20 font-medium text-gray-700">CUENTA RIZO:</label>
             <input type="text" name="cuenta_rizo" id="cuenta_rizo" class=" border border-gray-300 rounded px-2 py-1" required>
@@ -143,7 +141,7 @@
 
         <div class="flex items-center">
             <label for="fecha_cliente" class="w-20 font-medium text-gray-700">FECHA CLIENTE:</label>
-            <input type="date" name="fecha_cliente" id="fecha_cliente" class=" border border-gray-300 rounded px-2 py-1" required>
+            <input type="date" name="fecha_cliente" id="fecha_cliente" class="border border-gray-300 rounded px-2 py-1" required>
         </div>
 
         <div class="flex items-center">
@@ -270,18 +268,18 @@
                         if (data) {
                             console.log('Modelo encontrado:', data);
                             // Aquí acomodo los campos como requiera, son los datos que envio el BACK como JSON (registro encontrado en modelos)
-                            $('#trama_0').val((data.Hilo ?? '').toString().replace(/\.0$/, ''));
-                            $('#color_0').val((data.OBS ?? '').toString().replace(/\.0$/, ''));
-                            $('#calibre_1').val((data.Hilo1 ?? '').toString().replace(/\.0$/, ''));
-                            $('#color_1').val((data.OBS1 ?? '').toString().replace(/\.0$/, ''));
-                            $('#calibre_2').val((data.Hilo2 ?? '').toString().replace(/\.0$/, ''));
-                            $('#color_2').val((data.OBS2 ?? '').toString().replace(/\.0$/, ''));
-                            $('#calibre_3').val((data.Hilo3 ?? '').toString().replace(/\.0$/, ''));
-                            $('#color_3').val((data.OBS3 ?? '').toString().replace(/\.0$/, ''));
-                            $('#calibre_4').val((data.Hilo4 ?? '').toString().replace(/\.0$/, ''));
-                            $('#color_4').val((data.OBS4 ?? '').toString().replace(/\.0$/, ''));
-                            $('#calibre_5').val((data.Hilo5 ?? '').toString().replace(/\.0$/, ''));
-                            $('#color_5').val((data.OBS5 ?? '').toString().replace(/\.0$/, ''));
+                            $('#trama_0').val((data.Tra ?? '').toString().replace(/\.0$/, ''));
+                            $('#color_0').val((data.OBS_R1 ?? '').toString().replace(/\.0$/, ''));
+                            $('#calibre_1').val((data.Hilo_4 ?? '').toString().replace(/\.0$/, ''));
+                            $('#color_1').val((data.OBS_R2 ?? '').toString().replace(/\.0$/, ''));
+                            $('#calibre_2').val((data.Hilo_5 ?? '').toString().replace(/\.0$/, ''));
+                            $('#color_2').val((data.OBS_R3 ?? '').toString().replace(/\.0$/, ''));
+                            $('#calibre_3').val((data.Hilo_6 ?? '').toString().replace(/\.0$/, ''));
+                            $('#color_3').val((data.OBS_R4 ?? '').toString().replace(/\.0$/, ''));
+                            $('#calibre_4').val((data.Hilo_7 ?? '').toString().replace(/\.0$/, ''));
+                            $('#color_4').val((data.OBS_R5 ?? '').toString().replace(/\.0$/, ''));
+                            $('#calibre_5').val((data.Hilo_8 ?? '').toString().replace(/\.0$/, ''));
+                            $('#color_5').val((data.OBS_R6 ?? '').toString().replace(/\.0$/, ''));
                             // Fechas
                             function formatearFecha(fechaBruta) {
                                 if (fechaBruta) {
@@ -364,12 +362,6 @@ Escucha cuando el usuario escribe en cantidad y actualiza saldo con el mismo val
 </script>
 
 
-
-
-
-
-
-
 <!-- scripts TEMPORALES para mostrar varibles globales, BORRAR!!!!! DESPUÉS-->
 <script>
   function mostrarDataTelarEnTextarea() {
@@ -391,7 +383,6 @@ Escucha cuando el usuario escribe en cantidad y actualiza saldo con el mismo val
       }
   }
 </script>
-
 
 
 @endsection
