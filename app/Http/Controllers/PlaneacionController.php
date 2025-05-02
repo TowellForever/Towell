@@ -153,7 +153,7 @@ class PlaneacionController extends Controller
                 'Entrega' => $request->input('fecha_entrega'),
                 'Dif_vs_Compromiso' => null,
 
-            // Aquí irán más campos en el futuro
+            // Aquí pueden ir más campos en el futuro
         ]);
 
         return redirect()->route('planeacion.index')->with('success', 'Registro guardado correctamente');
