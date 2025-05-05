@@ -8,7 +8,7 @@ class CreateCalendariosTable extends Migration
     public function up()
     {
         Schema::create('calendarios', function (Blueprint $table) {
-            $table->bigInteger('cal_id')->primary()->default(1); // PK y FK
+            $table->integer('cal_id')->primary()->default(1); // PK y FK
             $table->dateTime('fecha_inicio')->nullable();
             $table->dateTime('fecha_fin')->nullable();
             $table->decimal('total_horas', 10, 2)->nullable();

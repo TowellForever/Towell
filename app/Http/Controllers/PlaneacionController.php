@@ -6,6 +6,7 @@ use App\Models\Calendario;
 use App\Models\CatalagoTelar;
 use App\Models\Modelos;
 use App\Models\Planeacion; // Asegúrate de importar el modelo Planeacion
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -66,77 +67,77 @@ class PlaneacionController extends Controller
         $telar = CatalagoTelar::where('telar', $request->telar)->first();
 
         $modelo = Modelos::where('CLAVE_AX', $request->clave_ax)
-        //->where('Modelo', $request->nombre_modelo) PREGUNTAR SI ESTA CORRECTO
+        ->where('Departamento', $telar->salon)
+        //->where('Nombre_de_Formato_Logistico',$request->nombre_modelo)
         ->first();
 
-        //dd( $modelo);
-
+        //dd($modelo);
 
         Planeacion::create(
 
             [
                 'Cuenta' => $request->input('cuenta_rizo'),
-                'Salon' => $telar ? $telar->salon : null, //De esta forma se evita lanzar un error de laravel en caso de que $telar->telar sea nulo (no tenga valor)
+                'Salon' => $telar ? $telar->salon : null, //De esta forma se evita lanzar un error de laravel en caso de que $telar->telar sea nulo (no tenga valor) $telar ? $telar->salon :
                 'Telar'  => $request->input('telar'),
-                'Ultimo' => null,
-                'Cambios_Hilo' => null,
+                'Ultimo' => $modelo->RASEMA,
+                'Cambios_Hilo' => $modelo->CODIGO_DE_DIBUJO,
                 'Maquina' => null,
-                'Ancho' => null,
+                'Ancho' =>(int) $modelo->Ancho,
                 'Eficiencia_Std' => null,
-                'Velocidad_STD' => null,
+                'Velocidad_STD' =>(int) null,
                 'Calibre_Rizo'=> $request->input('calibre_rizo'),
                 'Calibre_Pie' => $request->input('calibre_pie'),
                 'Calendario' => null,
-                'Clave_Estilo' => null,
+                'Clave_Estilo' => $modelo->Clave,
                 'Tamano' => $request->input('tamano'), 
                 'Estilo_Alternativo' => null,
                 'Nombre_Producto' => $request->input('nombre_modelo'), 
-                'Saldos' => $request->input('saldo'),
+                'Saldos' =>(int) $request->input('saldo'),
                 'Fecha_Captura' => null,
                 'Orden_Prod' => null,
                 'Fecha_Liberacion' => null,
-                'Id_Flog' => $request->input('no_flog'),
+                'Id_Flog' =>(int) $request->input('no_flog'),
                 'Descrip' => $request->input('descripcion'),
                 'Aplic' => null,
-                'Obs' => $request->input('color_0'),
+                'Obs' => $modelo->Observaciones,
                 'Tipo_Ped' => null,
-                'Tiras' => null,
-                'Peine' => null,
-                'Largo_Crudo' => null,
+                'Tiras' => (int) $modelo->TIRAS,
+                'Peine' => (int) $modelo->Peine,
+                'Largo_Crudo' => (int) $modelo->Largo,
                 'Peso_Crudo' => null,
-                'Luchaje' => null,
+                'Luchaje' => (int) $modelo->Luchaje,
                 'CALIBRE_TRA' => $request->input('trama_0'),
-                'Dobladillo' => null,
-                'PASADAS_TRAMA' => null,
-                'PASADAS_C1' => null,
-                'PASADAS_C2' => null,
-                'PASADAS_C3' => null,
-                'PASADAS_C4' => null,
-                'PASADAS_C5' => null,
-                'ancho_por_toalla' => null,
-                'COLOR_TRAMA' => null,
-                'CALIBRE_C1' => $request->input('calibre_1'),
-                'Clave_Color_C1' => null,
+                'Dobladillo' => $modelo->Tipo_plano,
+                'PASADAS_TRAMA' => (int) $modelo->PASADAS,
+                'PASADAS_C1' => (int) $modelo->PASADAS_C1,
+                'PASADAS_C2' => (int) $modelo->PASADAS_C2,
+                'PASADAS_C3' => (int) $modelo->PASADAS_C3,
+                'PASADAS_C4' => (int) $modelo->PASADAS_C4,
+                'PASADAS_C5' => (int) $modelo->X,
+                'ancho_por_toalla' => null, //CONCATENACION (int) $modelo->TIRAS . $modelo->TRAMA_Ancho_Peine,
+                'COLOR_TRAMA' => $modelo->OBS_R1,
+                'CALIBRE_C1' => (float) $request->input('calibre_1'),
+                'Clave_Color_C1' => (float) $modelo->C1_R,
                 'COLOR_C1' => $request->input('color_1'),
-                'CALIBRE_C2' => $request->input('calibre_2'),
-                'Clave_Color_C2' => null,
+                'CALIBRE_C2' => (float) $request->input('calibre_2'),
+                'Clave_Color_C2' => $modelo->C2_R,
                 'COLOR_C2' => $request->input('color_2'),
-                'CALIBRE_C3' => $request->input('calibre_3'),
-                'Clave_Color_C3' => null,
+                'CALIBRE_C3' => (float) $request->input('calibre_3'),
+                'Clave_Color_C3' => $modelo->C3_R,
                 'COLOR_C3' => $request->input('color_3'),
-                'CALIBRE_C4' => $request->input('calibre_4'),
-                'Clave_Color_C4' => null,
+                'CALIBRE_C4' => (float) $request->input('calibre_4'),
+                'Clave_Color_C4' => $modelo->C4_R,
                 'COLOR_C4' => $request->input('color_4'),
-                'CALIBRE_C5' => $request->input('calibre_5'),
-                'Clave_Color_C5' => null,
+                'CALIBRE_C5' => (float) $request->input('calibre_5'),
+                'Clave_Color_C5' => $modelo->C5_R,
                 'COLOR_C5' => $request->input('color_5'),
-                'Plano' => null,
+                'Plano' =>(int) $modelo->Med_plano,
                 'Cuenta_Pie' => $request->input('cuenta_pie'),
                 'Clave_Color_Pie' => null,
-                'Color_Pie' => null,
-                'Peso_gr_m2' => null,
+                'Color_Pie' => $modelo->OBS,
+                'Peso_gr_m2' => null,//CONCATENACION? (int) $modelo->Ancho . $modelo->Largo,
                 'Dias_Ef' => null,
-                'Prod_Kg_Dia' => null,
+                'Prod_Kg_Dia' =>(int) $modelo->KG_Dia,
                 'Std_Dia' => null,
                 'Prod_Kg_Dia1' => null,
                 'Std_Toa_Hr_100' => null,
@@ -147,10 +148,10 @@ class PlaneacionController extends Controller
                 'Calc4' => null,
                 'Calc5' => null,
                 'Calc6' => null,
-                'Fin_Tejido' => null,
-                'Fecha_Compromiso' => null,
-                'Fecha_Compromiso1' => null,
-                'Entrega' => $request->input('fecha_entrega'),
+                'Fin_Tejido' => Carbon::parse($request->input('fecha_fin'))->format('Y-m-d'),
+                'Fecha_Compromiso' => Carbon::parse($request->input('fecha_compromiso_tejido'))->format('Y-m-d'),
+                'Fecha_Compromiso1' => Carbon::parse($request->input('fecha_cliente'))->format('Y-m-d'),
+                'Entrega' => Carbon::parse($request->input('fecha_entrega'))->format('Y-m-d'),
                 'Dif_vs_Compromiso' => null,
 
             // Aquí pueden ir más campos en el futuro

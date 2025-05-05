@@ -69,7 +69,7 @@
 
         <div class="flex items-center">
             <label for="calibre_1" class="w-20 font-medium text-gray-700">TRAMA 1:</label>
-            <input type="text" name="trama_1" id="calibre_1" class=" border border-gray-300 rounded px-2 py-1" >
+            <input type="number" name="calibre_1" id="calibre_1" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
         <div class="flex items-center">
             <label for="color_1" class="w-20 font-medium text-gray-700">COLOR 1:</label>
@@ -78,7 +78,7 @@
 
         <div class="flex items-center">
             <label for="calibre_2" class="w-20 font-medium text-gray-700">TRAMA 2:</label>
-            <input type="text" name="trama_2" id="calibre_2" class=" border border-gray-300 rounded px-2 py-1" >
+            <input type="text" name="calibre_2" id="calibre_2" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
         <div class="flex items-center">
             <label for="color_2" class="w-20 font-medium text-gray-700">COLOR 2:</label>
@@ -87,7 +87,7 @@
 
         <div class="flex items-center">
             <label for="calibre_3" class="w-20 font-medium text-gray-700">TRAMA 3:</label>
-            <input type="text" name="trama_3" id="calibre_3" class=" border border-gray-300 rounded px-2 py-1" >
+            <input type="text" name="calibre_3" id="calibre_3" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
         <div class="flex items-center">
             <label for="color_3" class="w-20 font-medium text-gray-700">COLOR 3:</label>
@@ -96,7 +96,7 @@
 
         <div class="flex items-center">
             <label for="calibre_4" class="w-20 font-medium text-gray-700">TRAMA 4:</label>
-            <input type="text" name="trama_4" id="calibre_4" class=" border border-gray-300 rounded px-2 py-1" >
+            <input type="text" name="calibre_4" id="calibre_4" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
         <div class="flex items-center">
             <label for="color_4" class="w-20 font-medium text-gray-700">COLOR 4:</label>
@@ -105,7 +105,7 @@
 
         <div class="flex items-center">
             <label for="calibre_5" class="w-20 font-medium text-gray-700">TRAMA 5:</label>
-            <input type="text" name="trama_5" id="calibre_5" class=" border border-gray-300 rounded px-2 py-1" >
+            <input type="text" name="calibre_5" id="calibre_5" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
         <div class="flex items-center">
             <label for="color_5" class="w-20 font-medium text-gray-700">COLOR 5:</label>
@@ -114,12 +114,12 @@
 
         <div class="flex items-center">
             <label for="cantidad" class="w-20 font-medium text-gray-700">CANTIDAD:</label>
-            <input type="number" name="cantidad" id="cantidad" class=" border border-gray-300 rounded px-2 py-1" >
+            <input type="number"  step="0.01" name="cantidad" id="cantidad" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
         
         <div class="flex items-center">
             <label for="saldos" class="w-20 font-medium text-gray-700">SALDOS:</label>
-            <input type="text" name="saldo" id="saldo" class=" border border-gray-300 rounded px-2 py-1" >
+            <input type="number"  step="0.01" name="saldo" id="saldo" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
 
         <div class="flex items-center">

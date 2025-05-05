@@ -16,7 +16,7 @@ return new class extends Migration
             $table->date('fecha');
             $table->string('tipo_mov');
             $table->decimal('cantidad',8,2); 
-            $table->bigInteger('tej_num');
+            $table->integer('tej_num');
 
             // Relación con TEJIDO_SCHEDULING (campo num_registro)
             $table->foreign('tej_num')
