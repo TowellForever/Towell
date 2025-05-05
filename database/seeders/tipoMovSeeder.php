@@ -16,7 +16,7 @@ class tipoMovSeeder extends Seeder
     {
         $now = Carbon::now();
 
-        for ($tej_num = 1; $tej_num <= 50; $tej_num++) {
+        for ($tej_num = 2; $tej_num <= 50; $tej_num++) {
             for ($tipo_mov = 1; $tipo_mov <= 12; $tipo_mov++) {
 
                 DB::table('tipo_movimientos')->insert([

@@ -28,7 +28,8 @@ class PlaneacionController extends Controller
             'Fecha_Compromiso', 'Fecha_Compromiso1', 'Entrega', 'Dif_vs_Compromiso', 
         ];
         
-        $query = DB::table('TEJIDO_SCHEDULING');
+        $query = DB::table('TEJIDO_SCHEDULING')
+            ->orderBy('TELAR'); // Ascendente por defecto
         
         // Filtrar registros de acuerdo a los filtros recibidos
         if ($request->has('column') && $request->has('value')) {
@@ -199,11 +200,12 @@ class PlaneacionController extends Controller
     }
 
     //metodos de TELARES (tablas de datos de tejido)********************************************************************************************************
+    //El siguiente método obtiene un objeto con la informacion completa de la tabla TEJIDO_SCHEDULING, en lo sucesivo, se mostrará la informacon del telar en la vista dinámica individual
     public function mostrarTelarSulzer($telar)
     {
          // Buscar el registro en proceso para este telar
          $datos = DB::table('TEJIDO_SCHEDULING')
-         ->where('en_proceso', 1)
+         ->where('en_proceso', true)
          ->where('telar', $telar)
          ->get();
      
@@ -212,7 +214,6 @@ class PlaneacionController extends Controller
             "Selecciona un registro en planeación para poner en proceso y ver los datos del telar {$telar}.");
 
         }     
-
 
         return view('modulos/tejido/telares/telar-informacion-individual', compact('telar', 'datos'));
     }

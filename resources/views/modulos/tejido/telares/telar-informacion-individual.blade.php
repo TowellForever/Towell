@@ -19,39 +19,39 @@
                     <td class=" p-2">     
                         <b>Orden:</b> {{ $dato->Orden_Prod }} 
                         <br><b>Cuenta Rizo:</b> {{ $dato->Cuenta }}
-                        <br><b>Trama 4:</b> {{ number_format($dato->CALIBRE_C3, 2) }}
+                        <br><b>Trama 4:</b> {{ $dato->CALIBRE_C3 == 0 ? '0' : rtrim(rtrim(number_format($dato->CALIBRE_C3, 2, '.', ''), '0'), '.') }}
                         <br><b>Artículo:</b> {{ $dato->Nombre_Producto }}
                         <br><b>Pedido:</b> {{ $dato->Tipo_Ped }}
                         <br><b>Fin:</b> {{ \Carbon\Carbon::parse($dato->Fin_Tejido)->format('d/m/Y') }}
                     </td>
                     <td class=" p-2">
-                            <b>No Flog:</b> {{ $dato->Id_Flog }} 
+                            <b>No. Flog:</b> {{ $dato->Id_Flog}} 
                         <br><b>Cuenta Pie:</b> {{ $dato->Cuenta_Pie }}
-                        <br><b>Trama 5:</b> {{ number_format($dato->CALIBRE_C4, 2) }}
+                        <br><b>Trama 5:</b> {{ $dato->CALIBRE_C4 == 0 ? '0' : rtrim(rtrim(number_format($dato->CALIBRE_C4, 2, '.', ''), '0'), '.') }}
                         <br><b>Producido:</b> {{ '---' }}
                         <br>
                         <br><b>Fecha de Compromiso Tejido:</b> {{ \Carbon\Carbon::parse($dato->Fecha_Compromiso)->format('d/m/Y') }}
                     </td>
                     <td class=" p-2">
                         <b>Trama 1:</b> {{ number_format($dato->CALIBRE_TRA, 2) }}
-                        <br><b>Trama 6:</b> {{ number_format($dato->CALIBRE_C5 , 2) }}
+                        <br><b>Trama 6:</b> {{ $dato->CALIBRE_C5 == 0 ? '0' : rtrim(rtrim(number_format($dato->CALIBRE_C5, 2, '.', ''), '0'), '.') }}
                         <br><b>Número de Tiras:</b> {{ $dato->Tiras }}
-                        <br><b>Producción (KG)/Día:</b> {{ '$dato->' }}
+                        <br><b>Producción (KG)/Día:</b> {{ $dato->Prod_Kg_Dia }}
                         <br>
                         <br><b>Fecha de Compromiso Cliente:</b> {{ \Carbon\Carbon::parse($dato->Fecha_Compromiso1)->format('d/m/Y') }}
                     </td>
                     <td class=" p-2">
                             <b>Cliente:</b> {{ '$dato->' }} 
-                        <br><b>Trama 2:</b> {{ number_format($dato->CALIBRE_C1 , 2) }}
+                        <br><b>Trama 2:</b> {{ $dato->CALIBRE_C1 == 0 ? '0' : rtrim(rtrim(number_format($dato->CALIBRE_C1, 2, '.', ''), '0'), '.') }}
                         <br><b>Trama 7:</b> {{ '-' }}
                         <br>
                         <br>
-                        <br><b>STD/Día:</b> {{ '$dato->Std/Dia ' }}
+                        <br><b>STD/Día:</b> {{ $dato->Std_Dia }}
 
                     </td>
                     <td class=" p-2">
                             <br>
-                            <b>Trama 3:</b> {{ number_format($dato->CALIBRE_C2 , 2) }}
+                            <b>Trama 3:</b> {{ $dato->CALIBRE_C2 == 0 ? '0' : rtrim(rtrim(number_format($dato->CALIBRE_C2, 2, '.', ''), '0'), '.') }}
                         <br><b>Trama 8:</b> {{ '-' }}
                         <br>
                         <br><b>Inicio:</b> {{ \Carbon\Carbon::parse($dato->Inicio_Tejido)->format('d/m/Y') }}

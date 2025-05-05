@@ -337,6 +337,7 @@
 
                     const numRegistro = this.getAttribute('data-num-registro');
                     numRegistroSeleccionado = numRegistro;
+                    console.log("Registro seleccionado:", numRegistro);
 
                     fetch(`/planeacion/tipo-movimientos/${numRegistroSeleccionado}`)
                         .then(res => res.json())
