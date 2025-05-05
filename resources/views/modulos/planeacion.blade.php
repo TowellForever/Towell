@@ -86,7 +86,7 @@
                     </thead>
                     <tbody class="">
                         @foreach($datos as $registro)
-                            <tr class="px-1 py-0.5 text-sm" data-num-registro="{{ $registro->num_registro }}"">
+                            <tr class="px-1 py-0.5 text-sm" data-num-registro="{{ $registro->num_registro }}"> 
                                 <!-- Agregar checkbox 'en_proceso' -->
                                 <td class="px-1 py-0.5">
                                     <form action="{{ route('tejido_scheduling.update', $registro->num_registro) }}" method="POST">
