@@ -46,7 +46,7 @@
         </div>
         <div class="flex items-center">
             <label for="calibre_rizo" class="w-20 font-medium text-gray-700">CALIBRE RIZO:</label>
-            <input type="text" name="calibre_rizo" id="calibre_rizo" class=" border border-gray-300 rounded px-2 py-1" required>
+            <input type="text" name="calibre_rizo" id="calibre_rizo" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
 
         <div class="flex items-center">
@@ -55,12 +55,12 @@
         </div>
         <div class="flex items-center">
             <label for="calibre_pie" class="w-20 font-medium text-gray-700">CALIBRE PIE:</label>
-            <input type="text" name="calibre_pie" id="calibre_pie" class=" border border-gray-300 rounded px-2 py-1" required>
+            <input type="text" name="calibre_pie" id="calibre_pie" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
 
         <div class="flex items-center">
             <label for="trama_0" class="w-20 font-medium text-gray-700">TRAMA:</label>
-            <input type="text" name="trama_0" id="trama_0" class=" border border-gray-300 rounded px-2 py-1" >
+            <input type="number" step="0.01" name="trama_0" id="trama_0" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
         <div class="flex items-center">
             <label for="color_0" class="w-20 font-medium text-gray-700">COLOR:</label>
@@ -69,7 +69,7 @@
 
         <div class="flex items-center">
             <label for="calibre_1" class="w-20 font-medium text-gray-700">TRAMA 1:</label>
-            <input type="number" name="calibre_1" id="calibre_1" class=" border border-gray-300 rounded px-2 py-1" >
+            <input type="number" step="0.01" name="calibre_1" id="calibre_1" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
         <div class="flex items-center">
             <label for="color_1" class="w-20 font-medium text-gray-700">COLOR 1:</label>
@@ -78,7 +78,7 @@
 
         <div class="flex items-center">
             <label for="calibre_2" class="w-20 font-medium text-gray-700">TRAMA 2:</label>
-            <input type="text" name="calibre_2" id="calibre_2" class=" border border-gray-300 rounded px-2 py-1" >
+            <input type="number" step="0.01" name="calibre_2" id="calibre_2" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
         <div class="flex items-center">
             <label for="color_2" class="w-20 font-medium text-gray-700">COLOR 2:</label>
@@ -87,7 +87,7 @@
 
         <div class="flex items-center">
             <label for="calibre_3" class="w-20 font-medium text-gray-700">TRAMA 3:</label>
-            <input type="text" name="calibre_3" id="calibre_3" class=" border border-gray-300 rounded px-2 py-1" >
+            <input type="number" step="0.01" name="calibre_3" id="calibre_3" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
         <div class="flex items-center">
             <label for="color_3" class="w-20 font-medium text-gray-700">COLOR 3:</label>
@@ -96,7 +96,7 @@
 
         <div class="flex items-center">
             <label for="calibre_4" class="w-20 font-medium text-gray-700">TRAMA 4:</label>
-            <input type="text" name="calibre_4" id="calibre_4" class=" border border-gray-300 rounded px-2 py-1" >
+            <input type="number" step="0.01" name="calibre_4" id="calibre_4" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
         <div class="flex items-center">
             <label for="color_4" class="w-20 font-medium text-gray-700">COLOR 4:</label>
@@ -105,7 +105,7 @@
 
         <div class="flex items-center">
             <label for="calibre_5" class="w-20 font-medium text-gray-700">TRAMA 5:</label>
-            <input type="text" name="calibre_5" id="calibre_5" class=" border border-gray-300 rounded px-2 py-1" >
+            <input type="number" step="0.01" name="calibre_5" id="calibre_5" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
         <div class="flex items-center">
             <label for="color_5" class="w-20 font-medium text-gray-700">COLOR 5:</label>
@@ -236,17 +236,24 @@
         $('#clave_ax').on('select2:select', function (e) {
             const claveAX = e.params.data.id;
 
+            // Asegúrate que dataTelar tenga el salón válido
+            const salon = dataTelar?.salon ?? null;
+
+            if (!salon) {
+                alert('Primero selecciona un Telar para poder filtrar los modelos.');
+                return;
+            }
+
             //Limpiar opciones previas
             $('#nombre_modelo').empty().trigger('change');
 
             $.ajax({
                 url: '{{ route("modelos.porClave") }}',
-                data: { clave_ax: claveAX },
+                data: { clave_ax: claveAX, departamento: salon},
                 success: function (data) {
-                    const opciones = data.map(item => ({
-                        id: item.Modelo,
-                        text: item.Modelo
-                    }));
+                    const opciones = data.map( item => ({ id: item.Modelo ,
+                         text: `${item.Modelo} - ${item.Departamento}` // 👈 Aquí concatenas 
+                         }));
 
                     $('#nombre_modelo').select2({
                         data: opciones,
@@ -270,18 +277,29 @@
                         if (data) {
                             console.log('Modelo encontrado:', data);
                             // Aquí acomodo los campos como requiera, son los datos que envio el BACK como JSON (registro encontrado en modelos)
-                            $('#trama_0').val((data.Tra ?? '').toString().replace(/\.0$/, ''));
-                            $('#color_0').val((data.OBS_R1 ?? '').toString().replace(/\.0$/, ''));
+                            $('#trama_0').val(!isNaN(parseFloat(data.Tra)) ? parseFloat(data.Tra).toFixed(2) : '');
+
+                                $('#color_0').val((data.OBS_R1 ?? ''));
+
                             $('#calibre_1').val((data.Hilo_4 ?? '').toString().replace(/\.0$/, ''));
-                            $('#color_1').val((data.OBS_R2 ?? '').toString().replace(/\.0$/, ''));
-                            $('#calibre_2').val((data.Hilo_5 ?? '').toString().replace(/\.0$/, ''));
-                            $('#color_2').val((data.OBS_R3 ?? '').toString().replace(/\.0$/, ''));
+
+                                $('#color_1').val((data.OBS_R2 ?? ''));
+
+                            $('#calibre_2').val(!isNaN(parseFloat(data.Hilo_5)) ? parseFloat(data.Hilo_4).toFixed(2) : '');
+
+                                $('#color_2').val((data.OBS_R3 ?? ''));
+
                             $('#calibre_3').val((data.Hilo_6 ?? '').toString().replace(/\.0$/, ''));
-                            $('#color_3').val((data.OBS_R4 ?? '').toString().replace(/\.0$/, ''));
+                            
+                                $('#color_3').val((data.OBS_R4 ?? ''));
+
                             $('#calibre_4').val((data.Hilo_7 ?? '').toString().replace(/\.0$/, ''));
-                            $('#color_4').val((data.OBS_R5 ?? '').toString().replace(/\.0$/, ''));
+
+                                $('#color_4').val((data.OBS_R5 ?? ''));
+
                             $('#calibre_5').val((data.Hilo_8 ?? '').toString().replace(/\.0$/, ''));
-                            $('#color_5').val((data.OBS_R6 ?? '').toString().replace(/\.0$/, ''));
+
+                                $('#color_5').val((data.OBS_R6 ?? ''));
                             // Fechas
                             function formatearFecha(fechaBruta) {
                                 if (fechaBruta) {
