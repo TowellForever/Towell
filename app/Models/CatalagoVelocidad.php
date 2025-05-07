@@ -16,5 +16,5 @@ class CatalagoVelocidad extends Model
     public $timestamps = false;
 
     // Si quieres proteger ciertas columnas de la asignación masiva:
-    protected $fillable = ['telar', 'salon', 'tipo_hilo', 'velocidad', 'densidad'];
+    protected $fillable = ['telar', 'tipo_hilo', 'velocidad', 'densidad'];
 }

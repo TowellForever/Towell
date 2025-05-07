@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Calendario;
+use App\Models\CatalagoEficiencia;
 use App\Models\CatalagoTelar;
+use App\Models\CatalagoVelocidad;
 use App\Models\Modelos;
 use App\Models\Planeacion; // Asegúrate de importar el modelo Planeacion
 use Carbon\Carbon;
@@ -69,10 +71,50 @@ class PlaneacionController extends Controller
 
         $modelo = Modelos::where('CLAVE_AX', $request->clave_ax)
         ->where('Departamento', $telar->salon)
-        //->where('Nombre_de_Formato_Logistico',$request->nombre_modelo)
         ->first();
+    
+        if (!$modelo) {
+            return back()->with('error', 'Modelo no encontrado');
+        }
 
-        //dd($modelo);
+        $hilo = 'O16'  ; //VARIABLE TEMPORAL, ES NECESARIO UN CAT DE HILOS
+        
+        $densidad = $modelo->Tra > 40 ? 'Alta' : 'Normal';
+        $velocidad = CatalagoVelocidad::where('telar', $telar->nombre) ->where('tipo_hilo', $hilo)->where('densidad', $densidad) ->value('velocidad');//LISTOOOOO 330.00
+
+        $eficiencia = CatalagoEficiencia::where('telar', $telar->nombre)->where('tipo_hilo', $hilo)->where('densidad', $densidad) ->value('eficiencia'); //LISTOOOOO .78
+        
+        $Peso_gr_m2 = ($modelo->P_crudo * 10000) / ($modelo->Largo * $modelo->Ancho); //LISTOOOO
+
+        // Dias efectivos
+        $inicio = Carbon::parse($request->input('fecha_inicio'));
+        $fin = Carbon::parse($request->input('fecha_fin'));
+        $diferenciaHoras = $inicio->diffInHours($fin);// Diferencia total en horas --> -->  // Convertir a días con decimales (1 día = 24 horas)
+        $Dias_Ef = round($diferenciaHoras / 24, 2); // redondeado a 2 decimales BA en EXCEL //LISTOO
+        
+        $Std_Hr_efectivo = ($request->input('saldo') / ($diferenciaHoras/24)) / 24; //LISTOO   //=(P21/(BM21-BI21))/24   -->   (Saldos/ (fecha_fin - fecha_inicio) ) / 24  (7000 / 13.9) / 24
+        
+        //Producción de kilogramos por DIA
+        $Prod_Kg_Dia = ($modelo->P_crudo * $Std_Hr_efectivo) * 24 / 1000; //<-- <-- <-- BD en EXCEL -> PEMDAS MINE
+
+        $Std_Dia = (($modelo->TIRAS * 60) / (  (  ($modelo->TOTAL/1) + (($modelo->Luchaje * 0.5) / 0.0254) / $modelo->Repeticiones_p_corte) /$velocidad * $eficiencia)) * 24; //PENDIENTE
+        dd($Std_Dia);
+        /*
+        (  (Modelos[Tiras (ax)]*60)   / (  (  (modelos[Total (CE)] / 1)  +
+        (((modelos[Luchaje (U)] * 0.5) / 0.0254) / Modelos[Repeticiones p/corte (AY)])  ) /
+         TEJIDO,SCHEDULING[Velocitadad (I)]) * TEJIDO,SCHEDULING[Ef Std (h)]) * 24
+        */
+
+        $Prod_Kg_Dia1 = ($Std_Dia * $modelo->P_crudo)/1000; //PENDIENTE //BB
+
+        $Std_Toa_Hr_100 = (($modelo->TIRAS * 60) / (  (  ($modelo->TOTAL/1) + (($modelo->Luchaje * 0.5) / 0.0254) / $modelo->Repeticiones_p_corte) / $velocidad)) ; //LISTOO //velocidad variable pendiente
+        /* '(Modelos[Tiras (ax)]*60) / (((modelos[Total (CE)] / 1)+(((modelos[Luchaje (U)] * 0.5) / 0.0254) / Modelos[Repeticiones p/corte (AY)])) /
+         TEJIDO,SCHEDULING[Velocitadad (I)])
+        =(3*60)/(((1169/1)+(((21*0.5)/0.0254)/5))/400) = 57.52
+         */
+        $Horas = $request->input('saldo') / ($Std_Toa_Hr_100 * $eficiencia);
+
+        $Dias_jornada_completa = $Horas / 24;
 
         Planeacion::create(
 
@@ -137,9 +179,9 @@ class PlaneacionController extends Controller
                 'Cuenta_Pie' => $request->input('cuenta_pie'),
                 'Clave_Color_Pie' => null,
                 'Color_Pie' =>$modelo ? $modelo->OBS : null,
-                'Peso_gr_m2' => null,//CONCATENACION? (int) $modelo->Ancho . $modelo->Largo,
-                'Dias_Ef' => null,
-                'Prod_Kg_Dia' =>$modelo ? (int) $modelo->KG_Dia : null,
+                'Peso_gr_m2' => $Peso_gr_m2 ? number_format($Peso_gr_m2, 2) : null,
+                'Dias_Ef' => $Dias_Ef, //<-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <--
+                'Prod_Kg_Dia' => null, 
                 'Std_Dia' => null,
                 'Prod_Kg_Dia1' => null,
                 'Std_Toa_Hr_100' => null,

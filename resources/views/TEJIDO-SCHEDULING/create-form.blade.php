@@ -147,18 +147,19 @@
             <input type="date" name="day_scheduling" id="day_scheduling" class=" border border-gray-300 rounded px-2 py-1" >
         </div>
 
-        <div class="flex items-center">
-          <label for="fecha_inicio" class="w-20 font-medium text-gray-700">FECHA INICIO:</label>
-          <input type="date" name="fecha_inicio" id="fecha_inicio" class=" border border-gray-300 rounded px-2 py-1" >
-      </div>
+        <div class="flex items-center ">
+            <label for="fecha_inicio" class="w-20 font-medium text-gray-700">FECHA INICIO:</label>
+            <input type="datetime-local" name="fecha_inicio" id="fecha_inicio" class="border border-gray-300 rounded px-2 py-1">
+          </div>
+          
+          <div class="flex items-center">
+            <label for="fecha_fin" class="w-20 font-medium text-gray-700">FECHA FIN:</label>
+            <input type="datetime-local" name="fecha_fin" id="fecha_fin" class="border border-gray-300 rounded px-2 py-1">
+          </div>
+          
 
       <div class="flex items-center">
-        <label for="fecha_fin" class="w-20 font-medium text-gray-700">FECHA FIN:</label>
-        <input type="date" name="fecha_fin" id="fecha_fin" class=" border border-gray-300 rounded px-2 py-1" >
-      </div>
-
-      <div class="flex items-center">
-          <label for="fecha_entrega" class="w-20 font-medium text-gray-700">FECHA ENTREGA:</label>
+          <label for="fecha_entrega" class="w-18 font-medium text-gray-700">FECHA ENTREGA:</label>
           <input type="date" name="fecha_entrega" id="fecha_entrega" class=" border border-gray-300 rounded px-2 py-1" >
       </div>
 
@@ -281,23 +282,23 @@
 
                                 $('#color_0').val((data.OBS_R1 ?? ''));
 
-                            $('#calibre_1').val((data.Hilo_4 ?? '').toString().replace(/\.0$/, ''));
+                            $('#calibre_1').val(!isNaN(parseFloat(data.Hilo_4)) ? parseFloat(data.Hilo_4).toFixed(2) : '');
 
                                 $('#color_1').val((data.OBS_R2 ?? ''));
 
-                            $('#calibre_2').val(!isNaN(parseFloat(data.Hilo_5)) ? parseFloat(data.Hilo_4).toFixed(2) : '');
+                            $('#calibre_2').val(!isNaN(parseFloat(data.Hilo_5)) ? parseFloat(data.Hilo_5).toFixed(2) : '');
 
                                 $('#color_2').val((data.OBS_R3 ?? ''));
 
-                            $('#calibre_3').val((data.Hilo_6 ?? '').toString().replace(/\.0$/, ''));
+                           $('#calibre_3').val(!isNaN(parseFloat(data.Hilo_6)) ? parseFloat(data.Hilo_6).toFixed(2) : '');
                             
                                 $('#color_3').val((data.OBS_R4 ?? ''));
 
-                            $('#calibre_4').val((data.Hilo_7 ?? '').toString().replace(/\.0$/, ''));
+                            $('#calibre_4').val(!isNaN(parseFloat(data.Hilo_7)) ? parseFloat(data.Hilo5).Hilo_7(2) : '');
 
                                 $('#color_4').val((data.OBS_R5 ?? ''));
 
-                            $('#calibre_5').val((data.Hilo_8 ?? '').toString().replace(/\.0$/, ''));
+                            $('#calibre_5').val(!isNaN(parseFloat(data.Hilo_8)) ? parseFloat(data.Hilo_8).toFixed(2) : '');
 
                                 $('#color_5').val((data.OBS_R6 ?? ''));
                             // Fechas
