@@ -96,16 +96,15 @@ class PlaneacionController extends Controller
         
         //Producción de kilogramos por DIA
         $Prod_Kg_Dia = ($modelo->P_crudo * $Std_Hr_efectivo) * 24 / 1000; //<-- <-- <-- BD en EXCEL -> PEMDAS MINE
+        
+        $Std_Dia = (($modelo->TIRAS * 60) / (  (  ($modelo->TOTAL) + ((($modelo->Luchaje * 0.5) / 0.0254) / $modelo->Repeticiones_p_corte) )/ $velocidad) * $eficiencia) * 24; //LISTOO
 
-        $Std_Dia = (($modelo->TIRAS * 60) / (  (  ($modelo->TOTAL/1) + (($modelo->Luchaje * 0.5) / 0.0254) / $modelo->Repeticiones_p_corte) /$velocidad * $eficiencia)) * 24; //PENDIENTE
-        dd($Std_Dia);
         /*
-        (  (Modelos[Tiras (ax)]*60)   / (  (  (modelos[Total (CE)] / 1)  +
-        (((modelos[Luchaje (U)] * 0.5) / 0.0254) / Modelos[Repeticiones p/corte (AY)])  ) /
+        ((Modelos[Tiras (ax)]*60) / (((modelos[Total (CE)] / 1)+(((modelos[Luchaje (U)] * 0.5) / 0.0254) / Modelos[Repeticiones p/corte (AY)])) /
          TEJIDO,SCHEDULING[Velocitadad (I)]) * TEJIDO,SCHEDULING[Ef Std (h)]) * 24
         */
 
-        $Prod_Kg_Dia1 = ($Std_Dia * $modelo->P_crudo)/1000; //PENDIENTE //BB
+        $Prod_Kg_Dia1 = ($Std_Dia * $modelo->P_crudo)/1000; //LISTO
 
         $Std_Toa_Hr_100 = (($modelo->TIRAS * 60) / (  (  ($modelo->TOTAL/1) + (($modelo->Luchaje * 0.5) / 0.0254) / $modelo->Repeticiones_p_corte) / $velocidad)) ; //LISTOO //velocidad variable pendiente
         /* '(Modelos[Tiras (ax)]*60) / (((modelos[Total (CE)] / 1)+(((modelos[Luchaje (U)] * 0.5) / 0.0254) / Modelos[Repeticiones p/corte (AY)])) /
