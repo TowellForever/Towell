@@ -114,7 +114,7 @@
 
         <div class="flex items-center">
             <label for="cantidad" class="w-20 font-medium text-gray-700">CANTIDAD:</label>
-            <input type="number"  step="0.01" name="cantidad" id="cantidad" class=" border border-gray-300 rounded px-2 py-1" >
+            <input type="number"  step="0.01" name="cantidad" id="cantidad" class=" border border-gray-300 rounded px-2 py-1" required>
         </div>
         
         <div class="flex items-center">

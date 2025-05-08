@@ -8,12 +8,18 @@ use App\Models\CatalagoTelar;
 use App\Models\CatalagoVelocidad;
 use App\Models\Modelos;
 use App\Models\Planeacion; // Asegúrate de importar el modelo Planeacion
+use App\Models\TipoMovimientos;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class PlaneacionController extends Controller
 {
+    private function cleanDecimal($value) {
+        $value = str_replace(',', '.', trim($value));
+        return is_numeric($value) ? number_format((float) $value, 2, '.', '') : null;
+    }
+
     // Método para obtener los datos y pasarlos a la vista
     public function index(Request $request)
     {
@@ -77,46 +83,54 @@ class PlaneacionController extends Controller
             return back()->with('error', 'Modelo no encontrado');
         }
 
-        $hilo = 'O16'  ; //VARIABLE TEMPORAL, ES NECESARIO UN CAT DE HILOS
+        $hilo = 'O16'  ; //VARIABLE TEMPORAL, ES NECESARIO UN CÁT DE HILOS
         
         $densidad = $modelo->Tra > 40 ? 'Alta' : 'Normal';
-        $velocidad = CatalagoVelocidad::where('telar', $telar->nombre) ->where('tipo_hilo', $hilo)->where('densidad', $densidad) ->value('velocidad');//LISTOOOOO 330.00
+        $velocidad = CatalagoVelocidad::where('telar', $telar->nombre) ->where('tipo_hilo', $hilo)->where('densidad', $densidad) ->value('velocidad');
 
-        $eficiencia = CatalagoEficiencia::where('telar', $telar->nombre)->where('tipo_hilo', $hilo)->where('densidad', $densidad) ->value('eficiencia'); //LISTOOOOO .78
+        $eficiencia = CatalagoEficiencia::where('telar', $telar->nombre)->where('tipo_hilo', $hilo)->where('densidad', $densidad) ->value('eficiencia'); 
         
-        $Peso_gr_m2 = ($modelo->P_crudo * 10000) / ($modelo->Largo * $modelo->Ancho); //LISTOOOO
+        $Peso_gr_m2 = ($modelo->P_crudo * 10000) / ($modelo->Largo * $modelo->Ancho); 
 
         // Dias efectivos
         $inicio = Carbon::parse($request->input('fecha_inicio'));
         $fin = Carbon::parse($request->input('fecha_fin'));
         $diferenciaHoras = $inicio->diffInHours($fin);// Diferencia total en horas --> -->  // Convertir a días con decimales (1 día = 24 horas)
-        $Dias_Ef = round($diferenciaHoras / 24, 2); // redondeado a 2 decimales BA en EXCEL //LISTOO
+        $Dias_Ef = round($diferenciaHoras / 24, 2); // redondeado a 2 decimales BA en EXCEL 
         
-        $Std_Hr_efectivo = ($request->input('saldo') / ($diferenciaHoras/24)) / 24; //LISTOO   //=(P21/(BM21-BI21))/24   -->   (Saldos/ (fecha_fin - fecha_inicio) ) / 24  (7000 / 13.9) / 24
+        $Std_Hr_efectivo = ($request->input('saldo') / ($diferenciaHoras/24)) / 24;   //=(P21/(BM21-BI21))/24   -->   (Saldos/ (fecha_fin - fecha_inicio) ) / 24  (7000 / 13.9) / 24
         
         //Producción de kilogramos por DIA
         $Prod_Kg_Dia = ($modelo->P_crudo * $Std_Hr_efectivo) * 24 / 1000; //<-- <-- <-- BD en EXCEL -> PEMDAS MINE
         
         $Std_Dia = (($modelo->TIRAS * 60) / (  (  ($modelo->TOTAL) + ((($modelo->Luchaje * 0.5) / 0.0254) / $modelo->Repeticiones_p_corte) )/ $velocidad) * $eficiencia) * 24; //LISTOO
 
-        /*
-        ((Modelos[Tiras (ax)]*60) / (((modelos[Total (CE)] / 1)+(((modelos[Luchaje (U)] * 0.5) / 0.0254) / Modelos[Repeticiones p/corte (AY)])) /
-         TEJIDO,SCHEDULING[Velocitadad (I)]) * TEJIDO,SCHEDULING[Ef Std (h)]) * 24
-        */
-
-        $Prod_Kg_Dia1 = ($Std_Dia * $modelo->P_crudo)/1000; //LISTO
+        $Prod_Kg_Dia1 = ($Std_Dia * $modelo->P_crudo)/1000; 
 
         $Std_Toa_Hr_100 = (($modelo->TIRAS * 60) / (  (  ($modelo->TOTAL/1) + (($modelo->Luchaje * 0.5) / 0.0254) / $modelo->Repeticiones_p_corte) / $velocidad)) ; //LISTOO //velocidad variable pendiente
-        /* '(Modelos[Tiras (ax)]*60) / (((modelos[Total (CE)] / 1)+(((modelos[Luchaje (U)] * 0.5) / 0.0254) / Modelos[Repeticiones p/corte (AY)])) /
-         TEJIDO,SCHEDULING[Velocitadad (I)])
-        =(3*60)/(((1169/1)+(((21*0.5)/0.0254)/5))/400) = 57.52
-         */
+
         $Horas = $request->input('saldo') / ($Std_Toa_Hr_100 * $eficiencia);
 
         $Dias_jornada_completa = $Horas / 24;
 
-        Planeacion::create(
+        //Validamos que no existe el registro, en caso de red lenta o de que el user de 2 clics, no se creen multiples registros con la misma informacion.
+        $cuenta = $request->input('cuenta_rizo');
+        $telarE = $request->input('telar');
+        $nombreModelo = $request->input('nombre_modelo');
+        $inicio = now()->copy()->subSeconds(5);
+        $fin = now()->copy()->addSeconds(5);
+        
+        $existe = Planeacion::where('Cuenta', $cuenta)
+            ->where('Telar', $telarE)
+            ->where('Nombre_Producto', $nombreModelo)
+            ->whereBetween('Fecha_Captura', [$inicio, $fin])
+            ->exists();        
+        
+        if ($existe) {
+            return redirect()->route('planeacion.index')->with('error', 'Este registro de planeación ya existe.');
+        }
 
+        $nuevoRegistro = Planeacion::create(
             [
                 'Cuenta' => $request->input('cuenta_rizo'),
                 'Salon' => $telar ? $telar->salon : null, //De esta forma se evita lanzar un error de laravel en caso de que $telar->telar sea nulo (no tenga valor) $telar ? $telar->salon :
@@ -125,8 +139,8 @@ class PlaneacionController extends Controller
                 'Cambios_Hilo' => null,
                 'Maquina' => $telar ? $telar->nombre : null,
                 'Ancho' => $modelo ? (int) $modelo->Ancho: null,
-                'Eficiencia_Std' => null,
-                'Velocidad_STD' => null,
+                'Eficiencia_Std' => $eficiencia,
+                'Velocidad_STD' => $velocidad,
                 'Calibre_Rizo'=> null,
                 'Calibre_Pie' =>  null,
                 'Calendario' => null,
@@ -135,18 +149,18 @@ class PlaneacionController extends Controller
                 'Estilo_Alternativo' => null,
                 'Nombre_Producto' => $request->input('nombre_modelo'), 
                 'Saldos' =>$request->input('saldo'),
-                'Fecha_Captura' => null,//now()->format('d-m-y'),
+                'Fecha_Captura' =>  Carbon::now(), 
                 'Orden_Prod' => null,
-                'Fecha_Liberacion' => null,
+                'Fecha_Liberacion' => $request->input('fecha_scheduling'),
                 'Id_Flog' => $request->input('no_flog'),
                 'Descrip' => $request->input('descripcion'),
                 'Aplic' => null,
                 'Obs' => $modelo ? $modelo->Observaciones : null,
                 'Tipo_Ped' => null,
-                'Tiras' => $modelo ? (int)$modelo->TIRAS : null,
+                'Tiras' => $modelo ? (int)$modelo->TIRAS : null,  
                 'Peine' => $modelo ? (int)$modelo->Peine : null,
                 'Largo_Crudo' => $modelo ? (int) $modelo->Largo:null,
-                'Peso_Crudo' => null,
+                'Peso_Crudo' => $modelo->P_crudo ? (int) $modelo->P_crudo : null,
                 'Luchaje' => $modelo ? (int) $modelo->Luchaje:null,
                 'CALIBRE_TRA' => $request->input('trama_0'),
                 'Dobladillo' => $modelo ? $modelo->Tipo_plano : null,
@@ -157,7 +171,7 @@ class PlaneacionController extends Controller
                 'PASADAS_C3' => $modelo ? (int)$modelo->PASADAS_C3 : null ,
                 'PASADAS_C4' => $modelo ? (int)$modelo->PASADAS_C4 : null ,
                 'PASADAS_C5' =>  $modelo ? (int)$modelo->X : null,
-                'ancho_por_toalla' => null, //CONCATENACION (int) $modelo->TIRAS . $modelo->TRAMA_Ancho_Peine,
+                'ancho_por_toalla' => null,
                 'COLOR_TRAMA' => $modelo ? $modelo->OBS_R1 :null ,
                 'CALIBRE_C1' =>  $modelo ? $request->input('calibre_1') :null,
                 'Clave_Color_C1' => null ,
@@ -178,16 +192,16 @@ class PlaneacionController extends Controller
                 'Cuenta_Pie' => $request->input('cuenta_pie'),
                 'Clave_Color_Pie' => null,
                 'Color_Pie' =>$modelo ? $modelo->OBS : null,
-                'Peso_gr_m2' => $Peso_gr_m2 ? number_format($Peso_gr_m2, 2) : null,
-                'Dias_Ef' => $Dias_Ef, //<-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <--
-                'Prod_Kg_Dia' => null, 
-                'Std_Dia' => null,
-                'Prod_Kg_Dia1' => null,
-                'Std_Toa_Hr_100' => null,
-                'Dias_jornada_completa' => null,
-                'Horas' => null,
-                'Std_Hr_efectivo' => null,
-                'Inicio_Tejido' => null,
+                'Peso_gr_m2' => is_numeric($Peso_gr_m2) ? number_format((float) str_replace(',', '.', $Peso_gr_m2), 2, '.', '') : null,
+                'Dias_Ef' => is_numeric($Dias_Ef) ? number_format((float) str_replace(',', '.', $Dias_Ef), 2, '.', '') : null,
+                'Prod_Kg_Dia' => is_numeric($Prod_Kg_Dia) ? number_format((float) str_replace(',', '.', $Prod_Kg_Dia), 2, '.', '') : null,
+                'Std_Dia' => is_numeric($Std_Dia) ? number_format((float) str_replace(',', '.', $Std_Dia), 2, '.', '') : null,
+                'Prod_Kg_Dia1' => is_numeric(str_replace(',', '.', $Prod_Kg_Dia1)) ? number_format((float) str_replace(',', '.', $Prod_Kg_Dia1), 2, '.', '') : null,
+                'Std_Toa_Hr_100' => is_numeric(str_replace(',', '.', $Std_Toa_Hr_100)) ? number_format((float) str_replace(',', '.', $Std_Toa_Hr_100), 2, '.', '') : null,
+                'Dias_jornada_completa' => is_numeric(str_replace(',', '.', $Dias_jornada_completa)) ? number_format((float) str_replace(',', '.', $Dias_jornada_completa), 2, '.', '') : null,
+                'Horas' => $this->cleanDecimal($Horas), // aqui estoy utilizando una funcion privada, para omitir el escribir todo el codigo en cada parametro
+                'Std_Hr_efectivo' => $this->cleanDecimal($Std_Hr_efectivo),
+                'Inicio_Tejido' => Carbon::parse($request->input('fecha_inicio'))->format('Y-m-d'),
                 'Calc4' => null,
                 'Calc5' => null,
                 'Calc6' => null,
@@ -200,6 +214,19 @@ class PlaneacionController extends Controller
             // Aquí pueden ir más campos en el futuro
         ]);
 
+        //una vez creado el nuevo registro, la info se almacena en la variable $nuevoRegistro, y con esa informacion obtenemos el num_registro (una vez ya generado el nuevo registro en TEJIDO_SCHEDULING)
+         // 2. Crear 12 registros en tipo_movimientos usando el num_registro recién creado
+        for ($i = 0; $i < 12; $i++) {
+            TipoMovimientos::create([
+                'tej_num' => $nuevoRegistro->num_registro,
+                // Puedes agregar más campos según los requeridos por la tabla tipo_movimientos
+                // 'tipo' => 'valor',
+                // 'descripcion' => 'valor',
+                'fecha' => '2025-05-08',
+                'tipo_mov' => $i + 1,
+                'cantidad' => round(mt_rand(100, 1000) / 10, rand(1, 2)),
+            ]);
+        }
         return redirect()->route('planeacion.index')->with('success', 'Registro guardado correctamente');
     }
 
