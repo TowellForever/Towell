@@ -17,4 +17,10 @@ class CatalagoTelar extends Model
 
     // Si quieres proteger ciertas columnas de la asignación masiva:
     protected $fillable = ['salon', 'telar', 'nombre', 'rizo', 'pie', 'ancho', 'calibre_rizo','calibre_pie'];
+
+    public function usuarios()
+    {
+        return $this->belongsToMany(Usuario::class, 'telares_usuario', 'telar_id', 'usuario_id');
+    }
+
 }

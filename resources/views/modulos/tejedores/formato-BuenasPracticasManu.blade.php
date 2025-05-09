@@ -4,6 +4,10 @@
 <div class="formato-print bg-white p-2 mx-2  print:w-[99%] print:relative print:top-0 print:mt-0 print:pt-0">
     <h1 class="text-center text-2xl font-bold">BUENAS PRÁCTICAS DE MANUFACTURA</h1>
 
+    <div class="text-sm font-semibold mb-2 mt-1">
+      * EXISTEN  <strong>{{ $usuario->telares->count() }}</strong> TELARES ASIGNADOS A: <strong> {{  $usuario->nombre}} </strong> *
+    </div>
+
     <!-- Fecha y Telar -->
     <div class="flex items-center justify-between mb-1">
         <div class="text-sm font-semibold">Fecha: <span class="border-b border-black px-4">06/02/25</span></div>
@@ -18,12 +22,12 @@
                     <th rowspan="2" class="w-1/4 border border-black px-1 py-1">Número de Tejedor</th>
                         <span rowspan="2" class="absolute top-[150px] left-[280px] z-10 text-xs font-bold">Telar:</span>
                     
-                    @for ($i = 313; $i <= 320; $i++)
-                        <th colspan="3" class="border border-black border-2 px-1 py-1">{{ $i }}</th>
-                    @endfor
+                    @foreach($usuario->telares as $telar)
+                        <th colspan="3" class="border border-black border-2 px-1 py-1">{{ $telar->telar }}</th>
+                    @endforeach
                 </tr>
                 <tr>
-                    @for ($i = 0; $i < 8; $i++)
+                    @for ($i = 0; $i < $usuario->telares->count(); $i++)
                         <th class="border border-black">1°</th>
                         <th class="border border-black">2°</th>
                         <th class="border border-black">3°</th>
@@ -50,14 +54,14 @@
                @foreach ($criterios as $i => $criterio)
                     <tr class="{{ in_array($i, [3, 9]) ? 'bg-red-500 text-white font-semibold' : '' }}">
                         <td class="border border-black text-left px-1 py-1">{{ $i + 1 }}.- {{ $criterio }}</td>
-                        @for ($j = 0; $j < 8 * 3; $j++)
+                        @for ($j = 0; $j < $usuario->telares->count() * 3; $j++) <!-- 5 * 3 - 5 es el numero de telares, 3 son los turnos c:-->
                             <td class="border border-black py-1">
                             <button type="button" 
                                 class="estado-check px-1 py-0.5 text-xs border border-gray-400 rounded-sm"
                                 data-estado="0"
                                 data-criterio="{{ $i }}"
                                 data-turno="{{ $j }}">
-                                ⬜
+                                ⬜ 
                             </button>
                             </td>
                         @endfor

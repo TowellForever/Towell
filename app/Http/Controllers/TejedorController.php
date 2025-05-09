@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth; // ✅ Esto es lo que faltaba
 
 class TejedorController extends Controller
 {
@@ -11,8 +12,12 @@ class TejedorController extends Controller
      */
     public function index()
     {
-        return view('modulos.tejedores.formato-BuenasPracticasManu'); //por ahora no estoy manejando tal cual el nombre de INDEX para la vista
+        $usuario = \App\Models\Usuario::with('telares')->find(Auth::id()); //usando la relacion creada entre usuarios y catalago_telares, buscamos los telares pertenecientes al id (numero_usuario) del usuario que esta logeado o autenticado
+
+
+        return view('modulos.tejedores.formato-BuenasPracticasManu', compact('usuario'));
     }
+
 
     /**
      * Show the form for creating a new resource.

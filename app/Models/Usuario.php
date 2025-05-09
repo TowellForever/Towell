@@ -24,4 +24,10 @@ class Usuario extends Authenticatable
     {
         $this->attributes['contrasenia'] = Hash::make($value);
     }
+
+    public function telares()
+    {
+        return $this->belongsToMany(CatalagoTelar::class, 'telares_usuario', 'usuario_id', 'telar_id');
+    }
+
 }
