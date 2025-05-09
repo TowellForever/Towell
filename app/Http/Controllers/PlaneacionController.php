@@ -215,7 +215,7 @@ class PlaneacionController extends Controller
         ]);
 
         //una vez creado el nuevo registro, la info se almacena en la variable $nuevoRegistro, y con esa informacion obtenemos el num_registro (una vez ya generado el nuevo registro en TEJIDO_SCHEDULING)
-         // 2. Crear 12 registros en tipo_movimientos usando el num_registro recién creado
+         //  Crear 12 registros en tipo_movimientos usando el num_registro recién creado
         for ($i = 0; $i < 12; $i++) {
             TipoMovimientos::create([
                 'tej_num' => $nuevoRegistro->num_registro,
@@ -351,7 +351,5 @@ class PlaneacionController extends Controller
     
         return response()->json($detalle);
     }
-    
-
 
 }

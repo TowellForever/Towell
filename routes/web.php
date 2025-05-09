@@ -14,6 +14,7 @@ use App\Http\Controllers\UsuarioController;
 use App\Models\Usuario;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReporteFallaController;
+use App\Http\Controllers\TejedorController;
 use App\Http\Controllers\UrdidoController;
 use App\Http\Controllers\WhatsAppController;
 
@@ -78,9 +79,10 @@ Route::get('/modulo-atadores', function () { return view('modulos/atadores');});
 Route::get('/atadores/programar-requerimientos', function () { return view('modulos/atadores/programar-requerimientos');});
 Route::get('/atadores-juliosAtados',  [AtadorController::class, 'cargarDatosUrdEngAtador'])->name('datosAtadores.Atador');
 
-//RUTAS DEL MODULO **tejedores**
+//RUTAS DEL MODULO **tejedores** TEJEDORES TEJEDORES
 Route::get('/modulo-tejedores', function () { return view('modulos/tejedores');});
 Route::get('/tejedores/programar-requerimientos', function () { return view('modulos/tejedores/programar-requerimientos');});
+Route::get('/tejedores/formato', [TejedorController::class, 'index']);
 
 //RUTAS DEL MODULO **mantenimiento**
 Route::get('/modulo-mantenimiento', function () { return view('modulos/mantenimiento');});
@@ -91,7 +93,7 @@ Route::get('/modulo-configuracion', function () { return view('modulos/configura
 //ruta temporal para vista de circulo - borrar despues
 Route::get('/urdido/urdidoTemporal', function () { return view('modulos/urdido/urdidoTemporal');});
 
-//ruta para llegar a la vista dinamica de los telares de jacquard-sulzer*************************************************************
+//ruta para llegar a la vista dinámica de los telares de jacquard-sulzer*************************************************************
 //***********************************************************************************************************************************
 Route::get('/tejido/jacquard-sulzer/{telar}', [PlaneacionController::class, 'mostrarTelarSulzer'])->name('tejido.mostrarTelarSulzer');
 //el método de arriba sirve para mstrar la informacion de un telar individualmente (telar-informacion-individual)

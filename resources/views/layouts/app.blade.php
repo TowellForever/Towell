@@ -70,7 +70,7 @@ body {
             <div class="container mx-auto flex justify-between items-center relative">
                 <!-- Logo Towell -->
                 <a href="/produccionProceso" class="text-3xl font-extrabold">
-                    <img src="{{ asset('images/fondosTowell/logo_towell2.png') }} " alt="Logo_Towell" class="absolute top-1 left-2 w-[120px] z-1">
+                    <img src="{{ asset('images/fondosTowell/logo_towell2.png') }} " alt="Logo_Towell" class="absolute top-1 left-2 w-[120px] z-1 no-print">
                 </a>
         
                 @if (!isset($ocultarBotones) || !$ocultarBotones)
