@@ -133,7 +133,6 @@ class PlaneacionController extends Controller
 
         //NUEVOS CAMPOS para TEJIDO_SCHEDULING (siguientes tablas en excel en TEJIDO_SCHEDULING)
         //Por ahora tendremos en cuentas las fechas INICIO y FIN CAPTURABLES
-        $Pzas = 0;
         $Fechainicio = Carbon::parse($request->input('fecha_inicio'));
         $Fechafin = Carbon::parse($request->input('fecha_fin'));
 
@@ -142,54 +141,67 @@ class PlaneacionController extends Controller
         }
 
        // Crear el periodo de días
-$periodo = CarbonPeriod::create($Fechainicio->copy()->startOfDay(), $Fechafin->copy()->endOfDay());
+      $periodo = CarbonPeriod::create($Fechainicio->copy()->startOfDay(), $Fechafin->copy()->endOfDay());
 
-$dias = [];
-$totalDias = 0;
+      $dias = [];
+      $totalDias = 0;
 
-foreach ($periodo as $index => $dia) {
-    $inicioDia = $dia->copy()->startOfDay();
-    $finDia = $dia->copy()->endOfDay();
+      foreach ($periodo as $index => $dia) {
+          $inicioDia = $dia->copy()->startOfDay();
+          $finDia = $dia->copy()->endOfDay();
 
-    // Calcular la fracción para el primer y segundo día
-    if ($index === 0) {
-            // Primer día: calcular la fracción desde la hora de inicio
-            $horasInicio = $Fechainicio->hour + ($Fechainicio->minute / 60); // Convertir horas y minutos a decimal
-            $horasFin = 24; // El día tiene 24 horas
-            $fraccion = round(($horasFin - $horasInicio) / 24, 3); // Calcular la fracción del día
-            $dias[] = [
-                'fecha' => $dia->toDateString(),
-                'fraccion_dia' => $fraccion,
-            ];
-            $totalDias++;
-    }  elseif ($dia->isSameDay($Fechafin)) {
-    // Último día: calcular la fracción desde 00:00 hasta la hora fin
-    $realInicio = $inicioDia;
-    $realFin = $Fechafin;
-    $segundos = $realFin->diffInSeconds($realInicio, true);
-    $dias[] = [
-        'fecha' => $dia->toDateString(),
-        'fraccion_dia' => round($segundos / 86400, 3),
-    ];
-    $totalDias++;
-}else {
-        // Días intermedios: fracción completa (1)
-        $dias[] = [
-            'fecha' => $dia->toDateString(),
-            'fraccion_dia' => 1, // Día completo
-        ];
-        $totalDias++;
-    }
-}
+          // Calcular la fracción para el primer y segundo día
+          if ($index === 0) {
+                  // Primer día: calcular la fracción desde la hora de inicio
+                  $horasInicio = $Fechainicio->hour + ($Fechainicio->minute / 60); // Convertir horas y minutos a decimal
+                  $horasFin = 24; // El día tiene 24 horas
+                  $fraccion = round(($horasFin - $horasInicio) / 24, 3); // Calcular la fracción del día
+                  $piezas = round(($fraccion * 24) * 20.4082864584521, 3);
+                  $kilos = round(($piezas * 210.12) / (20.4082864584521 * 24), 3);
+                  $dias[] = [
+                      'fecha' => $dia->toDateString(),
+                      'fraccion_dia' => $fraccion,
+                      'piezas' => $piezas,
+                      'kilos' => $kilos
+                  ];
+                  $totalDias++;
+          }  elseif ($dia->isSameDay($Fechafin)) {
+                  // Último día: calcular la fracción desde 00:00 hasta la hora fin
+                  $realInicio = $inicioDia;
+                  $realFin = $Fechafin;
+                  $segundos = $realFin->diffInSeconds($realInicio, true);
+                  $fraccion = round($segundos / 86400, 3); //agregamos esta linea de codigo para calcular las piezas
+                  $piezas = round(($fraccion * 24) * 20.4082864584521, 3);
+                  $kilos = round(($piezas * 210.12) / (20.4082864584521 * 24), 3);
+                  $dias[] = [
+                      'fecha' => $dia->toDateString(),
+                      'fraccion_dia' => round($segundos / 86400, 3),
+                      'piezas' => $piezas,
+                      'kilos' => $kilos
+                  ];
+                  $totalDias++;
+           }else {
+                  $fraccion = 1;
+                  // Días intermedios: fracción completa (1)
+                  $piezas = round(($fraccion * 24) * 20.4082864584521, 3);
+                  $kilos = round(($piezas * 210.12) / (20.4082864584521 * 24), 3);
+                  $dias[] = [
+                      'fecha' => $dia->toDateString(),
+                      'fraccion_dia' => 1, // Día completo
+                      'piezas' => $piezas,
+                      'kilos' => $kilos
+                  ];
+                  $totalDias++;
+          }
+      }
 
-// Mostrar el resultado con dd()
-dd([
-    'dias_generados' => $dias,
-    'total_dias' => $totalDias,
-]);
-
-
-
+      // Mostrar el resultado con dd()
+      dd([
+          'dias_generados' => $dias,
+          'total_dias' => $totalDias,
+      ]);
+      //procedemos con las formulas de excel tomando en cuenta las proporciones de los dias de acuerdo a las fechas de inicio y fin
+      //PIEZAS
 
 
         $nuevoRegistro = Planeacion::create(
@@ -277,18 +289,19 @@ dd([
         ]);
 
         //una vez creado el nuevo registro, la info se almacena en la variable $nuevoRegistro, y con esa informacion obtenemos el num_registro (una vez ya generado el nuevo registro en TEJIDO_SCHEDULING)
-         //  Crear 12 registros en tipo_movimientos usando el num_registro recién creado
-        for ($i = 0; $i < 12; $i++) {
-            TipoMovimientos::create([
-                'tej_num' => $nuevoRegistro->num_registro,
-                // Puedes agregar más campos según los requeridos por la tabla tipo_movimientos
-                // 'tipo' => 'valor',
-                // 'descripcion' => 'valor',
-                'fecha' => '2025-05-08',
-                'tipo_mov' => $i + 1,
-                'cantidad' => round(mt_rand(100, 1000) / 10, rand(1, 2)),
-            ]);
-        }
+         //  
+         foreach ($dias as $registro) {
+          \App\Models\TipoMovimientos::create([
+              'fecha_inicio'   => $Fechainicio, //no son necesarias
+              'fecha_fin'      => $Fechafin, //no son necesarias
+              'fecha'          => $registro['fecha'],
+              'fraccion_dia'   => $registro['fraccion_dia'],
+              'pzas'           => $registro['piezas'],
+              'kilos'          => $registro['kilos'],
+              'tej_num'        => $request->input('tej_num'), // Asegúrate de que este valor venga del formulario
+          ]);
+      }
+
         return redirect()->route('planeacion.index')->with('success', 'Registro guardado correctamente');
     }
 
