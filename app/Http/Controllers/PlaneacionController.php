@@ -10,6 +10,7 @@ use App\Models\Modelos;
 use App\Models\Planeacion; // Asegúrate de importar el modelo Planeacion
 use App\Models\TipoMovimientos;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -129,6 +130,67 @@ class PlaneacionController extends Controller
         if ($existe) {
             return redirect()->route('planeacion.index')->with('error', 'Este registro de planeación ya existe.');
         }
+
+        //NUEVOS CAMPOS para TEJIDO_SCHEDULING (siguientes tablas en excel en TEJIDO_SCHEDULING)
+        //Por ahora tendremos en cuentas las fechas INICIO y FIN CAPTURABLES
+        $Pzas = 0;
+        $Fechainicio = Carbon::parse($request->input('fecha_inicio'));
+        $Fechafin = Carbon::parse($request->input('fecha_fin'));
+
+        if ($Fechafin->lessThanOrEqualTo($Fechainicio)) {
+            return response()->json(['error' => 'La fecha fin debe ser posterior a la fecha inicio'], 422);
+        }
+
+       // Crear el periodo de días
+$periodo = CarbonPeriod::create($Fechainicio->copy()->startOfDay(), $Fechafin->copy()->endOfDay());
+
+$dias = [];
+$totalDias = 0;
+
+foreach ($periodo as $index => $dia) {
+    $inicioDia = $dia->copy()->startOfDay();
+    $finDia = $dia->copy()->endOfDay();
+
+    // Calcular la fracción para el primer y segundo día
+    if ($index === 0) {
+            // Primer día: calcular la fracción desde la hora de inicio
+            $horasInicio = $Fechainicio->hour + ($Fechainicio->minute / 60); // Convertir horas y minutos a decimal
+            $horasFin = 24; // El día tiene 24 horas
+            $fraccion = round(($horasFin - $horasInicio) / 24, 3); // Calcular la fracción del día
+            $dias[] = [
+                'fecha' => $dia->toDateString(),
+                'fraccion_dia' => $fraccion,
+            ];
+            $totalDias++;
+    }  elseif ($dia->isSameDay($Fechafin)) {
+    // Último día: calcular la fracción desde 00:00 hasta la hora fin
+    $realInicio = $inicioDia;
+    $realFin = $Fechafin;
+    $segundos = $realFin->diffInSeconds($realInicio, true);
+    $dias[] = [
+        'fecha' => $dia->toDateString(),
+        'fraccion_dia' => round($segundos / 86400, 3),
+    ];
+    $totalDias++;
+}else {
+        // Días intermedios: fracción completa (1)
+        $dias[] = [
+            'fecha' => $dia->toDateString(),
+            'fraccion_dia' => 1, // Día completo
+        ];
+        $totalDias++;
+    }
+}
+
+// Mostrar el resultado con dd()
+dd([
+    'dias_generados' => $dias,
+    'total_dias' => $totalDias,
+]);
+
+
+
+
 
         $nuevoRegistro = Planeacion::create(
             [

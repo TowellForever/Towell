@@ -20,8 +20,7 @@
             <thead>
                 <tr>
                     <th rowspan="2" class="w-1/4 border border-black px-1 py-1">Número de Tejedor</th>
-                        <span rowspan="2" class="absolute top-[150px] left-[280px] z-10 text-xs font-bold">Telar:</span>
-                    
+                      <span rowspan="2" class="absolute top-[140px] left-[280px] z-10 text-xs font-bold">Telar:</span>
                     @foreach($usuario->telares as $telar)
                         <th colspan="3" class="border border-black border-2 px-1 py-1">{{ $telar->telar }}</th>
                     @endforeach
