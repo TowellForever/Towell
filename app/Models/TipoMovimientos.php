@@ -18,6 +18,14 @@ class TipoMovimientos extends Model
         'fraccion_dia',
         'pzas',
         'kilos',
+        'rizo',
+        'cambio',
+        'trama',
+        'combinacion1',
+        'combinacion2',
+        'combinacion3',
+        'combinacion4',
+        'piel1',
         'tej_num',
     ];
 

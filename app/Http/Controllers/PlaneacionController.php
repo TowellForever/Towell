@@ -243,6 +243,7 @@ class PlaneacionController extends Controller
                   $rizo = 1; // Valor por defecto
                     if ($aplic === 'RZ') { $rizo = 1; } elseif ($aplic === 'RZ2') { $rizo = 2; } elseif ($aplic === 'RZ3') { $rizo = 3;} elseif ($aplic === 'BOR') {$rizo = 1;
                     } elseif ($aplic === 'EST') { $rizo = 1; } elseif ($aplic === 'DC') { $rizo = 1; }
+                 
                   $TRAMA =((((0.59*((((int)$modelo->PASADAS * 1.001) * $ancho_por_toalla) / 100))/ $request->input('trama_0')) * $piezas)/1000);
                   $combinacion1 =((((0.59 * ((((int)$modelo->PASADAS_C1 * 1.001) * $ancho_por_toalla) / 100)) / $request->input('calibre_1')) * $piezas)/ 1000) ;
                   $combinacion2 = ((((0.59 * ((((int)$modelo->PASADAS_C2 * 1.001) * $ancho_por_toalla) / 100)) / $request->input('calibre_2')) * $piezas) / 1000);
@@ -307,7 +308,7 @@ class PlaneacionController extends Controller
                 'Tipo_Ped' => null,
                 'Tiras' => $modelo ? (int)$modelo->TIRAS : null,  
                 'Peine' => $modelo ? (int)$modelo->Peine : null,
-                'Largo_Crudo' => $modelo ? (int) $modelo->Largo:null,
+                'Largo_Crudo' => $modelo ? (float) $modelo->Largo:null,
                 'Peso_Crudo' => $modelo->P_crudo ? (int) $modelo->P_crudo : null,
                 'Luchaje' => $modelo ? (int) $modelo->Luchaje:null,
                 'CALIBRE_TRA' => $request->input('trama_0'),
@@ -319,7 +320,7 @@ class PlaneacionController extends Controller
                 'PASADAS_C3' => $modelo ? (int)$modelo->PASADAS_C3 : null ,
                 'PASADAS_C4' => $modelo ? (int)$modelo->PASADAS_C4 : null ,
                 'PASADAS_C5' =>  $modelo ? (int)$modelo->X : null,
-                'ancho_por_toalla' =>$modelo ? $ancho_por_toalla : null,
+                'ancho_por_toalla' =>$modelo ? (float) $ancho_por_toalla : null,
                 'COLOR_TRAMA' => $modelo ? $modelo->OBS_R1 :null ,
                 'CALIBRE_C1' =>  $modelo ? $request->input('calibre_1') :null,
                 'Clave_Color_C1' => null ,
@@ -362,6 +363,7 @@ class PlaneacionController extends Controller
             // Aquí pueden ir más campos en el futuro
         ]);
 
+
         //una vez creado el nuevo registro, la info se almacena en la variable $nuevoRegistro, y con esa informacion obtenemos el num_registro (una vez ya generado el nuevo registro en TEJIDO_SCHEDULING)
          // Ahora puedes acceder al ID o cualquier otro valor generado automáticamente
         $tejNum = $nuevoRegistro->num_registro; // si se genera automáticamente
@@ -374,6 +376,14 @@ class PlaneacionController extends Controller
               'fraccion_dia'   => $registro['fraccion_dia'],
               'pzas'           => $registro['piezas'],
               'kilos'          => $registro['kilos'],
+              'rizo'           => $registro['rizo'],
+              'cambio'         => $registro['cambio'],
+              'trama'          => $registro['trama'],
+              'combinacion1'   => $registro['combinacion1'],
+              'combinacion2'   => $registro['combinacion2'],
+              'combinacion3'   => $registro['combinacion3'],
+              'combinacion4'   => $registro['combinacion4'],
+              'piel1'          => $registro['piel1'],
               'tej_num'        => $tejNum, // Asegúrate de que este valor venga del formulario
           ]);
       }
