@@ -147,24 +147,24 @@
             </div>
         </div>
         <div class="text-center">
-            <div class="table-wrapper bg-white shadow-lg rounded-lg p-1">
-              <table id="tablaTipoMovimientos" class="w-full border border-gray-300 text-xs table-fixed">
-                <thead>
-                  <tr id="filaFechas" class="bg-gray-800 text-white text-center">
-                    <th class="border border-gray-400 px-2 py-1 font-semibold text-sm w-24">Fecha</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr id="filaTipoMov" class="bg-gray-100 text-gray-700">
-                    <td class="border border-gray-300 px-2 py-1 font-medium text-sm w-24">Tipo Movimiento</td>
-                  </tr>
-                  <tr id="filaCantidad" class="bg-white text-gray-800">
-                    <td class="border border-gray-300 px-2 py-1 font-medium text-sm w-24">Cantidad</td>
-                  </tr>
-                </tbody>
+          <div class="table-wrapper bg-white shadow-lg rounded-lg p-1 overflow-x-auto">
+              <table id="tablaDatosPlaneacion" class="w-full border border-gray-300 text-xs table-fixed">
+                  <thead>
+                      <tr id="filaFechas" class="bg-gray-800 text-white text-center">
+                          <th class="border border-gray-400 px-2 py-1 font-semibold text-sm w-24">Campo</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr id="filaInicio" class="bg-gray-100 text-gray-700"><td class="border px-2 py-1">Inicio</td></tr>
+                      <tr id="filaFin" class="bg-white text-gray-800"><td class="border px-2 py-1">Fin</td></tr>
+                      <tr id="filaFraccion" class="bg-gray-100 text-gray-700"><td class="border px-2 py-1">Fracción Día</td></tr>
+                      <tr id="filaPzas" class="bg-white text-gray-800"><td class="border px-2 py-1">Pzas</td></tr>
+                      <tr id="filaKilos" class="bg-gray-100 text-gray-700"><td class="border px-2 py-1">Kilos</td></tr>
+                      <tr id="filaTej" class="bg-white text-gray-800"><td class="border px-2 py-1">Tejedor</td></tr>
+                  </tbody>
               </table>
-            </div>
-        </div>
+          </div>
+      </div>
     </div>
     <!--SCRIPT que sirve para ocultar y fijar columnas de la tabla-->
     <script>
@@ -297,15 +297,19 @@
     <!--SCRIPTS que implentan el funcionamiento de la tabla TIPO DE MOVIMIENTOS, se selecciona un registro, se obtiene el valor de num_registro y con 
         ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
 
-      <script>
+    <script>
         let filaSeleccionada = null;
-        let numRegistroSeleccionado = null;  //variables globales
+        let numRegistroSeleccionado = null;
 
         document.addEventListener("DOMContentLoaded", function () {
             const hoy = new Date();
             const filaFechas = document.getElementById("filaFechas");
-            const filaTipoMov = document.getElementById("filaTipoMov");
-            const filaCantidad = document.getElementById("filaCantidad");
+            const filaInicio = document.getElementById("filaInicio");
+            const filaFin = document.getElementById("filaFin");
+            const filaFraccion = document.getElementById("filaFraccion");
+            const filaPzas = document.getElementById("filaPzas");
+            const filaKilos = document.getElementById("filaKilos");
+            const filaTej = document.getElementById("filaTej");
 
             const fechas = [];
 
@@ -315,17 +319,20 @@
                 const fechaFormateada = fecha.toLocaleDateString("es-MX", {
                     day: "2-digit",
                     month: "2-digit",
-                    //year: "2-digit"
                 });
                 fechas.push(fechaFormateada);
 
-                // Agregar celdas vacías al header y a las filas
+                // Celdas vacías por fecha
                 filaFechas.innerHTML += `<th class="border border-gray-300">${fechaFormateada}</th>`;
-                filaTipoMov.innerHTML += `<td class="border border-gray-300"></td>`;
-                filaCantidad.innerHTML += `<td class="border border-gray-300"></td>`;
+                filaInicio.innerHTML += `<td class="border border-gray-300"></td>`;
+                filaFin.innerHTML += `<td class="border border-gray-300"></td>`;
+                filaFraccion.innerHTML += `<td class="border border-gray-300"></td>`;
+                filaPzas.innerHTML += `<td class="border border-gray-300"></td>`;
+                filaKilos.innerHTML += `<td class="border border-gray-300"></td>`;
+                filaTej.innerHTML += `<td class="border border-gray-300"></td>`;
             }
 
-            // Evento click en las filas de tablaPlaneacion
+            // Evento click para selección de fila
             const filas = document.querySelectorAll("#tablaPlaneacion tbody tr");
             filas.forEach(fila => {
                 fila.addEventListener("click", function () {
@@ -335,39 +342,46 @@
                     this.classList.add("fila-seleccionada");
                     filaSeleccionada = this;
 
-                    const numRegistro = this.getAttribute('data-num-registro');
-                    numRegistroSeleccionado = numRegistro;
-                    console.log("Registro seleccionado:", numRegistro);
+                    numRegistroSeleccionado = this.getAttribute('data-num-registro');
+                    console.log("Registro seleccionado:", numRegistroSeleccionado);
 
                     fetch(`/planeacion/tipo-movimientos/${numRegistroSeleccionado}`)
                         .then(res => res.json())
                         .then(data => {
-                            // Limpiar las celdas (excepto los encabezados)
-                            const celdasTipoMov = filaTipoMov.querySelectorAll("td:not(:first-child)");
-                            const celdasCantidad = filaCantidad.querySelectorAll("td:not(:first-child)");
-                            celdasTipoMov.forEach(celda => celda.textContent = "");
-                            celdasCantidad.forEach(celda => celda.textContent = "");
+                            // Limpiar
+                            [filaInicio, filaFin, filaFraccion, filaPzas, filaKilos, filaTej].forEach(row => {
+                                row.querySelectorAll("td:not(:first-child)").forEach(cell => cell.textContent = "");
+                            });
 
                             data.forEach(item => {
-                                const fechaItem = new Date(item.fecha).toLocaleDateString("es-MX", {
+                                const fechaItem = new Date(item.fecha_inicio).toLocaleDateString("es-MX", {
                                     day: "2-digit",
-                                    month: "2-digit",
-                                    //year: "2-digit"
+                                    month: "2-digit"
                                 });
 
                                 const index = fechas.indexOf(fechaItem);
                                 if (index !== -1) {
-                                    filaTipoMov.cells[index + 2].textContent = item.tipo_mov;
-                                    filaCantidad.cells[index + 2].textContent = item.cantidad;
+                                    filaInicio.cells[index + 1].textContent = item.fecha_inicio;
+                                    filaFin.cells[index + 1].textContent = item.fecha_fin;
+                                    filaFraccion.cells[index + 1].textContent = item.fraccion_dia;
+                                    filaPzas.cells[index + 1].textContent = item.pzas;
+                                    filaKilos.cells[index + 1].textContent = item.kilos;
+                                    filaTej.cells[index + 1].textContent = item.tej_num;
                                 }
-                            });
+                            console.log("Fecha del item:", fechaItem);
+                            console.log("Índice encontrado:", index);
+
+                            
+                              });
                         })
+
                         .catch(err => {
-                            console.error("Error al obtener movimientos:", err);
+                            console.error("Error al obtener detalles:", err);
                         });
                 });
             });
         });
+
     </script>
 
     @push('styles')

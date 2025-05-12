@@ -156,8 +156,8 @@ class PlaneacionController extends Controller
                   $horasInicio = $Fechainicio->hour + ($Fechainicio->minute / 60); // Convertir horas y minutos a decimal
                   $horasFin = 24; // El día tiene 24 horas
                   $fraccion = round(($horasFin - $horasInicio) / 24, 3); // Calcular la fracción del día
-                  $piezas = round(($fraccion * 24) * 20.4082864584521, 3);
-                  $kilos = round(($piezas * 210.12) / (20.4082864584521 * 24), 3);
+                  $piezas = round(($fraccion * 24) * 20.4082864584521, 2);
+                  $kilos = round(($piezas * 210.12) / (20.4082864584521 * 24), 2);
                   $dias[] = [
                       'fecha' => $dia->toDateString(),
                       'fraccion_dia' => $fraccion,
@@ -171,8 +171,8 @@ class PlaneacionController extends Controller
                   $realFin = $Fechafin;
                   $segundos = $realFin->diffInSeconds($realInicio, true);
                   $fraccion = round($segundos / 86400, 3); //agregamos esta linea de codigo para calcular las piezas
-                  $piezas = round(($fraccion * 24) * 20.4082864584521, 3);
-                  $kilos = round(($piezas * 210.12) / (20.4082864584521 * 24), 3);
+                  $piezas = round(($fraccion * 24) * 20.4082864584521, 2);
+                  $kilos = round(($piezas * 210.12) / (20.4082864584521 * 24), 2);
                   $dias[] = [
                       'fecha' => $dia->toDateString(),
                       'fraccion_dia' => round($segundos / 86400, 3),
@@ -183,8 +183,8 @@ class PlaneacionController extends Controller
            }else {
                   $fraccion = 1;
                   // Días intermedios: fracción completa (1)
-                  $piezas = round(($fraccion * 24) * 20.4082864584521, 3);
-                  $kilos = round(($piezas * 210.12) / (20.4082864584521 * 24), 3);
+                  $piezas = round(($fraccion * 24) * 20.4082864584521, 2);
+                  $kilos = round(($piezas * 210.12) / (20.4082864584521 * 24), 2);
                   $dias[] = [
                       'fecha' => $dia->toDateString(),
                       'fraccion_dia' => 1, // Día completo
@@ -196,12 +196,12 @@ class PlaneacionController extends Controller
       }
 
       // Mostrar el resultado con dd()
-      dd([
+      /*dd([
           'dias_generados' => $dias,
           'total_dias' => $totalDias,
-      ]);
+      ]);*/
       //procedemos con las formulas de excel tomando en cuenta las proporciones de los dias de acuerdo a las fechas de inicio y fin
-      //PIEZAS
+
 
 
         $nuevoRegistro = Planeacion::create(
@@ -289,7 +289,9 @@ class PlaneacionController extends Controller
         ]);
 
         //una vez creado el nuevo registro, la info se almacena en la variable $nuevoRegistro, y con esa informacion obtenemos el num_registro (una vez ya generado el nuevo registro en TEJIDO_SCHEDULING)
-         //  
+         // Ahora puedes acceder al ID o cualquier otro valor generado automáticamente
+        $tejNum = $nuevoRegistro->num_registro; // si se genera automáticamente
+        // o, si lo necesitas crear tú:
          foreach ($dias as $registro) {
           \App\Models\TipoMovimientos::create([
               'fecha_inicio'   => $Fechainicio, //no son necesarias
@@ -298,7 +300,7 @@ class PlaneacionController extends Controller
               'fraccion_dia'   => $registro['fraccion_dia'],
               'pzas'           => $registro['piezas'],
               'kilos'          => $registro['kilos'],
-              'tej_num'        => $request->input('tej_num'), // Asegúrate de que este valor venga del formulario
+              'tej_num'        => $tejNum, // Asegúrate de que este valor venga del formulario
           ]);
       }
 
@@ -375,16 +377,6 @@ class PlaneacionController extends Controller
 
     }
 
-    public function obtenerPorTejNum($tej_num){
-        $movimientos = DB::connection('sqlsrv') // Asegúrate que esta conexión apunte a `Produccion`
-            ->table('Produccion.dbo.tipo_movimientos')
-            ->where('tej_num', $tej_num)
-            ->select('tej_num', 'fecha', 'tipo_mov', 'cantidad')
-            ->get();
-
-        return response()->json($movimientos);
-    }
-
     // funcionando?
     public function buscarModelos(Request $request)
     {
@@ -425,6 +417,17 @@ class PlaneacionController extends Controller
             ->first();
     
         return response()->json($detalle);
+    }
+
+    // metodo para recuperar datos para tabla tipo_Movimientos
+        public function obtenerPorTejNum($tej_num){
+        $movimientos = DB::connection('sqlsrv') // Asegúrate que esta conexión apunte a `Produccion`
+            ->table('Produccion.dbo.tipo_movimientos')
+            ->where('tej_num', $tej_num)
+            ->select('*')
+            ->get();
+
+        return response()->json($movimientos);
     }
 
 }
