@@ -115,6 +115,16 @@ class PlaneacionController extends Controller
 
         $Dias_jornada_completa = $Horas / 24;
 
+        $ancho_por_toalla = ( (int) $modelo->TRAMA_Ancho_Peine / (int)$modelo->TIRAS) * 1.001; //(AK2 / AK1) * 1.001
+
+            //VARIABLES TEMPORALES - borrar despues de tener catalagos
+            $aplic = 'RZ';
+            $calibre_pie = 1;
+
+        $rizo = 1; // Valor por defecto
+        if ($aplic === 'RZ') { $rizo = 1; } elseif ($aplic === 'RZ2') { $rizo = 2; } elseif ($aplic === 'RZ3') { $rizo = 3;} elseif ($aplic === 'BOR') {$rizo = 1;
+        } elseif ($aplic === 'EST') { $rizo = 1; } elseif ($aplic === 'DC') { $rizo = 1; }
+
         //Validamos que no existe el registro, en caso de red lenta o de que el user de 2 clics, no se creen multiples registros con la misma informacion.
         $cuenta = $request->input('cuenta_rizo');
         $telarE = $request->input('telar');
@@ -159,6 +169,21 @@ class PlaneacionController extends Controller
                   $fraccion = round(($horasFin - $horasInicio) / 24, 3); // Calcular la fracción del día
                   $piezas = round(($fraccion * 24) * 20.4082864584521, 2);
                   $kilos = round(($piezas * 210.12) / (20.4082864584521 * 24), 2);
+
+                  $cambio = ''; //si Cambios_Hilo = 1, asignamos 1
+                  $TRAMA =((((0.59*((((int)$modelo->PASADAS * 1.001) * $ancho_por_toalla) / 100))/ $request->input('trama_0')) * $piezas)/1000);
+                  $Rizo = $aplic * $rizo; 
+                  $combinacion1 =((((0.59 * ((((int)$modelo->PASADAS_C1 * 1.001) * $ancho_por_toalla) / 100)) / $request->input('calibre_1')) * $piezas)/ 1000) ;
+                  $combinacion2 = ((((0.59 * ((((int)$modelo->PASADAS_C2 * 1.001) * $ancho_por_toalla) / 100)) / $request->input('calibre_2')) * $piezas) / 1000);
+                  $combinacion3 = ((($request->input('calibre_3') != 0 ? (0.59 * (((int)$modelo->PASADAS_C3 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
+                  $combinacion4 = ((($request->input('calibre_4') != 0 ? (0.59 * (((int)$modelo->PASADAS_C4 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
+                  $Piel1 = (((((((int) $modelo->Largo + (int) $modelo->Med_plano) / 100) * 1.055) * 0.00059) / ((0.00059 * 1) / (0.00059 / $calibre_pie)) * (($request->input('cuenta_pie') - 32) / (int) $modelo->PASADAS)) * $piezas);
+                  
+                  /*
+                    RISO?
+                   */
+                
+
                   $dias[] = [
                       'fecha' => $dia->toDateString(),
                       'fraccion_dia' => $fraccion,
@@ -197,10 +222,11 @@ class PlaneacionController extends Controller
       }
 
       // Mostrar el resultado con dd()
-      /*dd([
+      // AHORA VAMOS CON LAS FORMULAS RESTANTES
+      dd([
           'dias_generados' => $dias,
           'total_dias' => $totalDias,
-      ]);*/
+      ]);
       //procedemos con las formulas de excel tomando en cuenta las proporciones de los dias de acuerdo a las fechas de inicio y fin
 
 
@@ -246,7 +272,7 @@ class PlaneacionController extends Controller
                 'PASADAS_C3' => $modelo ? (int)$modelo->PASADAS_C3 : null ,
                 'PASADAS_C4' => $modelo ? (int)$modelo->PASADAS_C4 : null ,
                 'PASADAS_C5' =>  $modelo ? (int)$modelo->X : null,
-                'ancho_por_toalla' => null,
+                'ancho_por_toalla' =>$modelo ? $ancho_por_toalla : null,
                 'COLOR_TRAMA' => $modelo ? $modelo->OBS_R1 :null ,
                 'CALIBRE_C1' =>  $modelo ? $request->input('calibre_1') :null,
                 'Clave_Color_C1' => null ,
