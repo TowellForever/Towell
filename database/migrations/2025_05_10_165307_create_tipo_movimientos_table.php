@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->date('fecha_inicio');
             $table->date('fecha_fin');
+            $table->date('fecha');
             $table->decimal('fraccion_dia',8,2);
             $table->decimal('pzas',8,2);
             $table->decimal('kilos', 8, 2);

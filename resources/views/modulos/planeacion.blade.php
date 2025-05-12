@@ -155,8 +155,8 @@
                       </tr>
                   </thead>
                   <tbody>
-                      <tr id="filaInicio" class="bg-gray-100 text-gray-700"><td class="border px-2 py-1">Inicio</td></tr>
-                      <tr id="filaFin" class="bg-white text-gray-800"><td class="border px-2 py-1">Fin</td></tr>
+                      <!--<tr id="filaInicio" class="bg-gray-100 text-gray-700"><td class="border px-2 py-1">Inicio</td></tr>
+                      <tr id="filaFin" class="bg-white text-gray-800"><td class="border px-2 py-1">Fin</td></tr>-->
                       <tr id="filaFraccion" class="bg-gray-100 text-gray-700"><td class="border px-2 py-1">Fracción Día</td></tr>
                       <tr id="filaPzas" class="bg-white text-gray-800"><td class="border px-2 py-1">Pzas</td></tr>
                       <tr id="filaKilos" class="bg-gray-100 text-gray-700"><td class="border px-2 py-1">Kilos</td></tr>
@@ -316,16 +316,15 @@
             for (let i = 0; i < 30; i++) {
                 const fecha = new Date(hoy);
                 fecha.setDate(hoy.getDate() + i);
-                const fechaFormateada = fecha.toLocaleDateString("es-MX", {
-                    day: "2-digit",
-                    month: "2-digit",
-                });
+                const fechaFormateada = fecha.toISOString().split('T')[0]; // "2025-05-12"
+                const fechaFormateadaDiaMes = fechaFormateada.slice(5, 10); // "05-12"
+
                 fechas.push(fechaFormateada);
 
                 // Celdas vacías por fecha
-                filaFechas.innerHTML += `<th class="border border-gray-300">${fechaFormateada}</th>`;
-                filaInicio.innerHTML += `<td class="border border-gray-300"></td>`;
-                filaFin.innerHTML += `<td class="border border-gray-300"></td>`;
+                filaFechas.innerHTML += `<th class="border border-gray-300">${fechaFormateadaDiaMes}</th>`;
+                //filaInicio.innerHTML += `<td class="border border-gray-300"></td>`;
+                //filaFin.innerHTML += `<td class="border border-gray-300"></td>`;
                 filaFraccion.innerHTML += `<td class="border border-gray-300"></td>`;
                 filaPzas.innerHTML += `<td class="border border-gray-300"></td>`;
                 filaKilos.innerHTML += `<td class="border border-gray-300"></td>`;
@@ -348,28 +347,25 @@
                     fetch(`/planeacion/tipo-movimientos/${numRegistroSeleccionado}`)
                         .then(res => res.json())
                         .then(data => {
-                            // Limpiar
-                            [filaInicio, filaFin, filaFraccion, filaPzas, filaKilos, filaTej].forEach(row => {
+                            // Limpiar, quite estas: filaInicio, filaFin,
+                            [ filaFraccion, filaPzas, filaKilos, filaTej].forEach(row => {
                                 row.querySelectorAll("td:not(:first-child)").forEach(cell => cell.textContent = "");
                             });
 
                             data.forEach(item => {
-                                const fechaItem = new Date(item.fecha_inicio).toLocaleDateString("es-MX", {
-                                    day: "2-digit",
-                                    month: "2-digit"
-                                });
-
+                                const fechaItem = item.fecha; // ya debería venir como "YYYY-MM-DD"
+                                const fechaItemDiaMes = fechaItem.slice(5, 10); // "05-12"
                                 const index = fechas.indexOf(fechaItem);
                                 if (index !== -1) {
-                                    filaInicio.cells[index + 1].textContent = item.fecha_inicio;
-                                    filaFin.cells[index + 1].textContent = item.fecha_fin;
+                                    //filaInicio.cells[index + 1].textContent = item.fecha_inicio.slice(5, 10);
+                                    //filaFin.cells[index + 1].textContent = item.fecha_fin.slice(5, 10);
                                     filaFraccion.cells[index + 1].textContent = item.fraccion_dia;
                                     filaPzas.cells[index + 1].textContent = item.pzas;
                                     filaKilos.cells[index + 1].textContent = item.kilos;
                                     filaTej.cells[index + 1].textContent = item.tej_num;
                                 }
-                            console.log("Fecha del item:", fechaItem);
-                            console.log("Índice encontrado:", index);
+                            //console.log("Fecha del item:", fechaItem);
+                            //console.log("Índice encontrado:", index);
 
                             
                               });

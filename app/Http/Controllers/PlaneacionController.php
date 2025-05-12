@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PlaneacionController extends Controller
 {
@@ -295,8 +296,8 @@ class PlaneacionController extends Controller
          foreach ($dias as $registro) {
           \App\Models\TipoMovimientos::create([
               'fecha_inicio'   => $Fechainicio, //no son necesarias
-              'fecha_fin'      => $Fechafin, //no son necesarias
-              'fecha'          => $registro['fecha'],
+              'fecha_fin'      => $Fechafin, //no son necesaria
+              'fecha' => Carbon::createFromFormat('Y-m-d', $registro['fecha'])->toDateString(),
               'fraccion_dia'   => $registro['fraccion_dia'],
               'pzas'           => $registro['piezas'],
               'kilos'          => $registro['kilos'],

@@ -14,6 +14,7 @@ class TipoMovimientos extends Model
     protected $fillable = [
         'fecha_inicio',
         'fecha_fin',
+        'fecha',
         'fraccion_dia',
         'pzas',
         'kilos',
