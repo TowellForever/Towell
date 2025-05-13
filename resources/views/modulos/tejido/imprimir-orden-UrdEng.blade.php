@@ -5,14 +5,13 @@
     <title>ORDEN DE URDIDO Y ENGOMADO</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ asset('css/estilos.css') }}">
-
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 </head>
 <body class="bg-white impresion-UE">
     <div class="border border-black p-1 ">
         <div class="flex justify-between items-center mb-1">
             <div>
                 <img src="{{ asset('images/fondosTowell/logo_towell2.png') }}" alt="Logo Towell" style="width: 2cm;">
-                
             </div>
             <p class="font-bold text-lg text-sm">ORDEN DE URDIDO Y ENGOMADO</p>
             <div class="text-right mr-2">
@@ -20,7 +19,7 @@
             </div>
         </div>
     
-        <div class="grid grid-cols-4 gap-4 mb-0.5 text-left">
+        <div class="grid grid-cols-5 gap-4 mb-0.5 text-left">
             <div>
                 <p><strong>PARADA:</strong> _____________</p>
                 <p><strong>FECHA:</strong> _____________</p>
@@ -53,7 +52,11 @@
                 <p><strong>DESTINO:</strong> {{ $orden->destino ?? '' }}</p>
             </div>
             <div>
-                <p><strong>COLOR: _____________</strong> {{ $orden->color ?? ''}}</p>
+              <p><strong>COLOR: _____________</strong> {{ $orden->color ?? ''}}</p>
+            </div>
+            <div>
+              <!-- SVG donde se dibujará el código de barras -->
+              <svg id="barcode"></svg>
             </div>
         </div>
 
@@ -368,6 +371,21 @@
             </div>
         </div>
     </div>
+
+    <!--SECCIÓN DE SCRIPS JS-->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const folio = @json($folio);
+            JsBarcode("#barcode", folio, {
+                format: "CODE128",
+                lineColor: "black",
+                width: 1,
+                height: 30,
+                displayValue: false
+            });
+        });
+    </script>
+
 </body>
 
 </html>

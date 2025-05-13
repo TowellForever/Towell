@@ -86,7 +86,7 @@
                     </thead>
                     <tbody class="">
                         @foreach($datos as $registro)
-                            <tr class="px-1 py-0.5 text-sm" data-num-registro="{{ $registro->num_registro }}"> 
+                            <tr class="px-1 py-0.5 text-sm" data-num-registro="{{ $registro->num_registro }}" data-inicio="{{ $registro->Inicio_Tejido }}" data-fin="{{ $registro->Fin_Tejido }}"> 
                                 <!-- Agregar checkbox 'en_proceso' -->
                                 <td class="px-1 py-0.5">
                                     <form action="{{ route('tejido_scheduling.update', $registro->num_registro) }}" method="POST">
@@ -305,108 +305,100 @@
     <!--SCRIPTS que implentan el funcionamiento de la tabla TIPO DE MOVIMIENTOS, se selecciona un registro, se obtiene el valor de num_registro y con 
         ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
 
-    <script>
-        let filaSeleccionada = null;
-        let numRegistroSeleccionado = null;
+   <script>
+    let filaSeleccionada = null;
+    let numRegistroSeleccionado = null;
 
-       document.addEventListener("DOMContentLoaded", function () {
-          const hoy = new Date();
-          const tbody = document.getElementById("cuerpoTablaPlaneacion");
+    document.addEventListener("DOMContentLoaded", function () {
+        const filas = document.querySelectorAll("#tablaPlaneacion tbody tr");
 
-          for (let i = 0; i < 30; i++) {
-            const fecha = new Date(hoy);
-            fecha.setDate(hoy.getDate() + i);
-            const fechaFormateada = fecha.toISOString().split('T')[0]; // "2025-05-12"
-            const fechaza = new Date(fechaFormateada);
-            const opciones = { day: 'numeric', month: 'long' };
-            const fechaFormateadaDiaMes = fechaza.toLocaleDateString('es-MX', opciones);
+        filas.forEach(fila => {
+            fila.addEventListener("click", function () {
+                // Quitar selección anterior
+                if (filaSeleccionada) {
+                    filaSeleccionada.classList.remove("fila-seleccionada");
+                }
+                this.classList.add("fila-seleccionada");
+                filaSeleccionada = this;
 
+                // Obtener datos del registro
+                numRegistroSeleccionado = this.getAttribute('data-num-registro');
+                const fechaInicioTejido = this.getAttribute('data-inicio'); // "2025-05-13"
+                const fechaFinTejido = this.getAttribute('data-fin');       // "2025-05-25"
 
-              // Generar una fila con fecha en primera columna y celdas vacías
-              const fila = document.createElement("tr");
-              fila.classList.add(i % 2 === 0 ? 'bg-white' : 'bg-gray-100', 'text-gray-800');
+                console.log("Inicio Tejido:", fechaInicioTejido, "Fin Tejido:", fechaFinTejido);
+                console.log("Registro seleccionado:", numRegistroSeleccionado);
 
-              fila.innerHTML = `
-                  <td class="border px-2 py-1 text-center">${fechaFormateadaDiaMes}</td>
-                  <td class="border px-2 py-1 text-center" data-campo="pzas" data-fecha="${fechaFormateada}"></td>
-                  <td class="border px-2 py-1 text-center" data-campo="kilos" data-fecha="${fechaFormateada}"></td>
-                  <td class="border px-2 py-1 text-center" data-campo="tejedor" data-fecha="${fechaFormateada}"></td>
-                  <td class="border px-2 py-1 text-center" data-campo="rizo" data-fecha="${fechaFormateada}"></td>
-                  <td class="border px-2 py-1 text-center" data-campo="cambio" data-fecha="${fechaFormateada}"></td>
-                  <td class="border px-2 py-1 text-center" data-campo="trama" data-fecha="${fechaFormateada}"></td>
-                  <td class="border px-2 py-1 text-center" data-campo="combinacion1" data-fecha="${fechaFormateada}"></td>
-                  <td class="border px-2 py-1 text-center" data-campo="combinacion2" data-fecha="${fechaFormateada}"></td>
-                  <td class="border px-2 py-1 text-center" data-campo="combinacion3" data-fecha="${fechaFormateada}"></td>
-                  <td class="border px-2 py-1 text-center" data-campo="combinacion4" data-fecha="${fechaFormateada}"></td>
-                  <td class="border px-2 py-1 text-center" data-campo="piel1" data-fecha="${fechaFormateada}"></td>
-                  <td class="border px-2 py-1 text-center" data-campo="riso" data-fecha="${fechaFormateada}"></td>
-              `;
+                // Mostrar segunda tabla
+                document.getElementById("contenedorTabla2").style.display = "block";
 
-              tbody.appendChild(fila);
-          }
+                // Generar fechas en la tabla dinámica
+                const inicio = new Date(fechaInicioTejido);
+                const fin = new Date(fechaFinTejido);
+                const tbody = document.getElementById("cuerpoTablaPlaneacion");
+                tbody.innerHTML = "";
 
-           // Evento click para selección de fila
-            const filas = document.querySelectorAll("#tablaPlaneacion tbody tr");
-            filas.forEach(fila => {
-                fila.addEventListener("click", function () {
-                    if (filaSeleccionada) {
-                        filaSeleccionada.classList.remove("fila-seleccionada");
-                    }
-                    this.classList.add("fila-seleccionada");
-                    filaSeleccionada = this;
+                for (let d = new Date(inicio), i = 0; d <= fin; d.setDate(d.getDate() + 1), i++) {
+                    const fechaFormateada = d.toISOString().split('T')[0]; // YYYY-MM-DD
+                    const opciones = { day: 'numeric', month: 'long' };
+                    const fechaFormateadaDiaMes = d.toLocaleDateString('es-MX', opciones);
 
-                    numRegistroSeleccionado = this.getAttribute('data-num-registro');
-                    console.log("Registro seleccionado:", numRegistroSeleccionado);
+                    const fila = document.createElement("tr");
+                    fila.classList.add(i % 2 === 0 ? 'bg-white' : 'bg-gray-100', 'text-gray-800');
 
-                     // Mostrar la segunda tabla después de que el usuario da click en un registro de la tabla planeación
-                    document.getElementById("contenedorTabla2").style.display = "block";
+                    fila.innerHTML = `
+                        <td class="border px-2 py-1 text-center">${fechaFormateadaDiaMes}</td>
+                        <td class="border px-2 py-1 text-center" data-campo="pzas" data-fecha="${fechaFormateada}"></td>
+                        <td class="border px-2 py-1 text-center" data-campo="kilos" data-fecha="${fechaFormateada}"></td>
+                        <td class="border px-2 py-1 text-center" data-campo="tejedor" data-fecha="${fechaFormateada}"></td>
+                        <td class="border px-2 py-1 text-center" data-campo="rizo" data-fecha="${fechaFormateada}"></td>
+                        <td class="border px-2 py-1 text-center" data-campo="cambio" data-fecha="${fechaFormateada}"></td>
+                        <td class="border px-2 py-1 text-center" data-campo="trama" data-fecha="${fechaFormateada}"></td>
+                        <td class="border px-2 py-1 text-center" data-campo="combinacion1" data-fecha="${fechaFormateada}"></td>
+                        <td class="border px-2 py-1 text-center" data-campo="combinacion2" data-fecha="${fechaFormateada}"></td>
+                        <td class="border px-2 py-1 text-center" data-campo="combinacion3" data-fecha="${fechaFormateada}"></td>
+                        <td class="border px-2 py-1 text-center" data-campo="combinacion4" data-fecha="${fechaFormateada}"></td>
+                        <td class="border px-2 py-1 text-center" data-campo="piel1" data-fecha="${fechaFormateada}"></td>
+                        <td class="border px-2 py-1 text-center" data-campo="riso" data-fecha="${fechaFormateada}"></td>
+                    `;
 
-                    fetch(`/planeacion/tipo-movimientos/${numRegistroSeleccionado}`)
-                        .then(res => res.json())
-                        .then(data => {
-                            // Limpiar todas las celdas que tienen data-campo y data-fecha
-                            document.querySelectorAll('[data-campo][data-fecha]').forEach(cell => {
-                                cell.textContent = "";
-                            });
+                    tbody.appendChild(fila);
+                }
 
-                            data.forEach(item => {
-                                const fecha = item.fecha; // formato "YYYY-MM-DD"
-                                const celdaPzas   = document.querySelector(`[data-campo="pzas"][data-fecha="${fecha}"]`);
-                                const celdaKilos  = document.querySelector(`[data-campo="kilos"][data-fecha="${fecha}"]`);
-                                const celdaTej  = document.querySelector(`[data-campo="tejedor"][data-fecha="${fecha}"]`);
-                                const celdaRizo   = document.querySelector(`[data-campo="rizo"][data-fecha="${fecha}"]`);
-                                const celdaCambio = document.querySelector(`[data-campo="cambio"][data-fecha="${fecha}"]`);
-                                const celdaTrama  = document.querySelector(`[data-campo="trama"][data-fecha="${fecha}"]`);
-                                const celdaCombinacion1 = document.querySelector(`[data-campo="combinacion1"][data-fecha="${fecha}"]`);
-                                const celdaCombinacion2 = document.querySelector(`[data-campo="combinacion2"][data-fecha="${fecha}"]`);
-                                const celdaCombinacion3 = document.querySelector(`[data-campo="combinacion3"][data-fecha="${fecha}"]`);
-                                const celdaCombinacion4 = document.querySelector(`[data-campo="combinacion4"][data-fecha="${fecha}"]`);
-                                const celdaPiel1   = document.querySelector(`[data-campo="piel1"][data-fecha="${fecha}"]`);
-                                const celdaRiso   = document.querySelector(`[data-campo="riso"][data-fecha="${fecha}"]`);
-
-                                if (celdaPzas)     celdaPzas.textContent  = Math.floor(item.pzas).toString();
-                                if (celdaKilos)    celdaKilos.textContent = item.kilos;
-                                if (celdaTej)      celdaTej.textContent   = Math.floor(item.tej_num).toString();
-                                if (celdaRizo)     celdaRizo.textContent  = Math.floor(item.rizo).toString();
-                                if (celdaCambio)   celdaCambio.textContent  = Math.floor(item.cambio).toString();
-                                if (celdaTrama)    celdaTrama.textContent   = item.trama;
-                                if (celdaCombinacion1)   celdaCombinacion1.textContent   = item.combinacion1;
-                                if (celdaCombinacion2)   celdaCombinacion2.textContent   = item.combinacion2;
-                                if (celdaCombinacion3)   celdaCombinacion3.textContent   = item.combinacion3;
-                                if (celdaCombinacion4)   celdaCombinacion4.textContent   = item.combinacion4;
-                                if (celdaPiel1)    celdaPiel1.textContent   = item.piel1;
-                                if (celdaRiso)     celdaRiso.textContent    = item.riso;
-                            });
-                        })
-                        .catch(err => {
-                            console.error("Error al obtener detalles:", err);
+                // Cargar datos del servidor
+                fetch(`/planeacion/tipo-movimientos/${numRegistroSeleccionado}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        // Limpiar celdas anteriores
+                        document.querySelectorAll('[data-campo][data-fecha]').forEach(cell => {
+                            cell.textContent = "";
                         });
-                });
+
+                        data.forEach(item => {
+                            const fecha = item.fecha; // "YYYY-MM-DD"
+                            const campos = [
+                                "pzas", "kilos", "tejedor", "rizo", "cambio", "trama",
+                                "combinacion1", "combinacion2", "combinacion3", "combinacion4",
+                                "piel1", "riso"
+                            ];
+
+                            campos.forEach(campo => {
+                                const celda = document.querySelector(`[data-campo="${campo}"][data-fecha="${fecha}"]`);
+                                if (celda) {
+                                    const valor = item[campo];
+                                    celda.textContent = typeof valor === "number" ? Math.floor(valor).toString() : (valor || '');
+                                }
+                            });
+                        });
+                    })
+                    .catch(err => {
+                        console.error("Error al obtener detalles:", err);
+                    });
             });
-
         });
+    });
+</script>
 
-    </script>
 
     @push('styles')
         <style>
