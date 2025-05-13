@@ -154,6 +154,7 @@ class PlaneacionController extends Controller
       $dias = [];
       $totalDias = 0;
 
+      //INICIAMOS LOS CALCULOS DE ACUERDO A LAS FORMULAS DE ARCHIVO EXCEL DE PEPE OWNER
       foreach ($periodo as $index => $dia) {
           $inicioDia = $dia->copy()->startOfDay();
           $finDia = $dia->copy()->endOfDay();
@@ -177,9 +178,7 @@ class PlaneacionController extends Controller
                   $combinacion3 = ((($request->input('calibre_3') != 0 ? (0.59 * (((int)$modelo->PASADAS_C3 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
                   $combinacion4 = ((($request->input('calibre_4') != 0 ? (0.59 * (((int)$modelo->PASADAS_C4 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
                   $Piel1 = (((((((int) $modelo->Largo + (int) $modelo->Med_plano) / 100) * 1.055) * 0.00059) / ((0.00059 * 1) / (0.00059 / $calibre_pie)) * (($request->input('cuenta_pie') - 32) / (int) $modelo->PASADAS)) * $piezas);
-                  /*
-                    RISO?
-                   */
+                  $riso = ($kilos  - ($Piel1 + $combinacion3 + $combinacion2 + $combinacion1 +  $TRAMA + $combinacion4));
 
                   $dias[] = [
                       'fecha' => $dia->toDateString(),
@@ -194,7 +193,7 @@ class PlaneacionController extends Controller
                       'combinacion3' => $combinacion3,
                       'combinacion4' => $combinacion4,
                       'piel1' => $Piel1,
-
+                      'riso' => $riso,
                   ];
                   $totalDias++;
           }  elseif ($dia->isSameDay($Fechafin)) {
@@ -216,7 +215,7 @@ class PlaneacionController extends Controller
                   $combinacion3 = ((($request->input('calibre_3') != 0 ? (0.59 * (((int)$modelo->PASADAS_C3 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
                   $combinacion4 = ((($request->input('calibre_4') != 0 ? (0.59 * (((int)$modelo->PASADAS_C4 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
                   $Piel1 = (((((((int) $modelo->Largo + (int) $modelo->Med_plano) / 100) * 1.055) * 0.00059) / ((0.00059 * 1) / (0.00059 / $calibre_pie)) * (($request->input('cuenta_pie') - 32) / (int) $modelo->PASADAS)) * $piezas);
-                  
+                  $riso = ($kilos  - ($Piel1 + $combinacion3 + $combinacion2 + $combinacion1 +  $TRAMA + $combinacion4));
 
                   $dias[] = [
                       'fecha' => $dia->toDateString(),
@@ -231,6 +230,7 @@ class PlaneacionController extends Controller
                       'combinacion3' => $combinacion3,
                       'combinacion4' => $combinacion4,
                       'piel1' => $Piel1,
+                      'riso' => $riso,
                   ];
                   $totalDias++;
            }else {
@@ -250,7 +250,8 @@ class PlaneacionController extends Controller
                   $combinacion3 = ((($request->input('calibre_3') != 0 ? (0.59 * (((int)$modelo->PASADAS_C3 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
                   $combinacion4 = ((($request->input('calibre_4') != 0 ? (0.59 * (((int)$modelo->PASADAS_C4 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
                   $Piel1 = (((((((int) $modelo->Largo + (int) $modelo->Med_plano) / 100) * 1.055) * 0.00059) / ((0.00059 * 1) / (0.00059 / $calibre_pie)) * (($request->input('cuenta_pie') - 32) / (int) $modelo->PASADAS)) * $piezas);
-                 
+                  $riso = ($kilos  - ($Piel1 + $combinacion3 + $combinacion2 + $combinacion1 +  $TRAMA + $combinacion4));
+                  
                   $dias[] = [
                       'fecha' => $dia->toDateString(),
                       'fraccion_dia' => 1, // Día completo
@@ -264,6 +265,7 @@ class PlaneacionController extends Controller
                       'combinacion3' => $combinacion3,
                       'combinacion4' => $combinacion4,
                       'piel1' => $Piel1,
+                      'riso' => $riso,
                   ];
                   $totalDias++;
           }
@@ -385,6 +387,7 @@ class PlaneacionController extends Controller
               'combinacion4'   => $registro['combinacion4'],
               'piel1'          => $registro['piel1'],
               'tej_num'        => $tejNum, // Asegúrate de que este valor venga del formulario
+              'riso'           => $riso, 
           ]);
       }
 

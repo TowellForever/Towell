@@ -16,7 +16,6 @@ return new class extends Migration
             $table->decimal('fraccion_dia',8,2);
             $table->decimal('pzas',8,2);
             $table->decimal('kilos', 8, 2);
-            
             $table->decimal('rizo', 8, 2)->nullable();
             $table->decimal('cambio', 8, 2)->nullable();
             $table->decimal('trama', 8, 2)->nullable();
@@ -25,6 +24,7 @@ return new class extends Migration
             $table->decimal('combinacion3', 8, 2)->nullable();
             $table->decimal('combinacion4', 8, 2)->nullable();
             $table->decimal('piel1', 8, 2)->nullable();
+            $table->decimal('riso', 8, 2)->nullable();
             $table->integer('tej_num');
 
             // Relación con TEJIDO_SCHEDULING (campo num_registro)

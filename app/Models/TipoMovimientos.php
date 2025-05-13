@@ -26,6 +26,7 @@ class TipoMovimientos extends Model
         'combinacion3',
         'combinacion4',
         'piel1',
+        'riso',
         'tej_num',
     ];
 

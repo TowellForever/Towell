@@ -53,7 +53,7 @@
         </div>
     </div>
 
-    <div class=" mx-auto text-sm overflow-y-auto max-h-screen">
+    <div class="mx-auto text-sm overflow-y-auto max-h-[80vh]">
       <h1 class="text-3xl font-bold text-center -mt-8">PLANEACIÓN</h1>
         <div class="table-container relative">
             <div class="table-container-plane table-wrapper bg-white shadow-lg rounded-lg p-1">
@@ -146,16 +146,15 @@
                 <a href="{{ route('modelos.index') }}" class="button-plane-2">MODELOS 🛠️</a>
             </div>
         </div>
-        <div class="text-center">
+        <div id="contenedorTabla2" class="text-center" style="display: none;">
           <div class="table-wrapper bg-white shadow-lg rounded-lg p-1 overflow-x-auto">
-            <table id="tablaDatosPlaneacion" class="w-full border border-gray-300 text-xs table-fixed">
+            <table id="tablaDatosPlaneacion" class="w-full border border-gray-300 text-xs table-fixed" >
                 <thead>
                     <tr class="bg-gray-800 text-white text-center">
                         <th class="border border-gray-400 px-2 py-1 font-semibold text-sm w-24">Fecha</th>
                         <th class="border border-gray-400 px-2 py-1 font-semibold text-sm">Pzas</th>
                         <th class="border border-gray-400 px-2 py-1 font-semibold text-sm">Kilos</th>
                         <th class="border border-gray-400 px-2 py-1 font-semibold text-sm">Tejedor</th>
-
                         <th class="border border-gray-400 px-2 py-1 font-semibold text-sm">Rizo</th>
                         <th class="border border-gray-400 px-2 py-1 font-semibold text-sm">Cambio</th>
                         <th class="border border-gray-400 px-2 py-1 font-semibold text-sm">Trama</th>
@@ -164,6 +163,7 @@
                         <th class="border border-gray-400 px-2 py-1 font-semibold text-sm">Combinacion3</th>
                         <th class="border border-gray-400 px-2 py-1 font-semibold text-sm">Combinacion4</th>
                         <th class="border border-gray-400 px-2 py-1 font-semibold text-sm">Piel1</th>
+                        <th class="border border-gray-400 px-2 py-1 font-semibold text-sm">Riso</th>
 
                     </tr>
                 </thead>
@@ -314,19 +314,23 @@
           const tbody = document.getElementById("cuerpoTablaPlaneacion");
 
           for (let i = 0; i < 30; i++) {
-              const fecha = new Date(hoy);
-              fecha.setDate(hoy.getDate() + i);
-              const fechaFormateada = fecha.toISOString().split('T')[0]; // "2025-05-12"
-              const fechaFormateadaDiaMes = fechaFormateada.slice(5, 10); // "05-12"
+            const fecha = new Date(hoy);
+            fecha.setDate(hoy.getDate() + i);
+            const fechaFormateada = fecha.toISOString().split('T')[0]; // "2025-05-12"
+            const fechaza = new Date(fechaFormateada);
+            const opciones = { day: 'numeric', month: 'long' };
+            const fechaFormateadaDiaMes = fechaza.toLocaleDateString('es-MX', opciones);
+
 
               // Generar una fila con fecha en primera columna y celdas vacías
               const fila = document.createElement("tr");
               fila.classList.add(i % 2 === 0 ? 'bg-white' : 'bg-gray-100', 'text-gray-800');
 
               fila.innerHTML = `
-                  <td class="border px-2 py-1 text-center">${fechaFormateada}</td>
+                  <td class="border px-2 py-1 text-center">${fechaFormateadaDiaMes}</td>
                   <td class="border px-2 py-1 text-center" data-campo="pzas" data-fecha="${fechaFormateada}"></td>
                   <td class="border px-2 py-1 text-center" data-campo="kilos" data-fecha="${fechaFormateada}"></td>
+                  <td class="border px-2 py-1 text-center" data-campo="tejedor" data-fecha="${fechaFormateada}"></td>
                   <td class="border px-2 py-1 text-center" data-campo="rizo" data-fecha="${fechaFormateada}"></td>
                   <td class="border px-2 py-1 text-center" data-campo="cambio" data-fecha="${fechaFormateada}"></td>
                   <td class="border px-2 py-1 text-center" data-campo="trama" data-fecha="${fechaFormateada}"></td>
@@ -335,68 +339,70 @@
                   <td class="border px-2 py-1 text-center" data-campo="combinacion3" data-fecha="${fechaFormateada}"></td>
                   <td class="border px-2 py-1 text-center" data-campo="combinacion4" data-fecha="${fechaFormateada}"></td>
                   <td class="border px-2 py-1 text-center" data-campo="piel1" data-fecha="${fechaFormateada}"></td>
-                  <td class="border px-2 py-1 text-center" data-campo="tejedor" data-fecha="${fechaFormateada}"></td>
+                  <td class="border px-2 py-1 text-center" data-campo="riso" data-fecha="${fechaFormateada}"></td>
               `;
 
               tbody.appendChild(fila);
           }
 
            // Evento click para selección de fila
-const filas = document.querySelectorAll("#tablaPlaneacion tbody tr");
-filas.forEach(fila => {
-    fila.addEventListener("click", function () {
-        if (filaSeleccionada) {
-            filaSeleccionada.classList.remove("fila-seleccionada");
-        }
-        this.classList.add("fila-seleccionada");
-        filaSeleccionada = this;
+            const filas = document.querySelectorAll("#tablaPlaneacion tbody tr");
+            filas.forEach(fila => {
+                fila.addEventListener("click", function () {
+                    if (filaSeleccionada) {
+                        filaSeleccionada.classList.remove("fila-seleccionada");
+                    }
+                    this.classList.add("fila-seleccionada");
+                    filaSeleccionada = this;
 
-        numRegistroSeleccionado = this.getAttribute('data-num-registro');
-        console.log("Registro seleccionado:", numRegistroSeleccionado);
+                    numRegistroSeleccionado = this.getAttribute('data-num-registro');
+                    console.log("Registro seleccionado:", numRegistroSeleccionado);
 
-        fetch(`/planeacion/tipo-movimientos/${numRegistroSeleccionado}`)
-            .then(res => res.json())
-            .then(data => {
-                // Limpiar todas las celdas que tienen data-campo y data-fecha
-                document.querySelectorAll('[data-campo][data-fecha]').forEach(cell => {
-                    cell.textContent = "";
+                     // Mostrar la segunda tabla después de que el usuario da click en un registro de la tabla planeación
+                    document.getElementById("contenedorTabla2").style.display = "block";
+
+                    fetch(`/planeacion/tipo-movimientos/${numRegistroSeleccionado}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            // Limpiar todas las celdas que tienen data-campo y data-fecha
+                            document.querySelectorAll('[data-campo][data-fecha]').forEach(cell => {
+                                cell.textContent = "";
+                            });
+
+                            data.forEach(item => {
+                                const fecha = item.fecha; // formato "YYYY-MM-DD"
+                                const celdaPzas   = document.querySelector(`[data-campo="pzas"][data-fecha="${fecha}"]`);
+                                const celdaKilos  = document.querySelector(`[data-campo="kilos"][data-fecha="${fecha}"]`);
+                                const celdaTej  = document.querySelector(`[data-campo="tejedor"][data-fecha="${fecha}"]`);
+                                const celdaRizo   = document.querySelector(`[data-campo="rizo"][data-fecha="${fecha}"]`);
+                                const celdaCambio = document.querySelector(`[data-campo="cambio"][data-fecha="${fecha}"]`);
+                                const celdaTrama  = document.querySelector(`[data-campo="trama"][data-fecha="${fecha}"]`);
+                                const celdaCombinacion1 = document.querySelector(`[data-campo="combinacion1"][data-fecha="${fecha}"]`);
+                                const celdaCombinacion2 = document.querySelector(`[data-campo="combinacion2"][data-fecha="${fecha}"]`);
+                                const celdaCombinacion3 = document.querySelector(`[data-campo="combinacion3"][data-fecha="${fecha}"]`);
+                                const celdaCombinacion4 = document.querySelector(`[data-campo="combinacion4"][data-fecha="${fecha}"]`);
+                                const celdaPiel1   = document.querySelector(`[data-campo="piel1"][data-fecha="${fecha}"]`);
+                                const celdaRiso   = document.querySelector(`[data-campo="riso"][data-fecha="${fecha}"]`);
+
+                                if (celdaPzas)     celdaPzas.textContent  = Math.floor(item.pzas).toString();
+                                if (celdaKilos)    celdaKilos.textContent = item.kilos;
+                                if (celdaTej)      celdaTej.textContent   = Math.floor(item.tej_num).toString();
+                                if (celdaRizo)     celdaRizo.textContent  = Math.floor(item.rizo).toString();
+                                if (celdaCambio)   celdaCambio.textContent  = Math.floor(item.cambio).toString();
+                                if (celdaTrama)    celdaTrama.textContent   = item.trama;
+                                if (celdaCombinacion1)   celdaCombinacion1.textContent   = item.combinacion1;
+                                if (celdaCombinacion2)   celdaCombinacion2.textContent   = item.combinacion2;
+                                if (celdaCombinacion3)   celdaCombinacion3.textContent   = item.combinacion3;
+                                if (celdaCombinacion4)   celdaCombinacion4.textContent   = item.combinacion4;
+                                if (celdaPiel1)    celdaPiel1.textContent   = item.piel1;
+                                if (celdaRiso)     celdaRiso.textContent    = item.riso;
+                            });
+                        })
+                        .catch(err => {
+                            console.error("Error al obtener detalles:", err);
+                        });
                 });
-
-                data.forEach(item => {
-                    const fecha = item.fecha; // formato "YYYY-MM-DD"
-                    
-                    const celdaPzas  = document.querySelector(`[data-campo="pzas"][data-fecha="${fecha}"]`);
-                    const celdaKilos = document.querySelector(`[data-campo="kilos"][data-fecha="${fecha}"]`);
-                    const celdaRizo = document.querySelector(`[data-campo="rizo"][data-fecha="${fecha}"]`);
-                    const celdaCambio = document.querySelector(`[data-campo="cambio"][data-fecha="${fecha}"]`);
-                    const celdaTrama = document.querySelector(`[data-campo="trama"][data-fecha="${fecha}"]`);
-                    const celdaCombinacion1 = document.querySelector(`[data-campo="combinacion1"][data-fecha="${fecha}"]`);
-                    const celdaCombinacion2 = document.querySelector(`[data-campo="combinacion2"][data-fecha="${fecha}"]`);
-                    const celdaCombinacion3 = document.querySelector(`[data-campo="combinacion3"][data-fecha="${fecha}"]`);
-                    const celdaCombinacion4 = document.querySelector(`[data-campo="combinacion4"][data-fecha="${fecha}"]`);
-                    const celdaPiel1 = document.querySelector(`[data-campo="piel1"][data-fecha="${fecha}"]`);
-
-                    const celdaTej   = document.querySelector(`[data-campo="tejedor"][data-fecha="${fecha}"]`);
-
-                    if (celdaPzas)  celdaPzas.textContent  = item.pzas;
-                    if (celdaKilos) celdaKilos.textContent = item.kilos;
-                    if (celdaTej)   celdaTej.textContent   = item.tej_num;
-
-                    if (celdaRizo)   celdaRizo.textContent   = item.rizo;
-                    if (celdaCambio)   celdaCambio.textContent   = item.cambio;
-                    if (celdaTrama)   celdaTrama.textContent   = item.trama;
-                    if (celdaCombinacion1)   celdaCombinacion1.textContent   = item.combinacion1;
-                    if (celdaCombinacion2)   celdaCombinacion2.textContent   = item.combinacion2;
-                    if (celdaCombinacion3)   celdaCombinacion3.textContent   = item.combinacion3;
-                    if (celdaCombinacion4)   celdaCombinacion4.textContent   = item.combinacion4;
-                    if (celdaPiel1)   celdaPiel1.textContent   = item.piel1;
-                });
-            })
-            .catch(err => {
-                console.error("Error al obtener detalles:", err);
             });
-    });
-});
 
         });
 
