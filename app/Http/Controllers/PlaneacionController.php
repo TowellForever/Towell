@@ -165,8 +165,8 @@ class PlaneacionController extends Controller
                   $horasInicio = $Fechainicio->hour + ($Fechainicio->minute / 60); // Convertir horas y minutos a decimal
                   $horasFin = 24; // El día tiene 24 horas
                   $fraccion = round(($horasFin - $horasInicio) / 24, 3); // Calcular la fracción del día
-                  $piezas = round(($fraccion * 24) * 20.4082864584521, 2);
-                  $kilos = round(($piezas * 210.12) / (20.4082864584521 * 24), 2);
+                  $piezas = round(($fraccion * 24) * $Std_Hr_efectivo, 2);
+                  $kilos = round(($piezas * $Prod_Kg_Dia) / ($Std_Hr_efectivo * 24), 2);
 
                   $cambio = $Cambios_Hilo; //si Cambios_Hilo = 1, asignamos 1
                   $rizo = 1; // Valor por defecto
@@ -177,7 +177,8 @@ class PlaneacionController extends Controller
                   $combinacion2 = ((((0.59 * ((((int)$modelo->PASADAS_C2 * 1.001) * $ancho_por_toalla) / 100)) / $request->input('calibre_2')) * $piezas) / 1000);
                   $combinacion3 = ((($request->input('calibre_3') != 0 ? (0.59 * (((int)$modelo->PASADAS_C3 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
                   $combinacion4 = ((($request->input('calibre_4') != 0 ? (0.59 * (((int)$modelo->PASADAS_C4 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
-                  $Piel1 = (((((((int) $modelo->Largo + (int) $modelo->Med_plano) / 100) * 1.055) * 0.00059) / ((0.00059 * 1) / (0.00059 / $calibre_pie)) * (($request->input('cuenta_pie') - 32) / (int) $modelo->PASADAS)) * $piezas);
+                  $Piel1 = ((((((((int) $modelo->Largo + (int) $modelo->Med_plano) / 100) * 1.055) * 0.00059) / ((0.00059 * 1) / (0.00059 / $calibre_pie))) * (($request->input('cuenta_pie') - 32) / (int) $modelo->PASADAS)) * $piezas);
+
                   $riso = ($kilos  - ($Piel1 + $combinacion3 + $combinacion2 + $combinacion1 +  $TRAMA + $combinacion4));
 
                   $dias[] = [
@@ -202,8 +203,8 @@ class PlaneacionController extends Controller
                   $realFin = $Fechafin;
                   $segundos = $realFin->diffInSeconds($realInicio, true);
                   $fraccion = round($segundos / 86400, 3); //agregamos esta linea de codigo para calcular las piezas
-                  $piezas = round(($fraccion * 24) * 20.4082864584521, 2);
-                  $kilos = round(($piezas * 210.12) / (20.4082864584521 * 24), 2);
+                  $piezas = round(($fraccion * 24) * $Std_Hr_efectivo, 2);
+                  $kilos = round(($piezas * $Prod_Kg_Dia) / ($Std_Hr_efectivo * 24), 2);
 
                   $cambio = $Cambios_Hilo; //si Cambios_Hilo = 1, asignamos 1
                   $rizo = 1; // Valor por defecto
@@ -236,8 +237,8 @@ class PlaneacionController extends Controller
            }else {
                   $fraccion = 1;
                   // Días intermedios: fracción completa (1)
-                  $piezas = round(($fraccion * 24) * 20.4082864584521, 2);
-                  $kilos = round(($piezas * 210.12) / (20.4082864584521 * 24), 2);
+                  $piezas = round(($fraccion * 24) * $Std_Hr_efectivo, 2);
+                  $kilos = round(($piezas * $Prod_Kg_Dia) / ($Std_Hr_efectivo * 24), 2);
 
                    $cambio = $Cambios_Hilo; //si Cambios_Hilo = 1, asignamos 1
                   $rizo = 1; // Valor por defecto
