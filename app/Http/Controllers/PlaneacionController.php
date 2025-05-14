@@ -119,7 +119,7 @@ class PlaneacionController extends Controller
 
             //VARIABLES TEMPORALES - borrar despues de tener catalagos
             $aplic = 'RZ';
-            $calibre_pie = 1;
+            $calibre_pie = 10.1;
             $Cambios_Hilo = 1;
 
         //Validamos que no existe el registro, en caso de red lenta o de que el user de 2 clics, no se creen multiples registros con la misma informacion.
@@ -177,7 +177,9 @@ class PlaneacionController extends Controller
                   $combinacion2 = ((((0.59 * ((((int)$modelo->PASADAS_C2 * 1.001) * $ancho_por_toalla) / 100)) / $request->input('calibre_2')) * $piezas) / 1000);
                   $combinacion3 = ((($request->input('calibre_3') != 0 ? (0.59 * (((int)$modelo->PASADAS_C3 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
                   $combinacion4 = ((($request->input('calibre_4') != 0 ? (0.59 * (((int)$modelo->PASADAS_C4 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
-                  $Piel1 = ((((((((int) $modelo->Largo + (int) $modelo->Med_plano) / 100) * 1.055) * 0.00059) / ((0.00059 * 1) / (0.00059 / $calibre_pie))) * (($request->input('cuenta_pie') - 32) / (int) $modelo->PASADAS)) * $piezas);
+                  
+                  $Piel1 =((((((((float) $modelo->Largo + (float) $modelo->Med_plano) /100)* 1.055 ) * 0.00059)/((0.00059 * 1)/(0.00059 / $calibre_pie ))) *
+                   (((float) $request->input('cuenta_pie') - 32) / (float) $modelo->TIRAS)) * $piezas);
 
                   $riso = ($kilos  - ($Piel1 + $combinacion3 + $combinacion2 + $combinacion1 +  $TRAMA + $combinacion4));
 
@@ -215,7 +217,9 @@ class PlaneacionController extends Controller
                   $combinacion2 = ((((0.59 * ((((int)$modelo->PASADAS_C2 * 1.001) * $ancho_por_toalla) / 100)) / $request->input('calibre_2')) * $piezas) / 1000);
                   $combinacion3 = ((($request->input('calibre_3') != 0 ? (0.59 * (((int)$modelo->PASADAS_C3 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
                   $combinacion4 = ((($request->input('calibre_4') != 0 ? (0.59 * (((int)$modelo->PASADAS_C4 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
-                  $Piel1 = (((((((int) $modelo->Largo + (int) $modelo->Med_plano) / 100) * 1.055) * 0.00059) / ((0.00059 * 1) / (0.00059 / $calibre_pie)) * (($request->input('cuenta_pie') - 32) / (int) $modelo->PASADAS)) * $piezas);
+                  $Piel1 =((((((((float) $modelo->Largo + (float) $modelo->Med_plano) /100)* 1.055 ) * 0.00059)/((0.00059 * 1)/(0.00059 / $calibre_pie ))) *
+                   (((float) $request->input('cuenta_pie') - 32) / (float) $modelo->TIRAS)) * $piezas);
+
                   $riso = ($kilos  - ($Piel1 + $combinacion3 + $combinacion2 + $combinacion1 +  $TRAMA + $combinacion4));
 
                   $dias[] = [
@@ -250,8 +254,11 @@ class PlaneacionController extends Controller
                   $combinacion2 = ((((0.59 * ((((int)$modelo->PASADAS_C2 * 1.001) * $ancho_por_toalla) / 100)) / $request->input('calibre_2')) * $piezas) / 1000);
                   $combinacion3 = ((($request->input('calibre_3') != 0 ? (0.59 * (((int)$modelo->PASADAS_C3 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
                   $combinacion4 = ((($request->input('calibre_4') != 0 ? (0.59 * (((int)$modelo->PASADAS_C4 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
-                  $Piel1 = (((((((int) $modelo->Largo + (int) $modelo->Med_plano) / 100) * 1.055) * 0.00059) / ((0.00059 * 1) / (0.00059 / $calibre_pie)) * (($request->input('cuenta_pie') - 32) / (int) $modelo->PASADAS)) * $piezas);
+                  $Piel1 =((((((((float) $modelo->Largo + (float) $modelo->Med_plano) /100)* 1.055 ) * 0.00059)/((0.00059 * 1)/(0.00059 / $calibre_pie ))) *
+                   (((float) $request->input('cuenta_pie') - 32) / (float) $modelo->TIRAS)) * $piezas);
+
                   $riso = ($kilos  - ($Piel1 + $combinacion3 + $combinacion2 + $combinacion1 +  $TRAMA + $combinacion4));
+
                   
                   $dias[] = [
                       'fecha' => $dia->toDateString(),
@@ -283,7 +290,7 @@ class PlaneacionController extends Controller
 
 
         $nuevoRegistro = Planeacion::create(
-            [
+            [ 
                 'Cuenta' => $request->input('cuenta_rizo'),
                 'Salon' => $telar ? $telar->salon : null, //De esta forma se evita lanzar un error de laravel en caso de que $telar->telar sea nulo (no tenga valor) $telar ? $telar->salon :
                 'Telar'  => $request->input('telar'),
@@ -296,10 +303,10 @@ class PlaneacionController extends Controller
                 'Calibre_Rizo'=> null,
                 'Calibre_Pie' =>  null,
                 'Calendario' => null,
-                'Clave_Estilo' => null,
+                'Clave_Estilo' => $request->input('tamano') . $request->input('clave_ax'),
                 'Tamano' => $request->input('tamano'), 
                 'Estilo_Alternativo' => null,
-                'Nombre_Producto' => $request->input('nombre_modelo'), 
+                'Nombre_Producto' => $modelo ? $modelo->Modelo : null, 
                 'Saldos' =>$request->input('saldo'),
                 'Fecha_Captura' =>  Carbon::now(), 
                 'Orden_Prod' => null,
@@ -308,7 +315,7 @@ class PlaneacionController extends Controller
                 'Descrip' => $request->input('descripcion'),
                 'Aplic' => null,
                 'Obs' => $modelo ? $modelo->Observaciones : null,
-                'Tipo_Ped' => null,
+                'Tipo_Ped' => explode('-', $request->input('no_flog'))[0],
                 'Tiras' => $modelo ? (int)$modelo->TIRAS : null,  
                 'Peine' => $modelo ? (int)$modelo->Peine : null,
                 'Largo_Crudo' => $modelo ? (float) $modelo->Largo:null,
@@ -346,18 +353,18 @@ class PlaneacionController extends Controller
                 'Color_Pie' =>$modelo ? $modelo->OBS : null,
                 'Peso_gr_m2' => is_numeric($Peso_gr_m2) ? number_format((float) str_replace(',', '.', $Peso_gr_m2), 2, '.', '') : null,
                 'Dias_Ef' => is_numeric($Dias_Ef) ? number_format((float) str_replace(',', '.', $Dias_Ef), 2, '.', '') : null,
-                'Prod_Kg_Dia' => is_numeric($Prod_Kg_Dia) ? number_format((float) str_replace(',', '.', $Prod_Kg_Dia), 2, '.', '') : null,
+                'Prod_Kg_Dia' => is_numeric(str_replace(',', '.', $Prod_Kg_Dia1)) ? number_format((float) str_replace(',', '.', $Prod_Kg_Dia1), 2, '.', '') : null,
                 'Std_Dia' => is_numeric($Std_Dia) ? number_format((float) str_replace(',', '.', $Std_Dia), 2, '.', '') : null,
-                'Prod_Kg_Dia1' => is_numeric(str_replace(',', '.', $Prod_Kg_Dia1)) ? number_format((float) str_replace(',', '.', $Prod_Kg_Dia1), 2, '.', '') : null,
+                'Prod_Kg_Dia1' => is_numeric($Prod_Kg_Dia) ? number_format((float) str_replace(',', '.', $Prod_Kg_Dia), 2, '.', '') : nullf,
                 'Std_Toa_Hr_100' => is_numeric(str_replace(',', '.', $Std_Toa_Hr_100)) ? number_format((float) str_replace(',', '.', $Std_Toa_Hr_100), 2, '.', '') : null,
                 'Dias_jornada_completa' => is_numeric(str_replace(',', '.', $Dias_jornada_completa)) ? number_format((float) str_replace(',', '.', $Dias_jornada_completa), 2, '.', '') : null,
                 'Horas' => $this->cleanDecimal($Horas), // aqui estoy utilizando una funcion privada, para omitir el escribir todo el codigo en cada parametro
                 'Std_Hr_efectivo' => $this->cleanDecimal($Std_Hr_efectivo),
-                'Inicio_Tejido' => Carbon::parse($request->input('fecha_inicio'))->format('Y-m-d'),
+                'Inicio_Tejido' => Carbon::parse($request->input('fecha_inicio'))->format('Y-m-d H:i:s'),
                 'Calc4' => null,
                 'Calc5' => null,
                 'Calc6' => null,
-                'Fin_Tejido' => Carbon::parse($request->input('fecha_fin'))->format('Y-m-d'),
+                'Fin_Tejido' => Carbon::parse($request->input('fecha_fin'))->format('Y-m-d H:i:s'),
                 'Fecha_Compromiso' => Carbon::parse($request->input('fecha_compromiso_tejido'))->format('Y-m-d'),
                 'Fecha_Compromiso1' => Carbon::parse($request->input('fecha_cliente'))->format('Y-m-d'),
                 'Entrega' => Carbon::parse($request->input('fecha_entrega'))->format('Y-m-d'),
@@ -387,8 +394,8 @@ class PlaneacionController extends Controller
               'combinacion3'   => $registro['combinacion3'],
               'combinacion4'   => $registro['combinacion4'],
               'piel1'          => $registro['piel1'],
+              'riso'           => $registro['riso'], 
               'tej_num'        => $tejNum, // Asegúrate de que este valor venga del formulario
-              'riso'           => $riso, 
           ]);
       }
 

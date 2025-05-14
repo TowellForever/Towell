@@ -154,7 +154,6 @@
                         <th class="border border-gray-400 px-2 py-1 font-semibold text-sm w-24">Fecha</th>
                         <th class="border border-gray-400 px-2 py-1 font-semibold text-sm">Pzas</th>
                         <th class="border border-gray-400 px-2 py-1 font-semibold text-sm">Kilos</th>
-                        <th class="border border-gray-400 px-2 py-1 font-semibold text-sm">Tejedor</th>
                         <th class="border border-gray-400 px-2 py-1 font-semibold text-sm">Rizo</th>
                         <th class="border border-gray-400 px-2 py-1 font-semibold text-sm">Cambio</th>
                         <th class="border border-gray-400 px-2 py-1 font-semibold text-sm">Trama</th>
@@ -162,7 +161,7 @@
                         <th class="border border-gray-400 px-2 py-1 font-semibold text-sm">Combinacion2</th>
                         <th class="border border-gray-400 px-2 py-1 font-semibold text-sm">Combinacion3</th>
                         <th class="border border-gray-400 px-2 py-1 font-semibold text-sm">Combinacion4</th>
-                        <th class="border border-gray-400 px-2 py-1 font-semibold text-sm">Piel1</th>
+                        <th class="border border-gray-400 px-2 py-1 font-semibold text-sm">Pie1</th>
                         <th class="border border-gray-400 px-2 py-1 font-semibold text-sm">Riso</th>
 
                     </tr>
@@ -350,7 +349,6 @@
                         <td class="border px-2 py-1 text-center">${fechaFormateadaDiaMes}</td>
                         <td class="border px-2 py-1 text-center" data-campo="pzas" data-fecha="${fechaFormateada}"></td>
                         <td class="border px-2 py-1 text-center" data-campo="kilos" data-fecha="${fechaFormateada}"></td>
-                        <td class="border px-2 py-1 text-center" data-campo="tejedor" data-fecha="${fechaFormateada}"></td>
                         <td class="border px-2 py-1 text-center" data-campo="rizo" data-fecha="${fechaFormateada}"></td>
                         <td class="border px-2 py-1 text-center" data-campo="cambio" data-fecha="${fechaFormateada}"></td>
                         <td class="border px-2 py-1 text-center" data-campo="trama" data-fecha="${fechaFormateada}"></td>
@@ -377,7 +375,7 @@
                         data.forEach(item => {
                             const fecha = item.fecha; // "YYYY-MM-DD"
                             const campos = [
-                                "pzas", "kilos", "tejedor", "rizo", "cambio", "trama",
+                                "pzas", "kilos", "rizo", "cambio", "trama",
                                 "combinacion1", "combinacion2", "combinacion3", "combinacion4",
                                 "piel1", "riso"
                             ];
@@ -386,7 +384,7 @@
                                 const celda = document.querySelector(`[data-campo="${campo}"][data-fecha="${fecha}"]`);
                                 if (celda) {
                                     const valor = item[campo];
-                                    celda.textContent = typeof valor === "number" ? Math.floor(valor).toString() : (valor || '');
+                                    celda.textContent = typeof valor === "number" ? Math.floor(valor).toString() : (valor || '0');
                                 }
                             });
                         });
