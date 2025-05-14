@@ -105,6 +105,7 @@ class PlaneacionController extends Controller
       'Fecha_Compromiso1',
       'Entrega',
       'Dif_vs_Compromiso',
+      'cantidad',
     ];
 
     $query = DB::table('TEJIDO_SCHEDULING')
@@ -189,7 +190,7 @@ class PlaneacionController extends Controller
 
     //VARIABLES TEMPORALES - borrar despues de tener catalagos
     $aplic = 'RZ';
-    $calibre_pie = 10.1;
+    $calibre_pie = $modelo->Pie;
     $Cambios_Hilo = 1;
 
     //Validamos que no existe el registro, en caso de red lenta o de que el user de 2 clics, no se creen multiples registros con la misma informacion.
@@ -416,8 +417,8 @@ class PlaneacionController extends Controller
         'Fecha_Liberacion' => $request->input('fecha_scheduling'),
         'Id_Flog' => $request->input('no_flog'),
         'Descrip' => $request->input('descripcion'),
-        'Aplic' => null,
-        'Obs' => $modelo ? $modelo->Observaciones : null,
+        'Aplic' => $request->input('aplicacion'),
+        'Obs' => $modelo->Observaciones ? $modelo->Observaciones : '',
         'Tipo_Ped' => explode('-', $request->input('no_flog'))[0],
         'Tiras' => $modelo ? (int)$modelo->TIRAS : null,
         'Peine' => $modelo ? (int)$modelo->Peine : null,
@@ -472,6 +473,7 @@ class PlaneacionController extends Controller
         'Fecha_Compromiso1' => Carbon::parse($request->input('fecha_cliente'))->format('Y-m-d'),
         'Entrega' => Carbon::parse($request->input('fecha_entrega'))->format('Y-m-d'),
         'Dif_vs_Compromiso' => null,
+        'cantidad' => $request->input('saldo'), // campo recién agregado 
 
         // Aquí pueden ir más campos en el futuro
       ]
