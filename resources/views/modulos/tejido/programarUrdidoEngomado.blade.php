@@ -88,13 +88,12 @@
                         <input type="text" name="destino" value="{{ $datos->salon ?? '' }}" class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded" readonly>
                     </td>
                     <td class="border px-1 py-0.5">
-                        <select name="metros" class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded" required>
-                            <option value="" disabled selected></option>
-                            <option value="4000">4000</option>
-                            <option value="5000">5000</option>
-                            <option value="6000">6000</option>
-                            <option value="7000">7000</option>
-                        </select>
+                    <select name="metros" class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded" required>
+                        <option value="" disabled selected>Selecciona una opción</option>
+                        @for ($i = 1000; $i <= 10000; $i += 1000)
+                            <option value="{{ $i }}">{{ $i }}</option>
+                        @endfor
+                    </select>
                     </td>
                 </tr>                
             </tbody>
@@ -139,26 +138,31 @@
                             <th class="border px-1 py-0.5">No. de Telas</th>
                             <th class="border px-1 py-0.5">Ancho Balonas</th>
                             <th class="border px-1 py-0.5">Metraje de Telas</th>
-                            <th class="border px-1 py-0.5">Cuendeados Mínimo</th>
+                            <th class="border px-1 py-0.5">Cuendeados Mínimos por Tela</th>
                             <th class="border px-1 py-0.5 w-1/4">Observaciones</th>
                         </tr>
                     </thead>
                     <tbody class="h-24">
                         <tr>
                             <td class="border px-1 py-0.5">
-                                <input type="text" name="nucleo" class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded">
+                                <select name="nucleo" class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded">
+                                    <option value="" disabled selected></option>
+                                    <option value="Itema">Itema</option>
+                                    <option value="Smit">Smit</option>
+                                    <option value="Jacquard">Jacquard</option>
+                                </select>
                             </td>
                             <td class="border px-1 py-0.5">
                                 <input type="text" inputmode="numeric" pattern="[0-9]*" name="no_telas" class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded">
                             </td>
                             <td class="border px-1 py-0.5">
-                                <input type="text" name="balonas" class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded">
+                                <input type="text" inputmode="numeric" pattern="[0-9]*" name="balonas" class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded">
                             </td>
                             <td class="border px-1 py-0.5">
-                                <input type="text" name="metros_tela" class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded">
+                                <input type="text" inputmode="numeric" pattern="[0-9]*" name="metros_tela" class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded">
                             </td>
                             <td class="border px-1 py-0.5">
-                                <input type="text" name="cuendados_mini" class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded">
+                                <input type="text" inputmode="numeric" pattern="[0-9]*" name="cuendados_mini" class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded">
                             </td>
                             <td class="border px-1 py-0.5">
                                 <textarea name="observaciones" class="form-textarea w-full px-1 py-1 text-xs border border-gray-300 rounded h-16"></textarea>

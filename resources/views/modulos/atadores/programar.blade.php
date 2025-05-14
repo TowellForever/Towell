@@ -63,8 +63,9 @@
     </form>
 
     <!-- Modal Estilizado -->
-    <div id="capturaModal" class="fixed inset-0 z-100 hidden flex items-center justify-center bg-black bg-opacity-50 mt-5">
-        <div class="bg-white w-11/12 md:w-full lg:w-1/2 xl:w-1/2 rounded-xl shadow-2xl p-3 border border-gray-300">
+        <div id="capturaModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-50">
+            <div class="bg-white rounded-lg shadow-lg w-11/12 sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-2/5 max-h-[90vh] overflow-y-auto p-6">
+    
             <h2 class="text-base font-semibold text-gray-700 mb-3 text-center border-b pb-2">📋 Captura de Requerimiento</h2>
             
             <form method="POST" action="">
@@ -81,48 +82,48 @@
                             </p>
                             <div class="flex items-center">
                                 <label for="inputEstatus" class="w-28 text-xs text-gray-600 font-medium">ESTATUS ATADO:</label>
-                                <input type="text" name="turno" id="inputEstatus" class="w-20 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" value="En proceso">
+                                <input type="text" name="turno" id="inputEstatus" class="w-full border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" value="En proceso" readonly>
                             </div>
                             <div class="flex items-center">
                                 <label for="inputFecha" class="w-28 text-xs text-gray-600 font-medium">FECHA ATADO:</label>
-                                <input type="date" name="turno" id="inputFechaAta" class="w-20 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50"
+                                <input type="date" name="turno" id="inputFechaAta" class="w-full border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50"
                                     value="{{ now()->format('Y-m-d') }}">
                             </div>
                             <div class="flex items-center">
                                 <label for="inputTurno" class="w-28 text-xs text-gray-600 font-medium">TURNO:</label>
-                                <input type="text" inputmode="numeric" pattern="[0-9]*" name="turno" id="inputTurno" class="w-20 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" value="1">
+                                <input type="text" inputmode="numeric" pattern="[0-9]*" name="turno" id="inputTurno" class="w-full border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" value="1" readonly>
                             </div>
                             <div class="flex items-center">
                                 <label for="inputClaveAtador" class="w-28 text-xs text-gray-600 font-medium">CLAVE ATADOR:</label>
-                                <input type="text" name="clave_atador" id="inputClaveAtador" class="w-20 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" value="{{ Auth::user()->numero_empleado }}">
+                                <input type="text" name="clave_atador" id="inputClaveAtador" class="w-full border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" value="{{ Auth::user()->numero_empleado . ' ' .Auth::user()->nombre  }}" readonly>
                             </div>
                             <div class="flex items-center">
                                 <label for="inputNumJulio" class="w-28 text-xs text-gray-600 font-medium">N° JULIO:</label>
-                                <input type="text" inputmode="numeric" pattern="[0-9]*" name="num_julio" id="inputNumJulio" class="w-20 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" >
+                                <input type="text" inputmode="numeric" pattern="[0-9]*" name="num_julio" id="inputNumJulio" class="w-full border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" >
                             </div>
                             <div class="flex items-center">
                                 <label for="inputOrden" class="w-28 text-xs text-gray-600 font-medium">ORDEN:</label>
-                                <input type="text" name="orden" id="inputOrden" class="w-20 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" readonly>
+                                <input type="text" name="orden" id="inputOrden" class="w-full border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" readonly>
                             </div>
                             <div class="flex items-center">
                                 <label for="inputTipo2" class="w-28 text-xs text-gray-600 font-medium">R/P:</label>
-                                <input type="text" name="tipo2" id="inputTipo" class="w-20 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" readonly>
+                                <input type="text" name="tipo2" id="inputTipo" class="w-full border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" readonly>
                             </div>
                             <div class="flex items-center">
                                 <label for="inputMetros" class="w-28 text-xs text-gray-600 font-medium">METROS:</label>
-                                <input type="text" name="metros" id="inputMetros" class="w-20 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" readonly>
+                                <input type="text" name="metros" id="inputMetros" class="w-full border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" readonly>
                             </div>
                             <div class="flex items-center">
                                 <label for="inputTelar" class="w-28 text-xs text-gray-600 font-medium">TELAR:</label>
-                                <input type="text" name="telar" id="inputTelar" class="w-20 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" readonly>
+                                <input type="text" name="telar" id="inputTelar" class="w-full border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" readonly>
                             </div>
                             <div class="flex items-center">
                                 <label for="inputProv" class="w-28 text-xs text-gray-600 font-medium">PROV. :</label>
-                                <input type="text" name="prov" id="inputProv" value="" class="w-20 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" readonly>
+                                <input type="text" name="prov" id="inputProv" value="" class="w-full border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" readonly>
                             </div>
                             <div class="flex items-center">
                                 <label for="inputObservacionesMermaKg" class="w-28 text-xs text-gray-600 font-medium">MERMA KG:</label>
-                                <input type="text" inputmode="numeric" pattern="[0-9]*" name="observaciones_merma_kg" id="inputMermaKg" class="w-20 border border-gray-300 px-1 py-1 text-xs rounded-md bg-gray-50" >
+                                <input type="text" inputmode="numeric" pattern="[0-9]*" name="observaciones_merma_kg" id="inputMermaKg" class="w-full border border-gray-300 px-1 py-1 text-xs rounded-md bg-gray-50" >
                             </div>
                             <p class="text-xs font-semibold text-red-700 bg-red-100 border-l-4 border-red-500 p-3 rounded-md shadow-sm">
                                 NOTA: OBLIGATORIO, CADA ATADOR DEBE UTILIZAR LA ATADORA USTER (VERDE) AL MENOS EN 3 ATADOS COMPLETOS EN LA SEMANA Y REGISTRARLO.
@@ -136,11 +137,11 @@
                         </p>
                         <div class="flex items-center">
                             <label for="inputHoraParo" class="w-28 text-xs text-gray-600 font-medium">HORA DE PARO:</label>
-                            <input type="time" name="hora_paro" id="inputHoraParo" class="w-20 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" >
+                            <input type="time" name="hora_paro" id="inputHoraParo" class="w-30 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" >
                         </div>
                         <div class="flex items-center">
                             <label for="inputHoraParo" class="w-28 text-xs text-gray-600 font-medium">HORA ARRANQUE:</label>
-                            <input type="time" name="hora_paro" id="inputHoraParo" class="w-20 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" >
+                            <input type="time" name="hora_paro" id="inputHoraParo" class="w-30 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" >
                         </div>
                         <div class="flex items-center">
                             <label for="inputGruaHubtex" class="w-40 text-xs text-gray-600 font-medium">GRUA HUBTEX:</label>
@@ -159,7 +160,7 @@
                                          
                         <div class="flex items-center">
                             <label for="inputCalidadAtado" class="w-28 text-xs text-gray-600 font-medium">CALIDAD DE ATADO (1-10):</label>
-                            <select name="calidad_atado" id="inputCalidadAtado" class="w-20 border border-gray-300 px-1 py-1 text-xs rounded-md bg-gray-50">
+                            <select name="calidad_atado" id="inputCalidadAtado" class="w-30 border border-gray-300 px-1 py-1 text-xs rounded-md bg-gray-50">
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
@@ -174,7 +175,7 @@
                         </div>
                         <div class="flex items-center">
                             <label for="input5sOrden" class="w-28 text-xs text-gray-600 font-medium">5'S ORDEN Y LIMPIEZA 5-10:</label>
-                            <select name="ordenLimpieza" id="inputOrdenLimpieza" class="w-20 border border-gray-300 px-1 py-1 text-xs rounded-md bg-gray-50">
+                            <select name="ordenLimpieza" id="inputOrdenLimpieza" class="w-30 border border-gray-300 px-1 py-1 text-xs rounded-md bg-gray-50">
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
@@ -188,7 +189,7 @@
                             </select>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <label for="selectFirmaTejedor" class="w-28 text-xs text-gray-600 font-medium">FIRMA TEJEDOR:</label>
+                            <label for="selectFirmaTejedor" class="w-30 text-xs text-gray-600 font-medium">FIRMA TEJEDOR:</label>
                             <select id="selectFirmaTejedor" name="firma_tejedor" class="text-xs border border-gray-300 rounded px-1 py-1 bg-gray-50">
                                 <option value="">-- Selecciona --</option>
                                 <option value="firma_juan.png">Juan Pérez</option>

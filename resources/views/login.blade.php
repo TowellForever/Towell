@@ -100,7 +100,7 @@
                 <!-- Campo para Nombre -->
                 <div class="input-group">
                     <label for="nombre">Nombre</label>
-                    <input type="text" name="name" id="name" placeholder="Tu nombre" required>
+                    <input type="text" name="name" id="name" placeholder="Tu nombre" readonly>
                 </div>
 
                 <!-- Campo para Contraseña -->
