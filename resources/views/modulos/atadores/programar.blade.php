@@ -81,19 +81,20 @@
                             </p>
                             <div class="flex items-center">
                                 <label for="inputEstatus" class="w-28 text-xs text-gray-600 font-medium">ESTATUS ATADO:</label>
-                                <input type="text" name="turno" id="inputEstatus" class="w-20 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" >
+                                <input type="text" name="turno" id="inputEstatus" class="w-20 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" value="En proceso">
                             </div>
                             <div class="flex items-center">
                                 <label for="inputFecha" class="w-28 text-xs text-gray-600 font-medium">FECHA ATADO:</label>
-                                <input type="date" name="turno" id="inputFechaAta" class="w-20 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" >
+                                <input type="date" name="turno" id="inputFechaAta" class="w-20 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50"
+                                    value="{{ now()->format('Y-m-d') }}">
                             </div>
                             <div class="flex items-center">
                                 <label for="inputTurno" class="w-28 text-xs text-gray-600 font-medium">TURNO:</label>
-                                <input type="text" inputmode="numeric" pattern="[0-9]*" name="turno" id="inputTurno" class="w-20 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" >
+                                <input type="text" inputmode="numeric" pattern="[0-9]*" name="turno" id="inputTurno" class="w-20 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" value="1">
                             </div>
                             <div class="flex items-center">
                                 <label for="inputClaveAtador" class="w-28 text-xs text-gray-600 font-medium">CLAVE ATADOR:</label>
-                                <input type="text" name="clave_atador" id="inputClaveAtador" class="w-20 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" >
+                                <input type="text" name="clave_atador" id="inputClaveAtador" class="w-20 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50" value="{{ Auth::user()->numero_empleado }}">
                             </div>
                             <div class="flex items-center">
                                 <label for="inputNumJulio" class="w-28 text-xs text-gray-600 font-medium">N° JULIO:</label>
