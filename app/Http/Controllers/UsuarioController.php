@@ -51,7 +51,7 @@ class UsuarioController extends Controller
             ['nombre' => 'Engomado', 'imagen' => 'engomado.jpg', 'ruta' => route('ingresarFolioEngomado'), 'permiso' => 'engomado'],
             ['nombre' => 'Tejido', 'imagen' => 'tejido.jpg', 'ruta' => '/modulo-tejido', 'permiso' => 'tejido'],
             ['nombre' => 'Atadores', 'imagen' => 'Atadores.jpg', 'ruta' => '/atadores-juliosAtados', 'permiso' => 'atadores'],
-            ['nombre' => 'Tejedores', 'imagen' => 'tejedores.jpg', 'ruta' => '/modulo-tejedores', 'permiso' => 'tejedores'],
+            ['nombre' => 'Tejedores', 'imagen' => 'tejedores.jpg', 'ruta' => '/tejedores/formato', 'permiso' => 'tejedores'],
             ['nombre' => 'Mantenimiento', 'imagen' => 'mantenimiento.png', 'ruta' => '/modulo-mantenimiento', 'permiso' => 'mantenimiento'],
             ['nombre' => 'Configuración', 'imagen' => 'configuracion.png', 'ruta' => '/modulo-configuracion', 'permiso' => 'configuracion'],
         ];
