@@ -225,7 +225,7 @@
                 <a href="{{ route('telares.index') }}" class=" button-plane">CATÁLAGO TELARES 📑</a>
                 <a href="{{ route('eficiencia.index') }}" class="button-plane">CATÁLAGO EFICIENCIA STD 📑</a>
                 <a href="{{ route('velocidad.index') }}" class="button-plane">CATÁLAGO VELOCIDAD STD 📑</a>
-                <a href="{{ route('planeacion.calendarios') }}" class="button-plane ">CALENDARIOS 🗓️</a>
+                <a href="{{ route('calendariot1.index') }}" class="button-plane ">CALENDARIOS 🗓️</a>
                 <a href="{{ route('planeacion.aplicaciones') }}" class="button-plane">APLICACIONES 🧩</a>
                 <a href="{{ route('planeacion.create') }}" class="button-plane">NUEVO REGISTRO 📝</a>
                 <a href="{{ route('modelos.index') }}" class="button-plane-2">MODELOS 🛠️</a>
@@ -391,9 +391,9 @@
         });
     </script>
     <!--*******************************************************************************************************************************************************************************************
-                    *********************************************************************************************************************************************************************************************-->
+                                                                                    *********************************************************************************************************************************************************************************************-->
     <!--SCRIPTS que implentan el funcionamiento de la tabla TIPO DE MOVIMIENTOS, se selecciona un registro, se obtiene el valor de num_registro y con
-                            ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
+                                                                                            ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
 
     <script>
         let filaSeleccionada = null;
@@ -442,7 +442,7 @@
                             'text-gray-800');
 
                         fila.innerHTML = `
-                        <td class="border px-2 py-1 text-center">${fechaFormateadaDiaMes}</td>
+                        <td class="border px-2 py-1 text-center" data-campo="fecha">${fechaFormateadaDiaMes}</td>
                         <td class="border px-2 py-1 text-center" data-campo="pzas" data-fecha="${fechaFormateada}"></td>
                         <td class="border px-2 py-1 text-center" data-campo="kilos" data-fecha="${fechaFormateada}"></td>
                         <td class="border px-2 py-1 text-center" data-campo="rizo" data-fecha="${fechaFormateada}"></td>
@@ -470,10 +470,12 @@
                                 });
 
                             data.forEach(item => {
+                                console.log(item);
                                 const fecha = item.fecha; // "YYYY-MM-DD"
                                 const campos = [
                                     "pzas", "kilos", "rizo", "cambio", "trama",
-                                    "combinacion1", "combinacion2", "combinacion3",
+                                    "combinacion1", "combinacion2",
+                                    "combinacion3",
                                     "combinacion4",
                                     "piel1", "riso"
                                 ];

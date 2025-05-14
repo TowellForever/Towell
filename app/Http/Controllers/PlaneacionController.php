@@ -508,12 +508,6 @@ class PlaneacionController extends Controller
     return redirect()->route('planeacion.index')->with('success', 'Registro guardado correctamente');
   }
 
-  public function calendarios()
-  {
-    $calendarios = Calendario::all();
-    return view('/catalagos/calendarios', compact('calendarios'));
-  }
-
   public function aplicaciones()
   {
     return view('/catalagos/aplicaciones');

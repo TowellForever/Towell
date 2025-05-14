@@ -92,10 +92,4 @@ class Planeacion extends Model
         'num_registro',
         'cantidad',
     ];
-
-
-    public function calendario()
-    {
-        return $this->hasOne(Calendario::class, 'cal_id', 'num_registro');
-    }
 }
