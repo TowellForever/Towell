@@ -355,7 +355,7 @@ class PlaneacionController extends Controller
                 'Dias_Ef' => is_numeric($Dias_Ef) ? number_format((float) str_replace(',', '.', $Dias_Ef), 2, '.', '') : null,
                 'Prod_Kg_Dia' => is_numeric(str_replace(',', '.', $Prod_Kg_Dia1)) ? number_format((float) str_replace(',', '.', $Prod_Kg_Dia1), 2, '.', '') : null,
                 'Std_Dia' => is_numeric($Std_Dia) ? number_format((float) str_replace(',', '.', $Std_Dia), 2, '.', '') : null,
-                'Prod_Kg_Dia1' => is_numeric($Prod_Kg_Dia) ? number_format((float) str_replace(',', '.', $Prod_Kg_Dia), 2, '.', '') : nullf,
+                'Prod_Kg_Dia1' => is_numeric($Prod_Kg_Dia) ? number_format((float) str_replace(',', '.', $Prod_Kg_Dia), 2, '.', '') : null,
                 'Std_Toa_Hr_100' => is_numeric(str_replace(',', '.', $Std_Toa_Hr_100)) ? number_format((float) str_replace(',', '.', $Std_Toa_Hr_100), 2, '.', '') : null,
                 'Dias_jornada_completa' => is_numeric(str_replace(',', '.', $Dias_jornada_completa)) ? number_format((float) str_replace(',', '.', $Dias_jornada_completa), 2, '.', '') : null,
                 'Horas' => $this->cleanDecimal($Horas), // aqui estoy utilizando una funcion privada, para omitir el escribir todo el codigo en cada parametro
