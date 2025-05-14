@@ -170,9 +170,9 @@
         </div>
 
          <!-- Botón discreto para enviar -->
-         <div class="mt-4">
+         <div class="-mt-4">
             <button type="submit" onclick="this.disabled=true; this.form.submit();" class="w-1/5 bg-green-500 text-black px-4 py-2 rounded">
-                Orden Producción
+                GUARDAR
             </button>
         </div>
     </form>
