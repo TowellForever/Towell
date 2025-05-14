@@ -4,14 +4,24 @@
 <div class="formato-print bg-white p-2 mx-2  print:w-[99%] print:relative print:top-0 print:mt-0 print:pt-0">
     <h1 class="text-center text-2xl font-bold">BUENAS PRÁCTICAS DE MANUFACTURA</h1>
 
-    <div class="text-sm font-semibold mb-2 mt-1">
-      * EXISTEN  <strong>{{ $usuario->telares->count() }}</strong> TELARES ASIGNADOS A: <strong> {{  $usuario->nombre}} </strong> *
+<div class="d-flex justify-content-between items-center">
+        <div>RECIBE: <strong>{{ $usuario->nombre }}</strong></div>
+        <div>
+            ENTREGA:
+            <select name="entrega" id="entrega" class="form-control d-inline-block w-auto" style="font-weight: bold;">
+                <option value="jesus.alvarez"><strong>José Luis Patricio</strong></option>
+                <option value="karla.mendez"><strong>Beatriz Torres</strong></option>
+                <option value="ricardo.lopez"><strong>Ricardo López</strong></option>
+                <option value="andrea.soto"><strong>Andrea Soto</strong></option>
+                <option value="fernando.ramos"><strong>Fernando Ramos</strong></option>
+            </select>
+        </div>
     </div>
-
     <!-- Fecha y Telar -->
     <div class="flex items-center justify-between mb-1">
-        <div class="text-sm font-semibold">Fecha: <span class="border-b border-black px-4">06/02/25</span></div>
+        <div class="text-sm font-semibold">Fecha: <span class="border-b border-black px-4">{{ now()->format('d/m/Y') }}</span></div>
     </div>
+
 
     <!-- Tabla -->
    <!-- Tabla centrada y más pequeña -->
@@ -73,7 +83,7 @@
 
     <!-- Firma Supervisor -->
     <div class="mt-4 flex justify-between text-sm">
-        <div class="text-right text-gray-500">Versión 0 - F-PR-58 - 09/12/2024</div>
+        <div class="text-right text-gray-500">Versión 0 - F-PR-58 -  <span class="">{{ now()->format('d/m/Y') }}</span></div>
     </div>
     <br><hr><br>
 
@@ -87,7 +97,7 @@
                 estado = (estado + 1) % 3;
 
                 if (estado === 0) {
-                    this.innerHTML = 'O'; // Vacío
+                    this.innerHTML = '⬜'; // Vacío
                 } else if (estado === 1) {
                     this.innerHTML = '✅';
                 } else {
