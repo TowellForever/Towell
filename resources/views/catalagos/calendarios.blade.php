@@ -7,10 +7,9 @@
         <h1 class="text-3xl font-bold text-center mb-6">CALENDARIOS</h1>
 
         <div class="">
-            <table class="min-w-full bg-white border border-gray-300">
-                <!-- Primer Encabezado -->
+            <table class="min-w-full bg-white border border-gray-300" id="calendarioLista">
                 <thead>
-                    <tr class="bg-blue-500 text-white text-center">
+                    <tr class="bg-blue-500 text-white text-center cursor-pointer">
                         <th class="border border-gray-300 px-2 py-1 w-1/4">No. Calendario</th>
                         <th class="border border-gray-300 px-2 py-1 w-1/4">Nombre</th>
                         <th class="border border-gray-300 px-2 py-1 w-1/4">Días por Semana</th>
@@ -27,19 +26,19 @@
                     @endphp
 
                     @foreach ($filas as [$id, $nombre, $valor1, $valor2, $fondo])
-                        <tr class="{{ $fondo }} text-center font-semibold">
-                            <td class="px-2 py-1 {{ $fondo === 'bg-transparent' ? 'border-0' : 'border border-gray-300' }}">
+                        <tr class="text-center font-semibold calendario-fila {{ $fondo }}"
+                            data-calendario-id="{{ $id }}">
+                            <td class="{{ $fondo === 'bg-transparent' ? 'border-0' : 'border border-gray-300' }}">
                                 {{ $id }}</td>
-                            <td class="px-2 py-1 {{ $fondo === 'bg-transparent' ? 'border-0' : 'border border-gray-300' }}">
+                            <td class="{{ $fondo === 'bg-transparent' ? 'border-0' : 'border border-gray-300' }}">
                                 {{ $nombre }}</td>
-                            <td class="px-2 py-1 {{ $fondo === 'bg-transparent' ? 'border-0' : 'border border-gray-300' }}">
+                            <td class="{{ $fondo === 'bg-transparent' ? 'border-0' : 'border border-gray-300' }}">
                                 {{ $valor1 }}</td>
-                            <td class="px-2 py-1 {{ $fondo === 'bg-transparent' ? 'border-0' : 'border border-gray-300' }}">
+                            <td class="{{ $fondo === 'bg-transparent' ? 'border-0' : 'border border-gray-300' }}">
                                 {{ $valor2 }}</td>
                         </tr>
                     @endforeach
                 </tbody>
-
             </table>
 
             <div class="w-full mt-4">
@@ -55,16 +54,8 @@
                                 <th class="border border-gray-300 px-2 py-1">Días Acumulados</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @foreach ($calendariot1 as $cal)
-                                <tr class="text-center">
-                                    <td class="border border-gray-300 px-2 py-1">{{ $cal->horas }}</td>
-                                    <td class="border border-gray-300 px-2 py-1">{{ $cal->dia }}</td>
-                                    <td class="border border-gray-300 px-2 py-1">{{ $cal->inicio }}</td>
-                                    <td class="border border-gray-300 px-2 py-1">{{ $cal->fin }}</td>
-                                    <td class="border border-gray-300 px-2 py-1">{{ $cal->dias_acum }}</td>
-                                </tr>
-                            @endforeach
+                        <tbody id="tablaDetalleBody">
+                            {{-- Aquí se llenan dinámicamente las filas --}}
                         </tbody>
                     </table>
                 </div>
@@ -73,89 +64,73 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const tabla = document.querySelector("#fechaYHoras");
-            if (!tabla) return;
+        // Pasamos los datos del backend a JS como objetos JSON
+        const calendariot1 = @json($calendariot1);
+        const calendariot2 = @json($calendariot2);
+        const calendariot3 = @json($calendariot3);
 
-            tabla.querySelectorAll("tbody td").forEach((td, colIndex) => {
-                td.addEventListener("click", function() {
-                    if (td.querySelector("input")) return;
+        // Mapeamos por id para fácil acceso
+        const calendariosMap = {
+            1: calendariot1,
+            2: calendariot2,
+            3: calendariot3
+        };
 
-                    const fila = td.parentElement;
-                    const calId = fila.dataset.calId;
+        // Referencias DOM
+        const filasCalendario = document.querySelectorAll('.calendario-fila');
+        const tbodyDetalle = document.getElementById('tablaDetalleBody');
 
-                    let originalContent = td.innerText.trim();
-                    let input = document.createElement("input");
-                    input.type = "text";
-                    input.value = originalContent;
-                    input.classList.add("w-full", "border", "p-1");
+        // Función para dibujar la tabla inferior con los datos
+        function renderTablaDetalle(data) {
+            tbodyDetalle.innerHTML = ''; // limpiar tabla
 
-                    input.addEventListener("blur", function() {
-                        const nuevoValor = this.value.trim() || originalContent;
-                        td.innerText = nuevoValor;
+            if (!data || data.length === 0) {
+                tbodyDetalle.innerHTML = `<tr><td colspan="5" class="text-center p-4">No hay datos disponibles</td></tr>`;
+                return;
+            }
 
-                        const celdas = fila.querySelectorAll("td");
-                        const fecha_inicio = celdas[1].innerText.trim();
-                        const fecha_fin = celdas[2].innerText.trim();
-                        const total_horas = celdas[3].innerText.trim();
+            data.forEach(item => {
+                // Suponiendo que el objeto tiene propiedades: horas, dia, inicio, fin, dias_acum
+                const tr = document.createElement('tr');
+                tr.classList.add('text-center');
 
-                        fetch("{{ route('calendarios.update.inline') }}", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                                },
-                                body: JSON.stringify({
-                                    cal_id: calId,
-                                    fecha_inicio: fecha_inicio,
-                                    fecha_fin: fecha_fin,
-                                    total_horas: total_horas
-                                })
-                            })
-                            .then(res => res.json())
-                            .then(data => {
-                                console.log("Guardado:", data);
+                tr.innerHTML = `
+            <td class="border border-gray-300 px-2 py-1">${item.horas ?? ''}</td>
+            <td class="border border-gray-300 px-2 py-1">${item.dia ?? ''}</td>
+            <td class="border border-gray-300 px-2 py-1">${item.inicio ?? ''}</td>
+            <td class="border border-gray-300 px-2 py-1">${item.fin ?? ''}</td>
+            <td class="border border-gray-300 px-2 py-1">${item.dias_acum ?? ''}</td>
+        `;
 
-                                const fila = td.parentElement;
-                                const totalHorasTd = fila.children[3];
-                                totalHorasTd.innerText = data.total_horas;
-
-                                if (data.success) {
-                                    mostrarEstado(td, "✔️", "green");
-                                } else {
-                                    mostrarEstado(td, "❌", "red");
-                                }
-                            });
-                    });
-
-                    input.addEventListener("keydown", function(e) {
-                        if (e.key === "Enter") this.blur();
-                        if (e.key === "Escape") td.innerText = originalContent;
-                    });
-
-                    td.innerText = "";
-                    td.appendChild(input);
-                    input.focus();
-                });
+                tbodyDetalle.appendChild(tr);
             });
+        }
 
-            function mostrarEstado(td, simbolo, color) {
-                const feedback = document.createElement("span");
-                feedback.innerText = simbolo;
-                feedback.style.color = color;
-                feedback.style.marginLeft = "5px";
-                feedback.style.fontSize = "1.2em";
-                td.appendChild(feedback);
+        // Función para limpiar selección previa y marcar fila activa
+        function marcarFilaActiva(filaSeleccionada) {
+            filasCalendario.forEach(fila => fila.classList.remove('bg-yellow-300', 'font-bold'));
+            filaSeleccionada.classList.add('bg-yellow-300', 'font-bold');
+        }
 
-                setTimeout(() => {
-                    if (feedback && feedback.parentElement === td) {
-                        feedback.remove();
-                    }
-                }, 1500);
+        // Inicializamos con calendario 1 seleccionado y visible
+        document.addEventListener('DOMContentLoaded', () => {
+            const filaInicial = document.querySelector('.calendario-fila[data-calendario-id="1"]');
+            if (filaInicial) {
+                marcarFilaActiva(filaInicial);
+                renderTablaDetalle(calendariosMap[1]);
             }
         });
-    </script>
 
+        // Asignamos evento click a cada fila del calendario
+        filasCalendario.forEach(fila => {
+            fila.style.cursor = 'pointer';
+            fila.addEventListener('click', () => {
+                const id = fila.getAttribute('data-calendario-id');
+                marcarFilaActiva(fila);
+                renderTablaDetalle(calendariosMap[id]);
+            });
+        });
+    </script>
 
 
 @endsection
