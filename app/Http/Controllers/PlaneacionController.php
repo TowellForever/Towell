@@ -193,7 +193,7 @@ class PlaneacionController extends Controller
     $aplic = $request->input('aplicacion');
     $calibre_pie = $modelo->Pie;
     $calibre_rizo = $modelo->Rizo;
-    $Cambios_Hilo = 1;
+    $Cambios_Hilo = 0;
 
     //Validamos que no existe el registro, en caso de red lenta o de que el user de 2 clics, no se creen multiples registros con la misma informacion.
     $cuenta = $request->input('cuenta_rizo');
@@ -242,19 +242,19 @@ class PlaneacionController extends Controller
         $kilos = round(($piezas * $Prod_Kg_Dia) / ($Std_Hr_efectivo * 24), 2);
 
         $cambio = $Cambios_Hilo; //si Cambios_Hilo = 1, asignamos 1
-        $rizo = 1; // Valor por defecto
+        $rizo = 1 * $kilos; // Valor por defecto
         if ($aplic === 'RZ') {
-          $rizo = 1;
+          $rizo = 1 * $kilos;
         } elseif ($aplic === 'RZ2') {
-          $rizo = 2;
+          $rizo = 2 * $kilos;
         } elseif ($aplic === 'RZ3') {
-          $rizo = 3;
+          $rizo = 3 * $kilos;
         } elseif ($aplic === 'BOR') {
-          $rizo = 1;
+          $rizo = 1 * $kilos;
         } elseif ($aplic === 'EST') {
-          $rizo = 1;
+          $rizo = 1 * $kilos;
         } elseif ($aplic === 'DC') {
-          $rizo = 1;
+          $rizo = 1 * $kilos;
         }
         $TRAMA = ((((0.59 * ((((float)$modelo->PASADAS * 1.001) * $ancho_por_toalla) / 100)) / $request->input('trama_0')) * $piezas) / 1000);
         $combinacion1 = (($c1 = (float)$request->input('calibre_1')) > 0) ? ((((0.59 * (((float)$modelo->PASADAS_C1 * 1.001) * $ancho_por_toalla)) / 100) / $c1) * $piezas) / 1000 : 0;
@@ -294,17 +294,17 @@ class PlaneacionController extends Controller
         $cambio = $Cambios_Hilo; //si Cambios_Hilo = 1, asignamos 1
         $rizo = 1; // Valor por defecto
         if ($aplic === 'RZ') {
-          $rizo = 1;
+          $rizo = 1 * $kilos;
         } elseif ($aplic === 'RZ2') {
-          $rizo = 2;
+          $rizo = 2 * $kilos;
         } elseif ($aplic === 'RZ3') {
-          $rizo = 3;
+          $rizo = 3 * $kilos;
         } elseif ($aplic === 'BOR') {
-          $rizo = 1;
+          $rizo = 1 * $kilos;
         } elseif ($aplic === 'EST') {
-          $rizo = 1;
+          $rizo = 1 * $kilos;
         } elseif ($aplic === 'DC') {
-          $rizo = 1;
+          $rizo = 1 * $kilos;
         }
         $TRAMA = ((((0.59 * ((((float)$modelo->PASADAS * 1.001) * $ancho_por_toalla) / 100)) / $request->input('trama_0')) * $piezas) / 1000);
         $combinacion1 = (($c1 = (float)$request->input('calibre_1')) > 0) ? ((((0.59 * ((float)$modelo->PASADAS_C1 * 1.001 * $ancho_por_toalla)) / 100) / $c1) * $piezas) / 1000 : 0;
@@ -341,17 +341,17 @@ class PlaneacionController extends Controller
         $cambio = $Cambios_Hilo; //si Cambios_Hilo = 1, asignamos 1
         $rizo = 1; // Valor por defecto
         if ($aplic === 'RZ') {
-          $rizo = 1;
+          $rizo = 1 * $kilos;
         } elseif ($aplic === 'RZ2') {
-          $rizo = 2;
+          $rizo = 2 * $kilos;
         } elseif ($aplic === 'RZ3') {
-          $rizo = 3;
+          $rizo = 3 * $kilos;
         } elseif ($aplic === 'BOR') {
-          $rizo = 1;
+          $rizo = 1 * $kilos;
         } elseif ($aplic === 'EST') {
-          $rizo = 1;
+          $rizo = 1 * $kilos;
         } elseif ($aplic === 'DC') {
-          $rizo = 1;
+          $rizo = 1 * $kilos;
         }
 
         $TRAMA = ((((0.59 * ((((float)$modelo->PASADAS * 1.001) * $ancho_por_toalla) / 100)) / $request->input('trama_0')) * $piezas) / 1000);
@@ -386,10 +386,10 @@ class PlaneacionController extends Controller
 
     // Mostrar el resultado con dd()
     // AHORA VAMOS CON LAS FORMULAS RESTANTES
-    dd([
+    /*dd([
       'dias_generados' => $dias,
       'total_dias' => $totalDias,
-    ]);
+    ]);*/
     //procedemos con las formulas de excel tomando en cuenta las proporciones de los dias de acuerdo a las fechas de inicio y fin
 
 

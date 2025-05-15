@@ -136,11 +136,11 @@
             <div class="flex items-center">
                 <label for="calendario" class="w-20 font-medium text-gray-700">CALENDARIO:</label>
                 <select name="calendario" id="calendario" class="w-36 border border-gray-300 rounded px-2 py-1">
-                    <option value="2025-01">Calendario Tej1</option>
-                    <option value="2025-02">Calendario Tej2 </option>
-                    <option value="2025-03">Calendario Tej3 </option>
-                    <option value="2025-04">Calendario Tej4 </option>
-                    <option value="2025-05">Calendario Tej5 </option>
+                    <option value="Calendario Tej1">Calendario Tej1</option>
+                    <option value="Calendario Tej2">Calendario Tej2 </option>
+                    <option value="Calendario Tej3">Calendario Tej3 </option>
+                    <option value="Calendario Tej4">Calendario Tej4 </option>
+                    <option value="Calendario Tej5">Calendario Tej5 </option>
                 </select>
             </div>
 
@@ -441,8 +441,8 @@
         });
     </script>
     <!--
-                                                                                                                                                                                                                                                                                Escucha cuando el usuario escribe en cantidad y actualiza saldo con el mismo valor en tiempo real.
-                                                                                                                                                                                                                                                                                -->
+                                                                                                                                                                                                                                                                                        Escucha cuando el usuario escribe en cantidad y actualiza saldo con el mismo valor en tiempo real.
+                                                                                                                                                                                                                                                                                        -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const cantidadInput = document.getElementById('cantidad');
