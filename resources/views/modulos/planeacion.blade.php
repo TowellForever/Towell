@@ -212,7 +212,14 @@
                                                 $formattedValue = $value;
                                             }
                                         @endphp
-                                        <td class="small px-1 py-0.5">{{ $formattedValue }}</td>
+                                        @if (is_numeric($value) && intval($value) != $value)
+                                            <td class="small px-1 py-0.5 dec-hidden"
+                                                data-valor="{{ number_format($value, 2, '.', '') }}">
+                                                {{ intval($value) }}
+                                            </td>
+                                        @else
+                                            <td class="small px-1 py-0.5">{{ $formattedValue }}</td>
+                                        @endif
                                     @endif
                                 @endforeach
                             </tr>
@@ -392,9 +399,9 @@
         });
     </script>
     <!--*******************************************************************************************************************************************************************************************
-                                                                                                    *********************************************************************************************************************************************************************************************-->
+                                                                                                                    *********************************************************************************************************************************************************************************************-->
     <!--SCRIPTS que implentan el funcionamiento de la tabla TIPO DE MOVIMIENTOS, se selecciona un registro, se obtiene el valor de num_registro y con
-                                                                                                            ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
+                                                                                                                            ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
 
     <script>
         let filaSeleccionada = null;
@@ -501,6 +508,29 @@
             });
         });
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabla = document.getElementById('tablaPlaneacion');
+
+            if (tabla) {
+                tabla.addEventListener('click', function(e) {
+                    const fila = e.target.closest('tr');
+                    if (!fila) return;
+
+                    fila.querySelectorAll('.dec-hidden').forEach(td => {
+                        const fullValue = td.getAttribute('data-valor');
+                        if (fullValue) {
+                            td.textContent = fullValue;
+                            td.classList.remove('dec-hidden');
+                        }
+                    });
+                    // Aquí puedes agregar tu lógica para resaltar en amarillo, si no ya existe.
+                });
+            }
+        });
+    </script>
+
 
 
     @push('styles')
