@@ -37,6 +37,7 @@ class PlaneacionController extends Controller
       'Ancho',
       'Eficiencia_Std',
       'Velocidad_STD',
+      'Hilo',
       'Calibre_Rizo',
       'Calibre_Pie',
       'Calendario',
@@ -191,6 +192,7 @@ class PlaneacionController extends Controller
     //VARIABLES TEMPORALES - borrar despues de tener catalagos
     $aplic = 'RZ';
     $calibre_pie = $modelo->Pie;
+    $calibre_rizo = $modelo->Rizo;
     $Cambios_Hilo = 1;
 
     //Validamos que no existe el registro, en caso de red lenta o de que el user de 2 clics, no se creen multiples registros con la misma informacion.
@@ -404,9 +406,10 @@ class PlaneacionController extends Controller
         'Ancho' => $modelo ? (int) $modelo->Ancho : null,
         'Eficiencia_Std' => $eficiencia,
         'Velocidad_STD' => $velocidad,
-        'Calibre_Rizo' => null,
-        'Calibre_Pie' =>  null,
-        'Calendario' => null,
+        'Hilo' =>  $request->input('hilo'),
+        'Calibre_Rizo' =>  $calibre_rizo ? $calibre_rizo : null,
+        'Calibre_Pie' =>  $calibre_pie ? $calibre_pie : null,
+        'Calendario' => $request->input('calendario'),
         'Clave_Estilo' => $request->input('tamano') . $request->input('clave_ax'),
         'Tamano' => $request->input('tamano'),
         'Estilo_Alternativo' => null,
@@ -418,7 +421,7 @@ class PlaneacionController extends Controller
         'Id_Flog' => $request->input('no_flog'),
         'Descrip' => $request->input('descripcion'),
         'Aplic' => $request->input('aplicacion'),
-        'Obs' => $modelo->Observaciones ? $modelo->Observaciones : '',
+        'Obs' => null,
         'Tipo_Ped' => explode('-', $request->input('no_flog'))[0],
         'Tiras' => $modelo ? (int)$modelo->TIRAS : null,
         'Peine' => $modelo ? (int)$modelo->Peine : null,

@@ -17,7 +17,7 @@ class AtadorController extends Controller
             ->join('Produccion.dbo.urdido_engomado as u', 'r.orden_prod', '=', 'u.folio')
             ->select('fecha', 'tipo', 'valor', 'telar', 'orden_prod', 'proveedor', 'u.metros')
             ->where('status', 'activo')
-            ->orderBy('fecha', 'desc') // <-- Aquí se aplica el orden
+            ->orderBy('fecha', 'asc') // <-- Aquí se aplica el orden
             ->get();
 
 

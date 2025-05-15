@@ -78,6 +78,7 @@
                                     'Ancho',
                                     'Eficiencia_Std',
                                     'Velocidad_STD',
+                                    'Hilo',
                                     'Calibre_Rizo',
                                     'Calibre_Pie',
                                     'Calendario',
@@ -85,8 +86,8 @@
                                     'Tamano',
                                     'Estilo_Alternativo',
                                     'Nombre_Producto',
-                                    'Saldos',
                                     'cantidad',
+                                    'Saldos',
                                     'Fecha_Captura',
                                     'Orden_Prod',
                                     'Fecha_Liberacion',
@@ -391,9 +392,9 @@
         });
     </script>
     <!--*******************************************************************************************************************************************************************************************
-                                                                                    *********************************************************************************************************************************************************************************************-->
+                                                                                                    *********************************************************************************************************************************************************************************************-->
     <!--SCRIPTS que implentan el funcionamiento de la tabla TIPO DE MOVIMIENTOS, se selecciona un registro, se obtiene el valor de num_registro y con
-                                                                                            ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
+                                                                                                            ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
 
     <script>
         let filaSeleccionada = null;

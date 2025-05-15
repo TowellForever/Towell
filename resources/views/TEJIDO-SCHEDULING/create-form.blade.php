@@ -147,12 +147,27 @@
             <div class="flex items-center">
                 <label for="aplicacion" class="w-20 font-medium text-gray-700">APLICACIÓN:</label>
                 <select name="aplicacion" id="aplicacion" class="w-36 border border-gray-300 rounded px-2 py-1">
-                    <option value="2025-01">RZ </option>
-                    <option value="2025-05">RZ2 </option>
-                    <option value="2025-02">RZ3 </option>
-                    <option value="2025-03">BOR </option>
-                    <option value="2025-04">EST </option>
-                    <option value="2025-04">DC </option>
+                    <option value="RZ">RZ</option>
+                    <option value="RZ2">RZ2</option>
+                    <option value="RZ3">RZ3</option>
+                    <option value="BOR">BOR</option>
+                    <option value="EST">EST</option>
+                    <option value="DC">DC</option>
+                </select>
+            </div>
+
+            <div class="flex items-center">
+                <label for="hilo" class="w-20 font-medium text-gray-700">APLICACIÓN:</label>
+                <select name="hilo" id="hilo" class="w-36 border border-gray-300 rounded px-2 py-1">
+                    <option value="H">H</option>
+                    <option value="T20 PEINADO">T20 PEINADO</option>
+                    <option value="A12">RZ3</option>
+                    <option value="Hrpre">Hrpre</option>
+                    <option value="A20">A20</option>
+                    <option value="Fil600 (virgen)/A12">Fil600 (virgen)/A12</option>
+                    <option value="O16">O16</option>
+                    <option value="HR">HR</option>
+                    <option value="Fil (reciclado-secual)">Fil (reciclado-secual)</option>
                 </select>
             </div>
 
@@ -426,8 +441,8 @@
         });
     </script>
     <!--
-                                                                                                                                                                        Escucha cuando el usuario escribe en cantidad y actualiza saldo con el mismo valor en tiempo real.
-                                                                                                                                                                        -->
+                                                                                                                                                                                                                                                                        Escucha cuando el usuario escribe en cantidad y actualiza saldo con el mismo valor en tiempo real.
+                                                                                                                                                                                                                                                                        -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const cantidadInput = document.getElementById('cantidad');

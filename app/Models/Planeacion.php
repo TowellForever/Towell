@@ -20,6 +20,7 @@ class Planeacion extends Model
         'Ancho',
         'Eficiencia_Std',
         'Velocidad_STD',
+        'Hilo',
         'Calibre_Rizo',
         'Calibre_Pie',
         'Calendario',
@@ -93,3 +94,8 @@ class Planeacion extends Model
         'cantidad',
     ];
 }
+
+/*cantidad, Calibre_Rizo -> fueron agregados a la Base de DAtos posteriormente a la importacion de los datos junto con la tabla TEJIDO_SCHEDULING
+Tomar en cuenta que no afecta el  funcionamiento, tampoco afecta como se decide que se muestren esas columnas en el FRONTEND
+@JuanDeJesus
+*/
