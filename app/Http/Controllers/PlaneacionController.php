@@ -140,7 +140,7 @@ class PlaneacionController extends Controller
     return view('TEJIDO-SCHEDULING.create-form', compact('telares'));
   }
 
-
+  // STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE
   public function store(Request $request)
   {
     //dd($request->all()); // ✅ Imprime todos los datos del formulario
@@ -157,7 +157,7 @@ class PlaneacionController extends Controller
       return back()->with('error', 'Modelo no encontrado');
     }
 
-    $hilo = 'O16'; //VARIABLE TEMPORAL, ES NECESARIO UN CÁT DE HILOS
+    $hilo = $request->input('hilo');
 
     $densidad = $modelo->Tra > 40 ? 'Alta' : 'Normal';
     $velocidad = CatalagoVelocidad::where('telar', $telar->nombre)->where('tipo_hilo', $hilo)->where('densidad', $densidad)->value('velocidad');
@@ -190,7 +190,7 @@ class PlaneacionController extends Controller
     $ancho_por_toalla = ((int) $modelo->TRAMA_Ancho_Peine / (int)$modelo->TIRAS) * 1.001; //(AK2 / AK1) * 1.001
 
     //VARIABLES TEMPORALES - borrar despues de tener catalagos
-    $aplic = 'RZ';
+    $aplic = $request->input('aplicacion');
     $calibre_pie = $modelo->Pie;
     $calibre_rizo = $modelo->Rizo;
     $Cambios_Hilo = 1;
@@ -256,15 +256,14 @@ class PlaneacionController extends Controller
         } elseif ($aplic === 'DC') {
           $rizo = 1;
         }
-        $TRAMA = ((((0.59 * ((((int)$modelo->PASADAS * 1.001) * $ancho_por_toalla) / 100)) / $request->input('trama_0')) * $piezas) / 1000);
-        $combinacion1 = ($c1 = (float)$request->input('calibre_1')) > 0 ? ((((0.59 * ((int)$modelo->PASADAS_C1 * 1.001 * $ancho_por_toalla) / 100) / $c1) * $piezas) / 1000) : 0;
-        $combinacion2 = ($c2 = (float)$request->input('calibre_2')) > 0 ? ((((0.59 * ((int)$modelo->PASADAS_C2 * 1.001 * $ancho_por_toalla) / 100) / $c2) * $piezas) / 1000) : 0;
-        $combinacion3 = ((($request->input('calibre_3') != 0 ? (0.59 * (((int)$modelo->PASADAS_C3 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
-        $combinacion4 = ((($request->input('calibre_4') != 0 ? (0.59 * (((int)$modelo->PASADAS_C4 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
+        $TRAMA = ((((0.59 * ((((float)$modelo->PASADAS * 1.001) * $ancho_por_toalla) / 100)) / $request->input('trama_0')) * $piezas) / 1000);
+        $combinacion1 = (($c1 = (float)$request->input('calibre_1')) > 0) ? ((((0.59 * (((float)$modelo->PASADAS_C1 * 1.001) * $ancho_por_toalla)) / 100) / $c1) * $piezas) / 1000 : 0;
+        $combinacion2 = ($request->input('calibre_2') > 0) ? ((((0.59 * ((((float)$modelo->PASADAS_C2 * 1.001) * $ancho_por_toalla) / 100)) / $request->input('calibre_2')) * $piezas) / 1000) : 0;
+        $combinacion3 = ((($request->input('calibre_3') != 0 ? (0.59 * (((float)$modelo->PASADAS_C3 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
+        $combinacion4 = ((($request->input('calibre_4') != 0 ? (0.59 * (((float)$modelo->PASADAS_C4 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
 
         $Piel1 = ((((((((float) $modelo->Largo + (float) $modelo->Med_plano) / 100) * 1.055) * 0.00059) / ((0.00059 * 1) / (0.00059 / $calibre_pie))) *
           (((float) $request->input('cuenta_pie') - 32) / (float) $modelo->TIRAS)) * $piezas);
-
         $riso = ($kilos  - ($Piel1 + $combinacion3 + $combinacion2 + $combinacion1 +  $TRAMA + $combinacion4));
 
         $dias[] = [
@@ -307,11 +306,11 @@ class PlaneacionController extends Controller
         } elseif ($aplic === 'DC') {
           $rizo = 1;
         }
-        $TRAMA = ((((0.59 * ((((int)$modelo->PASADAS * 1.001) * $ancho_por_toalla) / 100)) / $request->input('trama_0')) * $piezas) / 1000);
-        $combinacion1 = ((((0.59 * ((((int)$modelo->PASADAS_C1 * 1.001) * $ancho_por_toalla) / 100)) / $request->input('calibre_1')) * $piezas) / 1000);
-        $combinacion2 = ((((0.59 * ((((int)$modelo->PASADAS_C2 * 1.001) * $ancho_por_toalla) / 100)) / $request->input('calibre_2')) * $piezas) / 1000);
-        $combinacion3 = ((($request->input('calibre_3') != 0 ? (0.59 * (((int)$modelo->PASADAS_C3 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
-        $combinacion4 = ((($request->input('calibre_4') != 0 ? (0.59 * (((int)$modelo->PASADAS_C4 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
+        $TRAMA = ((((0.59 * ((((float)$modelo->PASADAS * 1.001) * $ancho_por_toalla) / 100)) / $request->input('trama_0')) * $piezas) / 1000);
+        $combinacion1 = (($c1 = (float)$request->input('calibre_1')) > 0) ? ((((0.59 * ((float)$modelo->PASADAS_C1 * 1.001 * $ancho_por_toalla)) / 100) / $c1) * $piezas) / 1000 : 0;
+        $combinacion2 = ($request->input('calibre_2') > 0) ? ((((0.59 * ((((float)$modelo->PASADAS_C2 * 1.001) * $ancho_por_toalla) / 100)) / $request->input('calibre_2')) * $piezas) / 1000) : 0;
+        $combinacion3 = ((($request->input('calibre_3') != 0 ? (0.59 * (((float)$modelo->PASADAS_C3 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
+        $combinacion4 = ((($request->input('calibre_4') != 0 ? (0.59 * (((float)$modelo->PASADAS_C4 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
         $Piel1 = ((((((((float) $modelo->Largo + (float) $modelo->Med_plano) / 100) * 1.055) * 0.00059) / ((0.00059 * 1) / (0.00059 / $calibre_pie))) *
           (((float) $request->input('cuenta_pie') - 32) / (float) $modelo->TIRAS)) * $piezas);
 
@@ -355,14 +354,14 @@ class PlaneacionController extends Controller
           $rizo = 1;
         }
 
-        $TRAMA = ((((0.59 * ((((int)$modelo->PASADAS * 1.001) * $ancho_por_toalla) / 100)) / $request->input('trama_0')) * $piezas) / 1000);
-        $combinacion1 = ((((0.59 * ((((int)$modelo->PASADAS_C1 * 1.001) * $ancho_por_toalla) / 100)) / $request->input('calibre_1')) * $piezas) / 1000);
-        $combinacion2 = ((((0.59 * ((((int)$modelo->PASADAS_C2 * 1.001) * $ancho_por_toalla) / 100)) / $request->input('calibre_2')) * $piezas) / 1000);
-        $combinacion3 = ((($request->input('calibre_3') != 0 ? (0.59 * (((int)$modelo->PASADAS_C3 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
-        $combinacion4 = ((($request->input('calibre_4') != 0 ? (0.59 * (((int)$modelo->PASADAS_C4 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
-        $Piel1 = ((((((((float) $modelo->Largo + (float) $modelo->Med_plano) / 100) * 1.055) * 0.00059) / ((0.00059 * 1) / (0.00059 / $calibre_pie))) *
-          (((float) $request->input('cuenta_pie') - 32) / (float) $modelo->TIRAS)) * $piezas);
+        $TRAMA = ((((0.59 * ((((float)$modelo->PASADAS * 1.001) * $ancho_por_toalla) / 100)) / $request->input('trama_0')) * $piezas) / 1000);
+        $combinacion1 = (($c1 = (float)$request->input('calibre_1')) > 0) ? ((((0.59 * ((float)$modelo->PASADAS_C1 * 1.001 * $ancho_por_toalla)) / 100) / $c1) * $piezas) / 1000 : 0;
+        $combinacion2 = ($request->input('calibre_2') > 0) ? ((((0.59 * ((((float)$modelo->PASADAS_C2 * 1.001) * $ancho_por_toalla) / 100)) / $request->input('calibre_2')) * $piezas) / 1000) : 0;
+        $combinacion3 = ((($request->input('calibre_3') != 0 ? (0.59 * (((float)$modelo->PASADAS_C3 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
+        $combinacion4 = ((($request->input('calibre_4') != 0 ? (0.59 * (((float)$modelo->PASADAS_C4 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
 
+        $Piel1 = ((((((((float) $modelo->Largo + (float) $modelo->Plano) / 100) * 1.055) * 0.00059) / ((0.00059 * 1) / (0.00059 / $calibre_pie))) *
+          (((float) $request->input('cuenta_pie') - 32) / (float) $modelo->TIRAS)) * $piezas);
         $riso = ($kilos  - ($Piel1 + $combinacion3 + $combinacion2 + $combinacion1 +  $TRAMA + $combinacion4));
 
 
@@ -387,10 +386,10 @@ class PlaneacionController extends Controller
 
     // Mostrar el resultado con dd()
     // AHORA VAMOS CON LAS FORMULAS RESTANTES
-    /*dd([
-          'dias_generados' => $dias,
-          'total_dias' => $totalDias,
-      ]);*/
+    dd([
+      'dias_generados' => $dias,
+      'total_dias' => $totalDias,
+    ]);
     //procedemos con las formulas de excel tomando en cuenta las proporciones de los dias de acuerdo a las fechas de inicio y fin
 
 

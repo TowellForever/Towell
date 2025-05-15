@@ -157,7 +157,7 @@
             </div>
 
             <div class="flex items-center">
-                <label for="hilo" class="w-20 font-medium text-gray-700">APLICACIÓN:</label>
+                <label for="hilo" class="w-20 font-medium text-gray-700">HILO:</label>
                 <select name="hilo" id="hilo" class="w-36 border border-gray-300 rounded px-2 py-1">
                     <option value="H">H</option>
                     <option value="T20 PEINADO">T20 PEINADO</option>
@@ -441,8 +441,8 @@
         });
     </script>
     <!--
-                                                                                                                                                                                                                                                                        Escucha cuando el usuario escribe en cantidad y actualiza saldo con el mismo valor en tiempo real.
-                                                                                                                                                                                                                                                                        -->
+                                                                                                                                                                                                                                                                                Escucha cuando el usuario escribe en cantidad y actualiza saldo con el mismo valor en tiempo real.
+                                                                                                                                                                                                                                                                                -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const cantidadInput = document.getElementById('cantidad');
