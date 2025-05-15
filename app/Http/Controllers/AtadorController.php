@@ -17,8 +17,9 @@ class AtadorController extends Controller
             ->join('Produccion.dbo.urdido_engomado as u', 'r.orden_prod', '=', 'u.folio')
             ->select('fecha', 'tipo', 'valor', 'telar', 'orden_prod', 'proveedor', 'u.metros')
             ->where('status', 'activo')
-            ->orderBy('fecha', 'asc') // <-- Aquí se aplica el orden
+            ->orderByRaw("CONVERT(DATETIME, fecha, 103)") // 103 = formato dd/mm/yyyy - usamos la funcion CONVERT porque es la que funciona en Windows Server 2008.
             ->get();
+
 
 
 
