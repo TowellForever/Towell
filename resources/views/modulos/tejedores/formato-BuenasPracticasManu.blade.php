@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="formato-print bg-white p-2 mx-2  print:w-[99%] print:relative print:top-0 print:mt-0 print:pt-0">
+    <div class="bg-white container mx-auto overflow-y-auto" style="max-height: calc(100vh - 100px);">
+        <!--formato-print bg-white p-2 mx-2 print:w-[99%] print:relative print:top-0 print:mt-0 print:pt-0-->
         <h1 class="text-center text-2xl font-bold">BUENAS PRÁCTICAS DE MANUFACTURA</h1>
 
         <div class="d-flex justify-content-between items-center">
@@ -31,7 +32,7 @@
                 <thead>
                     <tr>
                         <th rowspan="2" class="w-1/4 border border-black px-1 py-1">Número de Tejedor</th>
-                        <span rowspan="2" class="absolute top-[140px] left-[280px] z-10 text-xs font-bold">Telar:</span>
+                        <span rowspan="2" class="absolute top-[140px] left-[280px] z-10 text-xs font-bold"></span>
                         @foreach ($usuario->telares as $telar)
                             <th colspan="3" class="border border-black border-2 px-1 py-1">{{ $telar->telar }}</th>
                         @endforeach
@@ -86,7 +87,8 @@
         <!-- Firma Supervisor -->
         <div class="mt-4 flex justify-between text-sm">
             <div class="text-right text-gray-500">Versión 0 - F-PR-58 - <span
-                    class="">{{ now()->format('d/m/Y') }}</span></div>
+                    class="">{{ now()->format('d/m/Y') }}</span>
+            </div>
         </div>
         <div class="flex justify-end mb-4">
             <a href="/produccionProceso"
