@@ -136,6 +136,14 @@
 
                 <div id="qr-video-container">
                     <video id="qr-video" autoplay></video>
+                    <div id="qr-overlay"
+                        style="position: absolute; top: 0; left: 0; right:0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; font-size: 1.5rem; z-index: 10;">
+                        <div id="qr-message">Escanea tu código...</div>
+                        <div
+                            style="margin-top: 20px; border: 3px solid white; width: 200px; height: 200px; border-radius: 10px;">
+                        </div>
+                    </div>
+
                 </div>
 
 
@@ -234,14 +242,13 @@
             passwordField.setAttribute('type', fieldType === 'password' ? 'text' : 'password');
         });
     </script>
-
-
+    <!-- Este SCRIPT carga la función del botón de QR-->
     <script>
         const qrButton = document.getElementById('qr-button');
         const qrVideoContainer = document.getElementById('qr-video-container');
         const qrVideo = document.getElementById('qr-video');
 
-        qrButton.addEventListener('click', function() {
+        function iniciarEscaneoQR() {
             navigator.mediaDevices.getUserMedia({
                     video: {
                         facingMode: 'environment'
@@ -249,7 +256,8 @@
                 })
                 .then(function(stream) {
                     qrVideo.srcObject = stream;
-                    qrVideoContainer.style.display = 'flex'; // Muestra el contenedor oscuro con el video
+                    qrVideoContainer.style.display = 'flex';
+                    document.getElementById('qr-overlay').style.display = 'flex';
                     qrVideo.play();
 
                     const interval = setInterval(() => {
@@ -265,10 +273,9 @@
 
                             if (qrCode) {
                                 clearInterval(interval);
-                                qrVideoContainer.style.display =
-                                    'none'; // Oculta el video al leer el código
+                                qrVideoContainer.style.display = 'none';
+                                document.getElementById('qr-overlay').style.display = 'none';
 
-                                // Enviar el número de empleado al backend para autenticación
                                 fetch('/login-qr', {
                                         method: 'POST',
                                         headers: {
@@ -288,8 +295,7 @@
                                             alert('Error: ' + data.message);
                                         }
                                     })
-                                    .catch(error => console.error('Error en la autenticación QR:',
-                                        error));
+                                    .catch(error => console.error('Error en la autenticación QR:', error));
                             }
                         }
                     }, 100);
@@ -297,8 +303,22 @@
                 .catch(error => {
                     console.log('Error al acceder a la cámara: ', error);
                 });
+        }
+
+        qrButton.addEventListener('click', iniciarEscaneoQR);
+
+        // Detectar dispositivo móvil y abrir cámara automáticamente al cargar
+        function esDispositivoMovil() {
+            return /Android|iPhone|iPad|iPod|Windows Phone|webOS/i.test(navigator.userAgent);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (esDispositivoMovil()) {
+                iniciarEscaneoQR();
+            }
         });
     </script>
+
 </body>
 
 </html>
