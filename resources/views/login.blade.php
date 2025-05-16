@@ -201,7 +201,8 @@
                     .then(data => {
                         document.getElementById('name').value = data.nombre || "";
                         const fotoUrl = data.foto ? `/images/${data.foto}` :
-                            ''; // Ruta de la foto, asegurándose de que sea válida
+                            ''; // Ruta de la foto, asegurándose de que sea válida 
+                        document.getElementById('password').focus(); // Ponemos el foco en la contraseña
                         const photoPreview = document.getElementById('photo-preview');
                         const photoImage = document.getElementById('photo-image');
 
@@ -209,10 +210,9 @@
                         if (fotoUrl) {
                             photoPreview.style.display = 'block'; // Hacer visible la imagen
                             photoImage.src = fotoUrl; // Actualizar la imagen
-                        } else {
-                            photoPreview.style.display =
-                                'none'; // Si no hay foto, ocultar el área de la vista previa
+                            document.getElementById('password').focus();
                         }
+
                     })
                     .catch(error => console.error("Error al obtener el nombre:", error));
             }
