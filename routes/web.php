@@ -104,7 +104,6 @@ Route::post('/update-orden-engomado', [EngomadoController::class, 'updateOrdenEn
 Route::post('/finalizar-engomado', [EngomadoController::class, 'finalizarEngomado']);
 Route::get('/imprimir-orden/{folio}', [EngomadoController::class, 'imprimirOrdenUE'])->name('imprimir.orden');
 
-
 //RUTAS DEL MODULO **atadores**
 Route::get('/modulo-atadores', function () {
     return view('modulos/atadores');

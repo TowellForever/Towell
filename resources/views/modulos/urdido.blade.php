@@ -135,7 +135,6 @@
                                     value="{{ $orden && $orden->fecha ? \Carbon\Carbon::parse($orden->fecha)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d') }}">
                             </td>
 
-
                             <td class="border p-1 w-30">
                                 <select class="w-24 border rounded p-1 text-xs"
                                     name="datos[{{ $registroIndex }}][oficial]" id="oficial_{{ $registroIndex }}"
