@@ -27,12 +27,12 @@ class UrdidoController extends Controller
         $julios = Julio::where('tipo', 'urdido')->get();
         $oficiales = Oficial::all();
 
-        if (!$urdido || !$construccion || !$requerimiento||!$ordenUrdido||!$julios||!$oficiales) {
-            return redirect()->route('ingresarFolio')->withErrors('No se encontraron datos para el folio proporcionado.');
+        if (!$urdido || !$construccion || !$requerimiento || !$ordenUrdido || !$julios || !$oficiales) {
+            return redirect()->route('ingresarFolio')->withErrors('La orden ingresada (' . $request->folio . ') no se ha encontrado. Por favor, valide el número e intente de nuevo.');
         }
 
         // Pasar los datos a la vista
-        return view('modulos/urdido', compact('urdido', 'construccion', 'requerimiento','ordenUrdido','julios','oficiales'));
+        return view('modulos/urdido', compact('urdido', 'construccion', 'requerimiento', 'ordenUrdido', 'julios', 'oficiales'));
     }
 
     //mewtodo para insertar o actualizar registro de ORDEN
@@ -40,7 +40,7 @@ class UrdidoController extends Controller
     {
         // Obtener los registros del request
         $registros = $request->input('registros');
-        
+
         foreach ($registros as $registro) {
             // Validar los datos
             $validated = Validator::make($registro, [
@@ -48,12 +48,12 @@ class UrdidoController extends Controller
                 'id2' => 'required', // Validar que id2 esté presente
                 'fecha' => 'required',
             ])->validate();
-    
+
             // Buscar si ya existe un registro con el mismo 'id2' y 'folio'
-            $existente = OrdenUrdido::where('id2', $registro['id2'])    
+            $existente = OrdenUrdido::where('id2', $registro['id2'])
                 ->where('folio', $registro['folio'])
                 ->first();
-            
+
             // Si existe, actualizamos el registro
             if ($existente) {
                 $existente->update($registro);
@@ -62,10 +62,10 @@ class UrdidoController extends Controller
                 OrdenUrdido::create($registro);
             }
         }
-    
+
         return response()->json(['message' => 'Todos los registros fueron guardados correctamente.']);
     }
-    
+
     public function finalizarUrdido(Request $request)
     {
         $folio = $request->input('folio');
@@ -85,6 +85,4 @@ class UrdidoController extends Controller
 
         return response()->json(['message' => 'Estatus actualizado a FINALIZADO.']);
     }
-
-    
 }

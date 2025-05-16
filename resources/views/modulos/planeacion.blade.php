@@ -1,19 +1,30 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="flex justify-center sm:mt-4 mb-1 w-1/5">
-        <!-- Botón de búsqueda (lupa) -->
-        <button id="search-toggle" class="p-1 w-16 rounded-full bg-blue-500 text-white hover:bg-blue-600 mr-5">
-            <i class="fas fa-search text-3xl"></i>
-        </button>
+    <div
+        class="w-auto text-white text-xs mt-2 mb-1 flex overflow-x-auto space-x-2 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-300 p-1 mt-1 sm:mt-2 sm:p-0">
 
-        <!-- Botón de restablecer (cruz o refresh) -->
-        <div class="w-auto text-left">
-            <button id="reset-search" class="p-2 rounded-full bg-red-500 text-white hover:bg-red-600 mt-2 text-xs">
-                Restablecer búsqueda
-            </button>
-        </div>
+        <!-- Botón de búsqueda (lupa) -->
+        <button id="search-toggle" class="w-16 rounded-full text-white hover:bg-white sm:mt-8 flex">
+            <span style="font-size: 34px;">🔎</span>
+        </button>
+        <!--SEGUNDO CONTENEDOR para botones-->
+        <!-- Botones alineados a la derecha -->
+        <a href="" id="reset-search" class=" bg-red-500 ml-1 rounded-full p-1  sm:mt-8 flex">RESTABLECER
+            BÚSQUEDA </a> <!-- el funcionamiento de este boton se realiza con JS-->
+        <a href="{{ route('telares.index') }}" class=" button-plane ml-1 rounded-full p-1  sm:mt-8 flex">TELARES 📑</a>
+        <a href="{{ route('eficiencia.index') }}" class="button-plane rounded-full ml-1 p-1 sm:mt-8 flex">EFICIENCIA STD
+            📑</a>
+        <a href="{{ route('velocidad.index') }}" class="button-plane rounded-full ml-1 p-1 sm:mt-8 ">VELOCIDAD STD
+            📑</a>
+        <a href="{{ route('calendariot1.index') }}" class="button-plane rounded-full ml-1 p-1 sm:mt-8">CALENDARIOS 🗓️</a>
+        <a href="{{ route('planeacion.aplicaciones') }}" class="button-plane rounded-full ml-2 p-1 sm:mt-8">APLICACIONES
+            🧩</a>
+        <a href="{{ route('planeacion.create') }}" class="button-plane rounded-full ml-1 p-1 sm:mt-8">NUEVO REGISTRO 📝</a>
+        <a href="{{ route('modelos.index') }}" class="button-plane-2 rounded-full ml-1 p-1 sm:mt-8">MODELOS 🛠️</a>
     </div>
+
+
 
     <!-- Modal -->
     <div id="search-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
@@ -227,17 +238,6 @@
                     </tbody>
                 </table>
             </div>
-            <!--SEGUNDO CONTENEDOR para botones-->
-            <!-- Botones alineados a la derecha -->
-            <div class="button-column mb-4 text-xs">
-                <a href="{{ route('telares.index') }}" class=" button-plane">CATÁLAGO TELARES 📑</a>
-                <a href="{{ route('eficiencia.index') }}" class="button-plane">CATÁLAGO EFICIENCIA STD 📑</a>
-                <a href="{{ route('velocidad.index') }}" class="button-plane">CATÁLAGO VELOCIDAD STD 📑</a>
-                <a href="{{ route('calendariot1.index') }}" class="button-plane ">CALENDARIOS 🗓️</a>
-                <a href="{{ route('planeacion.aplicaciones') }}" class="button-plane">APLICACIONES 🧩</a>
-                <a href="{{ route('planeacion.create') }}" class="button-plane">NUEVO REGISTRO 📝</a>
-                <a href="{{ route('modelos.index') }}" class="button-plane-2">MODELOS 🛠️</a>
-            </div>
         </div>
         <div id="contenedorTabla2" class="text-center" style="display: none;">
             <div class="table-wrapper bg-white shadow-lg rounded-lg p-1 overflow-x-auto">
@@ -399,9 +399,9 @@
         });
     </script>
     <!--*******************************************************************************************************************************************************************************************
-                                                                                                                    *********************************************************************************************************************************************************************************************-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    *********************************************************************************************************************************************************************************************-->
     <!--SCRIPTS que implentan el funcionamiento de la tabla TIPO DE MOVIMIENTOS, se selecciona un registro, se obtiene el valor de num_registro y con
-                                                                                                                            ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
 
     <script>
         let filaSeleccionada = null;
@@ -562,8 +562,6 @@
             .button-column {
                 display: flex;
                 flex-direction: column;
-                /* Los botones estarán apilados en columna */
-                gap: 4px;
                 /* Espacio entre los botones */
                 width: 100px;
                 /* Define el ancho de la columna de botones */
@@ -577,13 +575,11 @@
                 /* Fondo azul */
                 color: white;
                 /* Color del texto */
-                padding: 1px 2px;
+                padding: 8px 2px;
                 /* Espaciado interno */
-                border-radius: 6px;
-                /* Bordes redondeados */
                 text-decoration: none;
                 /* Elimina el subrayado */
-                font-weight: bold;
+
                 transition: background-color 0.3s ease;
                 /* Efecto de transición */
                 text-align: center;
@@ -591,17 +587,17 @@
             }
 
             .button-plane-2 {
-                background-color: #fab43c;
+                background-color: #7839ed;
                 /* Fondo azul */
                 color: white;
                 /* Color del texto */
-                padding: 1px 2px;
+                padding: 8px 2px;
                 /* Espaciado interno */
                 border-radius: 6px;
                 /* Bordes redondeados */
                 text-decoration: none;
                 /* Elimina el subrayado */
-                font-weight: bold;
+
                 transition: background-color 0.3s ease;
                 /* Efecto de transición */
                 text-align: center;
