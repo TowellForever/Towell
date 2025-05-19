@@ -399,9 +399,9 @@
         });
     </script>
     <!--*******************************************************************************************************************************************************************************************
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    *********************************************************************************************************************************************************************************************-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    *********************************************************************************************************************************************************************************************-->
     <!--SCRIPTS que implentan el funcionamiento de la tabla TIPO DE MOVIMIENTOS, se selecciona un registro, se obtiene el valor de num_registro y con
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
 
     <script>
         let filaSeleccionada = null;
@@ -424,21 +424,29 @@
                     const fechaInicioTejido = this.getAttribute('data-inicio'); // "2025-05-13"
                     const fechaFinTejido = this.getAttribute('data-fin'); // "2025-05-25"
 
-                    console.log("Inicio Tejido:", fechaInicioTejido, "Fin Tejido:", fechaFinTejido);
-                    console.log("Registro seleccionado:", numRegistroSeleccionado);
-
                     // Mostrar segunda tabla
                     document.getElementById("contenedorTabla2").style.display = "block";
 
                     // Generar fechas en la tabla dinámica
                     const inicio = new Date(fechaInicioTejido);
                     const fin = new Date(fechaFinTejido);
+                    console.log("inicio:", inicio.toISOString(), "fin:", fin.toISOString());
+
                     const tbody = document.getElementById("cuerpoTablaPlaneacion");
                     tbody.innerHTML = "";
 
                     for (let d = new Date(inicio), i = 0; d <= fin; d.setDate(d.getDate() + 1),
                         i++) {
-                        const fechaFormateada = d.toISOString().split('T')[0]; // YYYY-MM-DD
+                        function formatFechaLocal(date) {
+                            const year = date.getFullYear();
+                            const month = String(date.getMonth() + 1).padStart(2,
+                                '0'); // meses comienzan en 0
+                            const day = String(date.getDate()).padStart(2, '0');
+                            return `${year}-${month}-${day}`;
+                        }
+
+                        const fechaFormateada = formatFechaLocal(
+                            d); // en vez de d.toISOString().split('T')[0]
                         const opciones = {
                             day: 'numeric',
                             month: 'long'
@@ -476,9 +484,10 @@
                                 cell => {
                                     cell.textContent = "";
                                 });
-
                             data.forEach(item => {
-                                console.log(item);
+                                //console.log(item);
+
+
                                 const fecha = item.fecha; // "YYYY-MM-DD"
                                 const campos = [
                                     "pzas", "kilos", "rizo", "cambio", "trama",
@@ -492,6 +501,12 @@
                                     const celda = document.querySelector(
                                         `[data-campo="${campo}"][data-fecha="${fecha}"]`
                                     );
+                                    if (!celda) {
+                                        console.warn(
+                                            `No se encontró la celda para campo: ${campo}, fecha: ${fecha}`
+                                        );
+                                    }
+
                                     if (celda) {
                                         const valor = item[campo];
                                         celda.textContent = typeof valor ===
