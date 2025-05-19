@@ -49,6 +49,7 @@ class TejedorController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request);
         $request->validate([
             'recibe' => 'required|string',
             'entrega' => 'required|string',

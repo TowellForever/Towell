@@ -1,6 +1,25 @@
 @extends('layouts.app')
 
 @section('content')
+    @if (session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'ÉXITO',
+                    text: @json(session('success')),
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: true,
+                    backdrop: true,
+                    customClass: {
+                        popup: 'text-xl'
+                    }
+                });
+            });
+        </script>
+    @endif
+
     @php
         // Establece la zona horaria explícitamente (asegúrate de que coincida con tu ubicación)
         $ahora = \Carbon\Carbon::now('America/Mexico_City');
@@ -24,6 +43,10 @@
 
 
     <div class="bg-white container mx-auto overflow-y-auto" style="max-height: calc(100vh - 100px);">
+        <div class="text-sm font-semibold m-0 p-0 leading-none opacity-70">
+            FECHA: <strong>{{ now()->format('Y-m-d H:i') }}</strong>
+        </div>
+
         <h1 class="text-center text-2xl font-bold">BUENAS PRÁCTICAS DE MANUFACTURA</h1>
 
         <form method="POST" action="{{ route('manufactura.guardar') }}">
@@ -33,8 +56,9 @@
             <input type="hidden" name="fecha" value="{{ now() }}">
             <input type="hidden" name="turno_actual" value="{{ $turnoActual }}">
 
-            <div class="d-flex justify-content-between items-center">
+            <div class="d-flex justify-content-between items-center mb-2">
                 <div>RECIBE: <strong>{{ $usuario->nombre }}</strong></div>
+                <div class="text-sm font-semibold mt-2">TURNO ACTUAL: <strong>{{ $turnoActual }}</strong></div>
                 <div>
                     ENTREGA:
                     @php
@@ -57,8 +81,6 @@
 
                 </div>
             </div>
-
-            <div class="text-sm font-semibold mt-2">Turno Actual: <strong>{{ $turnoActual }}</strong></div>
 
             <div class="overflow-x-auto h-1/2 mx-auto">
                 <table class="table-auto w-full border border-black text-xs text-center">
@@ -91,7 +113,6 @@
                                 'Dibujo/Orilla Salpicado',
                                 'Hilos falsos.',
                                 'Tejido correcto (rayas - tejido abierto)',
-                                'FIRMA SUPERVISOR: ',
                             ];
                         @endphp
 
@@ -117,6 +138,7 @@
                                 @endfor
                             </tr>
                         @endforeach
+                        <td class="border border-black text-left px-1 py-1">11.- FIRMA DEL SUPERVISOR:</td>
                     </tbody>
                 </table>
             </div>
