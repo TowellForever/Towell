@@ -399,9 +399,9 @@
         });
     </script>
     <!--*******************************************************************************************************************************************************************************************
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    *********************************************************************************************************************************************************************************************-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            *********************************************************************************************************************************************************************************************-->
     <!--SCRIPTS que implentan el funcionamiento de la tabla TIPO DE MOVIMIENTOS, se selecciona un registro, se obtiene el valor de num_registro y con
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
 
     <script>
         let filaSeleccionada = null;
@@ -432,11 +432,13 @@
                     const fin = new Date(fechaFinTejido);
                     console.log("inicio:", inicio.toISOString(), "fin:", fin.toISOString());
 
+
                     const tbody = document.getElementById("cuerpoTablaPlaneacion");
                     tbody.innerHTML = "";
 
-                    for (let d = new Date(inicio), i = 0; d <= fin; d.setDate(d.getDate() + 1),
-                        i++) {
+                    for (let d = new Date(inicio.toDateString()), i = 0; d <= new Date(fin
+                            .toDateString()); d.setDate(d.getDate() + 1), i++) {
+
                         function formatFechaLocal(date) {
                             const year = date.getFullYear();
                             const month = String(date.getMonth() + 1).padStart(2,
