@@ -1,41 +1,65 @@
 @extends('layouts.app')
 
 @section('content')
+    @php
+        // Establece la zona horaria explícitamente (asegúrate de que coincida con tu ubicación)
+        $ahora = \Carbon\Carbon::now('America/Mexico_City');
+
+        $hora = (int) $ahora->format('H');
+        $minuto = (int) $ahora->format('i');
+        $totalMinutos = $hora * 60 + $minuto;
+
+        if ($totalMinutos >= 390 && $totalMinutos <= 869) {
+            // 06:30 - 14:29
+            $turnoActual = 1;
+        } elseif ($totalMinutos >= 870 && $totalMinutos <= 1349) {
+            // 14:30 - 22:29
+            $turnoActual = 2;
+        } else {
+            // 22:30 - 06:29
+            $turnoActual = 3;
+        }
+    @endphp
+
+
+
     <div class="bg-white container mx-auto overflow-y-auto" style="max-height: calc(100vh - 100px);">
         <h1 class="text-center text-2xl font-bold">BUENAS PRÁCTICAS DE MANUFACTURA</h1>
 
         <form method="POST" action="{{ route('manufactura.guardar') }}">
+            @csrf
+
+            <input type="hidden" name="recibe" value="{{ $usuario->nombre }}">
+            <input type="hidden" name="fecha" value="{{ now() }}">
+            <input type="hidden" name="turno_actual" value="{{ $turnoActual }}">
 
             <div class="d-flex justify-content-between items-center">
                 <div>RECIBE: <strong>{{ $usuario->nombre }}</strong></div>
-                <input type="hidden" name="recibe" value="{{ $usuario->nombre }}">
                 <div>
                     ENTREGA:
+                    @php
+                        $usuarios = [
+                            'jesus.alvarez' => 'Juan de Jesus',
+                            'karla.mendez' => 'Karla Mendez',
+                            'ricardo.lopez' => 'Ricardo López',
+                            'andrea.soto' => 'Andrea Soto',
+                            'fernando.ramos' => 'Fernando Ramos',
+                        ];
+                    @endphp
+
                     <select name="entrega" id="entrega" class="form-control d-inline-block w-auto font-bold">
-                        <option value="juan.de.jesus" {{ $usuarioPorDefecto == 'jesus.alvarez' ? 'selected' : '' }}>Juan de
-                            Jesus</option>
-                        <option value="beatriz.torres" {{ $usuarioPorDefecto == 'karla.mendez' ? 'selected' : '' }}>Beatriz
-                            Torres
-                        </option>
-                        <option value="ricardo.lopez" {{ $usuarioPorDefecto == 'ricardo.lopez' ? 'selected' : '' }}>Ricardo
-                            López
-                        </option>
-                        <option value="andrea.soto" {{ $usuarioPorDefecto == 'andrea.soto' ? 'selected' : '' }}>Andrea Soto
-                        </option>
-                        <option value="fernando.ramos" {{ $usuarioPorDefecto == 'fernando.ramos' ? 'selected' : '' }}>
-                            Fernando
-                            Ramos</option>
+                        @foreach ($usuarios as $clave => $nombre)
+                            <option value="{{ $clave }}" {{ $usuarioPorDefecto == $clave ? 'selected' : '' }}>
+                                {{ $nombre }}
+                            </option>
+                        @endforeach
                     </select>
+
                 </div>
             </div>
 
-            <div class="flex items-center justify-between mb-1">
-                <div class="text-sm font-semibold">Fecha: <span
-                        class="border-b border-black px-4">{{ now()->format('d/m/Y') }}</span> <input type="hidden"
-                        name="fecha" value="{{ now() }}"></div>
-            </div>
+            <div class="text-sm font-semibold mt-2">Turno Actual: <strong>{{ $turnoActual }}</strong></div>
 
-            @csrf
             <div class="overflow-x-auto h-1/2 mx-auto">
                 <table class="table-auto w-full border border-black text-xs text-center">
                     <thead>
@@ -77,13 +101,16 @@
                                     {{ $criterio }}</td>
                                 @for ($j = 0; $j < $usuario->telares->count() * 3; $j++)
                                     @php
+                                        $turno = ($j % 3) + 1;
                                         $inputName = "criterios[{$i}][{$j}]";
+                                        $editable = $turno === $turnoActual;
                                     @endphp
                                     <td class="border border-black py-1">
                                         <input type="hidden" name="{{ $inputName }}" value="0">
                                         <button type="button"
                                             class="estado-check px-1 py-0.5 text-xs border border-gray-400 rounded-sm"
-                                            data-target="{{ $inputName }}" data-estado="0">
+                                            data-target="{{ $inputName }}" data-estado="0"
+                                            {{ !$editable ? 'disabled style=opacity:0.4' : '' }}>
                                             ⬜
                                         </button>
                                     </td>
@@ -94,42 +121,41 @@
                 </table>
             </div>
 
-            <div class="mt-4 flex justify-between text-sm">
-                <div class="text-right text-gray-500">Versión 0 - F-PR-58 - <span>{{ now()->format('d/m/Y') }}</span></div>
-            </div>
-
-            <div class="flex justify-end mb-4">
+            <div class="flex justify-end mt-4">
                 <button type="submit"
-                    class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl shadow-md transition duration-300 ease-in-out">
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl shadow-md transition duration-300 ease-in-out">
                     GUARDAR
                 </button>
             </div>
         </form>
     </div>
 
-    <!-- Script para cambiar estado del botón y su valor correspondiente -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const estados = ['⬜', '✅', '❌'];
-            const valores = [0, 1, 2];
+        document.querySelectorAll('.estado-check').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (btn.disabled) return;
 
-            document.querySelectorAll('.estado-check').forEach(button => {
-                button.addEventListener('click', () => {
-                    let estadoActual = parseInt(button.getAttribute('data-estado')) || 0;
-                    let nuevoEstado = (estadoActual + 1) % 3;
+                const target = btn.dataset.target;
+                const input = document.querySelector(`input[name="${target}"]`);
+                let estado = parseInt(btn.dataset.estado);
 
-                    button.setAttribute('data-estado', nuevoEstado);
-                    button.innerText = estados[nuevoEstado];
+                estado = (estado + 1) % 3;
+                btn.dataset.estado = estado;
 
-                    let inputName = button.getAttribute('data-target');
-                    let inputHidden = document.querySelector(`input[name="${inputName}"]`);
-                    if (inputHidden) {
-                        inputHidden.value = valores[nuevoEstado];
-                    }
-                });
+                if (estado === 0) {
+                    btn.textContent = '⬜';
+                } else if (estado === 1) {
+                    btn.textContent = '✅';
+                } else {
+                    btn.textContent = '❌';
+                }
+
+                input.value = estado;
             });
         });
     </script>
+
+
 
     @push('styles')
         <style>
@@ -179,6 +205,14 @@
 
                 .text-white {
                     color: #000 !important;
+                }
+
+                .estado-check[disabled] {
+                    background-color: #e5e7eb;
+                    /* gris claro */
+                    color: #9ca3af;
+                    /* texto gris */
+                    border-color: #d1d5db;
                 }
             }
         </style>
