@@ -3,7 +3,13 @@
 @section('title', 'Calendarios - Planeación')
 
 @section('content')
-    <div class="container mx-auto p-2">
+    <div
+        class="container mx-auto p-2 
+            lg:max-h-[600px]  <!-- para pantallas grandes (PC) -->
+            md:max-h-[500px]  <!-- para laptops -->
+            sm:max-h-[800px]  <!-- para tablets -->
+            overflow-y-auto">
+        <!-- para permitir scroll si se excede -->
         <h1 class="text-3xl font-bold text-center mb-6">CALENDARIOS</h1>
 
         <div class="">
@@ -21,7 +27,7 @@
                         $filas = [
                             ['1', 'Calendario Tej1', '', '', 'bg-gray-100'],
                             ['2', 'Calendario Tej2', '', '', 'bg-gray-100'],
-                            ['3', 'Calendario Tej3', '', '', 'bg-transparent'],
+                            ['3', 'Calendario Tej3', '', '', 'bg-gray-100'],
                         ];
                     @endphp
 
@@ -95,11 +101,11 @@
                 tr.classList.add('text-center');
 
                 tr.innerHTML = `
-            <td class="border border-gray-300 px-2 py-1">${item.horas ?? ''}</td>
+            <td class="border border-gray-300 px-2 py-1">${item.horas != null ? parseFloat(item.horas).toFixed(2) : ''}</td>
             <td class="border border-gray-300 px-2 py-1">${item.dia ?? ''}</td>
-            <td class="border border-gray-300 px-2 py-1">${item.inicio ?? ''}</td>
-            <td class="border border-gray-300 px-2 py-1">${item.fin ?? ''}</td>
-            <td class="border border-gray-300 px-2 py-1">${item.dias_acum ?? ''}</td>
+            <td class="border border-gray-300 px-2 py-1">${item.inicio ? item.inicio.replace('.000', '') : ''}</td>
+            <td class="border border-gray-300 px-2 py-1">${item.fin ? item.fin.replace('.000', '') : ''}</td>
+            <td class="border border-gray-300 px-2 py-1">${item.dias_acum != null ? parseFloat(item.dias_acum).toFixed(2) : ''}</td>
         `;
 
                 tbodyDetalle.appendChild(tr);
