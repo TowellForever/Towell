@@ -119,23 +119,9 @@
                 <tbody class="h-10">
                     <tr>
                         <td class="border px-1 py-0.5">
-                            <select name="lmaturdido"
+                            <select id="bomSelect" name="lmaturdido"
                                 class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded" required>
-                                <option value="" disabled selected></option>
-                                <option value="Hilo Algodón 20/1">Hilo Algodón 20/1</option>
-                                <option value="Hilo Algodón 30/1">Hilo Algodón 30/1</option>
-                                <option value="Hilo Poliéster 150D">Hilo Poliéster 150D</option>
-                                <option value="Hilo Mezcla Alg/Pol">Hilo Mezcla Alg/Pol</option>
-                                <option value="Hilo Nylon 70D">Hilo Nylon 70D</option>
-                                <option value="Hilo Crudo">Hilo Crudo</option>
-                                <option value="Hilo Teñido Azul">Hilo Teñido Azul</option>
-                                <option value="Hilo Teñido Negro">Hilo Teñido Negro</option>
-                                <option value="Engomado Tipo A">Engomado Tipo A</option>
-                                <option value="Engomado Tipo B">Engomado Tipo B</option>
-                                <option value="Adhesivo Lubricante">Adhesivo Lubricante</option>
-                                <option value="Cono de Cartón">Cono de Cartón</option>
-                                <option value="Portabobinas">Portabobinas</option>
-                                <option value="Empalmador Automático">Empalmador Automático</option>
+                                <option value="" disabled selected>Selecciona un BOM</option>
                             </select>
                         </td>
                     </tr>
@@ -315,5 +301,28 @@
             @endif
         });
     </script>
+    <!--busca BOMIDs para select2 de URDIDO-->
+    <script>
+        $('#bomSelect').select2({
+            placeholder: "Buscar BOM...",
+            ajax: {
+                url: '{{ route('bomids.api') }}',
+                dataType: 'json',
+                delay: 250,
+                processResults: function(data) {
+                    return {
+                        results: data.map(item => ({
+                            id: item.BOMID,
+                            text: item.BOMID
+                        }))
+                    };
+                },
+                cache: true
+            },
+            minimumInputLength: 1,
+            width: 'resolve'
+        });
+    </script>
+
 
 @endsection
