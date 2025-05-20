@@ -218,7 +218,7 @@
                         <tbody class="h-10">
                             <tr>
                                 <td class="border px-1 py-0.5">
-                                    <select name="engomado"
+                                    <select name="maquinaEngomado"
                                         class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded"
                                         required>
                                         <option value="" disabled selected></option>
@@ -228,7 +228,7 @@
                                     </select>
                                 </td>
                                 <td class="border px-1 py-0.5">
-                                    <select id="bomSelect2" name="lmatEngomado"
+                                    <select id="bomSelect2" name="lmatengomado"
                                         class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded"
                                         required>
                                         <option value="" disabled selected>Selecciona una lista</option>

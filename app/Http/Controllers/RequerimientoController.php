@@ -151,7 +151,7 @@ class RequerimientoController extends Controller
         return view('modulos.tejido.programarUrdidoEngomado', compact('requerimiento', 'datos'));
     }
 
-    /* metodo querealiza funciones de vista PROGRAMARURDIDOENGOMADO**********************************************************************************
+    /* metodo que realiza funciones de vista PROGRAMARURDIDOENGOMADO**********************************************************************************
     ***********************************************************************************************************************************************
      */
     public function requerimientosAGuardar(Request $request)
@@ -167,6 +167,10 @@ class RequerimientoController extends Controller
                 'metros' => 'required|numeric',
                 'nucleo' => 'required',
                 'no_telas' => 'required|integer',
+
+                'lmaturdido' => 'required',
+                'maquinaEngomado' => 'required',
+                'lmatengomado' => 'required',
                 // puedes agregar más campos si necesitas
             ], [
                 'cuenta.required' => 'El campo cuenta es obligatorio.',
@@ -179,6 +183,10 @@ class RequerimientoController extends Controller
                 'nucleo.required' => 'El campo núcleo es obligatorio.',
                 'no_telas.required' => 'El campo número de telas es obligatorio.',
                 'no_telas.integer' => 'El campo número de telas debe ser un número entero.',
+
+                'lmaturdido.required' => 'El campo L. Mat. Urdido es obligatorio.',
+                'maquinaEngomado.required' => 'El campo maquinaEngomado es obligatorio.',
+                'lmatengomado.required' => 'El campo L. Mat. Engomado es obligatorio.',
             ]);
 
 
@@ -211,6 +219,10 @@ class RequerimientoController extends Controller
                 'engomado' => '',
                 'color' => '',
                 'solidos' => '',
+                'lmaturdido' => $request->input('lmaturdido'), //nuevos registros 20-05-2025
+                'maquinaEngomado' => $request->input('maquinaEngomado'),
+                'lmatengomado' => $request->input('lmatengomado'),
+
             ]);
 
             $no_julios = $request->input('no_julios');
