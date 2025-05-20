@@ -104,7 +104,6 @@ class EngomadoController extends Controller
         $orden = UrdidoEngomado::where('folio', $folio)->first();
         $julios = ConstruccionJulios::where('folio', $folio)->get(); //julios dados de alta en programacion-requerimientos
 
-
         return view('modulos\tejido\imprimir-orden-UrdEng', compact('folio', 'orden', 'julios'));
     }
 }
