@@ -15,8 +15,21 @@ class Usuario extends Authenticatable
 
 
     protected $fillable = [
-        'numero_empleado', 'nombre', 'contrasenia', 'area', 'foto',
-        'almacen', 'urdido', 'engomado', 'tejido', 'atadores', 'tejedores', 'mantenimiento'
+        'numero_empleado',
+        'nombre',
+        'contrasenia',
+        'area',
+        'foto',
+        'almacen',
+        'urdido',
+        'engomado',
+        'tejido',
+        'atadores',
+        'tejedores',
+        'mantenimiento',
+        'planeacion',
+        'configuracion',
+        'UrdidoEngomado',
     ];
 
     // Mutador para encriptar la contraseña automáticamente
@@ -29,5 +42,4 @@ class Usuario extends Authenticatable
     {
         return $this->belongsToMany(CatalagoTelar::class, 'telares_usuario', 'usuario_id', 'telar_id');
     }
-
 }
