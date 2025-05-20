@@ -142,6 +142,12 @@
                         <div
                             style="margin-top: 20px; border: 3px solid white; width: 200px; height: 200px; border-radius: 10px;">
                         </div>
+                        <button id="cerrar-qr"
+                            style="position: absolute; top: 10px; right: 10px; z-index: 11; width: auto; max-width: 150px;"
+                            class="bg-green-600 text-white p-1 rounded">
+                            Cerrar QR
+                        </button>
+
                     </div>
 
                 </div>
@@ -247,6 +253,9 @@
         const qrButton = document.getElementById('qr-button');
         const qrVideoContainer = document.getElementById('qr-video-container');
         const qrVideo = document.getElementById('qr-video');
+        const cerrarQR = document.getElementById('cerrar-qr');
+        let stream = null;
+        let interval = null;
 
         function iniciarEscaneoQR() {
             navigator.mediaDevices.getUserMedia({
@@ -254,13 +263,14 @@
                         facingMode: 'environment'
                     }
                 })
-                .then(function(stream) {
+                .then(function(s) {
+                    stream = s;
                     qrVideo.srcObject = stream;
                     qrVideoContainer.style.display = 'flex';
                     document.getElementById('qr-overlay').style.display = 'flex';
                     qrVideo.play();
 
-                    const interval = setInterval(() => {
+                    interval = setInterval(() => {
                         if (qrVideo.readyState === qrVideo.HAVE_ENOUGH_DATA) {
                             const canvas = document.createElement('canvas');
                             canvas.width = qrVideo.videoWidth;
@@ -272,10 +282,7 @@
                             const qrCode = jsQR(imageData.data, canvas.width, canvas.height);
 
                             if (qrCode) {
-                                clearInterval(interval);
-                                qrVideoContainer.style.display = 'none';
-                                document.getElementById('qr-overlay').style.display = 'none';
-
+                                detenerEscaneoQR();
                                 fetch('/login-qr', {
                                         method: 'POST',
                                         headers: {
@@ -305,9 +312,22 @@
                 });
         }
 
-        qrButton.addEventListener('click', iniciarEscaneoQR);
+        function detenerEscaneoQR() {
+            if (interval) {
+                clearInterval(interval);
+                interval = null;
+            }
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+            qrVideoContainer.style.display = 'none';
+            document.getElementById('qr-overlay').style.display = 'none';
+        }
 
-        // Detectar dispositivo móvil y abrir cámara automáticamente al cargar
+        qrButton.addEventListener('click', iniciarEscaneoQR);
+        cerrarQR.addEventListener('click', detenerEscaneoQR);
+
         function esDispositivoMovil() {
             return /Android|iPhone|iPad|iPod|Windows Phone|webOS/i.test(navigator.userAgent);
         }

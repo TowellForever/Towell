@@ -110,7 +110,7 @@
                 </tbody>
             </table>
             <!-- LISTA DE MATERIALES Urdido-->
-            <table class="w-1/3 text-xs border-collapse border border-gray-300 mb-4">
+            <table class="w-1/2 text-xs border-collapse border border-gray-300 mb-4">
                 <thead class="h-10">
                     <tr class="bg-gray-200 text-left">
                         <th class="border px-1 py-0.5 w-12">L. Mat. Urdido</th>
@@ -208,11 +208,11 @@
                         </tbody>
                     </table>
                     <!-- LISTA DE MATERIALES Urdido-->
-                    <table class="w-1/2 text-xs border-collapse border border-gray-300 mb-4">
+                    <table class="w-full text-xs border-collapse border border-gray-300 mb-4">
                         <thead class="h-10">
                             <tr class="bg-gray-200 text-left">
                                 <th class="border px-1 py-0.5 w-12">Engomado</th>
-                                <th class="border px-1 py-0.5 w-12">Lista de Materiales Engomado</th>
+                                <th class="border px-1 py-0.5 w-12">L. Mat. Engomado</th>
                             </tr>
                         </thead>
                         <tbody class="h-10">

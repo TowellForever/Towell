@@ -69,7 +69,6 @@ Route::get('/tejido/itema-viejo', function () {
 Route::get('/tejido/itema-nuevo', function () {
     return view('modulos/tejido/itema-nuevo');
 });
-Route::get('/tejido/programar-requerimientos', [RequerimientoController::class, 'requerimientosActivos']);
 Route::get('/tejido/programarReq', [RequerimientoController::class, 'requerimientosAProgramar'])->name('formulario.programarRequerimientos');
 Route::post('/tejido/guardarUrdidoEngomado', [RequerimientoController::class, 'requerimientosAGuardar'])->name('orden.produccion.store');
 Route::get('/tejido/programar-requerimientos-DeRegreso', [RequerimientoController::class, 'regresoAProgramarRequerimientos'])->name('ReturningBackProRequerimientos');
@@ -129,6 +128,9 @@ Route::post('/manufactura/guardar', [TejedorController::class, 'store'])->name('
 Route::get('/modulo-mantenimiento', function () {
     return view('modulos/mantenimiento');
 });
+
+//RUTAS DEL MODULO **UrdidoEngomado**
+Route::get('/modulo-UrdidoEngomado', [RequerimientoController::class, 'requerimientosActivos']);
 
 //RUTAS DEL MODULO **configuracion**
 Route::get('/modulo-configuracion', function () {

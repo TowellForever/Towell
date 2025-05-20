@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container mx-auto -mt-3 overflow-y-auto" style="max-height: calc(100vh - 150px);">
+    <div class="container sm:mt-8 md:mt-1 mx-auto -mt-3 overflow-y-auto" style="max-height: calc(100vh - 150px);">
         <form id="seleccionForm" method="GET" action="{{ route('formulario.programarRequerimientos') }}">
             <!-- Inputs ocultos para enviar el telar y tipo seleccionados -->
             <input type="hidden" name="telar" id="telarInput">
