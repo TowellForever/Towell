@@ -74,6 +74,7 @@ Route::get('/tejido/programarReq', [RequerimientoController::class, 'requerimien
 Route::post('/tejido/guardarUrdidoEngomado', [RequerimientoController::class, 'requerimientosAGuardar'])->name('orden.produccion.store');
 Route::get('/tejido/programar-requerimientos-DeRegreso', [RequerimientoController::class, 'regresoAProgramarRequerimientos'])->name('ReturningBackProRequerimientos');
 Route::get('/tejido/bomids', [App\Http\Controllers\Select2Controller::class, 'getBomIds'])->name('bomids.api'); //<- rutas para buscador select2 BOMIDs
+Route::get('/tejido/bomids2', [App\Http\Controllers\Select2Controller::class, 'getBomIds2'])->name('bomids.api2'); //<- rutas para buscador select2 BOMIDs
 
 //RUTAS DEL MODULO **urdido**
 Route::get('/modulo-urdido', function () {

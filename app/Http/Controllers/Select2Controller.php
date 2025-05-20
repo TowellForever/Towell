@@ -32,4 +32,31 @@ class Select2Controller extends Controller
 
         return response()->json($data);
     }
+
+    //funcion para recuperar BOMIDs segun PIE o RIZO para ENGOMADO DATA
+    public function getBomIds2(Request $request)
+    {
+        $search = $request->input('q');     // texto buscado
+        $tipo = $request->input('tipo');    // Pie o Rizo
+
+        $query = DB::connection('sqlsrv_ti')
+            ->table('TI_PRO.dbo.BOMVersion')
+            ->select('BOMID');
+
+        // Filtro por tipo
+        if ($tipo === 'Rizo') {
+            $query->whereIn('ITEMID', ['JU-ENG-RI-C', 'JU-ENG-RI-A']);
+        } elseif ($tipo === 'Pie') {
+            $query->whereIn('ITEMID', ['JU-ENG-PI-C', 'JU-ENG-PI-A']);
+        }
+
+        // Filtro por texto buscado
+        if (!empty($search)) {
+            $query->where('BOMID', 'like', '%' . $search . '%');
+        }
+
+        $data = $query->groupBy('BOMID')->orderBy('BOMID')->get();
+
+        return response()->json($data);
+    }
 }

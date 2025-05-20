@@ -222,31 +222,16 @@
                                         class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded"
                                         required>
                                         <option value="" disabled selected></option>
-                                        <option value="Hilo Algodón 20/1">Hilo Algodón 20/1</option>
-                                        <option value="Hilo Algodón 30/1">Hilo Algodón 30/1</option>
-                                        <option value="Hilo Poliéster 150D">Hilo Poliéster 150D</option>
-                                        <option value="Hilo Mezcla Alg/Pol">Hilo Mezcla Alg/Pol</option>
+                                        <option value="Hilo Algodón 20/1">West Point 1</option>
+                                        <option value="Hilo Algodón 30/1">West Point 2</option>
+                                        <option value="Hilo Poliéster 150D">West Point 3</option>
                                     </select>
                                 </td>
                                 <td class="border px-1 py-0.5">
-                                    <select name="lmatengomado"
+                                    <select id="bomSelect2" name="lmatEngomado"
                                         class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded"
                                         required>
-                                        <option value="" disabled selected></option>
-                                        <option value="Hilo Algodón 20/1">Hilo Algodón 20/1</option>
-                                        <option value="Hilo Algodón 30/1">Hilo Algodón 30/1</option>
-                                        <option value="Hilo Poliéster 150D">Hilo Poliéster 150D</option>
-                                        <option value="Hilo Mezcla Alg/Pol">Hilo Mezcla Alg/Pol</option>
-                                        <option value="Hilo Nylon 70D">Hilo Nylon 70D</option>
-                                        <option value="Hilo Crudo">Hilo Crudo</option>
-                                        <option value="Hilo Teñido Azul">Hilo Teñido Azul</option>
-                                        <option value="Hilo Teñido Negro">Hilo Teñido Negro</option>
-                                        <option value="Engomado Tipo A">Engomado Tipo A</option>
-                                        <option value="Engomado Tipo B">Engomado Tipo B</option>
-                                        <option value="Adhesivo Lubricante">Adhesivo Lubricante</option>
-                                        <option value="Cono de Cartón">Cono de Cartón</option>
-                                        <option value="Portabobinas">Portabobinas</option>
-                                        <option value="Empalmador Automático">Empalmador Automático</option>
+                                        <option value="" disabled selected>Selecciona una lista</option>
                                     </select>
                                 </td>
                             </tr>
@@ -323,6 +308,38 @@
             width: 'resolve'
         });
     </script>
+
+    <!--busca BOMIDs para select2 de ENGOMADO-->
+    <script>
+        $(document).ready(function() {
+            $('#bomSelect2').select2({
+                placeholder: "Buscar lista...",
+                ajax: {
+                    url: '{{ route('bomids.api2') }}',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            q: params.term, // texto del buscador
+                            tipo: '{{ $tipo }}' // aquí se envía "Pie" o "Rizo" desde Blade
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data.map(item => ({
+                                id: item.BOMID,
+                                text: item.BOMID
+                            }))
+                        };
+                    },
+                    cache: true
+                },
+                minimumInputLength: 1,
+                width: 'resolve'
+            });
+        });
+    </script>
+
 
 
 @endsection
