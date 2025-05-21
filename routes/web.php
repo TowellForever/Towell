@@ -100,8 +100,7 @@ Route::get('/ingresar-folio-engomado', function () {
     return view('modulos/engomado/ingresar_folio');
 })->name('ingresarFolioEngomado');
 Route::post('/orden-trabajo-engomado', [EngomadoController::class, 'cargarDatosEngomado'])->name('produccion.ordenTrabajoEngomado');
-Route::post('/guardar-finalizar-engomado', [EngomadoController::class, 'guardarYFinalizar'])
-    ->name('ordenEngomado.guardarFinalizar');
+Route::post('/guardar-y-finalizar-engomado', [EngomadoController::class, 'guardarYFinalizar'])->name('ordenEngomado.guardarYFinalizar'); //Ruta que sustituye a 2 amtiguas rutas de 2 botones que se unificaron
 Route::get('/imprimir-orden/{folio}', [EngomadoController::class, 'imprimirOrdenUE'])->name('imprimir.orden');
 
 //RUTAS DEL MODULO **atadores**

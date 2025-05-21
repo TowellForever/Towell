@@ -2,6 +2,7 @@
 
 @section('content')
     <div class="container mx-auto p-2 bg-white shadow-lg rounded-lg mt-1 overflow-y-auto md:h-[650px]">
+        <div id="finalizadoOverlay">FINALIZADO CORRECTAMENTE</div>
         <h1 class="text-3xl font-bold text-center mb-2">Proceso de Producción de Engomado</h1>
         <!-- Formulario -->
         <form class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2">
@@ -134,7 +135,7 @@
                         <td class="border p-1 w-30">
                             <select class="w-24 border rounded p-1 text-xs" name="datos[{{ $registroIndex }}][oficial]"
                                 id="oficial_{{ $registroIndex }}" onchange="updateOficialTipo({{ $registroIndex }})">
-                                <option value="">{{ Auth::user()->nombre }}</option>
+                                <option value="{{ Auth::user()->nombre }}">{{ Auth::user()->nombre }}</option>
                                 @foreach ($oficiales as $of)
                                     <option value="{{ $of->oficial }}" data-tipo="{{ $of->tipo }}"
                                         @if (!empty($orden) && $of->oficial == $orden->oficial) selected @endif>
@@ -217,61 +218,34 @@
         </table>
         <div class="mt-4 text-right">
             @if ($engomadoUrd->estatus_engomado == 'en_proceso')
-                <button id="finalizar" class="btn bg-red-600 text-white w-20 h-9 hover:bg-red-400">Finalizar</button>
-                <button id="guardarTodo" class="btn bg-blue-600 text-white w-20 h-9 hover:bg-blue-400">Guardar</button>
+                <button class="btn bg-blue-600 text-white w-20 h-9 hover:bg-blue-400" id="guardarYFinalizar">Guardar y
+                    Finalizar</button>
             @endif
         </div>
     </div>
 
     <script>
-        document.getElementById('finalizar').addEventListener('click', function() {
-            let folio = document.getElementById('folio').value
-
+        document.getElementById("guardarYFinalizar").addEventListener("click", function() {
+            // Validar folio
+            const folio = document.querySelector('input[name="folio"]').value;
             if (!folio) {
                 alert("No se encontró el folio.");
                 return;
             }
 
-            if (!confirm("¿Está seguro de finalizar este urdido?")) return;
+            if (!confirm("¿Está seguro de guardar y finalizar este urdido?")) return;
 
-            fetch('/finalizar-engomado', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
-                            'content')
-                    },
-                    body: JSON.stringify({
-                        folio: folio
-                    })
-                })
-                .then(res => res.json())
-                .then(data => {
-                    alert(data.message);
-                    // Si quieres deshabilitar el botón o recargar:
-                    document.getElementById('finalizar').disabled = true;
-                    document.getElementById('finalizar').innerText = 'Finalizado';
-                })
-                .catch(err => {
-                    console.error(err);
-                    alert("Ocurrió un error al finalizar el urdido.");
-                });
-        });
-    </script>
-    <script>
-        document.getElementById("guardarTodo").addEventListener("click", function() {
-            // Obtener todos los inputs de tipo name="datos[..]"
+            // Obtener todos los datos de los inputs
             const inputs = document.querySelectorAll('input[name^="datos"], select[name^="datos"]');
             let formData = {};
             let camposGenerales = {
                 color: document.querySelector('input[name="color"]').value,
                 solidos: document.querySelector('input[name="solidos"]').value,
                 observaciones: document.querySelector('textarea[name="observaciones"]').value,
-                folio: document.querySelector('input[name="folio"]').value,
+                folio: folio,
                 engomado: document.querySelector('input[name="engomado"]').value
             };
 
-            // Agrupar inputs por índice
             inputs.forEach(input => {
                 const match = input.name.match(/datos\[(\d+)\]\[(\w+)\]/);
                 if (match) {
@@ -282,18 +256,14 @@
                         formData[index] = {};
                     }
 
-                    // Verificar si es un select para agregar el valor seleccionado
-                    if (input.tagName.toLowerCase() === "select") {
-                        formData[index][key] = input.options[input.selectedIndex]
-                            .value; // Valor de la opción seleccionada
-                    } else {
-                        formData[index][key] = input.value;
-                    }
+                    formData[index][key] = input.tagName.toLowerCase() === "select" ?
+                        input.options[input.selectedIndex].value :
+                        input.value;
                 }
             });
 
-            // Enviar los datos al servidor
-            fetch("{{ route('ordenEngomado.guardar') }}", {
+            // Enviar al backend combinado
+            fetch("{{ route('ordenEngomado.guardarYFinalizar') }}", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -302,19 +272,29 @@
                     },
                     body: JSON.stringify({
                         registros: Object.values(formData),
-                        generales: camposGenerales // ← agregamos los campos generales aquí
+                        generales: camposGenerales
                     })
                 })
                 .then(response => response.json())
                 .then(data => {
-                    alert(data.message || "Todos sus registros han sido guardados correctamente.");
+                    alert(data.message || "Registros guardados y engomado finalizado.");
+                    document.getElementById('guardarYFinalizar').disabled = true;
+                    document.getElementById('guardarYFinalizar').innerText = 'Finalizado';
+                    //Antes de cerrar el proceso de finalizado, muestro el overlay
+                    const overlay = document.getElementById('finalizadoOverlay');
+                    overlay.classList.add('active');
+
+                    setTimeout(() => {
+                        overlay.classList.remove('active');
+                    }, 4000);
                 })
                 .catch(error => {
                     console.error("Error:", error);
-                    alert("Error al guardar los registros.");
+                    alert("Ocurrió un error al guardar y finalizar.");
                 });
         });
     </script>
+
     <!--script para actualizar datos en tiempo real en 2 campos de la 2da tabla (tara y peso neto)-->
     <script>
         function updateValues(registroIndex) {
@@ -358,4 +338,32 @@
             }
         }
     </script>
+
+    @push('styles')
+        <style>
+            #finalizadoOverlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(0, 0, 0, 0.8);
+                color: white;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 4rem;
+                font-weight: bold;
+                z-index: 9999;
+                opacity: 0;
+                transition: opacity 0.5s ease;
+                pointer-events: none;
+            }
+
+            #finalizadoOverlay.active {
+                opacity: 1;
+                pointer-events: auto;
+            }
+        </style>
+    @endpush
 @endsection

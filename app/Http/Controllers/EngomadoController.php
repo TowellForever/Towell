@@ -42,20 +42,27 @@ class EngomadoController extends Controller
     }
 
     //mewtodo para insertar o actualizar registro de ORDEN
-    public function updateOrdenEngomado(Request $request)
+
+    public function guardarYFinalizar(Request $request)
     {
-        // Obtener los registros del request
+        // 1. Obtener datos del request
         $registros = $request->input('registros');
         $generales = $request->input('generales');
 
-        if ($generales && isset($generales['folio'])) {
-            // Guardar o actualizar los datos generales en la tabla urdido_engomado
-            \App\Models\UrdidoEngomado::updateOrCreate(
-                ['folio' => $generales['folio']], // condición
-                $generales // datos a actualizar
-            );
+        // 2. Validar que exista folio
+        if (!$generales || !isset($generales['folio'])) {
+            return response()->json(['message' => 'Folio no proporcionado.'], 400);
         }
 
+        $folio = $generales['folio'];
+
+        // 3. Guardar o actualizar los datos generales en la tabla urdido_engomado
+        \App\Models\UrdidoEngomado::updateOrCreate(
+            ['folio' => $folio],
+            $generales
+        );
+
+        // 4. Guardar o actualizar los registros en orden_engomado
         foreach ($registros as $registro) {
             $validated = Validator::make($registro, [
                 'folio' => 'required',
@@ -73,28 +80,19 @@ class EngomadoController extends Controller
             }
         }
 
-        return response()->json(['message' => 'Registros y datos generales guardados correctamente.']);
-    }
+        // 5. Finalizar el engomado (cambiar estatus)
+        $registroGeneral = \App\Models\UrdidoEngomado::where('folio', $folio)->first();
 
-    public function finalizarEngomado(Request $request)
-    {
-        $folio = $request->input('folio');
-
-        if (!$folio) {
-            return response()->json(['message' => 'Folio no proporcionado.'], 400);
-        }
-
-        $registro = \App\Models\UrdidoEngomado::where('folio', $folio)->first();
-
-        if (!$registro) {
+        if (!$registroGeneral) {
             return response()->json(['message' => 'Registro no encontrado.'], 404);
         }
 
-        $registro->estatus_engomado = 'finalizado';
-        $registro->save();
+        $registroGeneral->estatus_engomado = 'finalizado';
+        $registroGeneral->save();
 
-        return response()->json(['message' => 'Estatus actualizado a FINALIZADO.']);
+        return response()->json(['message' => 'Registros guardados y engomado finalizado correctamente.']);
     }
+
 
     //Metodo para la impresion de Urdido Engomado
     public function imprimirOrdenUE($folio)
