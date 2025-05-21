@@ -3,7 +3,7 @@
 @section('content')
     <div class="container mx-auto p-6 bg-white shadow-lg rounded-lg mt-2 overflow-y-auto md:h-[650px]">
         <h1 class="text-3xl font-bold text-center mb-2">ORDEN DE URDIDO</h1>
-        <div id="finalizadoOverlay">FINALIZADO</div>
+        <div id="finalizadoOverlay">FINALIZADO CORRECTAMENTE</div>
 
         <!-- Formulario -->
         <form class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2">
@@ -134,12 +134,12 @@
                                 <input class="w-24 p-1" type="date" name="datos[{{ $registroIndex }}][fecha]"
                                     value="{{ $orden && $orden->fecha ? \Carbon\Carbon::parse($orden->fecha)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d') }}">
                             </td>
-
+                            <!--OFICIAL, select dinámico-->
                             <td class="border p-1 w-30">
                                 <select class="w-24 border rounded p-1 text-xs"
                                     name="datos[{{ $registroIndex }}][oficial]" id="oficial_{{ $registroIndex }}"
                                     onchange="updateOficialTipo({{ $registroIndex }})">
-                                    <option value="">{{ Auth::user()->nombre }}</option>
+                                    <option value="{{ Auth::user()->nombre }}">{{ Auth::user()->nombre }}</option>
                                     @foreach ($oficiales as $of)
                                         <option value="{{ $of->oficial }}" data-tipo="{{ $of->tipo }}"
                                             @if (!empty($orden) && $of->oficial == $orden->oficial) selected @endif>
@@ -226,9 +226,9 @@
         </table>
         <div class="mt-4 text-right">
             @if ($urdido->estatus_urdido == 'en_proceso')
-                <button id="finalizar" class="btn bg-red-600 text-white w-20 h-9 hover:bg-red-400">Finalizar</button>
-                <button id="guardarTodo"
-                    class="ml-10 btn bg-blue-600 text-white w-20 h-9 hover:bg-blue-400">Guardar</button>
+                <button id="guardarYFinalizar"
+                    class="ml-10 btn bg-blue-600 text-white w-40 h-12 hover:bg-blue-400">Guardar
+                    y Finalizar</button>
             @endif
         </div>
     </div>
@@ -261,55 +261,20 @@
     </script>
 
     <script>
-        document.getElementById('finalizar').addEventListener('click', function() {
-            let folio = document.getElementById('folio').value;
+        document.getElementById("guardarYFinalizar").addEventListener("click", function() {
+            const inputs = document.querySelectorAll('input[name^="datos"], select[name^="datos"]');
+            let formData = {};
+            let erroresPorFila = {};
+            let folio = document.getElementById("folio").value;
 
             if (!folio) {
                 alert("No se encontró el folio.");
                 return;
             }
 
-            if (!confirm("¿Está seguro de finalizar este urdido?")) return;
+            if (!confirm("¿Está seguro de guardar y finalizar este urdido?")) return;
 
-            fetch('/finalizar-urdido', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
-                            'content')
-                    },
-                    body: JSON.stringify({
-                        folio: folio
-                    })
-                })
-                .then(res => res.json())
-                .then(data => {
-                    // Mostrar mensaje pantalla completa
-                    const overlay = document.getElementById('finalizadoOverlay');
-                    overlay.classList.add('active');
-
-                    setTimeout(() => {
-                        overlay.classList.remove('active');
-                    }, 3000); // 3 segundos
-
-                    // Opcional: deshabilitar botón
-                    document.getElementById('finalizar').disabled = true;
-                    document.getElementById('finalizar').innerText = 'Finalizado';
-                })
-                .catch(err => {
-                    console.error(err);
-                    alert("Ocurrió un error al finalizar el urdido.");
-                });
-        });
-    </script>
-
-    <script>
-        document.getElementById("guardarTodo").addEventListener("click", function() {
-            const inputs = document.querySelectorAll('input[name^="datos"], select[name^="datos"]');
-            let formData = {};
-            let erroresPorFila = {};
-
-            // Agrupar inputs por índice
+            // Agrupar datos por fila
             inputs.forEach(input => {
                 const match = input.name.match(/datos\[(\d+)\]\[(\w+)\]/);
                 if (match) {
@@ -320,15 +285,14 @@
                         formData[index] = {};
                     }
 
-                    // Obtener valor
                     let value = input.tagName.toLowerCase() === "select" ?
                         input.options[input.selectedIndex].value :
                         input.value.trim();
 
                     formData[index][key] = value;
 
-                    // Validar campos vacíos (excepto los que sí pueden estar vacíos)
-                    const camposOpcionales = ['tara', 'peso_neto']; // Agrega aquí más si lo necesitas
+                    // Validar campos obligatorios
+                    const camposOpcionales = ['tara', 'peso_neto'];
                     if (!value && !camposOpcionales.includes(key)) {
                         if (!erroresPorFila[index]) {
                             erroresPorFila[index] = [];
@@ -338,20 +302,19 @@
                 }
             });
 
-            // Mostrar errores si hay campos vacíos
+            // Mostrar errores si los hay
             if (Object.keys(erroresPorFila).length > 0) {
                 let mensaje = "Por favor completa los campos faltantes en las siguientes filas:\n\n";
                 for (const index in erroresPorFila) {
-                    mensaje +=
-                        `<hr><strong>Fila ${parseInt(index)}:</strong> ${erroresPorFila[index].join(', ')}<br>`;
+                    mensaje += `● Fila ${parseInt(index)}: ${erroresPorFila[index].join(', ')}\n`;
                 }
-                mostrarModalErrores(mensaje);
 
-                return; // No continúa con el fetch
+                alert(mensaje);
+                return;
             }
 
-            // Enviar los datos si todo está bien
-            fetch("{{ route('ordenUrdido.guardar') }}", {
+            // Enviar petición al backend
+            fetch("{{ route('urdido.guardarFinalizar') }}", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -359,19 +322,34 @@
                             "content")
                     },
                     body: JSON.stringify({
+                        folio: folio,
                         registros: Object.values(formData)
                     })
                 })
                 .then(response => response.json())
                 .then(data => {
-                    alert(data.message || "Todos sus registros han sido guardados correctamente.");
+                    // Mostrar mensaje de finalizado
+                    const overlay = document.getElementById('finalizadoOverlay');
+                    overlay.classList.add('active');
+
+                    setTimeout(() => {
+                        overlay.classList.remove('active');
+                    }, 4000);
+
+                    // Desactivar botón
+                    const btn = document.getElementById("guardarYFinalizar");
+                    btn.disabled = true;
+                    btn.innerText = "Finalizado";
+
+                    alert(data.message || "Guardado y finalizado correctamente.");
                 })
                 .catch(error => {
                     console.error("Error:", error);
-                    alert("Ocurrió un error al guardar los datos.");
+                    alert("Ocurrió un error al guardar y finalizar.");
                 });
         });
     </script>
+
 
     <script>
         function mostrarModalErrores(mensaje) {

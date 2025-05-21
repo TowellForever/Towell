@@ -86,8 +86,7 @@ Route::get('ingresar-folio', function () {
     return view('modulos/urdido/ingresar_folio');
 })->name('ingresarFolio');
 Route::post('orden-trabajo', [UrdidoController::class, 'cargarDatosUrdido'])->name('produccion.ordenTrabajo');
-Route::post('/update-orden-urdido', [UrdidoController::class, 'updateOrdenUrdido'])->name('ordenUrdido.guardar');
-Route::post('/finalizar-urdido', [UrdidoController::class, 'finalizarUrdido']);
+Route::post('/urdido/guardar-finalizar', [UrdidoController::class, 'guardarYFinalizarUrdido'])->name('urdido.guardarFinalizar');
 
 
 //RUTAS DEL MODULO **engomado**
@@ -101,8 +100,8 @@ Route::get('/ingresar-folio-engomado', function () {
     return view('modulos/engomado/ingresar_folio');
 })->name('ingresarFolioEngomado');
 Route::post('/orden-trabajo-engomado', [EngomadoController::class, 'cargarDatosEngomado'])->name('produccion.ordenTrabajoEngomado');
-Route::post('/update-orden-engomado', [EngomadoController::class, 'updateOrdenEngomado'])->name('ordenEngomado.guardar');
-Route::post('/finalizar-engomado', [EngomadoController::class, 'finalizarEngomado']);
+Route::post('/guardar-finalizar-engomado', [EngomadoController::class, 'guardarYFinalizar'])
+    ->name('ordenEngomado.guardarFinalizar');
 Route::get('/imprimir-orden/{folio}', [EngomadoController::class, 'imprimirOrdenUE'])->name('imprimir.orden');
 
 //RUTAS DEL MODULO **atadores**

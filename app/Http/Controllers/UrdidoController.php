@@ -35,17 +35,24 @@ class UrdidoController extends Controller
         return view('modulos/urdido', compact('urdido', 'construccion', 'requerimiento', 'ordenUrdido', 'julios', 'oficiales'));
     }
 
-    //mewtodo para insertar o actualizar registro de ORDEN
-    public function updateOrdenUrdido(Request $request)
+    //mewtodo para insertar o actualizar registro de ORDEN-URDIDO y FINALIZARLO - se unificó dado que solicitaron borrar uno de los 2 botones.
+    public function guardarYFinalizarUrdido(Request $request)
     {
-        // Obtener los registros del request
+        // Validación inicial del folio general
+        $folio = $request->input('folio');
+
+        if (!$folio) {
+            return response()->json(['message' => 'Folio no proporcionado.'], 400);
+        }
+
+        // Guardar o actualizar registros de orden_urdido
         $registros = $request->input('registros');
 
         foreach ($registros as $registro) {
             // Validar los datos
             $validated = Validator::make($registro, [
                 'folio' => 'required',
-                'id2' => 'required', // Validar que id2 esté presente
+                'id2' => 'required',
                 'fecha' => 'required',
             ])->validate();
 
@@ -54,35 +61,24 @@ class UrdidoController extends Controller
                 ->where('folio', $registro['folio'])
                 ->first();
 
-            // Si existe, actualizamos el registro
+            // Actualizar o crear
             if ($existente) {
                 $existente->update($registro);
             } else {
-                // Si no existe, creamos un nuevo registro
                 OrdenUrdido::create($registro);
             }
         }
 
-        return response()->json(['message' => 'Todos los registros fueron guardados correctamente.']);
-    }
+        // Actualizar estatus en urdido_engomado
+        $registroUrdido = \App\Models\UrdidoEngomado::where('folio', $folio)->first();
 
-    public function finalizarUrdido(Request $request)
-    {
-        $folio = $request->input('folio');
-
-        if (!$folio) {
-            return response()->json(['message' => 'Folio no proporcionado.'], 400);
+        if (!$registroUrdido) {
+            return response()->json(['message' => 'Registro en urdido_engomado no encontrado.'], 404);
         }
 
-        $registro = \App\Models\UrdidoEngomado::where('folio', $folio)->first();
+        $registroUrdido->estatus_urdido = 'finalizado';
+        $registroUrdido->save();
 
-        if (!$registro) {
-            return response()->json(['message' => 'Registro no encontrado.'], 404);
-        }
-
-        $registro->estatus_urdido = 'finalizado';
-        $registro->save();
-
-        return response()->json(['message' => 'Estatus actualizado a FINALIZADO.']);
+        return response()->json(['message' => 'Registros guardados y estatus actualizado a FINALIZADO.']);
     }
 }
