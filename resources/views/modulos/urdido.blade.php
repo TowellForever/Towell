@@ -262,9 +262,11 @@
 
     <script>
         document.getElementById("guardarYFinalizar").addEventListener("click", function() {
-            const inputs = document.querySelectorAll('input[name^="datos"], select[name^="datos"]');
+            const inputs = document.querySelectorAll(
+                'input[name^="datos"], select[name^="datos"]'
+            ); //Recoger todos los datos de entradas (input y select) con nombres que empiecen con datos
             let formData = {};
-            let erroresPorFila = {};
+            let erroresPorFila = {}; //almacenará campos faltantes para mostrar un resumen amigable si hay errores.
             let folio = document.getElementById("folio").value;
 
             if (!folio) {
@@ -292,7 +294,9 @@
                     formData[index][key] = value;
 
                     // Validar campos obligatorios
-                    const camposOpcionales = ['tara', 'peso_neto'];
+                    const camposOpcionales = ['tara', 'peso_neto', 'hilatura', 'maquina', 'operacion',
+                        'transferencia',
+                    ];
                     if (!value && !camposOpcionales.includes(key)) {
                         if (!erroresPorFila[index]) {
                             erroresPorFila[index] = [];
@@ -341,7 +345,13 @@
                     btn.disabled = true;
                     btn.innerText = "Finalizado";
 
-                    alert(data.message || "Guardado y finalizado correctamente.");
+                    // 👉 ABRIR la nueva pestaña con la impresión después de 3 segundos
+                    setTimeout(() => {
+                        const url = "{{ url('/imprimir-orden-llena-urd') }}/" + folio;
+                        window.open(url, '_blank');
+                    }, 3000); // 3000 ms = 3 segundos
+
+
                 })
                 .catch(error => {
                     console.error("Error:", error);
@@ -391,7 +401,6 @@
             document.getElementById('peso_neto_' + registroIndex).value = pesoNeto.toFixed(2); // Mostrar con 2 decimales
         }
     </script>
-
 
     @push('styles')
         <style>

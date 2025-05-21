@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ConstruccionJulios;
 use App\Models\ConstruccionUrdido;
 use App\Models\Julio;
 use App\Models\Oficial;
@@ -80,5 +81,16 @@ class UrdidoController extends Controller
         $registroUrdido->save();
 
         return response()->json(['message' => 'Registros guardados y estatus actualizado a FINALIZADO.']);
+    }
+    //Metodo para la impresion de Urdido ya CON DATOS
+    public function imprimirOrdenUrdido($folio)
+    {
+        //el FOLIO esta llegando como parte de la url, no como un objeto que se trata con REQUEST.
+        // escribir $folio = $request; Eso guarda todo el objeto Request en la variable $folio, lo cual no tiene sentido a menos que luego vayas a manipular el request completo con ese nombre (lo cual es confuso y no recomendado). 
+        $orden = UrdidoEngomado::where('folio', $folio)->first();
+        $julios = ConstruccionJulios::where('folio', $folio)->get(); //julios dados de alta en programacion-requerimientos
+        $ordUrdido = OrdenUrdido::where('folio', $folio)->get(); // recupero todos los registros que coincidan con el folio enviado del front
+
+        return view('modulos\urdido\imprimir_orden_urdido_llena', compact('folio', 'orden', 'julios', 'ordUrdido'));
     }
 }

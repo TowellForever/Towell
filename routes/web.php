@@ -87,6 +87,7 @@ Route::get('ingresar-folio', function () {
 })->name('ingresarFolio');
 Route::post('orden-trabajo', [UrdidoController::class, 'cargarDatosUrdido'])->name('produccion.ordenTrabajo');
 Route::post('/urdido/guardar-finalizar', [UrdidoController::class, 'guardarYFinalizarUrdido'])->name('urdido.guardarFinalizar');
+Route::get('/imprimir-orden-llena-urd/{folio}', [UrdidoController::class, 'imprimirOrdenUrdido'])->name('imprimir.orden.urdido');
 
 
 //RUTAS DEL MODULO **engomado**
