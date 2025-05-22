@@ -1,6 +1,23 @@
 @extends('layouts.app')
 
 @section('content')
+    @php
+        $mostrarAlerta = ($ordenCompleta->estatus_urdido === 'finalizado' && $ordenCompleta->estatus_engomado === 'finalizado');
+    @endphp
+
+    @if ($mostrarAlerta)
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'EDICIÓN NO PERMITIDA',
+                    text: 'Se han finalizado Urdido y Engomado de la orden {{ $folio }}. Lo sentimos, no es posible editar ningún dato.',
+                    confirmButtonText: 'Entendido'
+                });
+            });
+        </script>
+    @endif
+
     <!--define una variable PHP para logica de edicion segun estatus-->
     @php
 
@@ -215,7 +232,7 @@
                         </thead>
                         <tbody class="h-24">
                             <tr>
-                                <td class="border px-1 py-0.5">
+                                <td class="border px-1 py-0.5 w-1/6">
                                     <select name="nucleo"
                                         class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded"
                                         @if ($modo == 'solo_lectura' || $modo == 'solo_urdido') disabled @endif>
@@ -264,7 +281,7 @@
                                         text-xs border-collapse border border-gray-300 mb-4">
                         <thead class="h-10">
                             <tr class="bg-gray-200 text-left">
-                                <th class="border px-1 py-0.5 w-12">Engomado</th>
+                                <th class="border px-1 py-0.5 w-20">Engomado</th>
                                 <th class="border px-1 py-0.5 w-12">L. Mat. Engomado</th>
                             </tr>
                         </thead>
@@ -306,10 +323,12 @@
 
             <!-- Botón discreto para enviar -->
             <div class="-mt-4">
-                <button type="submit" onclick="this.disabled=true; this.form.submit();"
-                    class="w-1/5 bg-green-500 text-black px-4 py-2 rounded">
-                    ACTUALIZAR
-                </button>
+                @if (!$mostrarAlerta)
+                    <button type="submit" onclick="this.disabled=true; this.form.submit();"
+                        class="w-1/5 bg-green-500 text-black px-4 py-2 rounded">
+                        ACTUALIZAR
+                    </button>
+                 @endif
             </div>
         </form>
     </div>

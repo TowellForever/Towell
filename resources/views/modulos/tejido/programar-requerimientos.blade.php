@@ -88,8 +88,7 @@
                     </thead>
                     <tbody>
                         @foreach ($inventarios as $inv)
-                            <tr class="cursor-pointer hover:bg-yellow-200 transition duration-200"
-                                data-tipo="{{ $inv->TIPO }}">
+                            <tr class="cursor-pointer hover:bg-yellow-200 transition duration-200" data-tipo="{{ $inv->TIPO }}">
                                 <td class="border px-1 py-0.5">{{ $inv->ITEMID }}</td>
                                 <td class="border px-1 py-0.5">{{ $inv->TIPO }}</td>
                                 <td class="border px-1 py-0.5">{{ number_format($inv->QTY, 0) }}</td>
@@ -116,12 +115,12 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const requerimientosRows = document.querySelectorAll("tbody tr");
-            const inventariosRows = document.querySelectorAll(".inventarios tbody tr");
+        document.addEventListener("DOMContentLoaded", function () {
+            const requerimientosRows = document.querySelectorAll(".requerimientos tbody tr"); //primer tabla
+            const inventariosRows = document.querySelectorAll(".inventarios tbody tr"); //segunda tabla
 
             requerimientosRows.forEach(row => {
-                row.addEventListener("click", function() {
+                row.addEventListener("click", function () {
                     // Obtener el tipo del registro seleccionado
                     const tipoSeleccionado = this.querySelector("td:nth-child(2)").textContent
                         .trim();
