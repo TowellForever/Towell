@@ -84,12 +84,12 @@
                         <td class="border px-1 py-0.5">
                             <input type="text" name="telar" value=" {{ $requerimiento->telar ?? '' }}"
                                 class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded"
-                                @if ($modo == 'solo_lectura' || $modo == 'solo_engomado') disabled @endif>
+                                @if ($modo == 'solo_lectura' || $modo == 'solo_engomado') readonly @endif>
                         </td>
                         <td class="border px-1 py-0.5">
                             <input type="text" name="cuenta" value="{{ $ordenCompleta->cuenta }}"
                                 class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded"
-                                @if ($modo == 'solo_lectura' || $modo == 'solo_engomado') disabled @endif>
+                                @if ($modo == 'solo_lectura' || $modo == 'solo_engomado') readonly @endif>
                         </td>
                         <td class="border px-1 py-0.5">
                             <select name="urdido"
@@ -100,6 +100,7 @@
                                 <option value="Mc Coy 2">Mc Coy 2</option>
                                 <option value="Mc Coy 3">Mc Coy 3</option>
                             </select>
+                             @if ($modo == 'solo_lectura' || $modo == 'solo_engomado')<input type="hidden" name="urdido" value="{{ $ordenCompleta->urdido }}">@endif
                         </td>
                         <td class="border px-1 py-0.5">
                             <select name="proveedor"
@@ -111,18 +112,18 @@
                                 <option value="Lewis">Lewis Hamilton – Ferrari</option>
                                 <option value="Charles">Charles Leclerc – Ferrari</option>
                                 <option value="Lando">Lando Norris – McLaren</option>
-
                             </select>
+                             @if ($modo == 'solo_lectura' || $modo == 'solo_engomado')<input type="hidden" name="proveedor" value="{{ $ordenCompleta->proveedor }}">@endif
                         </td>
                         <td class="border px-1 py-0.5">
                             <input type="text" name="tipo" value="{{ $ordenCompleta->tipo }}"
                                 class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded"
-                                @if ($modo == 'solo_lectura' || $modo == 'solo_engomado') disabled @endif required>
+                                @if ($modo == 'solo_lectura' || $modo == 'solo_engomado') readonly @endif required>
                         </td>
                         <td class="border px-1 py-0.5">
                             <input type="text" name="destino" value="{{ $ordenCompleta->destino ?? '' }}"
                                 class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded"
-                                @if ($modo == 'solo_lectura' || $modo == 'solo_engomado') disabled @endif required>
+                                @if ($modo == 'solo_lectura' || $modo == 'solo_engomado') readonly @endif required>
                         </td>
                         <td class="border px-1 py-0.5">
                             <select name="metros"
@@ -133,6 +134,7 @@
                                     <option value="{{ $i }}">{{ $i }}</option>
                                 @endfor
                             </select>
+                            @if ($modo == 'solo_lectura' || $modo == 'solo_engomado')<input type="hidden" name="metros" value="{{ $ordenCompleta->metros }}">@endif
                         </td>
                     </tr>
                 </tbody>
@@ -152,6 +154,7 @@
                                 @if ($modo == 'solo_lectura' || $modo == 'solo_engomado') disabled @endif required>
                                 <option value="{{ $ordenCompleta->lmaturdido }}">{{ $ordenCompleta->lmaturdido }}</option>
                             </select>
+                            @if ($modo == 'solo_lectura' || $modo == 'solo_engomado')<input type="hidden" name="lmaturdido" value="{{$ordenCompleta->lmaturdido }}">@endif
                         </td>
                     </tr>
                 </tbody>
@@ -179,13 +182,13 @@
                                             <input type="text" inputmode="numeric" pattern="[0-9]*" name="no_julios[]"
                                                 value="{{ $julio->no_julios ?? '' }}"
                                                 class="form-input px-1 py-0.5 text-[10px] border border-gray-300 rounded w-full"
-                                                @if ($modo == 'solo_lectura' || $modo == 'solo_engomado') disabled @endif>
+                                                @if ($modo == 'solo_lectura' || $modo == 'solo_engomado') readonly @endif>
                                         </td>
                                         <td class="border px-1 py-0.5">
                                             <input type="text" inputmode="numeric" pattern="[0-9]*" name="hilos[]"
                                                 value="{{ $julio->hilos ?? '' }}"
                                                 class="form-input px-1 py-0.5 text-[10px] border border-gray-300 rounded w-full"
-                                                @if ($modo == 'solo_lectura' || $modo == 'solo_engomado') disabled @endif>
+                                                @if ($modo == 'solo_lectura' || $modo == 'solo_engomado') readonly @endif>
                                         </td>
                                     </tr>
                                 @endfor
@@ -222,34 +225,35 @@
                                         <option value="Smit">Smit</option>
                                         <option value="Jacquard">Jacquard</option>
                                     </select>
+                                    @if ($modo == 'solo_lectura' || $modo == 'solo_urdido')<input type="hidden" name="nucleo" value="{{$ordenCompleta->nucleo }}">@endif
                                 </td>
                                 <td class="border px-1 py-0.5">
                                     <input type="text" inputmode="numeric" pattern="[0-9]*" name="no_telas"
                                         class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded"
-                                        @if ($modo == 'solo_lectura' || $modo == 'solo_urdido') disabled @endif
+                                        @if ($modo == 'solo_lectura' || $modo == 'solo_urdido') readonly @endif
                                         value="{{ $ordenCompleta->no_telas }}">
                                 </td>
                                 <td class="border px-1 py-0.5">
                                     <input type="text" inputmode="numeric" pattern="[0-9]*" name="balonas"
                                         class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded"
-                                        @if ($modo == 'solo_lectura' || $modo == 'solo_urdido') disabled @endif
+                                        @if ($modo == 'solo_lectura' || $modo == 'solo_urdido') readonly @endif
                                         value="{{ $ordenCompleta->balonas }}">
                                 </td>
                                 <td class="border px-1 py-0.5">
                                     <input type="text" inputmode="numeric" pattern="[0-9]*" name="metros_tela"
                                         class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded"
-                                        @if ($modo == 'solo_lectura' || $modo == 'solo_urdido') disabled @endif
+                                        @if ($modo == 'solo_lectura' || $modo == 'solo_urdido') readonly @endif
                                         value="{{ $ordenCompleta->metros_tela }}">
                                 </td>
                                 <td class="border px-1 py-0.5">
                                     <input type="text" inputmode="numeric" pattern="[0-9]*" name="cuendados_mini"
                                         class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded"
-                                        @if ($modo == 'solo_lectura' || $modo == 'solo_urdido') disabled @endif
+                                        @if ($modo == 'solo_lectura' || $modo == 'solo_urdido') readonly @endif
                                         value="{{ $ordenCompleta->cuendados_mini }}">
                                 </td>
                                 <td class="border px-1 py-0.5">
                                     <textarea name="observaciones" class="form-textarea w-full px-1 py-1 text-xs border border-gray-300 rounded h-16"
-                                        @if ($modo == 'solo_lectura' || $modo == 'solo_urdido') disabled @endif>{{ $ordenCompleta->observaciones }}</textarea>
+                                        @if ($modo == 'solo_lectura' || $modo == 'solo_urdido') readonly @endif>{{ $ordenCompleta->observaciones }}</textarea>
                                 </td>
                             </tr>
                         </tbody>
@@ -269,13 +273,20 @@
                                 <td class="border px-1 py-0.5">
                                     <select name="maquinaEngomado"
                                         class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded"
-                                        @if ($modo == 'solo_lectura' || $modo == 'solo_urdido') disabled @endif required>
+                                        @if ($modo == 'solo_lectura' || $modo == 'solo_urdido') disabled @endif
+                                        required>
                                         <option value="{{ $ordenCompleta->maquinaEngomado }}">
-                                            {{ $ordenCompleta->maquinaEngomado }}</option>
+                                            {{ $ordenCompleta->maquinaEngomado }}
+                                        </option>
                                         <option value="Hilo Algodón 20/1">West Point 1</option>
                                         <option value="Hilo Algodón 30/1">West Point 2</option>
                                         <option value="Hilo Poliéster 150D">West Point 3</option>
                                     </select>
+
+                                    @if ($modo == 'solo_lectura' || $modo == 'solo_urdido')
+                                        <input type="hidden" name="maquinaEngomado" value="{{ $ordenCompleta->maquinaEngomado }}">
+                                    @endif
+
                                 </td>
                                 <td class="border px-1 py-0.5">
                                     <select id="bomSelect2" name="lmatengomado"
@@ -285,6 +296,7 @@
                                             {{ $ordenCompleta->lmatengomado }}
                                         </option>
                                     </select>
+                                     @if ($modo == 'solo_lectura' || $modo == 'solo_urdido')<input type="hidden" name="lmatengomado" value="{{$ordenCompleta->lmatengomado }}">@endif
                                 </td>
                             </tr>
                         </tbody>

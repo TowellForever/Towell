@@ -174,11 +174,6 @@ class UrdidoController extends Controller
                 'observaciones' => $request->input('observaciones'),
                 'created_at' => now(),
                 'updated_at' => now(),
-                'estatus_urdido' => 'en_proceso',
-                'estatus_engomado' => 'en_proceso',
-                'engomado' => '',
-                'color' => '',
-                'solidos' => '',
                 'lmaturdido' => $request->input('lmaturdido'), //nuevos registros 20-05-2025
                 'maquinaEngomado' => $request->input('maquinaEngomado'),
                 'lmatengomado' => $request->input('lmatengomado'),
