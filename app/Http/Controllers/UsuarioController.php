@@ -56,7 +56,7 @@ class UsuarioController extends Controller
             ['nombre' => 'TEJEDORES', 'imagen' => 'tejedores.jpg', 'ruta' => '/tejedores/formato', 'permiso' => 'tejedores'],
             ['nombre' => 'MANTENIMIENTO', 'imagen' => 'mantenimiento.png', 'ruta' => '/modulo-mantenimiento', 'permiso' => 'mantenimiento'],
             ['nombre' => 'PROGRAMACIÓN URDIDO ENGOMADO', 'imagen' => 'UrdEngo.png', 'ruta' => '/modulo-UrdidoEngomado', 'permiso' => 'UrdidoEngomado'],
-            ['nombre' => 'EDICIÓN ORDEN URDIDO ENGOMADO', 'imagen' => 'edit.png', 'ruta' => '/modulo-UrdidoEngomado', 'permiso' => 'UrdidoEngomado'],
+            ['nombre' => 'EDICIÓN ORDEN URDIDO ENGOMADO', 'imagen' => 'edit.png', 'ruta' => '/modulo-edicion-urdido-engomado', 'permiso' => 'UrdidoEngomado'],
             ['nombre' => 'CONFIGURACIÓN', 'imagen' => 'configuracion.png', 'ruta' => '/modulo-configuracion', 'permiso' => 'configuracion'],
         ];
 

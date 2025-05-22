@@ -93,4 +93,26 @@ class UrdidoController extends Controller
 
         return view('modulos\urdido\imprimir_orden_urdido_llena', compact('folio', 'orden', 'julios', 'ordUrdido'));
     }
+
+    //este metodo es del módulo de EDICION de URDIDO y ENGOMADO, envía los datos necesarios al front
+    public function cargarDatosOrdenUrdEng(Request $request)
+    {
+        $folio = $request->folio;
+
+        $requerimiento = Requerimiento::where('orden_prod', $folio)->first();
+        // Obtener los datos de la tabla urdido_engomado
+        $ordenCompleta = UrdidoEngomado::where('folio', $folio)->first(); //obtenemos los registros que van en la tabla de Registro de Produccion
+        $julios = ConstruccionJulios::where('folio', $folio)->get(); //julios dados de alta en programacion-requerimientos
+        //dd($ordenCompleta);
+
+        //get() nunca será null, sino una colección (posiblemente vacía).
+        if (is_null($ordenCompleta)) {
+            return redirect()->route('ingresarFolioEdicion')
+                ->withErrors('La orden ingresada (' . $request->folio . ') no se ha encontrado. Por favor, valide el número e intente de nuevo.');
+        }
+
+
+        // Pasar los datos a la vista con el folio
+        return view('modulos/edicion_urdido_engomado/programarUrdidoEngomado', compact('folio', 'ordenCompleta', 'requerimiento', 'julios'));
+    }
 }

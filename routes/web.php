@@ -128,8 +128,15 @@ Route::get('/modulo-mantenimiento', function () {
     return view('modulos/mantenimiento');
 });
 
-//RUTAS DEL MODULO **UrdidoEngomado**
+//RUTAS DEL MODULO **Programacion-Urdido-Engomado**
 Route::get('/modulo-UrdidoEngomado', [RequerimientoController::class, 'requerimientosActivos']);
+
+//RUTAS DEL MODULO **EDICION-Urdido-Engomado** 22-05-2025
+Route::get('/modulo-edicion-urdido-engomado', function () {
+    return view('/modulos/edicion_urdido_engomado/edicion-urdido-engomado-folio');
+})->name('ingresarFolioEdicion');
+Route::post('/orden-trabajo-editar', [UrdidoController::class, 'cargarDatosOrdenUrdEng'])->name('update.ordenTrabajo');
+
 
 //RUTAS DEL MODULO **configuracion**
 Route::get('/modulo-configuracion', function () {
