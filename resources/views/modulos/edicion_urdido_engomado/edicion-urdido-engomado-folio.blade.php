@@ -83,7 +83,7 @@
         <div class="glass-card w-full max-w-md p-8" id="card">
             <h1 class="text-2xl font-bold text-center mb-6 tracking-wide">ORDEN DE TRABAJO PARA EDITAR</h1>
 
-            <form id="folioForm" action="{{ route('update.ordenTrabajo') }}" method="POST" class="space-y-4">
+            <form id="folioForm" action="{{ route('update.ordenTrabajo') }}" method="GET" class="space-y-4">
                 @csrf
                 <div>
                     <label for="folio" class="block mb-1 text-sm font-medium text-center">Porfavor ingrese su orden de

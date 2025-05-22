@@ -23,7 +23,7 @@
     <div class="mt-3 mb-20 p-1 overflow-y-auto lg:max-h-[400px] ">
 
         {{-- Mostrar errores de validación --}}
-        <form action="{{ route('orden.produccion.store') }}" method="POST">
+        <form action="{{ route('orden.produccion.update') }}" method="POST">
             @csrf
             {{-- Mostrar errores de validación --}}
             @if ($errors->any())
@@ -51,6 +51,9 @@
                 </div>
             @endif
             <h2 class="text-sm font-bold mb-1">Datos Urdido</h2>
+
+            <input type="hidden" name="folio" value="{{ $folio }}">
+
             <table class="w-full text-xs border-collapse border border-gray-300 mb-4 ">
                 <thead class="h-10">
                     <tr class="bg-gray-200 text-left">
@@ -84,7 +87,7 @@
                                 @if ($modo == 'solo_lectura' || $modo == 'solo_engomado') disabled @endif>
                         </td>
                         <td class="border px-1 py-0.5">
-                            <input type="text" name="cuenta" value="{{ $cuenta }}"
+                            <input type="text" name="cuenta" value="{{ $ordenCompleta->cuenta }}"
                                 class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded"
                                 @if ($modo == 'solo_lectura' || $modo == 'solo_engomado') disabled @endif>
                         </td>
@@ -167,7 +170,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            <tbody>
                                 @for ($i = 0; $i < 4; $i++)
                                     @php
                                         $julio = $julios[$i] ?? null;
@@ -176,19 +178,18 @@
                                         <td class="border px-1 py-0.5">
                                             <input type="text" inputmode="numeric" pattern="[0-9]*" name="no_julios[]"
                                                 value="{{ $julio->no_julios ?? '' }}"
-                                                class="form-input px-1 py-0.5 text-[10px] border border-gray-300 rounded w-full">
+                                                class="form-input px-1 py-0.5 text-[10px] border border-gray-300 rounded w-full"
+                                                @if ($modo == 'solo_lectura' || $modo == 'solo_engomado') disabled @endif>
                                         </td>
                                         <td class="border px-1 py-0.5">
                                             <input type="text" inputmode="numeric" pattern="[0-9]*" name="hilos[]"
                                                 value="{{ $julio->hilos ?? '' }}"
-                                                class="form-input px-1 py-0.5 text-[10px] border border-gray-300 rounded w-full">
+                                                class="form-input px-1 py-0.5 text-[10px] border border-gray-300 rounded w-full"
+                                                @if ($modo == 'solo_lectura' || $modo == 'solo_engomado') disabled @endif>
                                         </td>
                                     </tr>
                                 @endfor
                             </tbody>
-
-                            </tbody>
-
                         </table>
                     </div>
                 </div>
@@ -295,7 +296,7 @@
             <div class="-mt-4">
                 <button type="submit" onclick="this.disabled=true; this.form.submit();"
                     class="w-1/5 bg-green-500 text-black px-4 py-2 rounded">
-                    GUARDAR
+                    ACTUALIZAR
                 </button>
             </div>
         </form>
@@ -303,7 +304,7 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const form = document.querySelector('form[action="{{ route('orden.produccion.store') }}"]');
+            const form = document.querySelector('form[action="{{ route('orden.produccion.update') }}"]');
 
             form.addEventListener('submit', function(e) {
                 // Opcional: evitar envío para probar
@@ -315,8 +316,6 @@
                 for (let [key, value] of formData.entries()) {
                     data[key] = value;
                 }
-
-                console.log("Datos enviados:", data);
             });
         });
     </script>

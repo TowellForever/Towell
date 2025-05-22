@@ -4,7 +4,7 @@
     <div class="flex items-center justify-center min-h-screen bg-gray-100">
         <div class="bg-white p-10 rounded-2xl shadow-2xl text-center max-w-xl w-full">
             <h1 class="text-5xl font-extrabold text-gray-800 mb-6 tracking-wide">
-                Folio generado
+                Su folio es:
             </h1>
 
             <div class="bg-gray-50 border border-gray-300 rounded-xl p-6 mb-8">

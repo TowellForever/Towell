@@ -10,6 +10,7 @@ use App\Models\OrdenUrdido;
 use Illuminate\Http\Request;
 use App\Models\UrdidoEngomado;
 use App\Models\Requerimiento;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -114,5 +115,138 @@ class UrdidoController extends Controller
 
         // Pasar los datos a la vista con el folio
         return view('modulos/edicion_urdido_engomado/programarUrdidoEngomado', compact('folio', 'ordenCompleta', 'requerimiento', 'julios'));
+    }
+
+    public function ordenToActualizar(Request $request)
+    {
+        $folio = $request->folio;
+        // Validación básica: puedes hacerlo con reglas o de forma manual
+        $request->validate([
+            'cuenta' => 'required',
+            'urdido' => 'required',
+            'proveedor' => 'required',
+            'tipo' => 'required',
+            'destino' => 'required',
+            'metros' => 'required|numeric',
+            'nucleo' => 'required',
+            'no_telas' => 'required|integer',
+            'lmaturdido' => 'required',
+            'maquinaEngomado' => 'required',
+            'lmatengomado' => 'required',
+            // puedes agregar más campos si necesitas
+        ], [
+            'cuenta.required' => 'El campo cuenta es obligatorio.',
+            'urdido.required' => 'El campo urdido es obligatorio.',
+            'proveedor.required' => 'El campo proveedor es obligatorio.',
+            'tipo.required' => 'El campo tipo es obligatorio.',
+            'destino.required' => 'El campo destino es obligatorio.',
+            'metros.required' => 'El campo metros es obligatorio.',
+            'metros.numeric' => 'El campo metros debe ser un número.',
+            'nucleo.required' => 'El campo núcleo es obligatorio.',
+            'no_telas.required' => 'El campo número de telas es obligatorio.',
+            'no_telas.integer' => 'El campo número de telas debe ser un número entero.',
+            'lmaturdido.required' => 'El campo L. Mat. Urdido es obligatorio.',
+            'maquinaEngomado.required' => 'El campo maquinaEngomado es obligatorio.',
+            'lmatengomado.required' => 'El campo L. Mat. Engomado es obligatorio.',
+        ]);
+
+
+        // Validar que los arrays existan y tengan la misma longitud
+        if (!is_array($request->no_julios) || !is_array($request->hilos)) {
+            return redirect()->back()->with('error', 'Datos de construcción inválidos.');
+        }
+
+        // actualizar en urdido_engomado
+        DB::table('urdido_engomado')
+            ->where('folio', $request->folio)
+            ->update([
+                'cuenta' => $request->input('cuenta'),
+                'urdido' => $request->input('urdido'),
+                'proveedor' => $request->input('proveedor'),
+                'tipo' => $request->input('tipo'),
+                'destino' => $request->input('destino'),
+                'metros' => $request->input('metros'),
+                'nucleo' => $request->input('nucleo'),
+                'no_telas' => $request->input('no_telas'),
+                'balonas' => $request->input('balonas'),
+                'metros_tela' => $request->input('metros_tela'),
+                'cuendados_mini' => $request->input('cuendados_mini'),
+                'observaciones' => $request->input('observaciones'),
+                'created_at' => now(),
+                'updated_at' => now(),
+                'estatus_urdido' => 'en_proceso',
+                'estatus_engomado' => 'en_proceso',
+                'engomado' => '',
+                'color' => '',
+                'solidos' => '',
+                'lmaturdido' => $request->input('lmaturdido'), //nuevos registros 20-05-2025
+                'maquinaEngomado' => $request->input('maquinaEngomado'),
+                'lmatengomado' => $request->input('lmatengomado'),
+
+            ]);
+
+        //tablita de construccion de julios 
+        // Obtener registros actuales existentes para el folio
+        // Obtener registros actuales existentes para el folio
+        $registrosExistentes = DB::table('construccion_urdido')
+            ->where('folio', $folio)
+            ->orderBy('id') // Importante para mantener el orden
+            ->get();
+
+        // Datos del formulario
+        $no_julios = $request->input('no_julios');
+        $hilos = $request->input('hilos');
+
+        for ($i = 0; $i < count($no_julios); $i++) {
+            if (!empty($no_julios[$i]) && !empty($hilos[$i])) {
+                if (isset($registrosExistentes[$i])) {
+                    // Si ya hay un registro en esa posición, se actualiza
+                    DB::table('construccion_urdido')
+                        ->where('id', $registrosExistentes[$i]->id)
+                        ->update([
+                            'no_julios' => $no_julios[$i],
+                            'hilos' => $hilos[$i],
+                            'updated_at' => now(),
+                        ]);
+                } else {
+                    // Si no hay un registro existente, se inserta uno nuevo
+                    DB::table('construccion_urdido')->insert([
+                        'folio' => $folio,
+                        'no_julios' => $no_julios[$i],
+                        'hilos' => $hilos[$i],
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
+        }
+
+        // Opcional: eliminar registros sobrantes si el nuevo arreglo es menor
+        if (count($no_julios) < count($registrosExistentes)) {
+            for ($j = count($no_julios); $j < count($registrosExistentes); $j++) {
+                DB::table('construccion_urdido')->where('id', $registrosExistentes[$j]->id)->delete();
+            }
+        }
+
+        //fin de tablita de construccion  de julios
+
+        /* ESTO YA NO ES NECESARIO, porque el folio ya ha sido actualizado en la creacion del registro
+            $updatedRows = DB::table('requerimiento')
+                ->where('status', 'activo')
+                ->where('telar', (string) $request->input('telar'))
+                ->where(function ($query) use ($request) {
+                    if ($request->input('tipo') === 'Rizo') {
+                        $query->where('rizo', 1);
+                    } elseif ($request->input('tipo') === 'Pie') {
+                        $query->where('pie', 1);
+                    }
+                })
+                ->update(['orden_prod' => $folio]);
+
+            if ($updatedRows === 0) {
+                return redirect()->back()->with('error', 'No se encontró un registro válido en requerimiento para actualizar.');
+            }*/
+
+        return view('modulos.edicion_urdido_engomado.FolioEnPantalla', compact('folio'));
     }
 }
