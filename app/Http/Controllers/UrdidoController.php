@@ -197,56 +197,46 @@ class UrdidoController extends Controller
         $no_julios = $request->input('no_julios');
         $hilos = $request->input('hilos');
 
+        // Filtrar datos válidos (ambos campos no vacíos)
+        $valores_validos = [];
         for ($i = 0; $i < count($no_julios); $i++) {
             if (!empty($no_julios[$i]) && !empty($hilos[$i])) {
-                if (isset($registrosExistentes[$i])) {
-                    // Si ya hay un registro en esa posición, se actualiza
-                    DB::table('construccion_urdido')
-                        ->where('id', $registrosExistentes[$i]->id)
-                        ->update([
-                            'no_julios' => $no_julios[$i],
-                            'hilos' => $hilos[$i],
-                            'updated_at' => now(),
-                        ]);
-                } else {
-                    // Si no hay un registro existente, se inserta uno nuevo
-                    DB::table('construccion_urdido')->insert([
-                        'folio' => $folio,
-                        'no_julios' => $no_julios[$i],
-                        'hilos' => $hilos[$i],
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]);
-                }
+                $valores_validos[] = [
+                    'no_julios' => $no_julios[$i],
+                    'hilos' => $hilos[$i],
+                ];
             }
         }
 
-        // Opcional: eliminar registros sobrantes si el nuevo arreglo es menor
-        if (count($no_julios) < count($registrosExistentes)) {
-            for ($j = count($no_julios); $j < count($registrosExistentes); $j++) {
+        // Insertar o actualizar registros válidos
+        for ($i = 0; $i < count($valores_validos); $i++) {
+            if (isset($registrosExistentes[$i])) {
+                // Actualizar registro existente
+                DB::table('construccion_urdido')
+                    ->where('id', $registrosExistentes[$i]->id)
+                    ->update([
+                        'no_julios' => $valores_validos[$i]['no_julios'],
+                        'hilos' => $valores_validos[$i]['hilos'],
+                        'updated_at' => now(),
+                    ]);
+            } else {
+                // Insertar nuevo registro
+                DB::table('construccion_urdido')->insert([
+                    'folio' => $folio,
+                    'no_julios' => $valores_validos[$i]['no_julios'],
+                    'hilos' => $valores_validos[$i]['hilos'],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+        }
+
+        // Eliminar registros sobrantes (si había más antes)
+        if (count($valores_validos) < count($registrosExistentes)) {
+            for ($j = count($valores_validos); $j < count($registrosExistentes); $j++) {
                 DB::table('construccion_urdido')->where('id', $registrosExistentes[$j]->id)->delete();
             }
         }
-
-        //fin de tablita de construccion  de julios
-
-        /* ESTO YA NO ES NECESARIO, porque el folio ya ha sido actualizado en la creacion del registro
-            $updatedRows = DB::table('requerimiento')
-                ->where('status', 'activo')
-                ->where('telar', (string) $request->input('telar'))
-                ->where(function ($query) use ($request) {
-                    if ($request->input('tipo') === 'Rizo') {
-                        $query->where('rizo', 1);
-                    } elseif ($request->input('tipo') === 'Pie') {
-                        $query->where('pie', 1);
-                    }
-                })
-                ->update(['orden_prod' => $folio]);
-
-            if ($updatedRows === 0) {
-                return redirect()->back()->with('error', 'No se encontró un registro válido en requerimiento para actualizar.');
-            }*/
-
         return view('modulos.edicion_urdido_engomado.FolioEnPantalla', compact('folio'));
     }
 }

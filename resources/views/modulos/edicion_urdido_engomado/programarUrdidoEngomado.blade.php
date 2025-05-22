@@ -115,7 +115,7 @@
                             </select>
                         </td>
                         <td class="border px-1 py-0.5">
-                            <input type="text" name="tipo" value="{{ $tipo }}"
+                            <input type="text" name="tipo" value="{{ $ordenCompleta->tipo }}"
                                 class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded"
                                 @if ($modo == 'solo_lectura' || $modo == 'solo_engomado') disabled @endif required>
                         </td>

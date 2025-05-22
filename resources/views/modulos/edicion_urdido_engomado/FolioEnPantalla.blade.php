@@ -17,7 +17,7 @@
                 Presione el botón para continuar
             </p>
 
-            <a href="{{ route('ReturningBackProRequerimientos') }}"
+            <a href="/produccionProceso"
                 class="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-full transition duration-200 shadow-md">
                 Continuar
             </a>
