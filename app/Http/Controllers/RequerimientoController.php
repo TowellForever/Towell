@@ -6,6 +6,7 @@ use App\Models\InventDim;
 use App\Models\InventSum;
 use Illuminate\Http\Request;
 use App\Models\Requerimiento;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -94,6 +95,7 @@ class RequerimientoController extends Controller
         return response()->json($requerimientos);
     }
 
+    // metodo del modulo de TEJIDO - TEJIDO - TEJIDO - TEJIDO - TEJIDO - TEJIDO
     public function requerimientosActivos()
     {
         // Consultar los requerimientos activos
@@ -110,6 +112,45 @@ class RequerimientoController extends Controller
             ->get();
 
         return view('modulos/tejido/programar-requerimientos', compact('requerimientos', 'inventarios'));
+    }
+    //metodo que implementa el guardado de Inventario Disponible en Programacion-Requerimientos PROGRAMACION-REQUERIMIENTOS-INVENTARIOS PROGRAMACION-REQUERIMIENTOS-INVENTARIOS PROGRAMACION-REQUERIMIENTOS-INVENTARIOS
+    public function BTNreservar(Request $request)
+    {
+        //Si el string puede traer puntos o comas como separadores de miles o decimales, primero hay que normalizarlo:
+        function parse_metros($str)
+        {
+            // Elimina comas (,) que se usan como separador de miles
+            $str = str_replace(',', '', $str);
+
+            // Ahora convertir a float
+            return is_numeric($str) ? floatval($str) : 0;
+        }
+
+        $data = $request;
+        try {
+            DB::connection('sqlsrv_ti')->table('TWDISPONIBLEURDENG2')->insert([
+                'articulo' => $data['articulo'],
+                'tipo' => $data['tipo'],
+                'cantidad' => $data['cantidad'],
+                'hilo' => $data['hilo'],
+                'cuenta' => $data['cuenta'],
+                'color' => $data['color'],
+                'almacen' => $data['almacen'],
+                'orden' => $data['orden'],
+                'localidad' => $data['localidad'],
+                'no_julio' => $data['no_julio'],
+                'metros' => parse_metros($data['metros']),
+                'fecha' => Carbon::createFromFormat('d/m/Y', $data['fecha'])->format('Y-m-d'),
+                'twdis_key' => $data['twdis_key'],
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'RESERVADO EXITOSAMENTE'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => $e->getMessage()]);
+        }
     }
 
     //metodo que regresa 2 objetos a la vista para llenar 2 tablas (amarillas)

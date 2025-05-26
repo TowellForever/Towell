@@ -137,6 +137,8 @@ Route::get('/modulo-edicion-urdido-engomado', function () {
 })->name('ingresarFolioEdicion');
 Route::get('/orden-trabajo-editar', [UrdidoController::class, 'cargarDatosOrdenUrdEng'])->name('update.ordenTrabajo');
 Route::post('/tejido/actualizarUrdidoEngomado', [UrdidoController::class, 'ordenToActualizar'])->name('orden.produccion.update');
+Route::post('/reservar-inventario', [RequerimientoController::class, 'BTNreservar'])->name('reservar.inventario');
+
 
 
 //RUTAS DEL MODULO **configuracion**

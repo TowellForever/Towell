@@ -88,7 +88,8 @@
                     </thead>
                     <tbody>
                         @foreach ($inventarios as $inv)
-                            <tr class="cursor-pointer hover:bg-yellow-200 transition duration-200" data-tipo="{{ $inv->TIPO }}">
+                            <tr class="cursor-pointer hover:bg-yellow-200 transition duration-200"
+                                data-tipo="{{ $inv->TIPO }}">
                                 <td class="border px-1 py-0.5">{{ $inv->ITEMID }}</td>
                                 <td class="border px-1 py-0.5">{{ $inv->TIPO }}</td>
                                 <td class="border px-1 py-0.5">{{ number_format($inv->QTY, 0) }}</td>
@@ -108,19 +109,19 @@
                 </table>
             </div>
             <div class="flex justify-end mt-2">
-                <button
-                    class="px-3 w-1/6 py-1 text-xs bg-green-500 text-white rounded shadow hover:bg-green-600">Reservar</button>
+                <button class="px-3 w-1/6 py-1 text-xs bg-green-500 text-white rounded shadow hover:bg-green-600"
+                    id="btnReservar">Reservar</button>
             </div>
         </div>
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             const requerimientosRows = document.querySelectorAll(".requerimientos tbody tr"); //primer tabla
             const inventariosRows = document.querySelectorAll(".inventarios tbody tr"); //segunda tabla
 
             requerimientosRows.forEach(row => {
-                row.addEventListener("click", function () {
+                row.addEventListener("click", function() {
                     // Obtener el tipo del registro seleccionado
                     const tipoSeleccionado = this.querySelector("td:nth-child(2)").textContent
                         .trim();
@@ -157,4 +158,91 @@
             row.classList.add("bg-blue-200");
         }
     </script>
+    <!--El siguiente script, marca la fila seleccionada de amarillo y obtiene todos sus datos-->
+    <script>
+        let selectedRowData = null;
+
+        document.querySelectorAll(".inventarios tbody tr").forEach(row => {
+            row.addEventListener("click", function() {
+                // Limpiar selección anterior
+                document.querySelectorAll(".inventarios tbody tr").forEach(r => r.classList.remove(
+                    "bg-yellow-300"));
+                this.classList.add("bg-yellow-300");
+
+                const cells = this.querySelectorAll("td");
+                selectedRowData = {
+                    articulo: cells[0].innerText.trim(),
+                    tipo: cells[1].innerText.trim(),
+                    cantidad: parseInt(cells[2].innerText.trim()),
+                    hilo: cells[3].innerText.trim(),
+                    cuenta: cells[4].innerText.trim(),
+                    color: cells[5].innerText.trim(),
+                    almacen: cells[6].innerText.trim(),
+                    orden: cells[7].innerText.trim(),
+                    localidad: cells[8].innerText.trim(),
+                    no_julio: cells[9].innerText.trim(),
+                    metros: cells[10].innerText.trim(),
+                    fecha: cells[11].innerText
+                        .trim(), // asegurarte que esté en formato válido YYYY-MM-DD
+                    twdis_key: 'foranea' // Puedes ajustar esto si lo necesitas dinámico
+                };
+
+                console.log("Seleccionado:", selectedRowData);
+            });
+        });
+
+        document.querySelector("#btnReservar").addEventListener("click", function() {
+            if (!selectedRowData) {
+                alert("Selecciona una fila antes de reservar.");
+                return;
+            }
+
+            fetch("{{ route('reservar.inventario') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    body: JSON.stringify(selectedRowData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                    } else {
+                        alert("Error al guardar");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Ocurrió un error en la solicitud.");
+                });
+        });
+    </script>
 @endsection
+
+
+
+
+<!--
+--creacion  de tabla COPIA
+CREATE TABLE TWDISPONIBLEURDENG2 (
+    ITEMID            VARCHAR(30),
+    CONFIGID          VARCHAR(20),
+    INVENTSIZEID      VARCHAR(20),
+    INVENTCOLORID     VARCHAR(20),
+    INVENTLOCATIONID  VARCHAR(20),
+    INVENTBATCHID     VARCHAR(30),
+    WMSLOCATIONID     VARCHAR(30),
+    INVENTSERIALID    VARCHAR(30),
+    QTY               INT,
+    METROS            DECIMAL(18, 2),
+    TIPO              VARCHAR(20),
+    ITEMNAME          VARCHAR(100),
+    COLORNAME         VARCHAR(50),
+    FECHAINGRESO      DATETIME,
+    DATAAREAID        VARCHAR(10),
+    RECVERSION        INT,
+    RECID             BIGINT
+);
+-->
