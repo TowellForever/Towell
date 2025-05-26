@@ -3,13 +3,14 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
-    protected $connection = 'sqlsrv_ti'; // conexión ya creada
+
     public function up(): void
     {
-        Schema::connection($this->connection)->create('TWDISPONIBLEURDENG2', function (Blueprint $table) {
+        Schema::create('TWDISPONIBLEURDENG2', function (Blueprint $table) {
             $table->id();
             $table->string('articulo', 40)->nullable();
             $table->string('tipo', 20)->nullable();
@@ -23,15 +24,19 @@ return new class extends Migration
             $table->string('no_julio', 40)->nullable();
             $table->decimal('metros', 10, 2)->nullable();
             $table->dateTime('fecha')->nullable();
-            $table->string('twdis_key', 10)->nullable();
+            $table->unsignedBigInteger('reqid'); // Clave foránea
         });
+
+        // 🔗 Agregamos la llave foránea manualmente (compatible con SQL Server)
+        DB::statement("
+            ALTER TABLE TWDISPONIBLEURDENG2
+            ADD CONSTRAINT fk_reqid FOREIGN KEY (reqid)
+            REFERENCES Produccion.dbo.requerimiento(id)
+        ");
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::connection($this->connection)->dropIfExists('TWDISPONIBLEURDENG2');
+        Schema::dropIfExists('TWDISPONIBLEURDENG2');
     }
 };

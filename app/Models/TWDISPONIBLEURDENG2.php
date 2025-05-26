@@ -26,5 +26,8 @@ class TWDISPONIBLEURDENG2 extends Model
         'metros',
         'fecha',
         'twdis_key',
+        'telar',
+        'fecha_requerida',
+        'mccoy',
     ];
 }

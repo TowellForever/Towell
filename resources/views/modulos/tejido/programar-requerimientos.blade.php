@@ -1,18 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container sm:mt-8 md:mt-1 mx-auto -mt-3 overflow-y-auto" style="max-height: calc(100vh - 150px);">
+    <div class="container sm:mt-8 md:mt-1 mx-auto -mt-3 overflow-y-auto md:h-[550px]">
         <form id="seleccionForm" method="GET" action="{{ route('formulario.programarRequerimientos') }}">
             <!-- Inputs ocultos para enviar el telar y tipo seleccionados -->
             <input type="hidden" name="telar" id="telarInput">
             <input type="hidden" name="tipo" id="tipoInput">
             <!-- Tabla 1: Requerimiento desde Dynamics AX -->
             <div class="bg-white shadow-md rounded-lg p-2 custom-scroll">
-                <h2 class="text-lg font-bold bg-yellow-200 text-center py-2">Programación de Requerimientos</h2>
-                <div class="flex justify-end mt-2 mb-2">
-                    <button
-                        class="px-3 w-1/6 py-1 text-xs bg-green-500 text-white rounded shadow hover:bg-green-600">Programar</button>
+
+                <div class="w-full mt-2 mb-2 flex items-center justify-between">
+                    <h2 class="text-lg font-bold bg-yellow-200 text-center flex-grow">Programación de Requerimientos</h2>
+                    <button class="w-40 font-semibold text-lg bg-blue-500 text-white hover:bg-green-600">Programar</button>
                 </div>
+
                 <div class="overflow-y-auto max-h-60 "> <!-- Contenedor con scroll -->
                     <!-- Tabla 1: Programación de Requerimientos -->
                     <table class="w-full text-xs border-collapse border border-gray-300 requerimientos">
@@ -53,6 +54,7 @@
                                     <td class="border px-1 py-0.5"></td>
                                     <!--Aqui se insertará la orden o FOLIO que se genera en la vista que sigue al presion boton Programar-->
                                     <td class="border text-center"><input type="checkbox" class="w-5 h-5"></td>
+                                    <input type="hidden" value="{{ $req->id }}">
                                 </tr>
                             @endforeach
                         </tbody>
@@ -65,7 +67,11 @@
 
         <!-- Tabla 2: Inventario Disponible -->
         <div class="bg-white shadow-md rounded-lg p-2">
-            <h2 class="text-lg font-bold bg-yellow-200 text-center py-2">Inventario Disponible</h2>
+            <div class="w-full mt-2 mb-2 flex items-center justify-between">
+                <h2 class="text-lg font-bold bg-yellow-200 text-center flex-grow">Inventario Disponible</h2>
+                <button class="w-40 font-semibold text-lg bg-blue-500 text-white hover:bg-green-600"
+                    id="btnReservar">Reservar</button>
+            </div>
             <div class="overflow-y-auto max-h-60 "> <!-- Contenedor con scroll -->
                 <!-- Tabla 2: Inventarios -->
                 <table class="w-full text-xs border-collapse border border-gray-300 inventarios">
@@ -108,33 +114,38 @@
                     </tbody>
                 </table>
             </div>
-            <div class="flex justify-end mt-2">
-                <button class="px-3 w-1/6 py-1 text-xs bg-green-500 text-white rounded shadow hover:bg-green-600"
-                    id="btnReservar">Reservar</button>
-            </div>
         </div>
     </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const requerimientosRows = document.querySelectorAll(".requerimientos tbody tr"); //primer tabla
-            const inventariosRows = document.querySelectorAll(".inventarios tbody tr"); //segunda tabla
+            const requerimientosRows = document.querySelectorAll(".requerimientos tbody tr"); // primera tabla
+            const inventariosRows = document.querySelectorAll(".inventarios tbody tr"); // segunda tabla
 
             requerimientosRows.forEach(row => {
                 row.addEventListener("click", function() {
-                    // Obtener el tipo del registro seleccionado
+                    // Obtener tipo y cuenta de la fila seleccionada en la primera tabla
                     const tipoSeleccionado = this.querySelector("td:nth-child(2)").textContent
                         .trim();
+                    const cuentaSeleccionada = this.querySelector("td:nth-child(3)").textContent
+                        .trim();
 
-                    // Filtrar la segunda tabla según el tipo
+                    // Filtrar la segunda tabla
                     inventariosRows.forEach(invRow => {
                         const tipoInventario = invRow.querySelector("td:nth-child(2)")
                             .textContent.trim();
 
-                        if (tipoInventario === tipoSeleccionado) {
-                            invRow.style.display = ""; // Mostrar si coincide
+                        // Extraer la cuenta antes del guion "-"
+                        const cuentaInventarioFull = invRow.querySelector("td:nth-child(5)")
+                            .textContent.trim();
+                        const cuentaInventario = cuentaInventarioFull.split("-")[0];
+
+                        // Mostrar solo si coinciden tipo y cuenta
+                        if (tipoInventario === tipoSeleccionado && cuentaInventario ===
+                            cuentaSeleccionada) {
+                            invRow.style.display = "";
                         } else {
-                            invRow.style.display = "none"; // Ocultar si no coincide
+                            invRow.style.display = "none";
                         }
                     });
                 });
@@ -160,17 +171,18 @@
     </script>
     <!--El siguiente script, marca la fila seleccionada de amarillo y obtiene todos sus datos-->
     <script>
-        let selectedRowData = null;
+        let selectedInventarioData = null;
+        let selectedRequerimientoData = null;
 
+        // SELECCIÓN DE LA TABLA INVENTARIOS
         document.querySelectorAll(".inventarios tbody tr").forEach(row => {
             row.addEventListener("click", function() {
-                // Limpiar selección anterior
                 document.querySelectorAll(".inventarios tbody tr").forEach(r => r.classList.remove(
                     "bg-yellow-300"));
                 this.classList.add("bg-yellow-300");
 
                 const cells = this.querySelectorAll("td");
-                selectedRowData = {
+                selectedInventarioData = {
                     articulo: cells[0].innerText.trim(),
                     tipo: cells[1].innerText.trim(),
                     cantidad: parseInt(cells[2].innerText.trim()),
@@ -182,20 +194,48 @@
                     localidad: cells[8].innerText.trim(),
                     no_julio: cells[9].innerText.trim(),
                     metros: cells[10].innerText.trim(),
-                    fecha: cells[11].innerText
-                        .trim(), // asegurarte que esté en formato válido YYYY-MM-DD
-                    twdis_key: 'foranea' // Puedes ajustar esto si lo necesitas dinámico
+                    fecha: cells[11].innerText.trim(),
+                    twdis_key: 'foranea'
                 };
 
-                console.log("Seleccionado:", selectedRowData);
+                console.log("Inventario seleccionado:", selectedInventarioData);
             });
         });
 
+        // SELECCIÓN DE LA TABLA REQUERIMIENTOS
+        document.querySelectorAll(".requerimientos tbody tr").forEach(row => {
+            row.addEventListener("click", function() {
+                document.querySelectorAll(".requerimientos tbody tr").forEach(r => r.classList.remove(
+                    "bg-blue-200"));
+                this.classList.add("bg-blue-200");
+
+                // Tomar el input hidden de esta fila
+                const id = this.querySelector('input[type="hidden"]').value;
+                selectedRequerimientoData = {
+                    id: id
+                };
+
+                console.log("Requerimiento seleccionado:", selectedRequerimientoData);
+            });
+        });
+
+        // BOTÓN PARA GUARDAR DATOS UNIFICADOS
         document.querySelector("#btnReservar").addEventListener("click", function() {
-            if (!selectedRowData) {
-                alert("Selecciona una fila antes de reservar.");
+            if (!selectedInventarioData && selectedRequerimientoData) {
+                alert("Selecciona una fila en ambas tablas antes de reservar.");
+                return;
+            } else if (selectedInventarioData && selectedRequerimientoData) {
+                //si hay seleccion de filas en ambas tablas, simplemente el programa continua ejecutandose
+            } else {
+                alert("Selecciona una fila en ambas tablas antes de reservar.");
                 return;
             }
+
+            // Combinar ambos objetos en un solo payload
+            const dataToSend = {
+                inventario: selectedInventarioData,
+                requerimiento: selectedRequerimientoData
+            };
 
             fetch("{{ route('reservar.inventario') }}", {
                     method: "POST",
@@ -203,14 +243,14 @@
                         "Content-Type": "application/json",
                         "X-CSRF-TOKEN": "{{ csrf_token() }}"
                     },
-                    body: JSON.stringify(selectedRowData)
+                    body: JSON.stringify(dataToSend)
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
                         alert(data.message);
                     } else {
-                        alert("Error al guardar");
+                        alert("Error al guardar.");
                     }
                 })
                 .catch(error => {
@@ -221,7 +261,11 @@
     </script>
 @endsection
 
-
+<!--
+    SELECT *
+FROM Produccion.dbo.TWDISPONIBLEURDENG2 AS d
+JOIN Produccion.dbo.requerimiento AS r
+    ON d.reqid = r.id;-->
 
 
 <!--

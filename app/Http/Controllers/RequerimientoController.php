@@ -125,32 +125,30 @@ class RequerimientoController extends Controller
             // Ahora convertir a float
             return is_numeric($str) ? floatval($str) : 0;
         }
+        $inventario = $request->input('inventario');
+        $requerimiento = $request->input('requerimiento');
 
-        $data = $request;
-        try {
-            DB::connection('sqlsrv_ti')->table('TWDISPONIBLEURDENG2')->insert([
-                'articulo' => $data['articulo'],
-                'tipo' => $data['tipo'],
-                'cantidad' => $data['cantidad'],
-                'hilo' => $data['hilo'],
-                'cuenta' => $data['cuenta'],
-                'color' => $data['color'],
-                'almacen' => $data['almacen'],
-                'orden' => $data['orden'],
-                'localidad' => $data['localidad'],
-                'no_julio' => $data['no_julio'],
-                'metros' => parse_metros($data['metros']),
-                'fecha' => Carbon::createFromFormat('d/m/Y', $data['fecha'])->format('Y-m-d'),
-                'twdis_key' => $data['twdis_key'],
-            ]);
+        DB::connection('sqlsrv')->table('TWDISPONIBLEURDENG2')->insert([
+            'articulo' => $inventario['articulo'],
+            'tipo' => $inventario['tipo'],
+            'cantidad' => $inventario['cantidad'],
+            'hilo' => $inventario['hilo'],
+            'cuenta' => $inventario['cuenta'],
+            'color' => $inventario['color'],
+            'almacen' => $inventario['almacen'],
+            'orden' => $inventario['orden'],
+            'localidad' => $inventario['localidad'],
+            'no_julio' => $inventario['no_julio'],
+            'metros' => parse_metros($inventario['metros']),
+            'fecha' => Carbon::createFromFormat('d/m/Y', $inventario['fecha'])->format('Y-m-d'),
+            'reqid' => $requerimiento['id'],
 
-            return response()->json([
-                'success' => true,
-                'message' => 'RESERVADO EXITOSAMENTE'
-            ]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'error' => $e->getMessage()]);
-        }
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'RESERVADO EXITOSAMENTE'
+        ]);
     }
 
     //metodo que regresa 2 objetos a la vista para llenar 2 tablas (amarillas)
