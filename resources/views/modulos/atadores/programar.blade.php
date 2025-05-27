@@ -99,7 +99,8 @@
                                         ATADO:</label>
                                     <input type="date" name="turno" id="inputFechaAta"
                                         class="w-full border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50"
-                                        value="{{ now()->format('Y-m-d') }}">
+                                        value="{{ \Carbon\Carbon::parse($ata->fecha)->format('Y-m-d') }}">
+
                                 </div>
                                 <div class="flex items-center">
                                     <label for="inputTurno" class="w-28 text-xs text-gray-600 font-medium">TURNO:</label>
