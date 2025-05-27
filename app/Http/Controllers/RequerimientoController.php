@@ -98,21 +98,33 @@ class RequerimientoController extends Controller
     // metodo del modulo de TEJIDO - TEJIDO - TEJIDO - TEJIDO - TEJIDO - TEJIDO
     public function requerimientosActivos()
     {
-        // Consultar los requerimientos activos
+        // Obtener los IDs de requerimientos ya seleccionados
+        $requerimientosSeleccionados = DB::table('Produccion.dbo.TWDISPONIBLEURDENG2')
+            ->pluck('reqid')
+            ->toArray();
+
+        $InventariosSeleccionados = DB::table('Produccion.dbo.TWDISPONIBLEURDENG2')
+            ->pluck('dis_id')
+            ->toArray();
+
+        // Consultar solo los requerimientos activos que NO están en TWDISPONIBLEURDENG2
         $requerimientos = DB::table('requerimiento')
-            ->where('status', 'activo') // Filtrar solo los registros activos
+            ->where('status', 'activo')
             ->where('orden_prod', '')
-            ->orderBy('fecha', 'asc') // Ordena por fecha más cercana
+            ->whereNotIn('id', $requerimientosSeleccionados)
+            ->orderBy('fecha', 'asc')
             ->get();
 
-        // Obtener los datos de la BD TI_PRO con los joins y filtros correspondientes
+        // Obtener inventarios desde la conexión SQL Server secundaria
         $inventarios = DB::connection('sqlsrv_ti')
             ->table('TI_PRO.dbo.TWDISPONIBLEURDENG')
             ->where('INVENTLOCATIONID', 'A-JUL/TELA')
+            ->whereNotIn('RECID', $InventariosSeleccionados)
             ->get();
 
         return view('modulos/tejido/programar-requerimientos', compact('requerimientos', 'inventarios'));
     }
+
     //metodo que implementa el guardado de Inventario Disponible en Programacion-Requerimientos PROGRAMACION-REQUERIMIENTOS-INVENTARIOS PROGRAMACION-REQUERIMIENTOS-INVENTARIOS PROGRAMACION-REQUERIMIENTOS-INVENTARIOS
     public function BTNreservar(Request $request)
     {
@@ -128,6 +140,19 @@ class RequerimientoController extends Controller
         $inventario = $request->input('inventario');
         $requerimiento = $request->input('requerimiento');
 
+        // VERIFICACION, si ya existe esa combinación
+        $existe = DB::table('TWDISPONIBLEURDENG2')
+            ->where('reqid', $requerimiento['id'])
+            ->where('dis_id', $inventario['recid'])
+            ->exists();
+
+        if ($existe) {
+            return response()->json([
+                'success' => false,
+                'message' => 'YA SE HA RESERVADO PREVIAMENTE, INTENTE CON OTRAS FILAS POR FAVOR.',
+            ]);
+        }
+
         DB::connection('sqlsrv')->table('TWDISPONIBLEURDENG2')->insert([
             'articulo' => $inventario['articulo'],
             'tipo' => $inventario['tipo'],
@@ -140,14 +165,26 @@ class RequerimientoController extends Controller
             'localidad' => $inventario['localidad'],
             'no_julio' => $inventario['no_julio'],
             'metros' => parse_metros($inventario['metros']),
-            'fecha' => Carbon::createFromFormat('d/m/Y', $inventario['fecha'])->format('Y-m-d'),
+            'fecha' => Carbon::createFromFormat('d-m-y', $inventario['fecha'])->format('Y-m-d'),
             'reqid' => $requerimiento['id'],
+            'dis_id' => ($inventario['recid']),
 
         ]);
 
+        $nuevoValorMetros = parse_metros($inventario['metros']);
+        $nuevoValorMccoy = 3; //PENDIENTE, aún necesitamos saber qué datos irán aquí 
+        $nuevoTelar = DB::table('Produccion.dbo.requerimiento')->where('id', $requerimiento['id'])->first();
+
+        //Log::info((array) $nuevoTelar);
+
         return response()->json([
             'success' => true,
-            'message' => 'RESERVADO EXITOSAMENTE'
+            'message' => 'RESERVADO CORRECTAMENTE',
+            'nuevos_valores' => [
+                'metros' => $nuevoValorMetros,
+                'mccoy' => $nuevoValorMccoy,
+                'telar' => $nuevoTelar->telar,
+            ]
         ]);
     }
 

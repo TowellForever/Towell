@@ -87,6 +87,7 @@
                             <th class="border px-1 py-0.5">No. Julio</th>
                             <th class="border px-1 py-0.5">Metros</th>
                             <th class="border px-1 py-0.5">Fecha</th>
+                            <th class="border px-1 py-0.5">Telar</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -104,7 +105,12 @@
                                 <td class="border px-1 py-0.5">{{ $inv->WMSLOCATIONID }}</td>
                                 <td class="border px-1 py-0.5">{{ $inv->INVENTSERIALID }}</td>
                                 <td class="border px-1 py-0.5">{{ number_format($inv->METROS, 0) }}</td>
-                                <td class="border px-1 py-0.5">12/05/2025</td>
+                                <td class="border px-1 py-0.5">
+                                    {{ \Carbon\Carbon::parse($inv->FECHAINGRESO)->format('d-m-y') }}
+                                </td>
+                                <td class="border px-1 py-0.5"></td>
+                                <input type="hidden" value="{{ $inv->RECID }}">
+                                <!-- el input oculta se ocupa para saber que registros ya estan seleccionados por el usuarios c:-->
                             </tr>
                         @endforeach
                     </tbody>
@@ -173,11 +179,17 @@
         // SELECCIÓN DE LA TABLA INVENTARIOS
         document.querySelectorAll(".inventarios tbody tr").forEach(row => {
             row.addEventListener("click", function() {
+                if (this.classList.contains("bg-red-200")) {
+                    alert("Este registro ya ha sido reservado y no puede ser seleccionado nuevamente.");
+                    return;
+                }
+
                 document.querySelectorAll(".inventarios tbody tr").forEach(r => r.classList.remove(
                     "bg-yellow-300"));
                 this.classList.add("bg-yellow-300");
 
                 const cells = this.querySelectorAll("td");
+                let recid = row.querySelector('input[type="hidden"]').value;
                 selectedInventarioData = {
                     articulo: cells[0].innerText.trim(),
                     tipo: cells[1].innerText.trim(),
@@ -191,7 +203,8 @@
                     no_julio: cells[9].innerText.trim(),
                     metros: cells[10].innerText.trim(),
                     fecha: cells[11].innerText.trim(),
-                    twdis_key: 'foranea'
+                    twdis_key: 'foranea',
+                    recid: recid,
                 };
 
                 console.log("Inventario seleccionado:", selectedInventarioData);
@@ -201,11 +214,17 @@
         // SELECCIÓN DE LA TABLA REQUERIMIENTOS
         document.querySelectorAll(".requerimientos tbody tr").forEach(row => {
             row.addEventListener("click", function() {
+                if (this.classList.contains("bg-red-200")) {
+                    alert(
+                        "Este requerimiento ya ha sido reservado y no puede ser seleccionado nuevamente."
+                    );
+                    return;
+                }
+
                 document.querySelectorAll(".requerimientos tbody tr").forEach(r => r.classList.remove(
                     "bg-yellow-300"));
                 this.classList.add("bg-yellow-300");
 
-                // Tomar el input hidden de esta fila
                 const id = this.querySelector('input[type="hidden"]').value;
                 selectedRequerimientoData = {
                     id: id
@@ -214,6 +233,7 @@
                 console.log("Requerimiento seleccionado:", selectedRequerimientoData);
             });
         });
+
 
         // BOTÓN PARA GUARDAR DATOS UNIFICADOS
         document.querySelector("#btnReservar").addEventListener("click", function() {
@@ -226,6 +246,17 @@
                 alert("Selecciona una fila en ambas tablas antes de reservar.");
                 return;
             }
+
+            const inventarioRow = document.querySelector(".inventarios tbody tr.bg-yellow-300");
+            const requerimientoRow = document.querySelector(".requerimientos tbody tr.bg-yellow-300");
+
+            // Verifica si alguna de las filas ya está en rojo
+            if (inventarioRow && inventarioRow.classList.contains("bg-red-200") ||
+                requerimientoRow && requerimientoRow.classList.contains("bg-red-200")) {
+                alert("No puedes reservar registros que ya han sido seleccionados anteriormente.");
+                return;
+            }
+
 
             // Combinar ambos objetos en un solo payload
             const dataToSend = {
@@ -245,8 +276,40 @@
                 .then(data => {
                     if (data.success) {
                         alert(data.message);
+
+                        // PINTAR AMBAS FILAS DE ROJO CLARO
+                        const inventarioRow = document.querySelector(".inventarios tbody tr.bg-yellow-300");
+                        const requerimientoRow = document.querySelector(
+                            ".requerimientos tbody tr.bg-yellow-300");
+
+                        inventarioRow.classList.remove("bg-yellow-300");
+                        requerimientoRow.classList.remove("bg-yellow-300");
+
+                        inventarioRow.classList.add("bg-red-200");
+                        requerimientoRow.classList.add("bg-red-200");
+
+                        // ACTUALIZAR CELDAS EN LA TABLA DE INVENTARIOS
+                        // Suponiendo que "metros" es la columna 10 y "mccoy" la 11 (ajusta si es necesario)
+                        const invCells = requerimientoRow.querySelectorAll("td");
+                        invCells[4].innerText = data.nuevos_valores.metros;
+                        invCells[5].innerText = data.nuevos_valores.mccoy;
+
+                        // ACTUALIZAR CELDA EN LA TABLA DE REQUERIMIENTOS
+                        // Aquí asumimos que hay una celda específica para el telar (ajusta si es necesario)
+                        const reqCells = inventarioRow.querySelectorAll("td");
+                        const celdaTelar = reqCells[12];
+                        celdaTelar.innerText = data.nuevos_valores.telar;
+
                     } else {
-                        alert("Error al guardar.");
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'ERROR',
+                            text: data.message,
+                            confirmButtonText: 'Entendido',
+                            confirmButtonColor: '#3085d6',
+                            background: '#f0f8ff',
+                            color: '#0a3d62',
+                        });
                     }
                 })
                 .catch(error => {

@@ -24,7 +24,8 @@ return new class extends Migration
             $table->string('no_julio', 40)->nullable();
             $table->decimal('metros', 10, 2)->nullable();
             $table->dateTime('fecha')->nullable();
-            $table->unsignedBigInteger('reqid'); // Clave foránea
+            $table->unsignedBigInteger('reqid'); //
+            $table->bigInteger('dis_id')->nullable();
         });
 
         // 🔗 Agregamos la llave foránea manualmente (compatible con SQL Server)
