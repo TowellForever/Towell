@@ -119,10 +119,19 @@ class RequerimientoController extends Controller
         $inventarios = DB::connection('sqlsrv_ti')
             ->table('TI_PRO.dbo.TWDISPONIBLEURDENG')
             ->where('INVENTLOCATIONID', 'A-JUL/TELA')
-            ->whereNotIn('RECID', $InventariosSeleccionados)
             ->get();
 
-        return view('modulos/tejido/programar-requerimientos', compact('requerimientos', 'inventarios'));
+        //Convierte $vinculados en un array asociativo en el backend para facilitar el acceso por dis_id
+        $vinculados = DB::table('Produccion.dbo.TWDISPONIBLEURDENG2 as d')
+            ->join('Produccion.dbo.requerimiento as r', 'd.reqid', '=', 'r.id')
+            ->select('d.dis_id', 'r.telar')
+            ->get()
+            ->keyBy('dis_id'); // Agrupa por dis_id como índice
+
+
+        //Log::info((array) $InventariosSeleccionados);
+
+        return view('modulos/tejido/programar-requerimientos', compact('requerimientos', 'inventarios', 'InventariosSeleccionados', 'vinculados'));
     }
 
     //metodo que implementa el guardado de Inventario Disponible en Programacion-Requerimientos PROGRAMACION-REQUERIMIENTOS-INVENTARIOS PROGRAMACION-REQUERIMIENTOS-INVENTARIOS PROGRAMACION-REQUERIMIENTOS-INVENTARIOS
@@ -174,6 +183,7 @@ class RequerimientoController extends Controller
         $nuevoValorMetros = parse_metros($inventario['metros']);
         $nuevoValorMccoy = 3; //PENDIENTE, aún necesitamos saber qué datos irán aquí 
         $nuevoTelar = DB::table('Produccion.dbo.requerimiento')->where('id', $requerimiento['id'])->first();
+        $orden = $inventario['orden'];
 
         //Log::info((array) $nuevoTelar);
 
@@ -184,6 +194,7 @@ class RequerimientoController extends Controller
                 'metros' => $nuevoValorMetros,
                 'mccoy' => $nuevoValorMccoy,
                 'telar' => $nuevoTelar->telar,
+                'orden' => $orden,
             ]
         ]);
     }

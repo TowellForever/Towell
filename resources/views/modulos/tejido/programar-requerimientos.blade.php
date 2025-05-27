@@ -108,7 +108,11 @@
                                 <td class="border px-1 py-0.5">
                                     {{ \Carbon\Carbon::parse($inv->FECHAINGRESO)->format('d-m-y') }}
                                 </td>
-                                <td class="border px-1 py-0.5"></td>
+                                <td class="border px-1 py-0.5">
+                                    @if (isset($vinculados[$inv->RECID]))
+                                        {{ $vinculados[$inv->RECID]->telar }}
+                                    @endif
+                                </td>
                                 <input type="hidden" value="{{ $inv->RECID }}">
                                 <!-- el input oculta se ocupa para saber que registros ya estan seleccionados por el usuarios c:-->
                             </tr>
@@ -175,21 +179,29 @@
     <script>
         let selectedInventarioData = null;
         let selectedRequerimientoData = null;
+        const inventariosReservados = @json($InventariosSeleccionados); // Pasar el arreglo PHP a JS
+
 
         // SELECCIÓN DE LA TABLA INVENTARIOS
+        // Al cargar la tabla, marcar filas reservadas y bloquear selección
         document.querySelectorAll(".inventarios tbody tr").forEach(row => {
-            row.addEventListener("click", function() {
-                if (this.classList.contains("bg-red-200")) {
-                    alert("Este registro ya ha sido reservado y no puede ser seleccionado nuevamente.");
-                    return;
-                }
+            let recid = row.querySelector('input[type="hidden"]').value;
 
+            if (inventariosReservados.includes(recid)) {
+                row.classList.add("bg-red-200");
+                // Puedes añadir tooltip o cursor no permitido
+                row.title = "Este registro ya ha sido reservado.";
+                // Opcional: bloquear pointer events para no permitir click
+                row.style.pointerEvents = "none";
+                return; // No asignamos evento click porque no puede seleccionar
+            }
+
+            row.addEventListener("click", function() {
                 document.querySelectorAll(".inventarios tbody tr").forEach(r => r.classList.remove(
                     "bg-yellow-300"));
                 this.classList.add("bg-yellow-300");
 
                 const cells = this.querySelectorAll("td");
-                let recid = row.querySelector('input[type="hidden"]').value;
                 selectedInventarioData = {
                     articulo: cells[0].innerText.trim(),
                     tipo: cells[1].innerText.trim(),
@@ -210,6 +222,7 @@
                 console.log("Inventario seleccionado:", selectedInventarioData);
             });
         });
+
 
         // SELECCIÓN DE LA TABLA REQUERIMIENTOS
         document.querySelectorAll(".requerimientos tbody tr").forEach(row => {
@@ -275,7 +288,15 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert(data.message);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'ÉXITO',
+                            text: data.message,
+                            confirmButtonText: 'Entendido',
+                            confirmButtonColor: '#3085d6',
+                            background: '#f0f8ff',
+                            color: '#0a3d62',
+                        });
 
                         // PINTAR AMBAS FILAS DE ROJO CLARO
                         const inventarioRow = document.querySelector(".inventarios tbody tr.bg-yellow-300");
@@ -293,6 +314,7 @@
                         const invCells = requerimientoRow.querySelectorAll("td");
                         invCells[4].innerText = data.nuevos_valores.metros;
                         invCells[5].innerText = data.nuevos_valores.mccoy;
+                        invCells[6].innerText = data.nuevos_valores.orden;
 
                         // ACTUALIZAR CELDA EN LA TABLA DE REQUERIMIENTOS
                         // Aquí asumimos que hay una celda específica para el telar (ajusta si es necesario)
