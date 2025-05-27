@@ -35,7 +35,8 @@
                             @foreach ($atadores as $ata)
                                 <!-- Ejemplo de fila sin datos reales -->
                                 <tr>
-                                    <td class="border px-1 py-0.5">{{ $ata->fecha }}</td>
+                                    <td class="border px-1 py-0.5">{{ \Carbon\Carbon::parse($ata->fecha)->format('d/m/y') }}
+                                    </td>
                                     <td class="border px-1 py-0.5">
                                         @php
                                             $mapa = [
@@ -54,9 +55,9 @@
                                     <!--Crea un pequeño diccionario ($mapa) con los posibles valores. Muestra el número correspondiente si encuentra coincidencia. Si no lo encuentra (ej. otro valor raro), muestra el valor original por si acaso.-->
                                     <td class="border px-1 py-0.5">{{ $ata->telar }}</td>
                                     <td class="border px-1 py-0.5">{{ $ata->tipo }}</td>
-                                    <td class="border px-1 py-0.5"></td> <!--N° Julios-->
+                                    <td class="border px-1 py-0.5">{{ $ata->no_julio }}</td>
                                     <td class="border px-1 py-0.5">{{ number_format($ata->metros, 0) }}</td>
-                                    <td class="border px-1 py-0.5">{{ $ata->orden_prod }}</td>
+                                    <td class="border px-1 py-0.5">{{ $ata->orden }}</td>
                                 </tr>
                                 <!-- Puedes duplicar más filas si necesitas más ejemplos -->
                             @endforeach

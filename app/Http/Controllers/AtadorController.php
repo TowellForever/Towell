@@ -13,15 +13,10 @@ class AtadorController extends Controller
         //Log::info('Data:', $request->all());
 
         // Obtener los datos de las tres tablas basadas en el folio
-        $atadores = DB::table('Produccion.dbo.requerimiento as r')
-            ->join('Produccion.dbo.urdido_engomado as u', 'r.orden_prod', '=', 'u.folio')
-            ->select('fecha', 'tipo', 'valor', 'telar', 'orden_prod', 'proveedor', 'u.metros')
-            ->where('status', 'activo')
-            ->orderByRaw("CONVERT(DATETIME, fecha, 103)") // 103 = formato dd/mm/yyyy - usamos la funcion CONVERT porque es la que funciona en Windows Server 2008.
+        $atadores = DB::table('Produccion.dbo.TWDISPONIBLEURDENG2 as d')
+            ->join('Produccion.dbo.requerimiento as r', 'd.reqid', '=', 'r.id')
+            ->select('d.fecha', 'd.tipo', 'd.no_julio', 'd.metros', 'd.orden', 'r.telar', 'r.valor') // O especifica campos como: 'd.dis_id', 'r.telar', etc.
             ->get();
-
-
-
 
         // Pasar los datos a la vista
         return view('modulos/atadores/programar', compact('atadores'));
