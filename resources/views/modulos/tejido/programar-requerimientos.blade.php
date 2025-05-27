@@ -26,7 +26,6 @@
                                 <th class="border px-1 py-0.5">Metros</th>
                                 <th class="border px-1 py-0.5">Mc Coy</th>
                                 <th class="border px-1 py-0.5">Orden Urdido o Engomado</th>
-                                <th class="border px-1 py-0.5">Programar</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -53,7 +52,6 @@
                                     <td class="border px-1 py-0.5">-</td> <!-- Mc Coy nulo -->
                                     <td class="border px-1 py-0.5"></td>
                                     <!--Aqui se insertará la orden o FOLIO que se genera en la vista que sigue al presion boton Programar-->
-                                    <td class="border text-center"><input type="checkbox" class="w-5 h-5"></td>
                                     <input type="hidden" value="{{ $req->id }}">
                                 </tr>
                             @endforeach
@@ -89,7 +87,6 @@
                             <th class="border px-1 py-0.5">No. Julio</th>
                             <th class="border px-1 py-0.5">Metros</th>
                             <th class="border px-1 py-0.5">Fecha</th>
-                            <th class="border px-1 py-0.5">Seleccionar</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -108,7 +105,6 @@
                                 <td class="border px-1 py-0.5">{{ $inv->INVENTSERIALID }}</td>
                                 <td class="border px-1 py-0.5">{{ number_format($inv->METROS, 0) }}</td>
                                 <td class="border px-1 py-0.5">12/05/2025</td>
-                                <td class="border px-1 py-0.5 text-center"><input type="checkbox" class="w-5 h-5"></td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -206,8 +202,8 @@
         document.querySelectorAll(".requerimientos tbody tr").forEach(row => {
             row.addEventListener("click", function() {
                 document.querySelectorAll(".requerimientos tbody tr").forEach(r => r.classList.remove(
-                    "bg-blue-200"));
-                this.classList.add("bg-blue-200");
+                    "bg-yellow-300"));
+                this.classList.add("bg-yellow-300");
 
                 // Tomar el input hidden de esta fila
                 const id = this.querySelector('input[type="hidden"]').value;
