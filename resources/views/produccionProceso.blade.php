@@ -1,6 +1,20 @@
 @extends('layouts.app', ['ocultarBotones' => true])
 
 @section('content')
+    @if (session('warning'))
+        <script>
+            Swal.fire({
+                icon: 'warning',
+                title: '¡Atención!',
+                text: '{{ session('warning') }}',
+                confirmButtonText: 'Entendido',
+                confirmButtonColor: '#d33',
+                backdrop: true,
+                timer: 5000,
+                timerProgressBar: true
+            });
+        </script>
+    @endif
     <div class="container mx-auto overflow-y-auto sm:h-[800px]" id="globalLoader">
         <h1 class="text-3xl font-bold text-center sm:mt-2 md:-mt-4 mb-2">PRODUCCIÓN EN PROCESO</h1>
 

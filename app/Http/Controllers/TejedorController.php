@@ -15,7 +15,12 @@ class TejedorController extends Controller
      */
     public function index()
     {
-        $usuario = \App\Models\Usuario::with('telares')->find(Auth::id()); //usando la relacion creada entre usuarios y catalago_telares, buscamos los telares pertenecientes al id (numero_usuario) del usuario que esta logeado o autenticado
+        $usuario =  \App\Models\Usuario::with('telares')->find(Auth::id()); //usando la relacion creada entre usuarios y catalago_telares, buscamos los telares pertenecientes al id (numero_usuario) del usuario que esta logeado o autenticado
+
+        if ($usuario && $usuario->telares->isEmpty()) {
+            // No tiene telares asignados, porque la relación telares del usuario está vacía.
+            return redirect()->back()->with('warning', 'No tienes telares asignados.');
+        }
 
         $ahora = Carbon::now('America/Mexico_City');
         $hora = (int) $ahora->format('H');

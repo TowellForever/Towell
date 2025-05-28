@@ -19,7 +19,6 @@
             });
         </script>
     @endif
-
     @php
         // Establece la zona horaria explícitamente (asegúrate de que coincida con tu ubicación)
         $ahora = \Carbon\Carbon::now('America/Mexico_City');
