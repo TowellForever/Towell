@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container mx-auto p-6 bg-white shadow-lg rounded-lg mt-2 overflow-y-auto md:h-[650px]">
-        <h1 class="text-3xl font-bold text-center mb-2">ORDEN DE URDIDO</h1>
+    <div class="container mx-auto p-6 bg-white shadow-lg rounded-lg mt-2 overflow-y-auto md:h-[600px]">
+        <h1 class="text-3xl font-bold text-center mb-2">PRODUCCIÓN DE URDIDO</h1>
         <div id="finalizadoOverlay">FINALIZADO CORRECTAMENTE</div>
 
         <!-- Formulario -->
