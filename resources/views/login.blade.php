@@ -122,7 +122,9 @@
                     @endif
 
                     <div class="password-container">
-                        <input type="password" name="contrasenia" id="password" placeholder="Tu contraseña" required>
+                        <input type="password" name="contrasenia" id="password" placeholder="Tu contraseña" required
+                            inputmode="numeric" pattern="[0-9]*">
+
                         <span id="togglePassword" class="eye-icon">👁️</span>
                     </div>
                 </div>
