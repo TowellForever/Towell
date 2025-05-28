@@ -39,7 +39,7 @@
                 <div class="flex items-center mb-1">
                     <label class="w-1/4 text-sm">Engomado:</label>
                     <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" name="engomado"
-                        value="{{ $engomadoUrd->engomado ?? '' }}">
+                        value="{{ $engomadoUrd->engomado ?? '' }}" required>
                 </div>
                 <label class="w-1/4 text-sm">Tipo:</label>
                 <label class="text-sm text-black font-bold"><input type="radio" name="tipo" value="Rizo"
@@ -64,10 +64,10 @@
                 <div class="flex items-center mb-1">
                     <label class="w-1/4 text-sm">Mts. De Telas:</label>
                     <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold"
-                        value="{{ $engomadoUrd->metros_tela ?? '' }}"readonly>
+                        value="{{ floor($engomadoUrd->metros_tela) == $engomadoUrd->metros_tela ? intval($engomadoUrd->metros_tela) : $engomadoUrd->metros_tela }}
+"readonly><!--Si es entero, lo convierte a entero con intval() (quita el .0), y si no es entero, lo deja como está (mantiene decimales como .5, .25, etc.).-->
                 </div>
             </div>
-
             <div class="text-sm">
                 <div class="flex items-center mb-1">
                     <label class="w-1/4 text-sm">Cuendeados Mín.:</label>
@@ -81,12 +81,12 @@
                 <div class="flex items-center mb-1">
                     <label class="w-1/4 text-sm">Color:</label>
                     <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" name="color"
-                        value="{{ $engomadoUrd->color ?? '' }}">
+                        value="{{ $engomadoUrd->color ?? '' }}" required>
                 </div>
                 <div class="flex items-center mb-1">
                     <label class="w-1/4 text-sm">Sólidos:</label>
                     <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" name="solidos"
-                        value="{{ $engomadoUrd->solidos ?? '' }}">
+                        value="{{ $engomadoUrd->solidos ?? '' }}" required>
                 </div>
             </div>
         </form>
@@ -193,10 +193,12 @@
                                 id="peso_neto_{{ $registroIndex }}" value="{{ $orden->peso_neto ?? '' }}" readonly>
                         </td>
 
-                        <td class="border p-1">{{ rtrim(rtrim($engomadoUrd->metros ?? '', '0'), '.') }}
+                        <td class="border p-1">
+                            {{ floor($engomadoUrd->metros_tela) == $engomadoUrd->metros_tela ? intval($engomadoUrd->metros_tela) : $engomadoUrd->metros_tela }}
                             <input type="hidden" name="datos[{{ $registroIndex }}][metros]"
-                                value="{{ rtrim(rtrim($engomadoUrd->metros ?? '', '0'), '.') }}">
+                                value="{{ floor($engomadoUrd->metros_tela) == $engomadoUrd->metros_tela ? intval($engomadoUrd->metros_tela) : $engomadoUrd->metros_tela }}">
                         </td>
+
                         <td class="border p-1"><input type="text" inputmode="numeric" pattern="[0-9]*"
                                 name="datos[{{ $registroIndex }}][temp_canoa_1]" class="w-10 border rounded p-1 text-xs"
                                 value="{{ $orden->temp_canoa_1 ?? '' }}"></td>

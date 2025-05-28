@@ -49,9 +49,24 @@ class EngomadoController extends Controller
         $registros = $request->input('registros');
         $generales = $request->input('generales');
 
-        // 2. Validar que exista folio
-        if (!$generales || !isset($generales['folio'])) {
-            return response()->json(['message' => 'Folio no proporcionado.'], 400);
+        // 2. Validar campos obligatorios en 'generales'
+        $validator = Validator::make($generales, [
+            'folio' => 'required',
+            'color' => 'required',
+            'solidos' => 'required',
+            'engomado' => 'required',
+        ], [
+            'folio.required' => 'Folio no proporcionado.',
+            'color.required' => 'El campo "color" es obligatorio.',
+            'solidos.required' => 'El campo "sólidos" es obligatorio.',
+            'engomado.required' => 'El campo "engomado" es obligatorio.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Por favor complete los campos obligatorios faltantes.',
+                'errors' => $validator->errors()
+            ], 422);
         }
 
         $folio = $generales['folio'];
@@ -80,7 +95,7 @@ class EngomadoController extends Controller
             }
         }
 
-        // 5. Finalizar el engomado (cambiar estatus)
+        // 5. Finalizar el engomado
         $registroGeneral = \App\Models\UrdidoEngomado::where('folio', $folio)->first();
 
         if (!$registroGeneral) {
@@ -92,6 +107,7 @@ class EngomadoController extends Controller
 
         return response()->json(['message' => 'Registros guardados y engomado finalizado correctamente.']);
     }
+
 
 
     //Metodo para la impresion de Urdido Engomado
