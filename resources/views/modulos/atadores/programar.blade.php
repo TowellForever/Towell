@@ -97,9 +97,8 @@
                                 <div class="flex items-center">
                                     <label for="inputFecha" class="w-28 text-xs text-gray-600 font-medium">FECHA
                                         ATADO:</label>
-                                    <input type="date" name="turno" id="inputFechaAta"
-                                        class="w-full border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50"
-                                        value="{{ \Carbon\Carbon::parse($ata->fecha)->format('Y-m-d') }}">
+                                    <input type="text" name="turno" id="inputFecha"
+                                        class="w-full border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50">
 
                                 </div>
                                 <div class="flex items-center">
@@ -117,10 +116,10 @@
                                         value="{{ Auth::user()->numero_empleado . ' ' . Auth::user()->nombre }}" readonly>
                                 </div>
                                 <div class="flex items-center">
-                                    <label for="inputNumJulio" class="w-28 text-xs text-gray-600 font-medium">N°
+                                    <label for="inputJulio" class="w-28 text-xs text-gray-600 font-medium">N°
                                         JULIO:</label>
                                     <input type="text" inputmode="numeric" pattern="[0-9]*" name="num_julio"
-                                        id="inputNumJulio"
+                                        id="inputJulio"
                                         class="w-full border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50">
                                 </div>
                                 <div class="flex items-center">
@@ -136,8 +135,7 @@
                                         readonly>
                                 </div>
                                 <div class="flex items-center">
-                                    <label for="inputMetros"
-                                        class="w-28 text-xs text-gray-600 font-medium">METROS:</label>
+                                    <label for="inputMetros" class="w-28 text-xs text-gray-600 font-medium">METROS:</label>
                                     <input type="text" name="metros" id="inputMetros"
                                         class="w-full border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50"
                                         readonly>
@@ -313,10 +311,16 @@
 
                     const celdas = filaSeleccionada.querySelectorAll("td");
                     const orden = celdas[6]?.innerText || '';
+
                     document.getElementById("inputOrden").value = celdas[6]?.innerText || '';
                     document.getElementById("inputMetros").value = celdas[5]?.innerText || '';
                     document.getElementById("inputTipo").value = celdas[3]?.innerText || '';
                     document.getElementById("inputTelar").value = celdas[2]?.innerText || '';
+                    document.getElementById("inputJulio").value = celdas[4]?.innerText || '';
+                    const fechaTexto = celdas[0]?.innerText?.trim();
+                    document.getElementById("inputFecha").value = fechaTexto ?
+                        fechaTexto : '';
+
 
                     // Buscar el proveedor en base al orden
                     const resultado = atadoresData.find(item => item.orden_prod === orden);
@@ -352,3 +356,33 @@
             </style>
         @endpush
     @endsection
+
+    <!--
+    SELECT *
+FROM Produccion.dbo.TWDISPONIBLEURDENG2 AS d
+JOIN Produccion.dbo.requerimiento AS r
+    ON d.reqid = r.id;-->
+
+
+    <!--
+--creacion  de tabla COPIA
+CREATE TABLE TWDISPONIBLEURDENG2 (
+    ITEMID            VARCHAR(30),
+    CONFIGID          VARCHAR(20),
+    INVENTSIZEID      VARCHAR(20),
+    INVENTCOLORID     VARCHAR(20),
+    INVENTLOCATIONID  VARCHAR(20),
+    INVENTBATCHID     VARCHAR(30),
+    WMSLOCATIONID     VARCHAR(30),
+    INVENTSERIALID    VARCHAR(30),
+    QTY               INT,
+    METROS            DECIMAL(18, 2),
+    TIPO              VARCHAR(20),
+    ITEMNAME          VARCHAR(100),
+    COLORNAME         VARCHAR(50),
+    FECHAINGRESO      DATETIME,
+    DATAAREAID        VARCHAR(10),
+    RECVERSION        INT,
+    RECID             BIGINT
+);
+-->
