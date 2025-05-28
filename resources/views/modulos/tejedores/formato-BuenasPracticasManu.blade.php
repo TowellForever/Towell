@@ -239,3 +239,29 @@
         </style>
     @endpush
 @endsection
+
+<!----SELECT * FROM Produccion.dbo.usuarios
+
+SELECT * FROM Produccion.dbo.catalago_telares
+
+SELECT * FROM Produccion.dbo.telares_usuario
+
+use Produccion.dbo.Produccion
+
+
+INSERT INTO Produccion.dbo.telares_usuario (usuario_id,telar_id)
+VALUES
+(10000, 11),
+(10000, 12),
+(10000, 13),
+(10000, 14),
+(10000, 15);
+
+
+UPDATE usuarios
+SET remember_token = 1
+WHERE id = 2;
+
+
+EXEC sp_help 'Produccion.dbo.telares_usuario'
+>

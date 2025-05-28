@@ -57,6 +57,29 @@
             border-radius: 10px;
             background: black;
         }
+
+        .eye-icon {
+            cursor: pointer;
+            display: inline-block;
+            transition: transform 0.3s ease, color 0.3s ease;
+            font-size: 24px;
+            color: #555;
+            user-select: none;
+        }
+
+        /* Efecto al pasar el cursor */
+        .eye-icon:hover {
+            color: #007BFF;
+            /* azul brillante */
+            transform: scale(1.3) rotate(15deg);
+        }
+
+        /* Efecto al hacer clic (cuando está activo) */
+        .eye-icon:active {
+            color: #0056b3;
+            /* azul oscuro */
+            transform: scale(1.1) rotate(-10deg);
+        }
     </style>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -125,7 +148,7 @@
                         <input type="password" name="contrasenia" id="password" placeholder="Tu contraseña" required
                             inputmode="numeric" pattern="[0-9]*">
 
-                        <span id="togglePassword" class="eye-icon">👁️</span>
+                        <span id="togglePassword" class="eye-icon">🔒</span>
                     </div>
                 </div>
 
