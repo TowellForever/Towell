@@ -11,7 +11,9 @@
 
                 <div class="w-full mt-2 mb-2 flex items-center justify-between">
                     <h2 class="text-lg font-bold bg-yellow-200 text-center flex-grow">Programación de Requerimientos</h2>
-                    <button class="w-40 font-semibold text-lg bg-blue-500 text-white hover:bg-green-600">Programar</button>
+                    <input type="hidden" name="idsSeleccionados" id="idsSeleccionados">
+                    <button type="submit"
+                        class="w-40 font-semibold text-lg bg-blue-500 text-white hover:bg-green-600">Programar</button>
                 </div>
 
                 <div class="overflow-y-auto max-h-60 "> <!-- Contenedor con scroll -->
@@ -26,6 +28,9 @@
                                 <th class="border px-1 py-0.5">Metros 🔽</th>
                                 <th class="border px-1 py-0.5">Mc Coy 🔽</th>
                                 <th class="border px-1 py-0.5">Orden Urdido o Engomado 🔽</th>
+                                <th class="border px-1 py-0.5">
+
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -53,6 +58,9 @@
                                     <td class="border px-1 py-0.5"></td>
                                     <!--Aqui se insertará la orden o FOLIO que se genera en la vista que sigue al presion boton Programar-->
                                     <input type="hidden" value="{{ $req->id }}">
+                                    <td class="border px-1 py-0.5 text-center">
+                                        <input type="checkbox" class="fila-check" value="{{ $req->id }}">
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -397,6 +405,28 @@
                     ordenarTabla(th, index);
                 });
             });
+        });
+    </script>
+    <!--capturamos los checkbox seleccionados c:-->
+    <script>
+        // Selección múltiple
+        function toggleTodos(masterCheckbox) {
+            const checkboxes = document.querySelectorAll('.fila-check');
+            checkboxes.forEach(cb => cb.checked = masterCheckbox.checked);
+        }
+
+        // Antes de enviar el form, recoger los IDs seleccionados
+        document.getElementById('seleccionForm').addEventListener('submit', function(e) {
+            const seleccionados = Array.from(document.querySelectorAll('.fila-check:checked'))
+                .map(cb => cb.value);
+
+            if (seleccionados.length === 0) {
+                e.preventDefault();
+                alert('Selecciona al menos un inventario para programar.');
+                return;
+            }
+
+            document.getElementById('idsSeleccionados').value = JSON.stringify(seleccionados);
         });
     </script>
 @endsection

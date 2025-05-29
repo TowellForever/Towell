@@ -203,9 +203,14 @@ class RequerimientoController extends Controller
     //PROGRAMAR-REQUERIMIENTO en TEJIDO //PROGRAMAR-REQUERIMIENTO en TEJIDO //PROGRAMAR-REQUERIMIENTO en TEJIDO
     public function requerimientosAProgramar(Request $request)
     {
+        //dd($request);
         // Recuperar los valores enviados desde la vista
         $telar = $request->input('telar');
         $tipo = $request->input('tipo');
+        $idsSeleccionados = json_decode($request->input('idsSeleccionados'), true);
+        if (!is_array($idsSeleccionados)) {
+            return back()->withErrors(['idsSeleccionados' => 'Error al procesar la selección.']);
+        }
 
         // Buscar el requerimiento activo con coincidencia de telar y tipo (rizo o pie)
         $requerimiento = DB::table('requerimiento')
@@ -235,7 +240,7 @@ class RequerimientoController extends Controller
 
 
         // Retornar vista con requerimiento y salón
-        return view('modulos.programar_requerimientos.programarUrdidoEngomado', compact('requerimiento', 'datos'));
+        return view('modulos.programar_requerimientos.programarUrdidoEngomado', compact('requerimiento', 'datos', 'idsSeleccionados'));
     }
 
     /* metodo que realiza funciones de vista PROGRAMARURDIDOENGOMADO**********************************************************************************

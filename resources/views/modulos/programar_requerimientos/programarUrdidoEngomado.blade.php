@@ -32,6 +32,7 @@
                     <strong class="font-bold">¡Operación exitosa!</strong> {{ session('success') }}
                 </div>
             @endif
+
             <h2 class="text-sm font-bold mb-1">Datos Urdido</h2>
             <table class="w-full text-xs border-collapse border border-gray-300 mb-4 ">
                 <thead class="h-10">
@@ -61,9 +62,12 @@
 
                     <tr>
                         <td class="border px-1 py-0.5">
-                            <input type="text" name="telar" value=" {{ $requerimiento->telar ?? '' }}"
-                                class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded">
+                            @foreach ($idsSeleccionados as $id)
+                                <input type="text" name="telar" value=" {{ $id ?? '' }}"
+                                    class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded">
+                            @endforeach
                         </td>
+
                         <td class="border px-1 py-0.5">
                             <input type="text" name="cuenta" value="{{ $cuenta }}"
                                 class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded">
