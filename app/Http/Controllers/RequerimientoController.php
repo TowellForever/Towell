@@ -131,7 +131,7 @@ class RequerimientoController extends Controller
 
         //Log::info((array) $InventariosSeleccionados);
 
-        return view('modulos/tejido/programar-requerimientos', compact('requerimientos', 'inventarios', 'InventariosSeleccionados', 'vinculados'));
+        return view('modulos.programar_requerimientos.programar-requerimientos', compact('requerimientos', 'inventarios', 'InventariosSeleccionados', 'vinculados'));
     }
 
     //metodo que implementa el guardado de Inventario Disponible en Programacion-Requerimientos PROGRAMACION-REQUERIMIENTOS-INVENTARIOS PROGRAMACION-REQUERIMIENTOS-INVENTARIOS PROGRAMACION-REQUERIMIENTOS-INVENTARIOS
@@ -235,7 +235,7 @@ class RequerimientoController extends Controller
 
 
         // Retornar vista con requerimiento y salón
-        return view('modulos.tejido.programarUrdidoEngomado', compact('requerimiento', 'datos'));
+        return view('modulos.programar_requerimientos.programarUrdidoEngomado', compact('requerimiento', 'datos'));
     }
 
     /* metodo que realiza funciones de vista PROGRAMARURDIDOENGOMADO**********************************************************************************
@@ -343,7 +343,7 @@ class RequerimientoController extends Controller
                 return redirect()->back()->with('error', 'No se encontró un registro válido en requerimiento para actualizar.');
             }
 
-            return view('modulos/tejido/FolioEnPantalla')->with('folio', $folio);
+            return view('modulos.programar_requerimientos.FolioEnPantalla')->with('folio', $folio);
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Validación fallida
             return redirect()->back()->withErrors($e->validator)->withInput();
@@ -353,7 +353,6 @@ class RequerimientoController extends Controller
             return redirect()->back()->with('error', 'Ocurrió un error inesperado al guardar los datos. Intenta nuevamente.');
         }
     }
-
 
     public function regresoAProgramarRequerimientos()
     {
@@ -371,7 +370,13 @@ class RequerimientoController extends Controller
             ->where('INVENTLOCATIONID', 'A-JUL/TELA')
             ->get();
 
-        return view('modulos/tejido/programar-requerimientos', compact('requerimientos', 'inventarios'));
+        $InventariosSeleccionados = DB::table('Produccion.dbo.TWDISPONIBLEURDENG2')
+            ->pluck('dis_id')
+            ->toArray();
+
+
+
+        return view('modulos.programar_requerimientos.programar-requerimientos', compact('requerimientos', 'inventarios', 'InventariosSeleccionados'));
     }
 
     private function generarFolioUnico()
@@ -406,7 +411,6 @@ class RequerimientoController extends Controller
 
         return $folio;
     }
-
 
     /*
 
