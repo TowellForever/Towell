@@ -200,7 +200,7 @@ class RequerimientoController extends Controller
     }
 
     //metodo que regresa 2 objetos a la vista para llenar 2 tablas (amarillas)
-    //PROGRAMAR-REQUERIMIENTO en TEJIDO //PROGRAMAR-REQUERIMIENTO en TEJIDO //PROGRAMAR-REQUERIMIENTO en TEJIDO
+    //PROGRAMAR-REQUERIMIENTO en programar_requerimiento //PROGRAMAR-REQUERIMIENTO en programar_requerimiento //PROGRAMAR-REQUERIMIENTO en programar_requerimiento
     public function requerimientosAProgramar(Request $request)
     {
         //dd($request);
@@ -211,6 +211,16 @@ class RequerimientoController extends Controller
         if (!is_array($idsSeleccionados)) {
             return back()->withErrors(['idsSeleccionados' => 'Error al procesar la selección.']);
         }
+
+        // Buscar los registros en Produccion.dbo.requerimiento SQLSERVER
+        $requerimientos = DB::connection('sqlsrv') // si estás usando SQL Server
+            ->table('Produccion.dbo.requerimiento')
+            ->whereIn('id', $idsSeleccionados)
+            ->get();
+
+        //dd($requerimientos);
+
+
 
         // Buscar el requerimiento activo con coincidencia de telar y tipo (rizo o pie)
         $requerimiento = DB::table('requerimiento')
@@ -240,7 +250,7 @@ class RequerimientoController extends Controller
 
 
         // Retornar vista con requerimiento y salón
-        return view('modulos.programar_requerimientos.programarUrdidoEngomado', compact('requerimiento', 'datos', 'idsSeleccionados'));
+        return view('modulos.programar_requerimientos.programarUrdidoEngomado', compact('requerimiento', 'datos', 'requerimientos'));
     }
 
     /* metodo que realiza funciones de vista PROGRAMARURDIDOENGOMADO**********************************************************************************
