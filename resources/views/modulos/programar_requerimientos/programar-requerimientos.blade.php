@@ -19,13 +19,13 @@
                     <table class="w-full text-xs border-collapse border border-gray-300 requerimientos">
                         <thead>
                             <tr class="bg-gray-200 text-left">
-                                <th class="border px-1 py-0.5">Telar</th>
-                                <th class="border px-1 py-0.5">Tipo</th>
-                                <th class="border px-1 py-0.5">Cuenta</th>
-                                <th class="border px-1 py-0.5">Fecha Requerida</th>
-                                <th class="border px-1 py-0.5">Metros</th>
-                                <th class="border px-1 py-0.5">Mc Coy</th>
-                                <th class="border px-1 py-0.5">Orden Urdido o Engomado</th>
+                                <th class="border px-1 py-0.5">Telar 🔽</th>
+                                <th class="border px-1 py-0.5">Tipo 🔽</th>
+                                <th class="border px-1 py-0.5">Cuenta 🔽</th>
+                                <th class="border px-1 py-0.5">Fecha Requerida 🔽</th>
+                                <th class="border px-1 py-0.5">Metros 🔽</th>
+                                <th class="border px-1 py-0.5">Mc Coy 🔽</th>
+                                <th class="border px-1 py-0.5">Orden Urdido o Engomado 🔽</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -338,6 +338,65 @@
                     console.error("Error:", error);
                     alert("Ocurrió un error en la solicitud.");
                 });
+        });
+    </script>
+
+    <script>
+        function ordenarTabla(th, columnaIndex) {
+            const tabla = th.closest('table');
+            const tbody = tabla.querySelector('tbody');
+            const filas = Array.from(tbody.querySelectorAll('tr'));
+            const ascendente = th.dataset.orden !== 'asc';
+
+            // Resetear iconos de otras columnas
+            tabla.querySelectorAll('th').forEach(header => {
+                header.dataset.orden = '';
+                if (header.textContent.includes('🔼') || header.textContent.includes('🔽')) {
+                    header.textContent = header.textContent.replace('🔼', '').replace('🔽', '');
+                }
+            });
+
+            // Establecer icono y orden actual
+            th.dataset.orden = ascendente ? 'asc' : 'desc';
+            th.textContent += ascendente ? ' 🔼' : ' 🔽';
+
+            filas.sort((a, b) => {
+                const aTexto = a.children[columnaIndex].innerText.trim();
+                const bTexto = b.children[columnaIndex].innerText.trim();
+
+                // Ver si se puede convertir a número o fecha
+                const aNum = parseFloat(aTexto.replace(',', ''));
+                const bNum = parseFloat(bTexto.replace(',', ''));
+                const esNumero = !isNaN(aNum) && !isNaN(bNum);
+
+                const aFecha = new Date(aTexto.split('-').reverse().join('-')); // d-m-Y → Y-m-d
+                const bFecha = new Date(bTexto.split('-').reverse().join('-'));
+                const esFecha = !isNaN(aFecha) && !isNaN(bFecha);
+
+                if (esNumero) {
+                    return ascendente ? aNum - bNum : bNum - aNum;
+                } else if (esFecha) {
+                    return ascendente ? aFecha - bFecha : bFecha - aFecha;
+                } else {
+                    return ascendente ?
+                        aTexto.localeCompare(bTexto) :
+                        bTexto.localeCompare(aTexto);
+                }
+            });
+
+            // Limpiar y reinsertar las filas ordenadas
+            tbody.innerHTML = '';
+            filas.forEach(fila => tbody.appendChild(fila));
+        }
+
+        // Agregar funcionalidad a cada th automáticamente
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('table.requerimientos thead th').forEach((th, index) => {
+                th.style.cursor = 'pointer';
+                th.addEventListener('click', function() {
+                    ordenarTabla(th, index);
+                });
+            });
         });
     </script>
 @endsection
