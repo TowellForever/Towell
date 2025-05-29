@@ -263,12 +263,24 @@
         // BOTÓN PARA GUARDAR DATOS UNIFICADOS
         document.querySelector("#btnReservar").addEventListener("click", function() {
             if (!selectedInventarioData && selectedRequerimientoData) {
-                alert("Selecciona una fila en ambas tablas antes de reservar.");
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Acción requerida',
+                    text: 'Selecciona una fila en ambas tablas antes de reservar.',
+                    confirmButtonText: 'Entendido',
+                    confirmButtonColor: '#3085d6',
+                });
                 return;
             } else if (selectedInventarioData && selectedRequerimientoData) {
                 //si hay seleccion de filas en ambas tablas, simplemente el programa continua ejecutandose
             } else {
-                alert("Selecciona una fila en ambas tablas antes de reservar.");
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Acción requerida',
+                    text: 'Selecciona una fila en ambas tablas antes de reservar.',
+                    confirmButtonText: 'Entendido',
+                    confirmButtonColor: '#3085d6',
+                });
                 return;
             }
 

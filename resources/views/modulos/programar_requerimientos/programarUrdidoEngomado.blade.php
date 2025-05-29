@@ -67,8 +67,19 @@
                             @endforeach
                         </td>
                         <td class="border px-1 py-0.5">
-                            <input type="text" name="cuenta" value="{{ $cuenta }}"
-                                class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded">
+                            @foreach ($requerimientos as $select)
+                                @php
+                                    $cuenta = '';
+
+                                    if (($select->rizo ?? null) == 1) {
+                                        $cuenta = $select->cuenta_rizo ?? '';
+                                    } elseif (($select->pie ?? null) == 1) {
+                                        $cuenta = $select->cuenta_pie ?? '';
+                                    }
+                                @endphp
+                                <input type="text" name="cuenta" value="{{ $cuenta }}"
+                                    class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded">
+                            @endforeach
                         </td>
                         <td class="border px-1 py-0.5">
                             <select name="urdido"
@@ -92,8 +103,18 @@
                             </select>
                         </td>
                         <td class="border px-1 py-0.5">
-                            <input type="text" name="tipo" value="{{ $tipo }}"
-                                class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded" readonly>
+                            @foreach ($requerimientos as $select)
+                                @php
+                                    $tipo = '';
+                                    if (($select->rizo ?? null) == 1) {
+                                        $tipo = 'Rizo';
+                                    } elseif (($select->pie ?? null) == 1) {
+                                        $tipo = 'Pie';
+                                    }
+                                @endphp
+                                <input type="text" name="tipo" value="{{ $tipo }}"
+                                    class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded" readonly>
+                            @endforeach
                         </td>
                         <td class="border px-1 py-0.5">
                             <input type="text" name="destino" value="{{ $datos->salon ?? '' }}"
