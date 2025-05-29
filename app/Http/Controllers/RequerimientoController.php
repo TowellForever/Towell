@@ -112,7 +112,7 @@ class RequerimientoController extends Controller
             ->where('status', 'activo')
             ->where('orden_prod', '')
             ->whereNotIn('id', $requerimientosSeleccionados)
-            ->orderBy('fecha', 'asc')
+            ->orderByRaw("CONVERT(DATETIME, fecha, 103) ASC")
             ->get();
 
         // Obtener inventarios desde la conexión SQL Server secundaria
