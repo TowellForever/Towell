@@ -12,7 +12,6 @@
                 <div class="w-full mt-2 mb-2 flex items-center justify-between">
                     <h2 class="text-lg font-bold bg-yellow-200 text-center flex-grow">Programación de Requerimientos</h2>
                     <input type="hidden" name="idsSeleccionados" id="idsSeleccionados">
-
                     <button type
                         class="w-40 font-semibold text-lg bg-blue-500 text-white hover:bg-green-600">Programar</button>
                 </div>
@@ -29,17 +28,19 @@
                                 <th class="border px-1 py-0.5">Metros 🔽</th>
                                 <th class="border px-1 py-0.5">Mc Coy 🔽</th>
                                 <th class="border px-1 py-0.5">Orden Urdido o Engomado 🔽</th>
-                                <th class="border px-1 py-0.5">
-
-                                </th>
+                                <th class="border px-1 py-0.5"></th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($requerimientos as $req)
                                 <tr class="cursor-pointer hover:bg-yellow-200 transition duration-200"
                                     data-tipo="{{ $req->rizo == 1 ? 'Rizo' : ($req->pie == 1 ? 'Pie' : 'N/A') }}"
-                                    data-telar="{{ $req->telar }}" onclick="seleccionarFila(this)">
-                                    <td class="border px-1 py-0.5">{{ $req->telar }}</td>
+                                    data-telar="{{ $req->telar }}" onclick="seleccionarFila(this)"
+                                    data-cuenta="{{ $req->rizo == 1 ? $req->cuenta_rizo : ($req->pie == 1 ? $req->cuenta_pie : '-') }}">
+                                    <td class="border
+                                    px-1 py-0.5">{{ $req->telar }}
+                                    </td>
+
                                     <td class="border px-1 py-0.5">
                                         @if ($req->rizo == 1)
                                             Rizo
@@ -52,6 +53,7 @@
                                     <td class="border px-1 py-0.5">
                                         {{ $req->rizo == 1 ? $req->cuenta_rizo : ($req->pie == 1 ? $req->cuenta_pie : '-') }}
                                     </td>
+
                                     <td class="border px-1 py-0.5">{{ \Carbon\Carbon::parse($req->fecha)->format('d-m-Y') }}
                                     </td>
                                     <td class="border px-1 py-0.5">-</td> <!-- Metros nulo -->
@@ -59,8 +61,9 @@
                                     <td class="border px-1 py-0.5"></td>
                                     <!--Aqui se insertará la orden o FOLIO que se genera en la vista que sigue al presion boton Programar-->
                                     <input type="hidden" value="{{ $req->id }}">
+                                    <!--Con este TD enviamos los id de los registros seleccionados previamente-->
                                     <td class="border px-1 py-0.5 text-center">
-                                        <input type="checkbox" class="fila-check" value="{{ $req->telar }}">
+                                        <input type="checkbox" class="fila-check" value="{{ $req->id }}">
                                     </td>
                                 </tr>
                             @endforeach
@@ -423,9 +426,43 @@
 
             if (seleccionados.length === 0) {
                 e.preventDefault();
-                alert('Selecciona al menos un inventario para programar.');
+                Swal.fire({
+                    icon: 'warning',
+                    title: '¡Atención!',
+                    text: 'Selecciona al menos un inventario para programar.',
+                    confirmButtonColor: '#3085d6',
+                });
+
                 return;
             }
+
+            if (seleccionados.length > 1) {
+                // Obtenemos los <tr> correspondientes a los seleccionados
+                const filasSeleccionadas = seleccionados.map(id =>
+                    document.querySelector(`.fila-check[value="${id}"]`).closest('tr')
+                );
+
+                // Sacamos los valores tipo y cuenta de esas filas
+                const tipos = filasSeleccionadas.map(fila => fila.getAttribute('data-tipo'));
+                const cuentas = filasSeleccionadas.map(fila => fila.getAttribute('data-cuenta'));
+
+                // Validamos que todos los tipos sean iguales
+                const todosTiposIguales = tipos.every(tipo => tipo === tipos[0]);
+                const todasCuentasIguales = cuentas.every(cuenta => cuenta === cuentas[0]);
+
+                if (!todosTiposIguales || !todasCuentasIguales) {
+                    e.preventDefault();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Los registros seleccionados deben tener el mismo Tipo y Cuenta para continuar.',
+                        confirmButtonColor: '#d33',
+                    });
+
+                    return;
+                }
+            }
+
             document.getElementById('idsSeleccionados').value = JSON.stringify(seleccionados);
         });
     </script>
