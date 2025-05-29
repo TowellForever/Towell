@@ -61,10 +61,13 @@
 
                     <tr>
                         <td class="border px-1 py-0.5">
-                            @foreach ($requerimientos as $select)
-                                <input type="text" name="telar" value=" {{ $select->telar ?? '' }}"
+                            @foreach ($requerimientos as $index => $select)
+                                <input type="hidden" name="registros[{{ $index }}][id]" value="{{ $select->id }}">
+                                <input type="text" name="registros[{{ $index }}][telar]"
+                                    value="{{ $select->telar ?? '' }}"
                                     class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded">
                             @endforeach
+
                         </td>
                         <td class="border px-1 py-0.5">
                             @foreach ($requerimientos as $select)
