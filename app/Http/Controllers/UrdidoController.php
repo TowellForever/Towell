@@ -24,7 +24,7 @@ class UrdidoController extends Controller
         // Obtener los datos de las tres tablas basadas en el folio
         $urdido = UrdidoEngomado::where('folio', $folio)->first();
         $construccion = ConstruccionUrdido::where('folio', $folio)->get(); // Usamos get() también para la construcción
-        $requerimiento = Requerimiento::where('orden_prod', $folio)->first();
+        $requerimiento = Requerimiento::where('orden_prod', 'like', $folio . '-%')->first();
         $ordenUrdido = OrdenUrdido::where('folio', $folio)->get(); //obtenemos los registros que van en la tabla de Registro de Produccion
         $julios = Julio::where('tipo', 'urdido')->get();
         $oficiales = Oficial::all();

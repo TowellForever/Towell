@@ -25,7 +25,7 @@ class EngomadoController extends Controller
         $engomadoUrd = UrdidoEngomado::where('folio', $folio)->first();
         $julios = Julio::where('tipo', 'engomado')->get();
         $engomado = OrdenEngomado::where('folio', $folio)->get();
-        $requerimiento = Requerimiento::where('orden_prod', $folio)->first();
+        $requerimiento = Requerimiento::where('orden_prod', 'like', $folio . '-%')->first();
         $oficiales = Oficial::all();
         //Log::info('Data:', $request->all());
         //Log::info('Data:', $engomadoUrd->toArray());
@@ -69,7 +69,7 @@ class EngomadoController extends Controller
             ], 422);
         }
 
-        $folio = $generales['folio'];
+        $folio = explode('-', $generales['folio']);
 
         // 3. Guardar o actualizar los datos generales en la tabla urdido_engomado
         \App\Models\UrdidoEngomado::updateOrCreate(
@@ -79,6 +79,11 @@ class EngomadoController extends Controller
 
         // 4. Guardar o actualizar los registros en orden_engomado
         foreach ($registros as $registro) {
+            // Limpiar el folio: eliminar cualquier sufijo como "-1", "-2", etc.
+            if (isset($registro['folio'])) {
+                $registro['folio'] = preg_replace('/-\d+$/', '', $registro['folio']);
+            }
+
             $validated = Validator::make($registro, [
                 'folio' => 'required',
                 'id2' => 'required',
@@ -89,11 +94,12 @@ class EngomadoController extends Controller
                 ->first();
 
             if ($existente) {
-                $existente->update($registro);
+                $existente->update($registro); // Aquí ya se guarda limpio
             } else {
-                \App\Models\OrdenEngomado::create($registro);
+                \App\Models\OrdenEngomado::create($registro); // También se guarda limpio
             }
         }
+
 
         // 5. Finalizar el engomado
         $registroGeneral = \App\Models\UrdidoEngomado::where('folio', $folio)->first();
