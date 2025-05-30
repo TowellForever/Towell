@@ -303,49 +303,6 @@ class RequerimientoController extends Controller
             foreach ($telares as $i => $telar) {
                 $folio = $folioBase . '-' . ($i + 1); // Ejemplo: FOLIO-1, FOLIO-2...
 
-                // Insertar en urdido_engomado
-                DB::table('urdido_engomado')->insert([
-                    'folio' => $folio,
-                    'cuenta' => $request->input('cuenta'),
-                    'urdido' => $request->input('urdido'),
-                    'proveedor' => $request->input('proveedor'),
-                    'tipo' => $request->input('tipo'),
-                    'destino' => $request->input('destino'),
-                    'metros' => $request->input('metros'),
-                    'nucleo' => $request->input('nucleo'),
-                    'no_telas' => $request->input('no_telas'),
-                    'balonas' => $request->input('balonas'),
-                    'metros_tela' => $request->input('metros_tela'),
-                    'cuendados_mini' => $request->input('cuendados_mini'),
-                    'observaciones' => $request->input('observaciones'),
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                    'estatus_urdido' => 'en_proceso',
-                    'estatus_engomado' => 'en_proceso',
-                    'engomado' => '',
-                    'color' => '',
-                    'solidos' => '',
-                    'lmaturdido' => $request->input('lmaturdido'),
-                    'maquinaEngomado' => $request->input('maquinaEngomado'),
-                    'lmatengomado' => $request->input('lmatengomado'),
-                ]);
-
-                // Insertar detalles de construcción
-                $no_julios = $request->input('no_julios');
-                $hilos = $request->input('hilos');
-
-                for ($j = 0; $j < count($no_julios); $j++) {
-                    if (!empty($no_julios[$j]) && !empty($hilos[$j])) {
-                        DB::table('construccion_urdido')->insert([
-                            'folio' => $folio,
-                            'no_julios' => $no_julios[$j],
-                            'hilos' => $hilos[$j],
-                            'created_at' => now(),
-                            'updated_at' => now(),
-                        ]);
-                    }
-                }
-
                 // Actualizar requerimiento por telar específico
                 DB::table('requerimiento')
                     ->where('status', 'activo')
@@ -359,8 +316,50 @@ class RequerimientoController extends Controller
                     })
                     ->update(['orden_prod' => $folio]);
             }
+            // Insertar en urdido_engomado
+            DB::table('urdido_engomado')->insert([
+                'folio' => $folioBase,
+                'cuenta' => $request->input('cuenta'),
+                'urdido' => $request->input('urdido'),
+                'proveedor' => $request->input('proveedor'),
+                'tipo' => $request->input('tipo'),
+                'destino' => $request->input('destino'),
+                'metros' => $request->input('metros'),
+                'nucleo' => $request->input('nucleo'),
+                'no_telas' => $request->input('no_telas'),
+                'balonas' => $request->input('balonas'),
+                'metros_tela' => $request->input('metros_tela'),
+                'cuendados_mini' => $request->input('cuendados_mini'),
+                'observaciones' => $request->input('observaciones'),
+                'created_at' => now(),
+                'updated_at' => now(),
+                'estatus_urdido' => 'en_proceso',
+                'estatus_engomado' => 'en_proceso',
+                'engomado' => '',
+                'color' => '',
+                'solidos' => '',
+                'lmaturdido' => $request->input('lmaturdido'),
+                'maquinaEngomado' => $request->input('maquinaEngomado'),
+                'lmatengomado' => $request->input('lmatengomado'),
+            ]);
 
-            return view('modulos.programar_requerimientos.FolioEnPantalla')->with('folio', $folio);
+            // Insertar detalles de construcción
+            $no_julios = $request->input('no_julios');
+            $hilos = $request->input('hilos');
+
+            for ($j = 0; $j < count($no_julios); $j++) {
+                if (!empty($no_julios[$j]) && !empty($hilos[$j])) {
+                    DB::table('construccion_urdido')->insert([
+                        'folio' => $folioBase,
+                        'no_julios' => $no_julios[$j],
+                        'hilos' => $hilos[$j],
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
+
+            return view('modulos.programar_requerimientos.FolioEnPantalla')->with('folio', $folioBase);
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Validación fallida
             return redirect()->back()->withErrors($e->validator)->withInput();
@@ -371,30 +370,6 @@ class RequerimientoController extends Controller
         }
     }
 
-    public function regresoAProgramarRequerimientos()
-    {
-        //regreso a la pagina de programar reqwuerimientos y tambien envio los 2 objetos para llenar ambas tablas
-        // Consultar los requerimientos activos
-        $requerimientos = DB::table('requerimiento')
-            ->where('status', 'activo') // Filtrar solo los registros activos
-            ->where('orden_prod', '')
-            ->orderBy('fecha', 'asc') // Ordena por fecha más cercana
-            ->get();
-
-        // Obtener los datos de la BD TI_PRO con los joins y filtros correspondientes
-        $inventarios = DB::connection('sqlsrv_ti')
-            ->table('TI_PRO.dbo.TWDISPONIBLEURDENG')
-            ->where('INVENTLOCATIONID', 'A-JUL/TELA')
-            ->get();
-
-        $InventariosSeleccionados = DB::table('Produccion.dbo.TWDISPONIBLEURDENG2')
-            ->pluck('dis_id')
-            ->toArray();
-
-
-
-        return view('modulos.programar_requerimientos.programar-requerimientos', compact('requerimientos', 'inventarios', 'InventariosSeleccionados'));
-    }
 
     private function generarFolioUnico()
     {

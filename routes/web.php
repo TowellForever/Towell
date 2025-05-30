@@ -71,7 +71,6 @@ Route::get('/tejido/itema-nuevo', function () {
 });
 Route::get('/tejido/programarReq', [RequerimientoController::class, 'requerimientosAProgramar'])->name('formulario.programarRequerimientos');
 Route::post('/tejido/guardarUrdidoEngomado', [RequerimientoController::class, 'requerimientosAGuardar'])->name('orden.produccion.store');
-Route::get('/tejido/programar-requerimientos-DeRegreso', [RequerimientoController::class, 'regresoAProgramarRequerimientos'])->name('ReturningBackProRequerimientos');
 Route::get('/tejido/bomids', [App\Http\Controllers\Select2Controller::class, 'getBomIds'])->name('bomids.api'); //<- rutas para buscador select2 BOMIDs
 Route::get('/tejido/bomids2', [App\Http\Controllers\Select2Controller::class, 'getBomIds2'])->name('bomids.api2'); //<- rutas para buscador select2 BOMIDs
 
@@ -129,7 +128,7 @@ Route::get('/modulo-mantenimiento', function () {
 });
 
 //RUTAS DEL MODULO **Programacion-Urdido-Engomado**
-Route::get('/modulo-UrdidoEngomado', [RequerimientoController::class, 'requerimientosActivos']);
+Route::get('/modulo-UrdidoEngomado', [RequerimientoController::class, 'requerimientosActivos'])->name('index.requerimientosActivos');
 
 //RUTAS DEL MODULO **EDICION-Urdido-Engomado** 22-05-2025
 Route::get('/modulo-edicion-urdido-engomado', function () {
