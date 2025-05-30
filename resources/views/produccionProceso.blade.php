@@ -1,6 +1,29 @@
 @extends('layouts.app', ['ocultarBotones' => true])
 
 @section('content')
+    @if (session('bienvenida'))
+        @if (session('bienvenida'))
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire({
+                        title: '¡Bienvenido!',
+                        html: 'Hola, <strong>{{ Auth::user()->nombre }}</strong>. <br><br>BIENVENIDO A LA APLICACIÓN WEB DE TOWELL.',
+                        imageUrl: '/images/fondosTowell/TOWELLIN.png', // Cambia esto por la ruta real de tu imagen
+                        imageWidth: 120,
+                        imageHeight: 120,
+                        imageAlt: 'Logo de Towell',
+                        confirmButtonText: 'Iniciar',
+                        confirmButtonColor: '#0d6efd',
+                        background: '#f9f9f9',
+                        color: '#333',
+                        customClass: {
+                            popup: 'shadow-lg rounded-xl'
+                        }
+                    });
+                });
+            </script>
+        @endif
+    @endif
     @if (session('warning'))
         <script>
             Swal.fire({

@@ -27,6 +27,7 @@ class AuthController extends Controller
         if ($empleado && Hash::check($request->contrasenia, $empleado->contrasenia)) {
             // Contraseña correcta, realizar login
             Auth::login($empleado);
+            session()->flash('bienvenida', true);
             return redirect()->intended('/produccionProceso');
         }
 
@@ -46,6 +47,7 @@ class AuthController extends Controller
         if ($empleado) {
             // Iniciar sesión sin contraseña
             Auth::login($empleado);
+            session()->flash('bienvenida', true);
             return response()->json(['success' => true]);
         }
 
