@@ -12,7 +12,7 @@
                         imageWidth: 120,
                         imageHeight: 120,
                         imageAlt: 'Logo de Towell',
-                        confirmButtonText: 'Iniciar',
+                        confirmButtonText: '🚀 Empezar',
                         confirmButtonColor: '#0d6efd',
                         background: '#f9f9f9',
                         color: '#333',

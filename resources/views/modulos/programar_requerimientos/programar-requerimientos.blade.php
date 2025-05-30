@@ -440,8 +440,8 @@
                 e.preventDefault();
                 Swal.fire({
                     icon: 'warning',
-                    title: '¡Atención!',
-                    text: 'Selecciona al menos un inventario para programar.',
+                    title: 'ATENCIÓN!',
+                    text: 'Por favor marque al menos cuadro (lado izquierdo) para continuar con la programación.',
                     confirmButtonColor: '#3085d6',
                 });
 
