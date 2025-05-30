@@ -91,8 +91,9 @@ class UrdidoController extends Controller
         $orden = UrdidoEngomado::where('folio', $folio)->first();
         $julios = ConstruccionJulios::where('folio', $folio)->get(); //julios dados de alta en programacion-requerimientos
         $ordUrdido = OrdenUrdido::where('folio', $folio)->get(); // recupero todos los registros que coincidan con el folio enviado del front
+        $telares = Requerimiento::where('orden_prod', 'like', $folio . '-%')->pluck('telar');
 
-        return view('modulos\urdido\imprimir_orden_urdido_llena', compact('folio', 'orden', 'julios', 'ordUrdido'));
+        return view('modulos\urdido\imprimir_orden_urdido_llena', compact('folio', 'orden', 'julios', 'ordUrdido', 'telares'));
     }
 
     //este metodo es del módulo de EDICION de URDIDO y ENGOMADO, envía los datos necesarios al front

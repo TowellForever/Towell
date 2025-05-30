@@ -28,24 +28,21 @@
             </div>
             <div>
                 <p><strong>CUENTA:</strong> {{ $orden->cuenta ?? '' }}</p>
-
-
                 <p class="flex items-center space-x-6">
-                    <strong class="mr-2">TIPO:</strong>
-                    <label class="inline-flex items-center space-x-1">
-                        <input type="checkbox" class="w-5 h-5 border-black" style="background-color: blue;"
+                    <strong class="mr-0.5">TIPO:</strong>
+                    <label class="inline-flex items-center checkbox-dark">
+                        <input type="checkbox" class="w-4 h-4 border border-black rounded-sm"
+                            style="background-color: #000; accent-color: #000;"
                             {{ $orden->tipo === 'Rizo' ? 'checked' : '' }} disabled>
-                        <span>RIZO</span>
+                        <span class="ml-2">RIZO</span>
                     </label>
 
-                    <label class="inline-flex items-center space-x-1">
-                        <input type="checkbox" class="w-5 h-5 border-black" style="color: blue;"
+                    <label class="inline-flex items-center ">
+                        <input type="checkbox" class="w-4 h-4 border-black" style="color: rgb(0, 0, 0);"
                             {{ $orden->tipo === 'Pie' ? 'checked' : '' }} disabled>
                         <span>PIE</span>
                     </label>
                 </p>
-
-
             </div>
             <div>
                 <p><strong>ORDENADO POR:</strong>_____________</p>
@@ -200,6 +197,7 @@
             </div>
             <div>
                 <p><strong>CUENDEADOS MÍNIMO:</strong>{{ $orden->cuendados_mini }}</p>
+                <p><strong>TELAR:</strong> {{ $telares->implode(', ') }}</p>
             </div>
             <div class="col-span-3">
                 <p class="max-w-xl line-clamp-2">
@@ -209,20 +207,21 @@
         </div>
     </div>
 
-    <!--SECCIÓN DE SCRIPS JS-->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const folio = @json($folio);
-            JsBarcode("#barcode", folio, {
-                format: "CODE128",
-                lineColor: "black",
-                width: 1,
-                height: 30,
-                displayValue: false
-            });
-        });
-    </script>
+
 
 </body>
+<!--SECCIÓN DE SCRIPS JS-->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const folio = @json($folio);
+        JsBarcode("#barcode", folio, {
+            format: "CODE128",
+            lineColor: "black",
+            width: 1,
+            height: 30,
+            displayValue: false
+        });
+    });
+</script>
 
 </html>

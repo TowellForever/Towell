@@ -338,7 +338,7 @@
 
                     setTimeout(() => {
                         overlay.classList.remove('active');
-                    }, 4000);
+                    }, 3000);
 
                     // Desactivar botón
                     const btn = document.getElementById("guardarYFinalizar");

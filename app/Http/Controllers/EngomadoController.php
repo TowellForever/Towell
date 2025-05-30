@@ -123,7 +123,8 @@ class EngomadoController extends Controller
         // escribir $folio = $request; Eso guarda todo el objeto Request en la variable $folio, lo cual no tiene sentido a menos que luego vayas a manipular el request completo con ese nombre (lo cual es confuso y no recomendado). 
         $orden = UrdidoEngomado::where('folio', $folio)->first();
         $julios = ConstruccionJulios::where('folio', $folio)->get(); //julios dados de alta en programacion-requerimientos
+        $telares = Requerimiento::where('orden_prod', 'like', $folio . '-%')->pluck('telar');
 
-        return view('modulos.programar_requerimientos.imprimir-orden-UrdEng', compact('folio', 'orden', 'julios'));
+        return view('modulos.programar_requerimientos.imprimir-orden-UrdEng', compact('folio', 'orden', 'julios', 'telares'));
     }
 }
