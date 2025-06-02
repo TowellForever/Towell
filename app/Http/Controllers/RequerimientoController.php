@@ -264,7 +264,6 @@ class RequerimientoController extends Controller
         try {
             // Validación básica: puedes hacerlo con reglas o de forma manual
             $request->validate([
-
                 'urdido' => 'required',
                 'proveedor' => 'required',
                 'destino' => 'required',

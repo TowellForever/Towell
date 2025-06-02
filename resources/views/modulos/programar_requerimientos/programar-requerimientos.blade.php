@@ -38,10 +38,10 @@
                                     data-telar="{{ $req->telar }}" onclick="seleccionarFila(this)"
                                     data-cuenta="{{ $req->rizo == 1 ? $req->cuenta_rizo : ($req->pie == 1 ? $req->cuenta_pie : '-') }}">
                                     <td class="border
-                                    px-1 py-0.5">{{ $req->telar }}
+                                    px-1 py-1">{{ $req->telar }}
                                     </td>
 
-                                    <td class="border px-1 py-0.5">
+                                    <td class="border px-1 py-1">
                                         @if ($req->rizo == 1)
                                             Rizo
                                         @elseif($req->pie == 1)
@@ -50,21 +50,22 @@
                                             N/A
                                         @endif
                                     </td>
-                                    <td class="border px-1 py-0.5">
+                                    <td class="border px-1 py-1">
                                         {{ $req->rizo == 1 ? $req->cuenta_rizo : ($req->pie == 1 ? $req->cuenta_pie : '-') }}
                                     </td>
 
-                                    <td class="border px-1 py-0.5">{{ \Carbon\Carbon::parse($req->fecha)->format('d-m-Y') }}
+                                    <td class="border px-1 py-1">{{ \Carbon\Carbon::parse($req->fecha)->format('d-m-Y') }}
                                     </td>
-                                    <td class="border px-1 py-0.5">-</td> <!-- Metros nulo -->
-                                    <td class="border px-1 py-0.5">-</td> <!-- Mc Coy nulo -->
-                                    <td class="border px-1 py-0.5"></td>
+                                    <td class="border px-1 py-1">-</td> <!-- Metros nulo -->
+                                    <td class="border px-1 py-1">-</td> <!-- Mc Coy nulo -->
+                                    <td class="border px-1 py-1"></td>
                                     <!--Aqui se insertará la orden o FOLIO que se genera en la vista que sigue al presion boton Programar-->
                                     <input type="hidden" value="{{ $req->id }}">
                                     <!--Con este TD enviamos los id de los registros seleccionados previamente-->
-                                    <td class="border px-1 py-0.5 text-center">
-                                        <input type="checkbox" class="fila-check" value="{{ $req->id }}">
+                                    <td class="border px-1 py-1 flex items-center justify-center">
+                                        <input type="checkbox" class="fila-check scale-150" value="{{ $req->id }}">
                                     </td>
+
                                 </tr>
                             @endforeach
                         </tbody>
