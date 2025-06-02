@@ -230,6 +230,11 @@
                     class="ml-10 btn bg-blue-600 text-white w-40 h-12 hover:bg-blue-400">Guardar
                     y Finalizar</button>
             @endif
+            @if ($urdido->estatus_urdido == 'finalizado')
+                <button onclick="reimprimir()" class="w-1/5 px-4 py-2 bg-green-600 text-white rounded">
+                    🔁 Reimprimir
+                </button>
+            @endif
         </div>
     </div>
 
@@ -399,6 +404,14 @@
 
             // Asignar el valor calculado al input de peso neto
             document.getElementById('peso_neto_' + registroIndex).value = pesoNeto.toFixed(2); // Mostrar con 2 decimales
+        }
+    </script>
+
+    <script>
+        function reimprimir() {
+            const folio = document.getElementById('folio').value;
+            const url = "{{ url('/imprimir-orden-llena-urd') }}/" + folio;
+            window.open(url, '_blank');
         }
     </script>
 

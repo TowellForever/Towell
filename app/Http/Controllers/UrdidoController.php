@@ -100,8 +100,7 @@ class UrdidoController extends Controller
     public function cargarDatosOrdenUrdEng(Request $request)
     {
         $folio = $request->folio;
-
-        $requerimiento = Requerimiento::where('orden_prod', $folio)->first();
+        $requerimiento = Requerimiento::where('orden_prod', 'like', $folio . '-%')->first();
         // Obtener los datos de la tabla urdido_engomado
         $ordenCompleta = UrdidoEngomado::where('folio', $folio)->first(); //obtenemos los registros que van en la tabla de Registro de Produccion
         $julios = ConstruccionJulios::where('folio', $folio)->get(); //julios dados de alta en programacion-requerimientos

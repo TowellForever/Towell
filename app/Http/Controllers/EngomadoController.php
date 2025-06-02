@@ -64,7 +64,7 @@ class EngomadoController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'message' => 'Por favor complete los campos obligatorios faltantes.',
+                'message' => 'Aún hay campos sin información, favor de llenar.',
                 'errors' => $validator->errors()
             ], 422);
         }

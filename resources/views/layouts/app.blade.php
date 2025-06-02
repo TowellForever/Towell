@@ -25,7 +25,6 @@
     <!-- Animate.css (CDN) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" />
 
-
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Estilos personalizados -->
     <style>

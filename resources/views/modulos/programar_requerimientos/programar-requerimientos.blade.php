@@ -440,8 +440,8 @@
                 e.preventDefault();
                 Swal.fire({
                     icon: 'warning',
-                    title: 'ATENCIÓN!',
-                    text: 'Por favor marque al menos cuadro (lado izquierdo) para continuar con la programación.',
+                    title: '!ATENCIÓN!',
+                    text: 'Por favor marque al menos un cuadro (lado izquierdo) para continuar con la programación.',
                     confirmButtonColor: '#3085d6',
                 });
 

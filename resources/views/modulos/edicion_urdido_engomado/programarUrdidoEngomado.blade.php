@@ -2,12 +2,13 @@
 
 @section('content')
     @php
-        $mostrarAlerta = ($ordenCompleta->estatus_urdido === 'finalizado' && $ordenCompleta->estatus_engomado === 'finalizado');
+        $mostrarAlerta =
+            $ordenCompleta->estatus_urdido === 'finalizado' && $ordenCompleta->estatus_engomado === 'finalizado';
     @endphp
 
     @if ($mostrarAlerta)
         <script>
-            document.addEventListener("DOMContentLoaded", function () {
+            document.addEventListener("DOMContentLoaded", function() {
                 Swal.fire({
                     icon: 'warning',
                     title: 'EDICIÓN NO PERMITIDA',
@@ -99,7 +100,7 @@
 
                     <tr>
                         <td class="border px-1 py-0.5">
-                            <input type="text" name="telar" value=" {{ $requerimiento->telar ?? '' }}"
+                            <input type="text" name="telar" value=" {{ $requerimiento->telar }}"
                                 class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded"
                                 @if ($modo == 'solo_lectura' || $modo == 'solo_engomado') readonly @endif>
                         </td>
@@ -117,7 +118,9 @@
                                 <option value="Mc Coy 2">Mc Coy 2</option>
                                 <option value="Mc Coy 3">Mc Coy 3</option>
                             </select>
-                             @if ($modo == 'solo_lectura' || $modo == 'solo_engomado')<input type="hidden" name="urdido" value="{{ $ordenCompleta->urdido }}">@endif
+                            @if ($modo == 'solo_lectura' || $modo == 'solo_engomado')
+                                <input type="hidden" name="urdido" value="{{ $ordenCompleta->urdido }}">
+                            @endif
                         </td>
                         <td class="border px-1 py-0.5">
                             <select name="proveedor"
@@ -130,7 +133,9 @@
                                 <option value="Charles">Charles Leclerc – Ferrari</option>
                                 <option value="Lando">Lando Norris – McLaren</option>
                             </select>
-                             @if ($modo == 'solo_lectura' || $modo == 'solo_engomado')<input type="hidden" name="proveedor" value="{{ $ordenCompleta->proveedor }}">@endif
+                            @if ($modo == 'solo_lectura' || $modo == 'solo_engomado')
+                                <input type="hidden" name="proveedor" value="{{ $ordenCompleta->proveedor }}">
+                            @endif
                         </td>
                         <td class="border px-1 py-0.5">
                             <input type="text" name="tipo" value="{{ $ordenCompleta->tipo }}"
@@ -146,12 +151,16 @@
                             <select name="metros"
                                 class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded"
                                 @if ($modo == 'solo_lectura' || $modo == 'solo_engomado') disabled @endif required>
-                                <option value="{{ $ordenCompleta->metros }}">{{ $ordenCompleta->metros }}</option>
+                                <option value="{{ $ordenCompleta->metros }}">
+                                    {{ fmod($ordenCompleta->metros, 1) == 0 ? number_format($ordenCompleta->metros, 0) : $ordenCompleta->metros }}
+                                </option>
                                 @for ($i = 1000; $i <= 10000; $i += 1000)
                                     <option value="{{ $i }}">{{ $i }}</option>
                                 @endfor
                             </select>
-                            @if ($modo == 'solo_lectura' || $modo == 'solo_engomado')<input type="hidden" name="metros" value="{{ $ordenCompleta->metros }}">@endif
+                            @if ($modo == 'solo_lectura' || $modo == 'solo_engomado')
+                                <input type="hidden" name="metros" value="{{ $ordenCompleta->metros }}">
+                            @endif
                         </td>
                     </tr>
                 </tbody>
@@ -171,7 +180,9 @@
                                 @if ($modo == 'solo_lectura' || $modo == 'solo_engomado') disabled @endif required>
                                 <option value="{{ $ordenCompleta->lmaturdido }}">{{ $ordenCompleta->lmaturdido }}</option>
                             </select>
-                            @if ($modo == 'solo_lectura' || $modo == 'solo_engomado')<input type="hidden" name="lmaturdido" value="{{$ordenCompleta->lmaturdido }}">@endif
+                            @if ($modo == 'solo_lectura' || $modo == 'solo_engomado')
+                                <input type="hidden" name="lmaturdido" value="{{ $ordenCompleta->lmaturdido }}">
+                            @endif
                         </td>
                     </tr>
                 </tbody>
@@ -242,7 +253,9 @@
                                         <option value="Smit">Smit</option>
                                         <option value="Jacquard">Jacquard</option>
                                     </select>
-                                    @if ($modo == 'solo_lectura' || $modo == 'solo_urdido')<input type="hidden" name="nucleo" value="{{$ordenCompleta->nucleo }}">@endif
+                                    @if ($modo == 'solo_lectura' || $modo == 'solo_urdido')
+                                        <input type="hidden" name="nucleo" value="{{ $ordenCompleta->nucleo }}">
+                                    @endif
                                 </td>
                                 <td class="border px-1 py-0.5">
                                     <input type="text" inputmode="numeric" pattern="[0-9]*" name="no_telas"
@@ -290,8 +303,7 @@
                                 <td class="border px-1 py-0.5">
                                     <select name="maquinaEngomado"
                                         class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded"
-                                        @if ($modo == 'solo_lectura' || $modo == 'solo_urdido') disabled @endif
-                                        required>
+                                        @if ($modo == 'solo_lectura' || $modo == 'solo_urdido') disabled @endif required>
                                         <option value="{{ $ordenCompleta->maquinaEngomado }}">
                                             {{ $ordenCompleta->maquinaEngomado }}
                                         </option>
@@ -301,7 +313,8 @@
                                     </select>
 
                                     @if ($modo == 'solo_lectura' || $modo == 'solo_urdido')
-                                        <input type="hidden" name="maquinaEngomado" value="{{ $ordenCompleta->maquinaEngomado }}">
+                                        <input type="hidden" name="maquinaEngomado"
+                                            value="{{ $ordenCompleta->maquinaEngomado }}">
                                     @endif
 
                                 </td>
@@ -313,7 +326,10 @@
                                             {{ $ordenCompleta->lmatengomado }}
                                         </option>
                                     </select>
-                                     @if ($modo == 'solo_lectura' || $modo == 'solo_urdido')<input type="hidden" name="lmatengomado" value="{{$ordenCompleta->lmatengomado }}">@endif
+                                    @if ($modo == 'solo_lectura' || $modo == 'solo_urdido')
+                                        <input type="hidden" name="lmatengomado"
+                                            value="{{ $ordenCompleta->lmatengomado }}">
+                                    @endif
                                 </td>
                             </tr>
                         </tbody>
@@ -328,7 +344,7 @@
                         class="w-1/5 bg-green-500 text-black px-4 py-2 rounded">
                         ACTUALIZAR
                     </button>
-                 @endif
+                @endif
             </div>
         </form>
     </div>

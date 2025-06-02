@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container mx-auto p-2 bg-white shadow-lg rounded-lg mt-1 overflow-y-auto md:h-[650px]">
-        <div id="finalizadoOverlay">FINALIZADO CORRECTAMENTE</div>
+        <div id="finalizadoOverlay">FINALIZADO</div>
         <h1 class="text-3xl font-bold text-center mb-2">Proceso de Producción de Engomado</h1>
         <!-- Formulario -->
         <form class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2">
@@ -220,7 +220,7 @@
         </table>
         <div class="mt-4 text-right">
             @if ($engomadoUrd->estatus_engomado == 'en_proceso')
-                <button class="btn bg-blue-600 text-white w-20 h-9 hover:bg-blue-400" id="guardarYFinalizar">Guardar y
+                <button class="btn bg-blue-600 text-white w-40 h-9 hover:bg-blue-400" id="guardarYFinalizar">Guardar y
                     Finalizar</button>
             @endif
         </div>
@@ -277,12 +277,21 @@
                         generales: camposGenerales
                     })
                 })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        // Si llega un 422 o cualquier otro error HTTP
+                        return response.json().then(data => {
+                            throw data; // Lanza el JSON como error para capturarlo en el catch
+                        });
+                    }
+                    return response.json();
+                })
                 .then(data => {
+                    // ✅ Solo llega aquí si todo salió bien
                     alert(data.message || "Registros guardados y engomado finalizado.");
                     document.getElementById('guardarYFinalizar').disabled = true;
                     document.getElementById('guardarYFinalizar').innerText = 'Finalizado';
-                    //Antes de cerrar el proceso de finalizado, muestro el overlay
+
                     const overlay = document.getElementById('finalizadoOverlay');
                     overlay.classList.add('active');
 
@@ -291,8 +300,10 @@
                     }, 4000);
                 })
                 .catch(error => {
-                    console.error("Error:", error);
-                    alert("Ocurrió un error al guardar y finalizar.");
+                    // Aquí entran los errores con status 422 o si se lanzó `throw`
+                    alert(error.message || "Ocurrió un error al guardar.");
+                    // Opcional: mostrar los errores específicos
+                    console.error("Errores de validación:", error.errors);
                 });
         });
     </script>

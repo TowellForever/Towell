@@ -3,6 +3,11 @@
 @section('content')
     <div class="flex items-center justify-center min-h-screen bg-gray-100">
         <div class="bg-white p-10 rounded-2xl shadow-2xl text-center max-w-xl w-full">
+            <button onclick="reimprimir()"
+                class="inline-flex w-1/3 items-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2">
+                🔁 Reimprimir
+            </button>
+
             <h1 class="text-5xl font-extrabold text-gray-800 mb-6 tracking-wide">
                 Folio generado
             </h1>
@@ -37,5 +42,13 @@
             let url = "{{ url('/imprimir-orden') }}/" + folio;
             window.open(url, '_blank');
         };
+    </script>
+
+    <script>
+        function reimprimir() {
+            let folio = @json($folio); // pasa la variable Blade a JS de forma segura
+            let url = "{{ url('/imprimir-orden') }}/" + folio;
+            window.open(url, '_blank');
+        }
     </script>
 @endsection
