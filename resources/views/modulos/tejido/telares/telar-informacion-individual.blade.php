@@ -1,7 +1,47 @@
-@extends('layouts.app')
+@extends('layouts.app', ['ocultarBotones' => true])
 
 @section('content')
     <div class=" container mx-auto overflow-y-auto" style="max-height: calc(100vh - 120px);">
+        @php
+            // Detectar si estás en la ruta especial
+            $esJacquardSulzer = request()->is('tejido/jacquard-sulzer/*');
+        @endphp
+
+        @if ($esJacquardSulzer)
+            <div class="flex gap-4 justify-center items-center z-5 botonesApp">
+                <!-- Botón Atrás -->
+                <button onclick="cambiarTelar(-1)"
+                    class="bg-white text-blue-500 font-bold py-2 px-4 rounded-lg shadow-md hover:bg-gray-300 transition duration-300 flex items-center gap-2">
+                    ⬅️
+                </button>
+
+                <!-- Botón Adelante -->
+                <button onclick="cambiarTelar(1)"
+                    class="bg-white text-blue-500 font-bold py-2 px-4 rounded-lg shadow-md hover:bg-gray-300 transition duration-300 flex items-center gap-2">
+                    ➡️
+                </button>
+            </div>
+
+            <script>
+                function cambiarTelar(direccion) {
+                    const path = window.location.pathname; // Ej: /tejido/jacquard-sulzer/208
+                    const partes = path.split('/');
+                    let telarActual = parseInt(partes.at(-1));
+
+                    if (isNaN(telarActual)) return;
+
+                    const siguienteTelar = telarActual + direccion;
+
+                    // 🔒 Límites válidos
+                    if (siguienteTelar < 207 || siguienteTelar > 211) return;
+
+                    // Reemplaza el número del telar y redirige
+                    partes[partes.length - 1] = siguienteTelar;
+                    const nuevaUrl = partes.join('/');
+                    window.location.href = nuevaUrl;
+                }
+            </script>
+        @endif
         <br>
         <h1 class="text-center text-black font-bold text-2xl -mt-4">
             {{ str_replace('-', ' ', 'JACQUARD SULZER') }} - {{ $telar }}
@@ -93,8 +133,8 @@
                                 <div class="mr-4">
                                     <b id="fecha"></b>
                                     <!--<br><b>Turno:</b> {{ '' }}
-                                                                    <br><b>Metros:</b> <br><input type="text" id="metros" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                                                    <br><input type="text" id="metros_pie" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">-->
+                                                                                                        <br><b>Metros:</b> <br><input type="text" id="metros" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                                                                        <br><input type="text" id="metros_pie" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">-->
                                 </div>
                             </div>
 
@@ -385,20 +425,20 @@
                                 </tbody>
                             </table>
                             <!-- <table class="ml-4 border-2">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th colspan="1" class="text-center border">JULIO RESERVADO</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td class="border text-center w-40">
-                                                                            <br><input type="text" id="julio_reserv" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                                                            <input type="text" id="julio_reserv_pie" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                                                        </td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>-->
+                                                                                                    <thead>
+                                                                                                        <tr>
+                                                                                                            <th colspan="1" class="text-center border">JULIO RESERVADO</th>
+                                                                                                        </tr>
+                                                                                                    </thead>
+                                                                                                    <tbody>
+                                                                                                        <tr>
+                                                                                                            <td class="border text-center w-40">
+                                                                                                                <br><input type="text" id="julio_reserv" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                                                                                <input type="text" id="julio_reserv_pie" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                    </tbody>
+                                                                                                </table>-->
                         </div>
                     </td>
                 </tr>
