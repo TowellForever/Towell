@@ -291,7 +291,7 @@ class RequerimientoController extends Controller
 
             // Validar que los arrays existan y tengan la misma longitud
             if (!is_array($request->no_julios) || !is_array($request->hilos)) {
-                return redirect()->back()->with('error', 'Datos de construcción inválidos.');
+                return redirect()->back()->withInput()->with('error', 'Datos de construcción inválidos.');
             }
 
 

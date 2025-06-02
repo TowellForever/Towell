@@ -75,24 +75,33 @@
                         <td class="border px-1 py-0.5">
                             <select name="urdido"
                                 class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded" required>
-                                <option value="" disabled selected></option>
-                                <option value="Mc Coy 1">Mc Coy 1</option>
-                                <option value="Mc Coy 2">Mc Coy 2</option>
-                                <option value="Mc Coy 3">Mc Coy 3</option>
+                                <option value="" disabled {{ old('urdido') ? '' : 'selected' }}></option>
+                                <option value="Mc Coy 1" {{ old('urdido') == 'Mc Coy 1' ? 'selected' : '' }}>Mc Coy 1
+                                </option>
+                                <option value="Mc Coy 2" {{ old('urdido') == 'Mc Coy 2' ? 'selected' : '' }}>Mc Coy 2
+                                </option>
+                                <option value="Mc Coy 3" {{ old('urdido') == 'Mc Coy 3' ? 'selected' : '' }}>Mc Coy 3
+                                </option>
                             </select>
                         </td>
+
                         <td class="border px-1 py-0.5">
                             <select name="proveedor"
                                 class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded" required>
-                                <option value="" disabled selected></option>
-                                <option value="Max">Max Verstappen – Red Bull</option>
-                                <option value="Sergio">Sergio Pérez – Red Bull</option>
-                                <option value="Lewis">Lewis Hamilton – Ferrari</option>
-                                <option value="Charles">Charles Leclerc – Ferrari</option>
-                                <option value="Lando">Lando Norris – McLaren</option>
-
+                                <option value="" disabled {{ old('proveedor') ? '' : 'selected' }}></option>
+                                <option value="Max" {{ old('proveedor') == 'Max' ? 'selected' : '' }}>Max Verstappen –
+                                    Red Bull</option>
+                                <option value="Sergio" {{ old('proveedor') == 'Sergio' ? 'selected' : '' }}>Sergio Pérez –
+                                    Red Bull</option>
+                                <option value="Lewis" {{ old('proveedor') == 'Lewis' ? 'selected' : '' }}>Lewis Hamilton –
+                                    Ferrari</option>
+                                <option value="Charles" {{ old('proveedor') == 'Charles' ? 'selected' : '' }}>Charles
+                                    Leclerc – Ferrari</option>
+                                <option value="Lando" {{ old('proveedor') == 'Lando' ? 'selected' : '' }}>Lando Norris –
+                                    McLaren</option>
                             </select>
                         </td>
+
                         <td class="border px-1 py-0.5">
                             <input type="text" name="tipo" value="{{ $tipo }}"
                                 class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded" readonly>
@@ -104,11 +113,17 @@
                         <td class="border px-1 py-0.5">
                             <select name="metros"
                                 class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded" required>
-                                <option value="" disabled selected>Selecciona una opción</option>
+                                <option value="" disabled {{ old('metros') === null ? 'selected' : '' }}>Selecciona
+                                    una opción</option>
                                 @for ($i = 1000; $i <= 10000; $i += 1000)
-                                    <option value="{{ $i }}">{{ $i }}</option>
+                                    <option value="{{ $i }}" {{ old('metros') == $i ? 'selected' : '' }}>
+                                        {{ $i }}
+                                    </option>
                                 @endfor
                             </select>
+                            @error('metros')
+                                <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                            @enderror
                         </td>
                     </tr>
                 </tbody>
@@ -149,11 +164,13 @@
                                     <tr>
                                         <td class="border px-1 py-0.5">
                                             <input type="text" inputmode="numeric" pattern="[0-9]*" name="no_julios[]"
-                                                class="form-input px-1 py-0.5 text-[10px] border border-gray-300 rounded w-full">
+                                                class="form-input px-1 py-0.5 text-[10px] border border-gray-300 rounded w-full"
+                                                value="{{ old('no_julios.' . $i) }}">
                                         </td>
                                         <td class="border px-1 py-0.5">
                                             <input type="text" inputmode="numeric" pattern="[0-9]*" name="hilos[]"
-                                                class="form-input px-1 py-0.5 text-[10px] border border-gray-300 rounded w-full">
+                                                class="form-input px-1 py-0.5 text-[10px] border border-gray-300 rounded w-full"
+                                                value="{{ old('hilos.' . $i) }}">
                                         </td>
                                     </tr>
                                 @endfor
@@ -183,33 +200,41 @@
                                 <td class="border px-1 py-0.5">
                                     <select name="nucleo"
                                         class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded">
-                                        <option value="" disabled selected></option>
-                                        <option value="Itema">Itema</option>
-                                        <option value="Smit">Smit</option>
-                                        <option value="Jacquard">Jacquard</option>
+                                        <option value="" disabled {{ old('nucleo') ? '' : 'selected' }}></option>
+                                        <option value="Itema" {{ old('nucleo') == 'Itema' ? 'selected' : '' }}>Itema
+                                        </option>
+                                        <option value="Smit" {{ old('nucleo') == 'Smit' ? 'selected' : '' }}>Smit
+                                        </option>
+                                        <option value="Jacquard" {{ old('nucleo') == 'Jacquard' ? 'selected' : '' }}>
+                                            Jacquard</option>
                                     </select>
                                 </td>
                                 <td class="border px-1 py-0.5">
                                     <input type="text" inputmode="numeric" pattern="[0-9]*" name="no_telas"
-                                        class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded">
+                                        class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded"
+                                        value="{{ old('no_telas') }}">
                                 </td>
                                 <td class="border px-1 py-0.5">
                                     <input type="text" inputmode="numeric" pattern="[0-9]*" name="balonas"
-                                        class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded">
+                                        class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded"
+                                        value="{{ old('balonas') }}">
                                 </td>
                                 <td class="border px-1 py-0.5">
                                     <input type="text" inputmode="numeric" pattern="[0-9]*" name="metros_tela"
-                                        class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded">
+                                        class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded"
+                                        value="{{ old('metros_tela') }}">
                                 </td>
                                 <td class="border px-1 py-0.5">
                                     <input type="text" inputmode="numeric" pattern="[0-9]*" name="cuendados_mini"
-                                        class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded">
+                                        class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded"
+                                        value="{{ old('cuendados_mini') }}">
                                 </td>
                                 <td class="border px-1 py-0.5">
-                                    <textarea name="observaciones" class="form-textarea w-full px-1 py-1 text-xs border border-gray-300 rounded h-16"></textarea>
+                                    <textarea name="observaciones" class="form-textarea w-full px-1 py-1 text-xs border border-gray-300 rounded h-16">{{ old('observaciones') }}</textarea>
                                 </td>
                             </tr>
                         </tbody>
+
                     </table>
                     <!-- LISTA DE MATERIALES Urdido-->
                     <table class="w-full text-xs border-collapse border border-gray-300 mb-4">
@@ -225,10 +250,17 @@
                                     <select name="maquinaEngomado"
                                         class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded"
                                         required>
-                                        <option value="" disabled selected></option>
-                                        <option value="Hilo Algodón 20/1">West Point 1</option>
-                                        <option value="Hilo Algodón 30/1">West Point 2</option>
-                                        <option value="Hilo Poliéster 150D">West Point 3</option>
+                                        <option value="" disabled {{ old('maquinaEngomado') ? '' : 'selected' }}>
+                                            Selecciona una opción</option>
+                                        <option value="West Point 1"
+                                            {{ old('maquinaEngomado') == 'West Point 1' ? 'selected' : '' }}>West Point 1
+                                        </option>
+                                        <option value="West Point 2"
+                                            {{ old('maquinaEngomado') == 'West Point 2' ? 'selected' : '' }}>West Point 2
+                                        </option>
+                                        <option value="West Point 3"
+                                            {{ old('maquinaEngomado') == 'West Point 3' ? 'selected' : '' }}>West Point 3
+                                        </option>
                                     </select>
                                 </td>
                                 <td class="border px-1 py-0.5">
@@ -286,7 +318,13 @@
             @endif
 
             @if ($errors->any())
-                alert("⚠️ Por favor, revisa los errores del formulario.");
+                Swal.fire({
+                    icon: 'warning',
+                    title: '!ATENCIÓN!',
+                    text: 'Por favor, revisa los errores del formulario.',
+                    confirmButtonColor: '#f59e0b', // color ámbar
+                    confirmButtonText: '  Entendido  '
+                });
             @endif
         });
     </script>
