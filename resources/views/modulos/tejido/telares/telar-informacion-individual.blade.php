@@ -93,8 +93,8 @@
                                 <div class="mr-4">
                                     <b id="fecha"></b>
                                     <!--<br><b>Turno:</b> {{ '' }}
-                                                                <br><b>Metros:</b> <br><input type="text" id="metros" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                                                <br><input type="text" id="metros_pie" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">-->
+                                                                    <br><b>Metros:</b> <br><input type="text" id="metros" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                                    <br><input type="text" id="metros_pie" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">-->
                                 </div>
                             </div>
 
@@ -385,20 +385,20 @@
                                 </tbody>
                             </table>
                             <!-- <table class="ml-4 border-2">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th colspan="1" class="text-center border">JULIO RESERVADO</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td class="border text-center w-40">
-                                                                        <br><input type="text" id="julio_reserv" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                                                        <input type="text" id="julio_reserv_pie" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>-->
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th colspan="1" class="text-center border">JULIO RESERVADO</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td class="border text-center w-40">
+                                                                            <br><input type="text" id="julio_reserv" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                                            <input type="text" id="julio_reserv_pie" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>-->
                         </div>
                     </td>
                 </tr>
@@ -471,18 +471,16 @@
                     .then(response => {
                         console.log(response.data.message);
 
-                        // 🔹 Mostrar mensaje flotante de éxito
-                        let msg = document.createElement('div');
-                        msg.textContent = "Datos actualizados correctamente";
-                        msg.style.position = "fixed";
-                        msg.style.bottom = "10px";
-                        msg.style.right = "10px";
-                        msg.style.backgroundColor = "green";
-                        msg.style.color = "white";
-                        msg.style.padding = "10px";
-                        msg.style.borderRadius = "5px";
-                        document.body.appendChild(msg);
-                        setTimeout(() => msg.remove(), 2000); // Eliminar mensaje después de 3s
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Datos actualizados correctamente',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true,
+                            position: 'bottom-end',
+                            toast: true
+                        });
+
                     })
                     .catch(error => {
                         console.error('Error:', error.response ? error.response.data : error.message);

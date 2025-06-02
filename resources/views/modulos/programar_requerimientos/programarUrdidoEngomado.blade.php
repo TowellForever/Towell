@@ -114,7 +114,7 @@
                             <select name="metros"
                                 class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded" required>
                                 <option value="" disabled {{ old('metros') === null ? 'selected' : '' }}>Selecciona
-                                    una opción</option>
+                                </option>
                                 @for ($i = 1000; $i <= 10000; $i += 1000)
                                     <option value="{{ $i }}" {{ old('metros') == $i ? 'selected' : '' }}>
                                         {{ $i }}
