@@ -67,15 +67,10 @@
                 }
             </script>
         @endif
-        <br>
-        <h1 class="text-center text-black font-bold text-2xl -mt-4">
-            {{ str_replace('-', ' ', 'JACQUARD SULZER') }} - {{ $telar }}
-        </h1>
-
-        <table class="table border-0">
+        <table class="table border-0 sm:mt-[20px] md:-mt-2">
             <thead class="bg-cyan-500 text-white text-center">
                 <tr>
-                    <th colspan="5">EN PROCESO</th>
+                    <th colspan="5">EN PROCESO JACQUARD SULZER {{ $telar }}</th>
                 </tr>
             </thead>
             <tbody class="bg-white text-black">
@@ -138,338 +133,339 @@
         </table>
 
         <!--TABLA REQUERIMIENTO **********************************************************************************************************************************************-->
-        <table class="table">
-            <thead class="bg-cyan-500 text-white">
-                <tr>
-                    <th class="text-center">REQUERIMIENTO</th>
-                </tr>
-            </thead>
-            <tbody class="bg-white text-black">
-                <tr>
-                    <td class="border p-2">
-                        <div class="flex">
+        <div class="overflow-x-auto sm:max-w-[620px] md:max-w-full">
+            <table class="table w-full">
+                <thead class="bg-cyan-500 text-white">
+                    <tr>
+                        <th class="text-center">REQUERIMIENTO</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white text-black">
+                    <tr>
+                        <td class="border p-2">
                             <div class="flex">
-                                <div class="mr-4">
-                                    <b><br><br>Cuentas: <br>
-                                    </b>
-                                    <b>RIZO </b><label id="cuenta-rizo"> {{ $dato->Cuenta }}</label> <br>
-                                    <b>PIE</b> <label id="cuenta-pie">{{ $dato->Calibre_Pie }}</label>
+                                <div class="flex">
+                                    <div class="mr-4">
+                                        <b><br><br>Cuentas: <br>
+                                        </b>
+                                        <b>RIZO </b><label id="cuenta-rizo"> {{ $dato->Cuenta }}</label> <br>
+                                        <b>PIE</b> <label id="cuenta-pie">{{ $dato->Calibre_Pie }}</label>
+                                    </div>
+                                    <div class="mr-4">
+                                        <b id="fecha"></b>
+                                        <!--<br><b>Turno:</b> {{ '' }}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <br><b>Metros:</b> <br><input type="text" id="metros" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <br><input type="text" id="metros_pie" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">-->
+                                    </div>
                                 </div>
-                                <div class="mr-4">
-                                    <b id="fecha"></b>
-                                    <!--<br><b>Turno:</b> {{ '' }}
-                                                                                                                                                                                                                                                                                        <br><b>Metros:</b> <br><input type="text" id="metros" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                                                                                                                                                                                                                                                                        <br><input type="text" id="metros_pie" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">-->
-                                </div>
+
+                                <!-- Tabla a la derecha 1-->
+                                <table class="ml-4 border-2">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="3" class="text-center border fecha-tabla">
+                                                {{ \Carbon\Carbon::now()->format('d-m-Y') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="border text-center">
+                                                <div class=" font-bold">1</div>
+                                                <div class="mt-2">
+                                                    <label><input type="checkbox" name="rizo1" class="t1rizo w-5 h-5"
+                                                            value="rizo1"> </label><br>
+                                                    <label><input type="checkbox" name="pie1" class="t1pie w-5 h-5"
+                                                            value="pie1"> </label>
+                                                </div>
+                                            </td>
+                                            <td class="border text-center">
+                                                <div class=" font-bold">2</div>
+                                                <div class="mt-2">
+                                                    <label><input type="checkbox" name="rizo2" class="t1rizo w-5 h-5"
+                                                            value="rizo2"> </label><br>
+                                                    <label><input type="checkbox" name="pie2" class="t1pie w-5 h-5"
+                                                            value="pie2"> </label>
+                                                </div>
+                                            </td>
+                                            <td class="border text-center">
+                                                <div class=" font-bold">3</div>
+                                                <div class="mt-2">
+                                                    <label><input type="checkbox" name="rizo3" class="t1rizo w-5 h-5"
+                                                            value="rizo3"> </label><br>
+                                                    <label><input type="checkbox" name="pie3" class="t1pie w-5 h-5"
+                                                            value="pie3"> </label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <!-- Tabla a la derecha 2-->
+                                <table class="ml-4 border-2">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="3" class="text-center border fecha-tabla">
+                                                {{ \Carbon\Carbon::tomorrow()->format('d-m-Y') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="border text-center">
+                                                <div class=" font-bold">1</div>
+                                                <div class="mt-2">
+                                                    <label><input type="checkbox" name="rizo1" class="t2rizo w-5 h-5"
+                                                            value="rizo1"> </label><br>
+                                                    <label><input type="checkbox" name="pie1" class="t2pie w-5 h-5"
+                                                            value="pie1"> </label>
+                                                </div>
+                                            </td>
+                                            <td class="border text-center">
+                                                <div class=" font-bold">2</div>
+                                                <div class="mt-2">
+                                                    <label><input type="checkbox" name="rizo2" class="t2rizo w-5 h-5"
+                                                            value="rizo2"> </label><br>
+                                                    <label><input type="checkbox" name="pie2" class="t2pie w-5 h-5"
+                                                            value="pie2"> </label>
+                                                </div>
+                                            </td>
+                                            <td class="border text-center">
+                                                <div class=" font-bold">3</div>
+                                                <div class="mt-2">
+                                                    <label><input type="checkbox" name="rizo3" class="t2rizo w-5 h-5"
+                                                            value="rizo3"> </label><br>
+                                                    <label><input type="checkbox" name="pie3" class="t2pie w-5 h-5"
+                                                            value="pie3"> </label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <!-- Tabla a la derecha 3-->
+                                <table class="ml-4 border-2">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="3" class="text-center border fecha-tabla">
+                                                {{ \Carbon\Carbon::now()->addDays(2)->format('d-m-Y') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="border text-center">
+                                                <div class=" font-bold">1</div>
+                                                <div class="mt-2">
+                                                    <label><input type="checkbox" name="rizo1" class="t3rizo w-5 h-5 "
+                                                            value="rizo1"> </label><br>
+                                                    <label><input type="checkbox" name="pie1" class="t3pie w-5 h-5"
+                                                            value="pie1"> </label>
+                                                </div>
+                                            </td>
+                                            <td class="border text-center">
+                                                <div class=" font-bold">2</div>
+                                                <div class="mt-2">
+                                                    <label><input type="checkbox" name="rizo2" class="t3rizo w-5 h-5"
+                                                            value="rizo2"> </label><br>
+                                                    <label><input type="checkbox" name="pie2" class="t3pie w-5 h-5"
+                                                            value="pie2"> </label>
+                                                </div>
+                                            </td>
+                                            <td class="border text-center">
+                                                <div class=" font-bold">3</div>
+                                                <div class="mt-2">
+                                                    <label><input type="checkbox" name="rizo3" class="t3rizo w-5 h-5"
+                                                            value="rizo3"> </label><br>
+                                                    <label><input type="checkbox" name="pie3" class="t3pie w-5 h-5"
+                                                            value="pie3"> </label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <!-- Tabla a la derecha 4-->
+                                <table class="ml-4 border-2">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="3" class="text-center border fecha-tabla">
+                                                {{ \Carbon\Carbon::now()->addDays(3)->format('d-m-Y') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="border text-center">
+                                                <div class=" font-bold">1</div>
+                                                <div class="mt-2">
+                                                    <label><input type="checkbox" name="rizo1" class="t4rizo w-5 h-5"
+                                                            value="rizo1"> </label><br>
+                                                    <label><input type="checkbox" name="pie1" class="t4pie w-5 h-5"
+                                                            value="pie1"> </label>
+                                                </div>
+                                            </td>
+                                            <td class="border text-center">
+                                                <div class=" font-bold">2</div>
+                                                <div class="mt-2">
+                                                    <label><input type="checkbox" name="rizo2" class="t4rizo w-5 h-5"
+                                                            value="rizo2"> </label><br>
+                                                    <label><input type="checkbox" name="pie2" class="t4pie w-5 h-5"
+                                                            value="pie2"> </label>
+                                                </div>
+                                            </td>
+                                            <td class="border text-center">
+                                                <div class=" font-bold">3</div>
+                                                <div class="mt-2">
+                                                    <label><input type="checkbox" name="rizo3" class="t4rizo w-5 h-5"
+                                                            value="rizo3"> </label><br>
+                                                    <label><input type="checkbox" name="pie3" class="t4pie w-5 h-5"
+                                                            value="pie3"> </label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <!-- Tabla a la derecha 5-->
+                                <table class="ml-4 border-2">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="3" class="text-center border fecha-tabla">
+                                                {{ \Carbon\Carbon::now()->addDays(4)->format('d-m-Y') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="border text-center">
+                                                <div class=" font-bold">1</div>
+                                                <div class="mt-2">
+                                                    <label><input type="checkbox" name="rizo1" class="t5rizo w-5 h-5"
+                                                            value="rizo1"> </label><br>
+                                                    <label><input type="checkbox" name="pie1" class="t5pie w-5 h-5"
+                                                            value="pie1"> </label>
+                                                </div>
+                                            </td>
+                                            <td class="border text-center">
+                                                <div class=" font-bold">2</div>
+                                                <div class="mt-2">
+                                                    <label><input type="checkbox" name="rizo2" class="t5rizo w-5 h-5"
+                                                            value="rizo2"> </label><br>
+                                                    <label><input type="checkbox" name="pie2" class="t5pie w-5 h-5"
+                                                            value="pie2"> </label>
+                                                </div>
+                                            </td>
+                                            <td class="border text-center">
+                                                <div class=" font-bold">3</div>
+                                                <div class="mt-2">
+                                                    <label><input type="checkbox" name="rizo3" class="t5rizo w-5 h-5"
+                                                            value="rizo3"> </label><br>
+                                                    <label><input type="checkbox" name="pie3" class="t5pie w-5 h-5"
+                                                            value="pie3"> </label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <!-- Tabla a la derecha 6-->
+                                <table class="ml-4 border-2">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="3" class="text-center border fecha-tabla">
+                                                {{ \Carbon\Carbon::now()->addDays(5)->format('d-m-Y') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="border text-center">
+                                                <div class=" font-bold">1</div>
+                                                <div class="mt-2">
+                                                    <label><input type="checkbox" name="rizo1" class="t6rizo w-5 h-5"
+                                                            value="rizo1"> </label><br>
+                                                    <label><input type="checkbox" name="pie1" class="t6pie w-5 h-5"
+                                                            value="pie1"> </label>
+                                                </div>
+                                            </td>
+                                            <td class="border text-center">
+                                                <div class=" font-bold">2</div>
+                                                <div class="mt-2">
+                                                    <label><input type="checkbox" name="rizo2" class="t6rizo w-5 h-5"
+                                                            value="rizo2"> </label><br>
+                                                    <label><input type="checkbox" name="pie2" class="t6pie w-5 h-5"
+                                                            value="pie2"> </label>
+                                                </div>
+                                            </td>
+                                            <td class="border text-center">
+                                                <div class=" font-bold">3</div>
+                                                <div class="mt-2">
+                                                    <label><input type="checkbox" name="rizo3" class="t6rizo w-5 h-5"
+                                                            value="rizo3"> </label><br>
+                                                    <label><input type="checkbox" name="pie3" class="t6pie w-5 h-5"
+                                                            value="pie3"> </label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <!-- Tabla a la derecha 7-->
+                                <table class="ml-4 border-2">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="3" class="text-center border fecha-tabla">
+                                                {{ \Carbon\Carbon::now()->addDays(6)->format('d-m-Y') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="border text-center">
+                                                <div class=" font-bold">1</div>
+                                                <div class="mt-2">
+                                                    <label><input type="checkbox" name="rizo1" class="t7rizo w-5 h-5"
+                                                            value="rizo1"> </label><br>
+                                                    <label><input type="checkbox" name="pie1" class="t7pie w-5 h-5"
+                                                            value="pie1"> </label>
+                                                </div>
+                                            </td>
+                                            <td class="border text-center">
+                                                <div class=" font-bold">2</div>
+                                                <div class="mt-2">
+                                                    <label><input type="checkbox" name="rizo2" class="t7rizo w-5 h-5"
+                                                            value="rizo2"> </label><br>
+                                                    <label><input type="checkbox" name="pie2" class="t7pie w-5 h-5"
+                                                            value="pie2"> </label>
+                                                </div>
+                                            </td>
+                                            <td class="border text-center">
+                                                <div class=" font-bold">3</div>
+                                                <div class="mt-2">
+                                                    <label><input type="checkbox" name="rizo3" class="t7rizo w-5 h-5"
+                                                            value="rizo3"> </label><br>
+                                                    <label><input type="checkbox" name="pie3" class="t7pie w-5 h-5"
+                                                            value="pie3"> </label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <!-- <table class="ml-4 border-2">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <thead>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <tr>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <th colspan="1" class="text-center border">JULIO RESERVADO</th>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </tr>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </thead>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <tbody>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <tr>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <td class="border text-center w-40">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <br><input type="text" id="julio_reserv" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <input type="text" id="julio_reserv_pie" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </td>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </tr>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </tbody>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                </table>-->
                             </div>
-
-                            <!-- Tabla a la derecha 1-->
-                            <table class="ml-4 border-2">
-                                <thead>
-                                    <tr>
-                                        <th colspan="3" class="text-center border fecha-tabla">
-                                            {{ \Carbon\Carbon::now()->format('d-m-Y') }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="border text-center">
-                                            <div class=" font-bold">1</div>
-                                            <div class="mt-2">
-                                                <label><input type="checkbox" name="rizo1" class="t1rizo w-5 h-5"
-                                                        value="rizo1"> </label><br>
-                                                <label><input type="checkbox" name="pie1" class="t1pie w-5 h-5"
-                                                        value="pie1"> </label>
-                                            </div>
-                                        </td>
-                                        <td class="border text-center">
-                                            <div class=" font-bold">2</div>
-                                            <div class="mt-2">
-                                                <label><input type="checkbox" name="rizo2" class="t1rizo w-5 h-5"
-                                                        value="rizo2"> </label><br>
-                                                <label><input type="checkbox" name="pie2" class="t1pie w-5 h-5"
-                                                        value="pie2"> </label>
-                                            </div>
-                                        </td>
-                                        <td class="border text-center">
-                                            <div class=" font-bold">3</div>
-                                            <div class="mt-2">
-                                                <label><input type="checkbox" name="rizo3" class="t1rizo w-5 h-5"
-                                                        value="rizo3"> </label><br>
-                                                <label><input type="checkbox" name="pie3" class="t1pie w-5 h-5"
-                                                        value="pie3"> </label>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                            <!-- Tabla a la derecha 2-->
-                            <table class="ml-4 border-2">
-                                <thead>
-                                    <tr>
-                                        <th colspan="3" class="text-center border fecha-tabla">
-                                            {{ \Carbon\Carbon::tomorrow()->format('d-m-Y') }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="border text-center">
-                                            <div class=" font-bold">1</div>
-                                            <div class="mt-2">
-                                                <label><input type="checkbox" name="rizo1" class="t2rizo w-5 h-5"
-                                                        value="rizo1"> </label><br>
-                                                <label><input type="checkbox" name="pie1" class="t2pie w-5 h-5"
-                                                        value="pie1"> </label>
-                                            </div>
-                                        </td>
-                                        <td class="border text-center">
-                                            <div class=" font-bold">2</div>
-                                            <div class="mt-2">
-                                                <label><input type="checkbox" name="rizo2" class="t2rizo w-5 h-5"
-                                                        value="rizo2"> </label><br>
-                                                <label><input type="checkbox" name="pie2" class="t2pie w-5 h-5"
-                                                        value="pie2"> </label>
-                                            </div>
-                                        </td>
-                                        <td class="border text-center">
-                                            <div class=" font-bold">3</div>
-                                            <div class="mt-2">
-                                                <label><input type="checkbox" name="rizo3" class="t2rizo w-5 h-5"
-                                                        value="rizo3"> </label><br>
-                                                <label><input type="checkbox" name="pie3" class="t2pie w-5 h-5"
-                                                        value="pie3"> </label>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                            <!-- Tabla a la derecha 3-->
-                            <table class="ml-4 border-2">
-                                <thead>
-                                    <tr>
-                                        <th colspan="3" class="text-center border fecha-tabla">
-                                            {{ \Carbon\Carbon::now()->addDays(2)->format('d-m-Y') }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="border text-center">
-                                            <div class=" font-bold">1</div>
-                                            <div class="mt-2">
-                                                <label><input type="checkbox" name="rizo1" class="t3rizo w-5 h-5 "
-                                                        value="rizo1"> </label><br>
-                                                <label><input type="checkbox" name="pie1" class="t3pie w-5 h-5"
-                                                        value="pie1"> </label>
-                                            </div>
-                                        </td>
-                                        <td class="border text-center">
-                                            <div class=" font-bold">2</div>
-                                            <div class="mt-2">
-                                                <label><input type="checkbox" name="rizo2" class="t3rizo w-5 h-5"
-                                                        value="rizo2"> </label><br>
-                                                <label><input type="checkbox" name="pie2" class="t3pie w-5 h-5"
-                                                        value="pie2"> </label>
-                                            </div>
-                                        </td>
-                                        <td class="border text-center">
-                                            <div class=" font-bold">3</div>
-                                            <div class="mt-2">
-                                                <label><input type="checkbox" name="rizo3" class="t3rizo w-5 h-5"
-                                                        value="rizo3"> </label><br>
-                                                <label><input type="checkbox" name="pie3" class="t3pie w-5 h-5"
-                                                        value="pie3"> </label>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                            <!-- Tabla a la derecha 4-->
-                            <table class="ml-4 border-2">
-                                <thead>
-                                    <tr>
-                                        <th colspan="3" class="text-center border fecha-tabla">
-                                            {{ \Carbon\Carbon::now()->addDays(3)->format('d-m-Y') }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="border text-center">
-                                            <div class=" font-bold">1</div>
-                                            <div class="mt-2">
-                                                <label><input type="checkbox" name="rizo1" class="t4rizo w-5 h-5"
-                                                        value="rizo1"> </label><br>
-                                                <label><input type="checkbox" name="pie1" class="t4pie w-5 h-5"
-                                                        value="pie1"> </label>
-                                            </div>
-                                        </td>
-                                        <td class="border text-center">
-                                            <div class=" font-bold">2</div>
-                                            <div class="mt-2">
-                                                <label><input type="checkbox" name="rizo2" class="t4rizo w-5 h-5"
-                                                        value="rizo2"> </label><br>
-                                                <label><input type="checkbox" name="pie2" class="t4pie w-5 h-5"
-                                                        value="pie2"> </label>
-                                            </div>
-                                        </td>
-                                        <td class="border text-center">
-                                            <div class=" font-bold">3</div>
-                                            <div class="mt-2">
-                                                <label><input type="checkbox" name="rizo3" class="t4rizo w-5 h-5"
-                                                        value="rizo3"> </label><br>
-                                                <label><input type="checkbox" name="pie3" class="t4pie w-5 h-5"
-                                                        value="pie3"> </label>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                            <!-- Tabla a la derecha 5-->
-                            <table class="ml-4 border-2">
-                                <thead>
-                                    <tr>
-                                        <th colspan="3" class="text-center border fecha-tabla">
-                                            {{ \Carbon\Carbon::now()->addDays(4)->format('d-m-Y') }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="border text-center">
-                                            <div class=" font-bold">1</div>
-                                            <div class="mt-2">
-                                                <label><input type="checkbox" name="rizo1" class="t5rizo w-5 h-5"
-                                                        value="rizo1"> </label><br>
-                                                <label><input type="checkbox" name="pie1" class="t5pie w-5 h-5"
-                                                        value="pie1"> </label>
-                                            </div>
-                                        </td>
-                                        <td class="border text-center">
-                                            <div class=" font-bold">2</div>
-                                            <div class="mt-2">
-                                                <label><input type="checkbox" name="rizo2" class="t5rizo w-5 h-5"
-                                                        value="rizo2"> </label><br>
-                                                <label><input type="checkbox" name="pie2" class="t5pie w-5 h-5"
-                                                        value="pie2"> </label>
-                                            </div>
-                                        </td>
-                                        <td class="border text-center">
-                                            <div class=" font-bold">3</div>
-                                            <div class="mt-2">
-                                                <label><input type="checkbox" name="rizo3" class="t5rizo w-5 h-5"
-                                                        value="rizo3"> </label><br>
-                                                <label><input type="checkbox" name="pie3" class="t5pie w-5 h-5"
-                                                        value="pie3"> </label>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                            <!-- Tabla a la derecha 6-->
-                            <table class="ml-4 border-2">
-                                <thead>
-                                    <tr>
-                                        <th colspan="3" class="text-center border fecha-tabla">
-                                            {{ \Carbon\Carbon::now()->addDays(5)->format('d-m-Y') }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="border text-center">
-                                            <div class=" font-bold">1</div>
-                                            <div class="mt-2">
-                                                <label><input type="checkbox" name="rizo1" class="t6rizo w-5 h-5"
-                                                        value="rizo1"> </label><br>
-                                                <label><input type="checkbox" name="pie1" class="t6pie w-5 h-5"
-                                                        value="pie1"> </label>
-                                            </div>
-                                        </td>
-                                        <td class="border text-center">
-                                            <div class=" font-bold">2</div>
-                                            <div class="mt-2">
-                                                <label><input type="checkbox" name="rizo2" class="t6rizo w-5 h-5"
-                                                        value="rizo2"> </label><br>
-                                                <label><input type="checkbox" name="pie2" class="t6pie w-5 h-5"
-                                                        value="pie2"> </label>
-                                            </div>
-                                        </td>
-                                        <td class="border text-center">
-                                            <div class=" font-bold">3</div>
-                                            <div class="mt-2">
-                                                <label><input type="checkbox" name="rizo3" class="t6rizo w-5 h-5"
-                                                        value="rizo3"> </label><br>
-                                                <label><input type="checkbox" name="pie3" class="t6pie w-5 h-5"
-                                                        value="pie3"> </label>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                            <!-- Tabla a la derecha 7-->
-                            <table class="ml-4 border-2">
-                                <thead>
-                                    <tr>
-                                        <th colspan="3" class="text-center border fecha-tabla">
-                                            {{ \Carbon\Carbon::now()->addDays(6)->format('d-m-Y') }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="border text-center">
-                                            <div class=" font-bold">1</div>
-                                            <div class="mt-2">
-                                                <label><input type="checkbox" name="rizo1" class="t7rizo w-5 h-5"
-                                                        value="rizo1"> </label><br>
-                                                <label><input type="checkbox" name="pie1" class="t7pie w-5 h-5"
-                                                        value="pie1"> </label>
-                                            </div>
-                                        </td>
-                                        <td class="border text-center">
-                                            <div class=" font-bold">2</div>
-                                            <div class="mt-2">
-                                                <label><input type="checkbox" name="rizo2" class="t7rizo w-5 h-5"
-                                                        value="rizo2"> </label><br>
-                                                <label><input type="checkbox" name="pie2" class="t7pie w-5 h-5"
-                                                        value="pie2"> </label>
-                                            </div>
-                                        </td>
-                                        <td class="border text-center">
-                                            <div class=" font-bold">3</div>
-                                            <div class="mt-2">
-                                                <label><input type="checkbox" name="rizo3" class="t7rizo w-5 h-5"
-                                                        value="rizo3"> </label><br>
-                                                <label><input type="checkbox" name="pie3" class="t7pie w-5 h-5"
-                                                        value="pie3"> </label>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <!-- <table class="ml-4 border-2">
-                                                                                                                                                                                                                                                                                    <thead>
-                                                                                                                                                                                                                                                                                        <tr>
-                                                                                                                                                                                                                                                                                            <th colspan="1" class="text-center border">JULIO RESERVADO</th>
-                                                                                                                                                                                                                                                                                        </tr>
-                                                                                                                                                                                                                                                                                    </thead>
-                                                                                                                                                                                                                                                                                    <tbody>
-                                                                                                                                                                                                                                                                                        <tr>
-                                                                                                                                                                                                                                                                                            <td class="border text-center w-40">
-                                                                                                                                                                                                                                                                                                <br><input type="text" id="julio_reserv" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                                                                                                                                                                                                                                                                                <input type="text" id="julio_reserv_pie" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                                                                                                                                                                                                                                                                            </td>
-                                                                                                                                                                                                                                                                                        </tr>
-                                                                                                                                                                                                                                                                                    </tbody>
-                                                                                                                                                                                                                                                                                </table>-->
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <div class="flex justify-center mt-6 w-80">
             <a href="{{ route('ordenes.programadas', ['telar' => $telar]) }}"
                 class="inline-block bg-blue-800 text-white font-bold py-2 px-6 rounded hover:bg-blue-900">
