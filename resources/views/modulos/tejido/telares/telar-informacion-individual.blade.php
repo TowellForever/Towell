@@ -4,7 +4,7 @@
     <div class=" container mx-auto overflow-y-auto" style="max-height: calc(100vh - 120px);">
         @php
             // Detectar si estás en la ruta especial
-            $esJacquardSulzer = request()->is('tejido/jacquard-sulzer/*');
+            $esJacquardSulzer = request()->is('tejido/jacquard-sulzer/*'); //tejido/jacquard-sulzer/ ESTA ES LA URL GLOBAL DE LA VISTA DINÁMICA, NUNCA CAMBIARÁ ESTA PARTE
         @endphp
 
         @if ($esJacquardSulzer)
@@ -30,12 +30,37 @@
 
                     if (isNaN(telarActual)) return;
 
-                    const siguienteTelar = telarActual + direccion;
+                    // 🧩 Definir los rangos válidos
+                    const rangoJacquardSulzer = [207, 208, 209, 210, 211];
+                    const rangoJacquardSmith = [201, 202, 203, 204, 205, 206, 213, 214, 215];
+                    const rangoSmith = [305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316];
+                    const rangoItemaViejo = [303, 304, 317, 318];
+                    const rangoItemaNuevo = [299, 300, 301, 302, 319, 320];
 
-                    // 🔒 Límites válidos
-                    if (siguienteTelar < 207 || siguienteTelar > 211) return;
+                    let rangoActivo = [];
 
-                    // Reemplaza el número del telar y redirige
+                    if (rangoJacquardSulzer.includes(telarActual)) {
+                        rangoActivo = rangoJacquardSulzer;
+                    } else if (rangoJacquardSmith.includes(telarActual)) {
+                        rangoActivo = rangoJacquardSmith;
+                    } else if (rangoSmith.includes(telarActual)) {
+                        rangoActivo = rangoSmith;
+                    } else if (rangoItemaViejo.includes(telarActual)) {
+                        rangoActivo = rangoItemaViejo;
+                    } else if (rangoItemaNuevo.includes(telarActual)) {
+                        rangoActivo = rangoItemaNuevo;
+                    } else {
+                        return; // 🚫 Número de telar no permitido
+                    }
+
+                    const indiceActual = rangoActivo.indexOf(telarActual);
+                    const nuevoIndice = indiceActual + direccion;
+
+                    if (nuevoIndice < 0 || nuevoIndice >= rangoActivo.length) return; // fuera de rango
+
+                    const siguienteTelar = rangoActivo[nuevoIndice];
+
+                    // 🧭 Redirigir
                     partes[partes.length - 1] = siguienteTelar;
                     const nuevaUrl = partes.join('/');
                     window.location.href = nuevaUrl;
@@ -133,8 +158,8 @@
                                 <div class="mr-4">
                                     <b id="fecha"></b>
                                     <!--<br><b>Turno:</b> {{ '' }}
-                                                                                                        <br><b>Metros:</b> <br><input type="text" id="metros" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                                                                                        <br><input type="text" id="metros_pie" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">-->
+                                                                                                                                                                                                                                                                                        <br><b>Metros:</b> <br><input type="text" id="metros" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                                                                                                                                                                                                                                                        <br><input type="text" id="metros_pie" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">-->
                                 </div>
                             </div>
 
@@ -425,20 +450,20 @@
                                 </tbody>
                             </table>
                             <!-- <table class="ml-4 border-2">
-                                                                                                    <thead>
-                                                                                                        <tr>
-                                                                                                            <th colspan="1" class="text-center border">JULIO RESERVADO</th>
-                                                                                                        </tr>
-                                                                                                    </thead>
-                                                                                                    <tbody>
-                                                                                                        <tr>
-                                                                                                            <td class="border text-center w-40">
-                                                                                                                <br><input type="text" id="julio_reserv" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                                                                                                <input type="text" id="julio_reserv_pie" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                                                                                            </td>
-                                                                                                        </tr>
-                                                                                                    </tbody>
-                                                                                                </table>-->
+                                                                                                                                                                                                                                                                                    <thead>
+                                                                                                                                                                                                                                                                                        <tr>
+                                                                                                                                                                                                                                                                                            <th colspan="1" class="text-center border">JULIO RESERVADO</th>
+                                                                                                                                                                                                                                                                                        </tr>
+                                                                                                                                                                                                                                                                                    </thead>
+                                                                                                                                                                                                                                                                                    <tbody>
+                                                                                                                                                                                                                                                                                        <tr>
+                                                                                                                                                                                                                                                                                            <td class="border text-center w-40">
+                                                                                                                                                                                                                                                                                                <br><input type="text" id="julio_reserv" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                                                                                                                                                                                                                                                                <input type="text" id="julio_reserv_pie" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                                                                                                                                                                                                                                                            </td>
+                                                                                                                                                                                                                                                                                        </tr>
+                                                                                                                                                                                                                                                                                    </tbody>
+                                                                                                                                                                                                                                                                                </table>-->
                         </div>
                     </td>
                 </tr>
