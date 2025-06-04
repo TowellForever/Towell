@@ -246,6 +246,6 @@ class UrdidoController extends Controller
         $ordUrdido = OrdenUrdido::where('folio', $folio)->get(); // recupero todos los registros que coincidan con el folio enviado del front
         $telares = Requerimiento::where('orden_prod', 'like', $folio . '-%')->pluck('telar');
 
-        return view('modulos.urdido.imprimir_papeletas_vacias', compact('folio', 'orden', 'julios', 'ordUrdido', 'telares', 'totalJulios'));
+        return view('modulos.urdido.imprimir_papeletas_vacias', compact('folio', 'orden', 'ordUrdido', 'telares', 'totalJulios'));
     }
 }

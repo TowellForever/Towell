@@ -3,27 +3,15 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>ORDEN DE URDIDO Y ENGOMADO</title>
+    <title>PAPELETAS VIAJERAS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ asset('css/estilos.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
-    <style>
-        .circle {
-            display: inline-block;
-            border: 1.5px solid black;
-            border-radius: 9999px;
-            /* hace el borde completamente circular */
-            padding: 4px 10px;
-            margin: 2px;
-            font-weight: bold;
-        }
-    </style>
-
 </head>
 
 <body class="bg-white impresion-UE">
     @for ($i = 0; $i < $totalJulios; $i++)
-        <div class="border border-black p-5">
+        <div class="border border-black p-5 mb-2">
             <div class="flex justify-between items-center mb-1">
                 <div>
                     <img src="{{ asset('images/fondosTowell/logo_towell2.png') }}" alt="Logo Towell" style="width: 2cm;">
@@ -35,35 +23,32 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-6 gap-4 mb-0.5 text-left">
+            <div class="grid grid-cols-5 gap-4 mb-2 text-left">
                 <div>
-                    <p><strong>ENGOMADO:</strong> ________________</p>
-                    <p><strong>URDIDO:</strong> ________________
+                    <p class="mt-2"><strong>ENGOMADO:</strong> {{ $orden->maquinaEngomado ?? '' }}</p>
+                    <p class="mt-2"><strong>URDIDO:</strong> {{ $orden->urdido }}
                     </p>
-                    <p><strong>ANCHO BALONAS:</strong> ________________
+                    <p class="mt-2"><strong>ANCHO BALONAS:</strong> {{ $orden->balonas ?? '' }}
                 </div>
                 <div>
-                    <p><strong>FECHA:</strong> {{ $orden->cuenta ?? '' }}</p>
-                    <p><strong>URDIDOR:</strong>________________</p>
-                    <p><strong>CAL.:</strong> </p>
+                    <p class="mt-2"><strong>FECHA:</strong> {{ $orden->fecha ?? '' }}</p>
+                    <p class="mt-2"><strong>URDIDOR:</strong> {{ Auth::user()->nombre }}</p>
+                    <p class="mt-2"><strong>CAL.:</strong> </p>
                 </div>
                 <div>
-                    <p><strong>TURNO::</strong>________________</p>
-                    <p><strong>CUENTA:</strong> {{ $orden->destino ?? '' }}</p>
-                    <p><strong>PROVEEDOR:</strong>________________</p>
+                    <p class="mt-2"><strong>TURNO:</strong> {{ $ordUrdido[0]->turno ?? '' }}</p>
+                    <p class="mt-2"><strong>CUENTA:</strong> {{ $orden->cuenta ?? '' }}</p>
+                    <p class="mt-2"><strong>PROVEEDOR:</strong> {{ $orden->proveedor ?? '' }}</p>
                 </div>
                 <div>
-                    <p><strong>COLOR: ___________________</strong> </p>
-                    <p><strong>SÓLIDOS: ___________________</strong> </p>
-                    <p><strong>TIPO: ________________</strong> </p>
+                    <p class="mt-2"><strong>ORDEN:</strong> ________________ </p>
+                    <p class="mt-2"><strong>SÓLIDOS:</strong> {{ $orden->solidos }} </p>
                 </div>
                 <div>
-                    <p><strong>ORDEN: ________________</strong> </p>
-                    <p><strong>PAREJA: ________________</strong> </p>
-                </div>
-                <div class=" flex justify-end">
-                    <!-- SVG donde se dibujará el código de barras -->
-                    <svg id="barcode"></svg>
+
+                    <p class="mt-2"><strong>PAREJA:</strong> ________________ </p>
+                    <p class="mt-2"><strong>TIPO:</strong> {{ $orden->tipo }} </p>
+                    <p class="mt-2"><strong>COLOR:</strong> {{ $orden->color }} </p>
                 </div>
             </div>
 
@@ -76,13 +61,14 @@
                             <th colspan="6"></th>
                         </tr>
                         <tr style="background-color: #e5e7eb;">
-                            <th style="padding: 1px; width: 5cm;">FECHA</th>
-                            <th style="padding: 1px; width: 5cm;">H. INIC.</th>
-                            <th style="padding: 1px; width: 1.5cm;">H. FINAL</th>
-                            <th style="padding: 1px; width: 3.5cm;">METROS</th>
-                            <th style="padding: 1px; width: 3.5cm;">ROTURAS</th>
-                            <th style="padding: 1px; width: 2.5cm;">ENGOMADOR</th>
-                            <th style="padding: 1px; width: 2.5cm;">OBSERVACIONES</th>
+                            <th style="padding: 1px; width: 5cm; border: 1px solid black; border: 1px solid black;">
+                                FECHA</th>
+                            <th style="padding: 1px; width: 2.5cm; border: 1px solid black;">H. INIC.</th>
+                            <th style="padding: 1px; width: 2.5cm; border: 1px solid black;">H. FINAL</th>
+                            <th style="padding: 1px; width: 3cm; border: 1px solid black;">METROS</th>
+                            <th style="padding: 1px; width: 2cm; border: 1px solid black;">ROTURAS</th>
+                            <th style="padding: 1px; width: 2.5cm; border: 1px solid black;">ENGOMADOR</th>
+                            <th style="padding: 1px; width: 2.5cm; border: 1px solid black;">OBSERVACIONES</th>
                         </tr>
                     </thead>
                     <tbody style="line-height: 1;">
@@ -118,15 +104,15 @@
                             <th colspan="9"></th>
                         </tr>
                         <tr style="background-color: #e5e7eb;">
-                            <th style="padding: 1px; width: 5cm;">N° JULIO</th>
-                            <th style="padding: 1px; width: 5cm;">KG. BRUTO</th>
-                            <th style="padding: 1px; width: 1.5cm;">TARA</th>
-                            <th style="padding: 1px; width: 3.5cm;">KG. NETO</th>
-                            <th style="padding: 1px; width: 3.5cm;">SOL. CAN.</th>
-                            <th style="padding: 1px; width: 2cm;">TEMP. CANOA 1</th>
-                            <th style="padding: 1px; width: 2.5cm;">TEMP. CANOA 2</th>
-                            <th style="padding: 1px; width: 2.5cm;">TEMP. TAMB.</th>
-                            <th style="padding: 1px; width: 2.5cm;">HUMEDAD</th>
+                            <th style="padding: 1px; width: 3cm;  border: 1px solid black;">N° JULIO</th>
+                            <th style="padding: 1px; width: 2cm; border: 1px solid black;">KG. BRUTO</th>
+                            <th style="padding: 1px; width: 2cm; border: 1px solid black;">TARA</th>
+                            <th style="padding: 1px; width: 2cm; border: 1px solid black;">KG. NETO</th>
+                            <th style="padding: 1px; width: 3cm; border: 1px solid black;">SOL. CAN.</th>
+                            <th style="padding: 1px; width: 2.5cm; border: 1px solid black;">TEMP. CANOA 1</th>
+                            <th style="padding: 1px; width: 2.5cm; border: 1px solid black;">TEMP. CANOA 2</th>
+                            <th style="padding: 1px; width: 2.5cm; border: 1px solid black;">TEMP. TAMB.</th>
+                            <th style="padding: 1px; width: 2.5cm; border: 1px solid black;">HUMEDAD</th>
                         </tr>
                     </thead>
                     <tbody style="line-height: 1;">
@@ -151,7 +137,9 @@
                     <p><strong>FECHA DE ATADO:</strong> _____________________________</p>
                 </div>
                 <div>
-                    <p><strong>TELAR:</strong> _____________________________</p>
+                    <p><strong>TELAR:</strong> {{ json_decode($telares)[0] }}
+
+                    </p>
                 </div>
                 <div>
                     <p><strong>TURNO:</strong> _____________________________</p>
@@ -163,7 +151,9 @@
                                 <td class="border border-black text-center px-1"><strong>CLAVE ATADOR</strong></td>
                             </tr>
                             <tr>
-                                <td class="border border-black py-4 text-center"></td>
+                                <td class="border border-black py-4 text-center text-sm">
+                                    {{ Auth::user()->numero_empleado }}
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -171,13 +161,7 @@
             </div>
             <div class="grid grid-cols-4 gap-4 -mt-2 text-left">
                 <div>
-                    <p><strong>DESTINO:
-                            <span class="circle">JZ</span>
-                            <span class="circle">JS</span>
-                            <span class="circle">S15</span>
-                            <span class="circle">S </span>
-                            <span class="circle">IN</span>
-                            <span class="circle">IV</span>
+                    <p><strong>DESTINO: {{ $orden->destino }}
                         </strong></p>
                 </div>
                 <div>
