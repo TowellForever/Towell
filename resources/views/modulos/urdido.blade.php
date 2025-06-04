@@ -279,89 +279,108 @@
                 return;
             }
 
-            if (!confirm("¿Está seguro de guardar y finalizar este urdido?")) return;
+            Swal.fire({
+                title: 'CONFIRME ESTA ACCIÓN',
+                text: '¿Desea guardar y finalizar este urdido?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí',
+                cancelButtonText: 'No'
+            }).then(result => {
+                if (!result.isConfirmed) return;
 
-            // Agrupar datos por fila
-            inputs.forEach(input => {
-                const match = input.name.match(/datos\[(\d+)\]\[(\w+)\]/);
-                if (match) {
-                    const index = match[1];
-                    const key = match[2];
+                // Aquí continúa tu lógica solo si confirmó
 
-                    if (!formData[index]) {
-                        formData[index] = {};
-                    }
 
-                    let value = input.tagName.toLowerCase() === "select" ?
-                        input.options[input.selectedIndex].value :
-                        input.value.trim();
 
-                    formData[index][key] = value;
+                // Agrupar datos por fila
+                inputs.forEach(input => {
+                    const match = input.name.match(/datos\[(\d+)\]\[(\w+)\]/);
+                    if (match) {
+                        const index = match[1];
+                        const key = match[2];
 
-                    // Validar campos obligatorios
-                    const camposOpcionales = ['tara', 'peso_neto', 'hilatura', 'maquina', 'operacion',
-                        'transferencia',
-                    ];
-                    if (!value && !camposOpcionales.includes(key)) {
-                        if (!erroresPorFila[index]) {
-                            erroresPorFila[index] = [];
+                        if (!formData[index]) {
+                            formData[index] = {};
                         }
-                        erroresPorFila[index].push(key);
+
+                        let value = input.tagName.toLowerCase() === "select" ?
+                            input.options[input.selectedIndex].value :
+                            input.value.trim();
+
+                        formData[index][key] = value;
+
+                        // Validar campos obligatorios
+                        const camposOpcionales = ['tara', 'peso_neto', 'hilatura', 'maquina',
+                            'operacion',
+                            'transferencia',
+                        ];
+                        if (!value && !camposOpcionales.includes(key)) {
+                            if (!erroresPorFila[index]) {
+                                erroresPorFila[index] = [];
+                            }
+                            erroresPorFila[index].push(key);
+                        }
                     }
-                }
-            });
-
-            // Mostrar errores si los hay
-            if (Object.keys(erroresPorFila).length > 0) {
-                let mensaje = "Por favor completa los campos faltantes en las siguientes filas:\n\n";
-                for (const index in erroresPorFila) {
-                    mensaje += `● Fila ${parseInt(index)}: ${erroresPorFila[index].join(', ')}\n`;
-                }
-
-                alert(mensaje);
-                return;
-            }
-
-            // Enviar petición al backend
-            fetch("{{ route('urdido.guardarFinalizar') }}", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute(
-                            "content")
-                    },
-                    body: JSON.stringify({
-                        folio: folio,
-                        registros: Object.values(formData)
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    // Mostrar mensaje de finalizado
-                    const overlay = document.getElementById('finalizadoOverlay');
-                    overlay.classList.add('active');
-
-                    setTimeout(() => {
-                        overlay.classList.remove('active');
-                    }, 3000);
-
-                    // Desactivar botón
-                    const btn = document.getElementById("guardarYFinalizar");
-                    btn.disabled = true;
-                    btn.innerText = "Finalizado";
-
-                    // 👉 ABRIR la nueva pestaña con la impresión después de 3 segundos
-                    setTimeout(() => {
-                        const url = "{{ url('/imprimir-orden-llena-urd') }}/" + folio;
-                        window.open(url, '_blank');
-                    }, 3000); // 3000 ms = 3 segundos
-
-
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    alert("Ocurrió un error al guardar y finalizar.");
                 });
+
+                // Mostrar errores si los hay
+                if (Object.keys(erroresPorFila).length > 0) {
+                    let mensaje = "Por favor completa los campos faltantes en las siguientes filas:\n\n";
+                    for (const index in erroresPorFila) {
+                        mensaje += `● Fila ${parseInt(index)}: ${erroresPorFila[index].join(', ')}\n`;
+                    }
+
+                    alert(mensaje);
+                    return;
+                }
+
+                // Enviar petición al backend
+                fetch("{{ route('urdido.guardarFinalizar') }}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
+                                .getAttribute(
+                                    "content")
+                        },
+                        body: JSON.stringify({
+                            folio: folio,
+                            registros: Object.values(formData)
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Mostrar mensaje de finalizado
+                        const overlay = document.getElementById('finalizadoOverlay');
+                        overlay.classList.add('active');
+
+                        setTimeout(() => {
+                            overlay.classList.remove('active');
+                        }, 3000);
+
+                        // Desactivar botón
+                        const btn = document.getElementById("guardarYFinalizar");
+                        btn.disabled = true;
+                        btn.innerText = "Finalizado";
+
+                        // 👉 ABRIR la nueva pestaña con la impresión después de 3 segundos
+                        setTimeout(() => {
+                            const url = "{{ url('/imprimir-orden-llena-urd') }}/" + folio;
+                            const papeletas = "{{ url('/imprimir-papeletas-pequenias') }}/" +
+                                folio;
+                            window.open(url, '_blank');
+                            window.open(papeletas, '_blank');
+
+                        }, 3000); // 3000 ms = 3 segundos
+
+
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        alert("Ocurrió un error al guardar y finalizar.");
+                    });
+            });
         });
     </script>
 
