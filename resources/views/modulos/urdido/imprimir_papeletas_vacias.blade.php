@@ -23,45 +23,87 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-5 gap-4 mb-2 text-left">
+            <div class="grid grid-cols-5 mb-2 text-left">
                 <div>
                     <p class="mt-2"><strong>ENGOMADO:</strong>
-                        <span class="text-xs"> {{ $orden->maquinaEngomado ?? '' }} </span>
-                    </p>
-                    <p class="mt-2"><strong>URDIDO:</strong><span class="text-xs"> {{ $orden->urdido }} </span>
-                    </p>
-                    <p class="mt-2"><strong>ANCHO BALONAS:</strong><span class="text-xs"> {{ $orden->balonas ?? '' }}
-                        </span>
-                </div>
-                <div>
-                    <p class="mt-2"><strong>FECHA:</strong><span class="text-xs"> {{ $orden->fecha ?? '' }} </span>
-                    </p>
-                    <p class="mt-2"><strong>URDIDOR:</strong> {{ Auth::user()->nombre }}
-                    </p>
-                    <p class="mt-2"><strong>CAL.:</strong><span class="text-xs"> </p>
-                </div>
-                <div>
-                    <p class="mt-2"><strong>TURNO:</strong><span class="text-xs"> {{ $ordUrdido[0]->turno ?? '' }}
-                        </span></p>
-                    <p class="mt-2"><strong>CUENTA:</strong><span class="text-xs"> {{ $orden->cuenta ?? '' }} </span>
-                    </p>
-                    <p class="mt-2"><strong>PROVEEDOR:</strong><span class="text-xs"> {{ $orden->proveedor ?? '' }}
+                        <span class="inline-block text-xs border-b-2 border-black px-2 print:border-black">
+                            {{ $orden->maquinaEngomado ?? '' }}
                         </span>
                     </p>
-                </div>
-                <div>
-                    <p class="mt-2"><strong>ORDEN:</strong> ________________ </p>
-                    <p class="mt-2"><strong>SÓLIDOS:</strong><span class="text-xs"> {{ $orden->solidos }} </p>
-                    </span>
-                </div>
-                <div>
+                    <p class="mt-2"><strong>URDIDO:</strong>
+                        <span class="inline-block text-xs border-b-2 border-black px-2 print:border-black">
+                            {{ $orden->urdido ?? '' }}
+                        </span>
+                    </p>
+                    <p class="mt-2"><strong>ANCHO BALONAS:</strong>
+                        <span class="inline-block text-xs border-b-2 border-black px-2 print:border-black">
+                            {{ $orden->balonas ?? '' }}
+                        </span>
 
-                    <p class="mt-2"><strong>PAREJA:</strong> ________________ </p>
-                    <p class="mt-2"><strong>TIPO:</strong><span class="text-xs"> {{ $orden->tipo }} </p> </span>
-                    <p class="mt-2"><strong>COLOR:</strong><span class="text-xs"> {{ $orden->color }} </p> </span>
+                </div>
+                <div>
+                    <p class="mt-2"><strong>FECHA:</strong>
+                        <span class="inline-block text-xs border-b-2 border-black px-2 print:border-black">
+                            {{ $orden->fecha ?? '' }}
+                        </span>
+                    </p>
+                    <p class="mt-2"><strong>URDIDOR:</strong>
+                        <span
+                            class="inline-block text-xs border-b-2 border-black print:border-black whitespace-nowrap overflow-hidden text-ellipsis max-w-[110px] align-middle">
+                            {{ Auth::user()->nombre ?? '' }}
+                        </span>
+
+                    </p>
+                    <p class="mt-2"><strong>CAL.:</strong>
+                        <span class="inline-block text-xs border-b-2 border-black px-2 print:border-black">
+                        </span>
+                </div>
+                <div class="ml-auto">
+                    <p class="mt-2"><strong>TURNO:</strong>
+                        <span class="inline-block text-xs border-b-2 border-black px-2 print:border-black">
+                            {{ $ordUrdido[0]->turno ?? '' }}
+                        </span>
+                    </p>
+                    <p class="mt-2"><strong>CUENTA:</strong>
+                        <span class="inline-block text-xs border-b-2 border-black px-2 print:border-black">
+                            {{ $orden->cuenta ?? '' }}
+                        </span>
+                    </p>
+                    <p class="mt-2"><strong>PROVEEDOR:</strong>
+                        <span class="inline-block text-xs border-b-2 border-black px-2 print:border-black">
+                            {{ $orden->proveedor ?? '' }}
+                        </span>
+                    </p>
+                </div>
+                <div class="ml-auto">
+                    <p class="mt-2"><strong>ORDEN:</strong>
+                        <span class="inline-block text-xs border-b-2 border-black px-2 print:border-black">
+                        </span>
+                    </p>
+
+                    <p class="mt-2"><strong>SÓLIDOS:</strong><span class="text-xs">
+                            <span class="inline-block text-xs border-b-2 border-black px-2 print:border-black">
+                                {{ $orden->solidos ?? '' }}
+                            </span>
+                    </p>
+
+                </div>
+                <div class="ml-auto">
+                    <p class="mt-2"><strong>PAREJA:</strong>
+                        <span class="inline-block text-xs border-b-2 border-black px-2 print:border-black">
+                        </span>
+                    </p>
+                    <p class="mt-2"><strong>TIPO:</strong><span class="text-xs">
+                            <span class="inline-block text-xs border-b-2 border-black px-2 print:border-black">
+                                {{ $orden->tipo ?? '' }}
+                            </span>
+                    </p> </span>
+                    <p class="mt-2"><strong>COLOR:</strong>
+                        <span class="inline-block text-xs border-b-2 border-black px-2 print:border-black">
+                            {{ $orden->color ?? '' }}
+                        </span>
                 </div>
             </div>
-
             <!-- Tabla principal -->
             <div class="w-full overflow-x-auto">
                 <table border="1"
@@ -71,14 +113,14 @@
                             <th colspan="6"></th>
                         </tr>
                         <tr style="background-color: #e5e7eb;">
-                            <th style="padding: 1px; width: 5cm; border: 1px solid black; border: 1px solid black;">
+                            <th style="padding: 1px; width: 4cm; border: 1px solid black; border: 1px solid black;">
                                 FECHA</th>
                             <th style="padding: 1px; width: 2.5cm; border: 1px solid black;">H. INIC.</th>
                             <th style="padding: 1px; width: 2.5cm; border: 1px solid black;">H. FINAL</th>
-                            <th style="padding: 1px; width: 3cm; border: 1px solid black;">METROS</th>
-                            <th style="padding: 1px; width: 2cm; border: 1px solid black;">ROTURAS</th>
+                            <th style="padding: 1px; width: 2.5cm; border: 1px solid black;">METROS</th>
+                            <th style="padding: 1px; width: 1.5cm; border: 1px solid black;">ROTURAS</th>
                             <th style="padding: 1px; width: 2.5cm; border: 1px solid black;">ENGOMADOR</th>
-                            <th style="padding: 1px; width: 2.5cm; border: 1px solid black;">OBSERVACIONES</th>
+                            <th style="padding: 1px; width: 5cm; border: 1px solid black;">OBSERVACIONES</th>
                         </tr>
                     </thead>
                     <tbody style="line-height: 1;">
@@ -150,42 +192,44 @@
                     @php
                         $items = $telares; // true para array asociativo
                     @endphp
-                    <p><strong>TELAR:</strong>
-                        @foreach ($telares as $index => $telar)
-                            {{ $telar }}
-                        @endforeach
+                    <p class="text-xs"><strong>TELAR:</strong>
+                        <span class="inline-block text-xs border-b-2 border-black px-2 print:border-black">
+                            {{ implode(', ', $telares->toArray()) }}
+                        </span>
                     </p>
                 </div>
                 <div>
                     <p><strong>TURNO:</strong> _____________________________</p>
                 </div>
                 <div>
-                    <table class="table-fixed border border-black text-xss">
+                    <table class="table-fixed border border-black text-xss ml-20">
                         <tbody>
                             <tr>
-                                <td class="border border-black text-center px-1"><strong>CLAVE ATADOR</strong></td>
+                                <td class="border border-black text-center px-4"><strong>CLAVE ATADOR</strong></td>
                             </tr>
                             <tr>
                                 <td class="border border-black py-4 text-center text-sm">
-                                    {{ Auth::user()->numero_empleado }}
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-            <div class="grid grid-cols-4 gap-4 -mt-10 text-left">
+            <div class="grid grid-cols-4 gap-4 -mt-6 ">
                 <div class="mt-5">
-                    <p><strong>DESTINO:<span class="text-xs"> {{ $orden->destino }} </span>
+                    <p><strong>DESTINO:<span class="text-xs">
+                                <span class="inline-block text-xs border-b-2 border-black px-2 print:border-black">
+                                    {{ $orden->destino ?? '' }}
+                                </span>
                         </strong></p>
                 </div>
                 <div>
-                    <table class="table-fixed border border-black text-xss">
+                    <table class="ml-auto border border-black text-xss text-right ">
                         <tbody>
                             <tr>
-                                <td class="border border-black px-2 text-center"><strong>H. PARO</strong></td>
-                                <td class="border border-black px-2 text-center"><strong>H. INICIO</strong></td>
-                                <td class="border border-black px-2 text-center"><strong>H. FINAL</strong></td>
+                                <td class="border border-black px-7 text-center"><strong>H. PARO</strong></td>
+                                <td class="border border-black px-7 text-center"><strong>H. INICIO</strong></td>
+                                <td class="border border-black px-7 text-center"><strong>H. FINAL</strong></td>
                             </tr>
                             <tr>
                                 <td class="border border-black p-4 text-center"></td>
@@ -196,7 +240,7 @@
                     </table>
                 </div>
                 <div>
-                    <p class="mt-5"><strong>MERMA:</strong> _____________________________</p>
+                    <p class="mt-5 text-right"><strong>MERMA:</strong> _____________________________</p>
                 </div>
             </div>
 
