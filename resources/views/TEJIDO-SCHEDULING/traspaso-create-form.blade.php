@@ -10,20 +10,21 @@
             <div class="col-span-1 grid grid-cols-1 items-center">
                 <label for="no_flog" class="w-20 font-medium text-gray-700">No FLOG:</label>
                 <select id="no_flog" name="no_flog" class=" border border-gray-300 rounded px-2 py-1 select2-flog">
-                    <option value="">-- SELECCIONA --</option>
+                    <option value="">
+                    </option>
                 </select>
             </div>
 
             <div class="flex items-center">
                 <label for="descrip" class="w-20 font-medium text-gray-700">DESCRIPCIÓN:</label>
                 <input type="text" name="descripcion" id="descrip" class=" border border-gray-300 rounded px-2 py-1"
-                    readonly>
+                    value="{{ $datos['Descrip'] }}">
             </div>
 
             <div class="flex items-center">
                 <label for="telar" class="w-20 font-medium text-gray-700">TELAR:</label>
                 <select name="telar" id="telar" class="border border-gray-300 rounded px-2 py-1 text-sm" required>
-                    <option value="">-- SELECCIONA --</option>
+                    <option value="">{{ $datos->Telar ?? '' }}</option>
                     @foreach ($telares as $telar)
                         <option value="{{ $telar->telar }}"> {{ $telar->telar }}</option>
                     @endforeach
@@ -39,17 +40,18 @@
             <div class="flex items-center">
                 <label for="nombre_modelo" class="w-20 font-medium text-gray-700">NOMBRE MODELO:</label>
                 <input type="text" id="nombre_modelo" name="nombre_modelo"
-                    class=" border border-gray-300 rounded px-2 py-1" readonly>
+                    class=" border border-gray-300 rounded px-2 py-1" value="{{ $datos['Nombre_Producto'] }}">
             </div>
 
             <div class="flex items-center">
                 <label for="tamano" class="w-20 font-medium text-gray-700">TAMAÑO:</label>
-                <input type="text" name="tamano" id="tamano" class="border rounded px-2 py-1" required>
+                <input type="text" name="tamano" id="tamano" class="border rounded px-2 py-1"
+                    value="{{ $datos['Tamano'] ?? '' }}">
             </div>
             <div class="flex items-center">
                 <label for="cuenta_rizo" class="w-20 font-medium text-gray-700">CUENTA RIZO:</label>
                 <input type="text" name="cuenta_rizo" id="cuenta_rizo" class=" border border-gray-300 rounded px-2 py-1"
-                    required>
+                    value="{{ $datos['Cuenta'] ?? '' }}">
             </div>
             <div class="flex items-center">
                 <label for="calibre_rizo" class="w-20 font-medium text-gray-700">CALIBRE RIZO:</label>
@@ -60,7 +62,7 @@
             <div class="flex items-center">
                 <label for="cuenta_pie" class="w-20 font-medium text-gray-700">CUENTA PIE:</label>
                 <input type="text" name="cuenta_pie" id="cuenta_pie" class=" border border-gray-300 rounded px-2 py-1"
-                    required>
+                    value="{{ $datos['Cuenta_Pie'] ?? '' }}">
             </div>
             <div class="flex items-center">
                 <label for="calibre_pie" class="w-20 font-medium text-gray-700">CALIBRE PIE:</label>
@@ -70,7 +72,7 @@
             <div class="flex items-center">
                 <label for="trama_0" class="w-20 font-medium text-gray-700">TRAMA:</label>
                 <input type="number" step="0.01" name="trama_0" id="trama_0"
-                    class=" border border-gray-300 rounded px-2 py-1">
+                    class=" border border-gray-300 rounded px-2 py-1" value="">
             </div>
             <div class="flex items-center">
                 <label for="color_0" class="w-20 font-medium text-gray-700">COLOR:</label>
@@ -441,8 +443,8 @@
         });
     </script>
     <!--
-                                                                                                                                                                                                                                                                                                Escucha cuando el usuario escribe en cantidad y actualiza saldo con el mismo valor en tiempo real.
-                                                                                                                                                                                                                                                                                                -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        Escucha cuando el usuario escribe en cantidad y actualiza saldo con el mismo valor en tiempo real.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const cantidadInput = document.getElementById('cantidad');

@@ -15,6 +15,7 @@ use App\Models\Usuario;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReporteFallaController;
 use App\Http\Controllers\TejedorController;
+use App\Http\Controllers\TejidoSchedullingController;
 use App\Http\Controllers\UrdidoController;
 use App\Http\Controllers\WhatsAppController;
 use App\Models\CalendarioT1;
@@ -159,7 +160,6 @@ Route::get('/tejido/jacquard-sulzer/{telar}', [PlaneacionController::class, 'mos
 //el método de arriba sirve para mstrar la informacion de un telar individualmente (telar-informacion-individual)
 Route::get('/modulos/tejido/telares/ordenes-programadas/{telar}', [PlaneacionController::class, 'mostrarOrdenesProgramadas'])->name('tejido.mostrarOrdenesProgramadas');
 Route::post('/guardar-requerimiento', [RequerimientoController::class, 'store']);
-
 Route::get('/ultimos-requerimientos', [RequerimientoController::class, 'obtenerRequerimientosActivos']);
 Route::get('/ordenes-programadas-dinamica/{telar}', [PlaneacionController::class, 'obtenerOrdenesProgramadas'])->name('ordenes.programadas');
 
@@ -175,6 +175,8 @@ Route::resource('planeacion', PlaneacionController::class);
 Route::resource('telares', CatalagoTelarController::class);
 Route::resource('eficiencia', CatalagoEficienciaController::class);
 Route::resource('velocidad', CatalagoVelocidadController::class);
+
+Route::get('/traspasoDataRedireccion', [TejidoSchedullingController::class, 'envioDeDataPlaneacion']);
 
 // ✅ NUEVAS RUTAS de PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION
 Route::get('/catalagos/calendarios', [CalendarioController::class, 'CalendarioT1'])->name('calendariot1.index');

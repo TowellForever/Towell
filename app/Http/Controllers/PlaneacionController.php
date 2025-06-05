@@ -392,8 +392,6 @@ class PlaneacionController extends Controller
     ]);*/
     //procedemos con las formulas de excel tomando en cuenta las proporciones de los dias de acuerdo a las fechas de inicio y fin
 
-
-
     $nuevoRegistro = Planeacion::create(
       [
         'Cuenta' => $request->input('cuenta_rizo'),
