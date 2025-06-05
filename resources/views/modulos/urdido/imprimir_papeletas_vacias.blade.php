@@ -11,7 +11,7 @@
 
 <body class="bg-white impresion-UE">
     @for ($i = 0; $i < $totalJulios; $i++)
-        <div class="border border-black p-5 mb-2">
+        <div class="border border-black p-5">
             <div class="flex justify-between items-center mb-1">
                 <div>
                     <img src="{{ asset('images/fondosTowell/logo_towell2.png') }}" alt="Logo Towell" style="width: 2cm;">
@@ -25,30 +25,40 @@
 
             <div class="grid grid-cols-5 gap-4 mb-2 text-left">
                 <div>
-                    <p class="mt-2"><strong>ENGOMADO:</strong> {{ $orden->maquinaEngomado ?? '' }}</p>
-                    <p class="mt-2"><strong>URDIDO:</strong> {{ $orden->urdido }}
+                    <p class="mt-2"><strong>ENGOMADO:</strong>
+                        <span class="text-xs"> {{ $orden->maquinaEngomado ?? '' }} </span>
                     </p>
-                    <p class="mt-2"><strong>ANCHO BALONAS:</strong> {{ $orden->balonas ?? '' }}
+                    <p class="mt-2"><strong>URDIDO:</strong><span class="text-xs"> {{ $orden->urdido }} </span>
+                    </p>
+                    <p class="mt-2"><strong>ANCHO BALONAS:</strong><span class="text-xs"> {{ $orden->balonas ?? '' }}
+                        </span>
                 </div>
                 <div>
-                    <p class="mt-2"><strong>FECHA:</strong> {{ $orden->fecha ?? '' }}</p>
-                    <p class="mt-2"><strong>URDIDOR:</strong> {{ Auth::user()->nombre }}</p>
-                    <p class="mt-2"><strong>CAL.:</strong> </p>
+                    <p class="mt-2"><strong>FECHA:</strong><span class="text-xs"> {{ $orden->fecha ?? '' }} </span>
+                    </p>
+                    <p class="mt-2"><strong>URDIDOR:</strong> {{ Auth::user()->nombre }}
+                    </p>
+                    <p class="mt-2"><strong>CAL.:</strong><span class="text-xs"> </p>
                 </div>
                 <div>
-                    <p class="mt-2"><strong>TURNO:</strong> {{ $ordUrdido[0]->turno ?? '' }}</p>
-                    <p class="mt-2"><strong>CUENTA:</strong> {{ $orden->cuenta ?? '' }}</p>
-                    <p class="mt-2"><strong>PROVEEDOR:</strong> {{ $orden->proveedor ?? '' }}</p>
+                    <p class="mt-2"><strong>TURNO:</strong><span class="text-xs"> {{ $ordUrdido[0]->turno ?? '' }}
+                        </span></p>
+                    <p class="mt-2"><strong>CUENTA:</strong><span class="text-xs"> {{ $orden->cuenta ?? '' }} </span>
+                    </p>
+                    <p class="mt-2"><strong>PROVEEDOR:</strong><span class="text-xs"> {{ $orden->proveedor ?? '' }}
+                        </span>
+                    </p>
                 </div>
                 <div>
                     <p class="mt-2"><strong>ORDEN:</strong> ________________ </p>
-                    <p class="mt-2"><strong>SÓLIDOS:</strong> {{ $orden->solidos }} </p>
+                    <p class="mt-2"><strong>SÓLIDOS:</strong><span class="text-xs"> {{ $orden->solidos }} </p>
+                    </span>
                 </div>
                 <div>
 
                     <p class="mt-2"><strong>PAREJA:</strong> ________________ </p>
-                    <p class="mt-2"><strong>TIPO:</strong> {{ $orden->tipo }} </p>
-                    <p class="mt-2"><strong>COLOR:</strong> {{ $orden->color }} </p>
+                    <p class="mt-2"><strong>TIPO:</strong><span class="text-xs"> {{ $orden->tipo }} </p> </span>
+                    <p class="mt-2"><strong>COLOR:</strong><span class="text-xs"> {{ $orden->color }} </p> </span>
                 </div>
             </div>
 
@@ -137,8 +147,13 @@
                     <p><strong>FECHA DE ATADO:</strong> _____________________________</p>
                 </div>
                 <div>
-                    <p><strong>TELAR:</strong> {{ json_decode($telares)[0] }}
-
+                    @php
+                        $items = $telares; // true para array asociativo
+                    @endphp
+                    <p><strong>TELAR:</strong>
+                        @foreach ($telares as $index => $telar)
+                            {{ $telar }}
+                        @endforeach
                     </p>
                 </div>
                 <div>
@@ -159,9 +174,9 @@
                     </table>
                 </div>
             </div>
-            <div class="grid grid-cols-4 gap-4 -mt-2 text-left">
-                <div>
-                    <p><strong>DESTINO: {{ $orden->destino }}
+            <div class="grid grid-cols-4 gap-4 -mt-10 text-left">
+                <div class="mt-5">
+                    <p><strong>DESTINO:<span class="text-xs"> {{ $orden->destino }} </span>
                         </strong></p>
                 </div>
                 <div>

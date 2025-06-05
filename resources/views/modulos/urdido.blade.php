@@ -430,7 +430,9 @@
         function reimprimir() {
             const folio = document.getElementById('folio').value;
             const url = "{{ url('/imprimir-orden-llena-urd') }}/" + folio;
+            const papeletas = "{{ url('/imprimir-papeletas-pequenias') }}/" + folio;
             window.open(url, '_blank');
+            window.open(papeletas, '_blank');
         }
     </script>
 
