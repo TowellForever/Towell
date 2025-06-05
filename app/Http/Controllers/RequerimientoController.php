@@ -358,7 +358,7 @@ class RequerimientoController extends Controller
                 }
             }
 
-            return view('modulos.programar_requerimientos.FolioEnPantalla')->with('folio', $folioBase);
+            return view('modulos.programar_requerimientos.lanzador')->with('folio', $folioBase);
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Validación fallida
             return redirect()->back()->withErrors($e->validator)->withInput();

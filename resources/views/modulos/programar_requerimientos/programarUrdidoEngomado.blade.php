@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app', ['ocultarBotones' => true])
 
 @section('content')
     <!-- Vista del formulario para registrar datos de URDIDO y ENGOMADO, además Construcción JULIOS -->
