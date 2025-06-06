@@ -203,13 +203,13 @@
             <div class="flex items-center ">
                 <label for="fecha_inicio" class="w-20 font-medium text-gray-700">FECHA INICIO:</label>
                 <input type="datetime-local" name="fecha_inicio" id="fecha_inicio"
-                    class="border border-gray-300 rounded px-2 py-1">
+                    class="border border-gray-300 rounded px-2 py-1" required>
             </div>
 
             <div class="flex items-center">
                 <label for="fecha_fin" class="w-20 font-medium text-gray-700">FECHA FIN:</label>
                 <input type="datetime-local" name="fecha_fin" id="fecha_fin"
-                    class="border border-gray-300 rounded px-2 py-1">
+                    class="border border-gray-300 rounded px-2 py-1" required>
             </div>
 
 
@@ -307,7 +307,7 @@
                 $('#nombre_modelo').empty().trigger('change');
 
                 $.ajax({
-
+                    url: '{{ route('modelos.porClave') }}',
                     data: {
                         clave_ax: claveAX,
                         departamento: salon
@@ -441,8 +441,8 @@
         });
     </script>
     <!--
-                                                                                                                                                                                                                                                                                                Escucha cuando el usuario escribe en cantidad y actualiza saldo con el mismo valor en tiempo real.
-                                                                                                                                                                                                                                                                                                -->
+                                                                                                                                                                                                                                                                                                    Escucha cuando el usuario escribe en cantidad y actualiza saldo con el mismo valor en tiempo real.
+                                                                                                                                                                                                                                                                                                    -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const cantidadInput = document.getElementById('cantidad');
