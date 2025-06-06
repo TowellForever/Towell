@@ -2,8 +2,8 @@
 
 @section('content')
     <div class="mx-auto p-3 bg-white shadow rounded-lg mt-6 overflow-y-auto max-h-[600px]">
-        <h1 class="text-xl font-bold mb-4 text-gray-800 text-center">NUEVO REGISTRO TEJIDO SCHEDULING</h1>
-        <form id="form-planeacion" action="{{ route('planeacion.store') }}" method="POST"
+        <h1 class="text-xl font-bold mb-4 text-gray-800 text-center">TRASPASO REGISTRO TEJIDO SCHEDULING</h1>
+        <form id="form-planeacion2" action="{{ route('planeacion.store') }}" method="POST"
             class="grid grid-cols-4 gap-x-8 gap-y-4 fs-11">
             @csrf
 
@@ -36,9 +36,12 @@
                 <select id="clave_ax" name="clave_ax"
                     class="w-34 border border-gray-300 rounded px-2 py-1 select2-modelos">
                     @if (isset($datos['Clave_Estilo']))
-                        <option value="{{ $datos['Clave_Estilo'] }}" selected>{{ $datos['Clave_Estilo'] }}</option>
+                        <option value="{{ preg_replace('/\D/', '', $datos['Clave_Estilo']) }}" selected>
+                            {{ preg_replace('/\D/', '', $datos['Clave_Estilo']) }}
+                        </option>
                     @endif
                 </select>
+
             </div>
             <div class="flex items-center">
                 <label for="nombre_modelo" class="w-20 font-medium text-gray-700">NOMBRE MODELO:</label>
@@ -54,7 +57,7 @@
             <div class="flex items-center">
                 <label for="cuenta_rizo" class="w-20 font-medium text-gray-700">CUENTA RIZO:</label>
                 <input type="text" name="cuenta_rizo" id="cuenta_rizo" class=" border border-gray-300 rounded px-2 py-1"
-                    value="     ">
+                    value="{{ $datos['Cuenta'] ?? '' }}">
             </div>
             <div class="flex items-center">
                 <label for="calibre_rizo" class="w-20 font-medium text-gray-700">CALIBRE RIZO:</label>
@@ -286,7 +289,7 @@
         $(document).ready(function() {
             // PRIMER SELECT: CLAVE_AX
             $('#clave_ax').select2({
-                placeholder: '{{ $datos['Clave_Estilo'] ?? '' }}',
+                placeholder: '',
                 ajax: {
                     url: '{{ route('modelos.buscar') }}',
                     dataType: 'json',
@@ -309,6 +312,14 @@
                     cache: true //Habilita el almacenamiento en caché de las respuestas para evitar solicitudes repetidas.
                 }
             });
+
+            // ✅ Establecer valor por defecto (solo números)
+            let valorInicial = $('#clave_ax').val();
+
+            if (valorInicial) {
+                let option = new Option(valorInicial, valorInicial, true, true);
+                $('#clave_ax').append(option).trigger('change');
+            }
 
             // SEGUNDO SELECT: nombre_modelo depende del valor seleccionado en clave_ax
             $('#clave_ax').on('select2:select', function(e) {
@@ -460,8 +471,8 @@
         });
     </script>
     <!--
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        Escucha cuando el usuario escribe en cantidad y actualiza saldo con el mismo valor en tiempo real.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    Escucha cuando el usuario escribe en cantidad y actualiza saldo con el mismo valor en tiempo real.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const cantidadInput = document.getElementById('cantidad');
@@ -519,7 +530,7 @@
     <!--STORE script para enviar datos al BACK, seran guardados en TEJIDO_SCHEDULING-->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const form = document.getElementById("form-planeacion");
+            const form = document.getElementById("form-planeacion2");
 
             form.addEventListener("submit", function(e) {
                 e.preventDefault();

@@ -397,7 +397,6 @@ class PlaneacionController extends Controller
     $nuevoRegistro = Planeacion::create(
       [
         'Cuenta' => (string) $request->input('cuenta_rizo'),
-        dd($request->input('cuenta_rizo')),
         'Salon' => $telar ? $telar->salon : null, //De esta forma se evita lanzar un error de laravel en caso de que $telar->telar sea nulo (no tenga valor) $telar ? $telar->salon :
         'Telar'  => $request->input('telar'),
         'Ultimo' =>  null,
