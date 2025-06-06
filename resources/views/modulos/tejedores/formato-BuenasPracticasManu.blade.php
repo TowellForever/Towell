@@ -41,12 +41,12 @@
 
 
 
-    <div class="bg-white container mx-auto overflow-y-auto" style="max-height: calc(100vh - 100px);">
-        <div class="text-sm font-semibold m-0 p-0 leading-none opacity-70">
+    <div class="md:mt-0 sm:mt-5  bg-white container overflow-y-auto overflow-x-auto md:h-[670px] sm:h-[1200px]">
+        <div class="text-sm font-semibold -mt-2 p-0 leading-none opacity-70">
             FECHA: <strong>{{ now()->format('Y-m-d H:i') }}</strong>
         </div>
 
-        <h1 class="text-center text-2xl font-bold">BUENAS PRÁCTICAS DE MANUFACTURA</h1>
+        <h1 class="text-center text-2xl font-bold md:-mt-6">BUENAS PRÁCTICAS DE MANUFACTURA</h1>
 
         <form method="POST" action="{{ route('manufactura.guardar') }}">
             @csrf
@@ -55,9 +55,9 @@
             <input type="hidden" name="fecha" value="{{ now() }}">
             <input type="hidden" name="turno_actual" value="{{ $turnoActual }}">
 
-            <div class="d-flex justify-content-between items-center mb-2">
+            <div class="d-flex justify-content-between items-center md:-mt-4">
                 <div>RECIBE: <strong>{{ $usuario->nombre }}</strong></div>
-                <div class="text-sm font-semibold mt-2">TURNO ACTUAL: <strong>{{ $turnoActual }}</strong></div>
+                <div class="text-sm font-semibold md:mt-2 sm:mt-10">TURNO ACTUAL: <strong>{{ $turnoActual }}</strong></div>
                 <div>
                     ENTREGA:
                     @php
@@ -81,7 +81,7 @@
                 </div>
             </div>
 
-            <div class="overflow-x-auto h-1/2 mx-auto">
+            <div class="overflow-x-auto h-1/2 md:mx-auto sm:mt-4">
                 <table class="table-auto w-full border border-black text-xs text-center">
                     <thead>
                         <tr>
@@ -142,12 +142,17 @@
                 </table>
             </div>
 
-            <div class="flex justify-end mt-4">
+            <div class="mt-2 justify-end flex gap-2">
                 <button type="submit"
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl shadow-md transition duration-300 ease-in-out">
+                    class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-1 px-3 rounded-md shadow-sm transition duration-200 ease-in-out w-auto">
                     GUARDAR
                 </button>
+                <button type="submit"
+                    class="bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-1 px-3 rounded-md shadow-sm transition duration-200 ease-in-out w-auto">
+                    AUTORIZAR
+                </button>
             </div>
+
         </form>
     </div>
 
