@@ -10,8 +10,9 @@
             <div class="col-span-1 grid grid-cols-1 items-center">
                 <label for="no_flog" class="w-20 font-medium text-gray-700">No FLOG:</label>
                 <select id="no_flog" name="no_flog" class=" border border-gray-300 rounded px-2 py-1 select2-flog">
-                    <option value="">
-                    </option>
+                    @if (isset($datos['Id_Flog']))
+                        <option value="{{ $datos['Id_Flog'] }}" selected>{{ $datos['Id_Flog'] }}</option>
+                    @endif
                 </select>
             </div>
 
@@ -24,7 +25,7 @@
             <div class="flex items-center">
                 <label for="telar" class="w-20 font-medium text-gray-700">TELAR:</label>
                 <select name="telar" id="telar" class="border border-gray-300 rounded px-2 py-1 text-sm" required>
-                    <option value="">{{ $datos->Telar ?? '' }}</option>
+                    <option value="{{ $datos['Telar'] ?? '' }}">{{ $datos['Telar'] ?? '' }}</option>
                     @foreach ($telares as $telar)
                         <option value="{{ $telar->telar }}"> {{ $telar->telar }}</option>
                     @endforeach
@@ -34,7 +35,9 @@
                 <label for="clave_ax" class="w-20 font-medium text-gray-700">CLAVE AX:</label>
                 <select id="clave_ax" name="clave_ax"
                     class="w-34 border border-gray-300 rounded px-2 py-1 select2-modelos">
-                    <option value="">-- ................................... --</option>
+                    @if (isset($datos['Clave_Estilo']))
+                        <option value="{{ $datos['Clave_Estilo'] }}" selected>{{ $datos['Clave_Estilo'] }}</option>
+                    @endif
                 </select>
             </div>
             <div class="flex items-center">
@@ -51,12 +54,12 @@
             <div class="flex items-center">
                 <label for="cuenta_rizo" class="w-20 font-medium text-gray-700">CUENTA RIZO:</label>
                 <input type="text" name="cuenta_rizo" id="cuenta_rizo" class=" border border-gray-300 rounded px-2 py-1"
-                    value="{{ $datos['Cuenta'] ?? '' }}">
+                    value="     ">
             </div>
             <div class="flex items-center">
                 <label for="calibre_rizo" class="w-20 font-medium text-gray-700">CALIBRE RIZO:</label>
                 <input type="text" name="calibre_rizo" id="calibre_rizo"
-                    class=" border border-gray-300 rounded px-2 py-1">
+                    class=" border border-gray-300 rounded px-2 py-1" value="{{ $datos['Calibre_Rizo'] ?? '' }}">
             </div>
 
             <div class="flex items-center">
@@ -66,43 +69,47 @@
             </div>
             <div class="flex items-center">
                 <label for="calibre_pie" class="w-20 font-medium text-gray-700">CALIBRE PIE:</label>
-                <input type="text" name="calibre_pie" id="calibre_pie" class=" border border-gray-300 rounded px-2 py-1">
+                <input type="text" name="calibre_pie" id="calibre_pie" class=" border border-gray-300 rounded px-2 py-1"
+                    value="{{ $datos['Calibre_Rizo'] ?? '' }}">
             </div>
 
             <div class="flex items-center">
                 <label for="trama_0" class="w-20 font-medium text-gray-700">TRAMA:</label>
                 <input type="number" step="0.01" name="trama_0" id="trama_0"
-                    class=" border border-gray-300 rounded px-2 py-1" value="">
+                    class=" border border-gray-300 rounded px-2 py-1" value="{{ $datos['CALIBRE_TRA'] ?? '' }}">
             </div>
             <div class="flex items-center">
                 <label for="color_0" class="w-20 font-medium text-gray-700">COLOR:</label>
-                <input type="text" name="color_0" id="color_0" class=" border border-gray-300 rounded px-2 py-1">
+                <input type="text" name="color_0" id="color_0" class=" border border-gray-300 rounded px-2 py-1"
+                    value="{{ $datos['COLOR_TRAMA'] ?? '' }}">
             </div>
 
             <div class="flex items-center">
                 <label for="calibre_1" class="w-20 font-medium text-gray-700">TRAMA 1:</label>
                 <input type="number" step="0.01" name="calibre_1" id="calibre_1"
-                    class=" border border-gray-300 rounded px-2 py-1">
+                    class=" border border-gray-300 rounded px-2 py-1" value="{{ $datos['CALIBRE_C1'] ?? '' }}">
             </div>
             <div class="flex items-center">
                 <label for="color_1" class="w-20 font-medium text-gray-700">COLOR 1:</label>
-                <input type="text" name="color_1" id="color_1" class=" border border-gray-300 rounded px-2 py-1">
+                <input type="text" name="color_1" id="color_1" class=" border border-gray-300 rounded px-2 py-1"
+                    value="{{ $datos['COLOR_C1'] ?? '' }}">
             </div>
 
             <div class="flex items-center">
                 <label for="calibre_2" class="w-20 font-medium text-gray-700">TRAMA 2:</label>
                 <input type="number" step="0.01" name="calibre_2" id="calibre_2"
-                    class=" border border-gray-300 rounded px-2 py-1">
+                    class=" border border-gray-300 rounded px-2 py-1" value="{{ $datos['CALIBRE_C2'] ?? '' }}">
             </div>
             <div class="flex items-center">
                 <label for="color_2" class="w-20 font-medium text-gray-700">COLOR 2:</label>
-                <input type="text" name="color_2" id="color_2" class=" border border-gray-300 rounded px-2 py-1">
+                <input type="text" name="color_2" id="color_2" class=" border border-gray-300 rounded px-2 py-1" VA
+                    {{ $datos['COLOR_C2'] ?? '' }}>
             </div>
 
             <div class="flex items-center">
                 <label for="calibre_3" class="w-20 font-medium text-gray-700">TRAMA 3:</label>
                 <input type="number" step="0.01" name="calibre_3" id="calibre_3"
-                    class=" border border-gray-300 rounded px-2 py-1">
+                    class=" border border-gray-300 rounded px-2 py-1" value="{{ $datos['CALIBRE_C3'] ?? '' }}">
             </div>
             <div class="flex items-center">
                 <label for="color_3" class="w-20 font-medium text-gray-700">COLOR 3:</label>
@@ -112,32 +119,35 @@
             <div class="flex items-center">
                 <label for="calibre_4" class="w-20 font-medium text-gray-700">TRAMA 4:</label>
                 <input type="number" step="0.01" name="calibre_4" id="calibre_4"
-                    class=" border border-gray-300 rounded px-2 py-1">
+                    class=" border border-gray-300 rounded px-2 py-1" value="{{ $datos['CALIBRE_C4'] ?? '' }}">
             </div>
             <div class="flex items-center">
                 <label for="color_4" class="w-20 font-medium text-gray-700">COLOR 4:</label>
-                <input type="text" name="color_4" id="color_4" class=" border border-gray-300 rounded px-2 py-1">
+                <input type="text" name="color_4" id="color_4" class=" border border-gray-300 rounded px-2 py-1"
+                    value="{{ $datos['COLOR_C4'] ?? '' }}">
             </div>
 
             <div class="flex items-center">
                 <label for="calibre_5" class="w-20 font-medium text-gray-700">TRAMA 5:</label>
                 <input type="number" step="0.01" name="calibre_5" id="calibre_5"
-                    class=" border border-gray-300 rounded px-2 py-1">
+                    class=" border border-gray-300 rounded px-2 py-1" value="{{ $datos['CALIBRE_C5'] ?? '' }}">
             </div>
             <div class="flex items-center">
                 <label for="color_5" class="w-20 font-medium text-gray-700">COLOR 5:</label>
-                <input type="text" name="color_5" id="color_5" class=" border border-gray-300 rounded px-2 py-1">
+                <input type="text" name="color_5" id="color_5" class=" border border-gray-300 rounded px-2 py-1"
+                    value="{{ $datos['COLOR_C5'] ?? '' }}">
             </div>
 
             <div class="flex items-center">
                 <label for="saldo" class="w-20 font-medium text-gray-700">CANTIDAD:</label>
                 <input type="number" step="0.01" name="saldo" id="saldo"
-                    class=" border border-gray-300 rounded px-2 py-1" required>
+                    class=" border border-gray-300 rounded px-2 py-1" value="{{ $datos['Saldos'] ?? '' }}" required>
             </div>
 
             <div class="flex items-center">
                 <label for="calendario" class="w-20 font-medium text-gray-700">CALENDARIO:</label>
                 <select name="calendario" id="calendario" class="w-36 border border-gray-300 rounded px-2 py-1">
+                    <option value="{{ $datos['Calendario'] ?? '' }}">{{ $datos['Calendario'] ?? '' }}</option>
                     <option value="Calendario Tej1">Calendario Tej1</option>
                     <option value="Calendario Tej2">Calendario Tej2 </option>
                     <option value="Calendario Tej3">Calendario Tej3 </option>
@@ -149,6 +159,7 @@
             <div class="flex items-center">
                 <label for="aplicacion" class="w-20 font-medium text-gray-700">APLICACIÓN:</label>
                 <select name="aplicacion" id="aplicacion" class="w-36 border border-gray-300 rounded px-2 py-1">
+                    <option value="{{ $datos['Aplic'] ?? '' }}">{{ $datos['Aplic'] ?? '' }}</option>
                     <option value="RZ">RZ</option>
                     <option value="RZ2">RZ2</option>
                     <option value="RZ3">RZ3</option>
@@ -161,6 +172,7 @@
             <div class="flex items-center">
                 <label for="hilo" class="w-20 font-medium text-gray-700">HILO:</label>
                 <select name="hilo" id="hilo" class="w-36 border border-gray-300 rounded px-2 py-1">
+                    <option value="{{ $datos['Hilo'] ?? '' }}">{{ $datos['Hilo'] ?? '' }}</option>
                     <option value="H">H</option>
                     <option value="T20 PEINADO">T20 PEINADO</option>
                     <option value="A12">RZ3</option>
@@ -187,13 +199,15 @@
             <div class="flex items-center">
                 <label for="fecha_compromiso_tejido" class="w-20 font-medium text-gray-700">COMPROMISO TEJIDO:</label>
                 <input type="date" name="fecha_compromiso_tejido" id="fecha_compromiso_tejido"
-                    class=" border border-gray-300 rounded px-2 py-1">
+                    class=" border border-gray-300 rounded px-2 py-1"
+                    value="{{ \Carbon\Carbon::parse($datos['Fecha_Compromiso'])->format('Y-m-d') }}">
             </div>
 
             <div class="flex items-center">
                 <label for="fecha_cliente" class="w-20 font-medium text-gray-700">FECHA CLIENTE:</label>
                 <input type="date" name="fecha_cliente" id="fecha_cliente"
-                    class="border border-gray-300 rounded px-2 py-1">
+                    class="border border-gray-300 rounded px-2 py-1"
+                    value="{{ \Carbon\Carbon::parse($datos['Fecha_Compromiso1'])->format('Y-m-d') }}">
             </div>
 
             <div class="flex items-center">
@@ -205,20 +219,23 @@
             <div class="flex items-center ">
                 <label for="fecha_inicio" class="w-20 font-medium text-gray-700">FECHA INICIO:</label>
                 <input type="datetime-local" name="fecha_inicio" id="fecha_inicio"
-                    class="border border-gray-300 rounded px-2 py-1">
+                    class="border border-gray-300 rounded px-2 py-1"
+                    value="{{ \Carbon\Carbon::parse($datos['Inicio_Tejido'])->format('Y-m-d H:i:s') }}">
             </div>
 
             <div class="flex items-center">
                 <label for="fecha_fin" class="w-20 font-medium text-gray-700">FECHA FIN:</label>
                 <input type="datetime-local" name="fecha_fin" id="fecha_fin"
-                    class="border border-gray-300 rounded px-2 py-1">
+                    class="border border-gray-300 rounded px-2 py-1"
+                    value="{{ \Carbon\Carbon::parse($datos['Fin_Tejido'])->format('Y-m-d H:i:s') }}">
             </div>
 
 
             <div class="flex items-center">
                 <label for="fecha_entrega" class="w-18 font-medium text-gray-700">FECHA ENTREGA:</label>
                 <input type="date" name="fecha_entrega" id="fecha_entrega"
-                    class=" border border-gray-300 rounded px-2 py-1">
+                    class=" border border-gray-300 rounded px-2 py-1"
+                    value="{{ \Carbon\Carbon::parse($datos['Entrega'])->format('Y-m-d') }}">
             </div>
 
             <div class="col-span-4 text-right mt-4 ">
@@ -269,7 +286,7 @@
         $(document).ready(function() {
             // PRIMER SELECT: CLAVE_AX
             $('#clave_ax').select2({
-                placeholder: '-- Selecciona CLAVE AX --',
+                placeholder: '{{ $datos['Clave_Estilo'] ?? '' }}',
                 ajax: {
                     url: '{{ route('modelos.buscar') }}',
                     dataType: 'json',
@@ -443,8 +460,8 @@
         });
     </script>
     <!--
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        Escucha cuando el usuario escribe en cantidad y actualiza saldo con el mismo valor en tiempo real.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                Escucha cuando el usuario escribe en cantidad y actualiza saldo con el mismo valor en tiempo real.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const cantidadInput = document.getElementById('cantidad');
@@ -461,7 +478,7 @@
         $(document).ready(function() {
             // SELECT2 para No FLOG
             $('#no_flog').select2({
-                placeholder: '-- Selecciona No FLOG --',
+                placeholder: '',
                 ajax: {
                     url: '{{ route('flog.buscar') }}', // La nueva ruta que vas a crear
                     dataType: 'json',
