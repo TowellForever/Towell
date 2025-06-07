@@ -20,10 +20,8 @@
         <a href="{{ route('calendariot1.index') }}" class="button-plane rounded-full ml-1 p-1 sm:mt-8">CALENDARIOS 🗓️</a>
         <a href="{{ route('planeacion.aplicaciones') }}" class="button-plane rounded-full ml-2 p-1 sm:mt-8">APLICACIONES
             🧩</a>
-        <a href="{{ route('planeacion.create') }}" class="button-plane rounded-full ml-1 p-1 sm:mt-8">NUEVO REGISTRO 📝</a>
+        <button id="btnUnico" class="button-plane rounded-full ml-1 p-1 sm:mt-8 w-32">NUEVO REGISTRO 📝</button>
         <a href="{{ route('modelos.index') }}" class="button-plane-2 rounded-full ml-1 p-1 sm:mt-8">MODELOS 🛠️</a>
-        <button id="btnEnviarFila" class="button-plane rounded-full ml-1 p-1 sm:mt-8 w-20">TRASPASAR</button>
-
     </div>
 
     <!-- Modal -->
@@ -399,9 +397,9 @@
         });
     </script>
     <!--*******************************************************************************************************************************************************************************************
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            *********************************************************************************************************************************************************************************************-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    *********************************************************************************************************************************************************************************************-->
     <!--SCRIPTS que implentan el funcionamiento de la tabla TIPO DE MOVIMIENTOS, se selecciona un registro, se obtiene el valor de num_registro y con
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
 
     <script>
         let filaSeleccionada = null;
@@ -547,10 +545,11 @@
             }
         });
     </script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const tabla = document.getElementById("tablaPlaneacion");
-            const botonEnviar = document.getElementById("btnEnviarFila"); // Asegúrate de que exista este botón
+            const botonUnico = document.getElementById("btnUnico");
             let datosFilaSeleccionada = null;
 
             const nombresColumnas = [
@@ -637,35 +636,33 @@
                 'num_registro',
             ]; // AJUSTA esto
 
-            tabla.querySelectorAll("tbody tr").forEach(fila => {
-                fila.addEventListener("click", function() {
-                    const celdas = this.querySelectorAll("td");
-                    let datosFila = {};
+            if (tabla) {
+                tabla.querySelectorAll("tbody tr").forEach(fila => {
+                    fila.addEventListener("click", function() {
+                        const celdas = this.querySelectorAll("td");
+                        let datosFila = {};
 
-                    celdas.forEach((celda, index) => {
-                        const clave = nombresColumnas[index];
-                        datosFila[clave] = celda.textContent.trim();
+                        celdas.forEach((celda, index) => {
+                            const clave = nombresColumnas[index];
+                            datosFila[clave] = celda.textContent.trim();
+                        });
+
+                        datosFilaSeleccionada = datosFila;
+                        console.log("Fila seleccionada:", datosFilaSeleccionada);
                     });
-
-                    datosFilaSeleccionada = datosFila; // Guardamos la fila seleccionada
-                    console.log("Fila seleccionada:", datosFilaSeleccionada);
                 });
-            });
+            }
 
-            botonEnviar.addEventListener("click", function() {
-                if (!datosFilaSeleccionada) {
-                    alert("Primero selecciona una fila.");
-                    return;
+            botonUnico.addEventListener("click", function() {
+                if (datosFilaSeleccionada) {
+                    const query = new URLSearchParams(datosFilaSeleccionada).toString();
+                    window.location.href = `traspasoDataRedireccion?${query}`;
+                } else {
+                    window.location.href = "{{ route('planeacion.create') }}";
                 }
-
-                const query = new URLSearchParams(datosFilaSeleccionada).toString();
-                window.location.href = `traspasoDataRedireccion?${query}`;
             });
-
-
         });
     </script>
-
 
     @push('styles')
         <style>
