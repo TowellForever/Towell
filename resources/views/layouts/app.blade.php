@@ -80,6 +80,8 @@
                         class="absolute top-1 left-2 w-[120px] z-1 no-print">
                 </a>
 
+                @yield('menu-planeacion')
+
                 @if (!isset($ocultarBotones) || !$ocultarBotones)
                     <!-- Botones de navegación -->
                     <div

@@ -1,5 +1,26 @@
 @extends('layouts.app')
 
+@section('menu-planeacion')
+    <div class="relative" style="position: absolute; left: 200px;">
+        <button id="btnReportes"
+            class="bg-gray-800 text-white font-bold px-4 py-1 rounded-md shadow hover:bg-gray-700 transition-all duration-200 cursor-pointer text-xs">
+            REPORTES
+        </button>
+
+        <div id="menuReportes"
+            class="hidden absolute bg-white border border-gray-300 mt-1 w-40 rounded-md shadow-lg z-[99] transition transform scale-95 opacity-0"
+            style="left: 0px;">
+            <a href="/calendario" class="block px-3 py-2 text-xs text-gray-800 hover:bg-gray-100">📈 CONSUMO</a>
+            <a href="/telas-programadas" class="block px-3 py-2 text-xs text-gray-800 hover:bg-gray-100">🧵 RUN</a>
+            <a href="/avances" class="block px-3 py-2 text-xs text-gray-800 hover:bg-gray-100">📅 RESUMEN TEJIDO</a>
+            <a href="/indicadores" class="block px-3 py-2 text-xs text-gray-800 hover:bg-gray-100">📊 APLICACIONES</a>
+            <a href="/auditoria" class="block px-3 py-2 text-xs text-gray-800 hover:bg-gray-100">🔍 RASURADO</a>
+            <a href="/auditoria" class="block px-3 py-2 text-xs text-gray-800 hover:bg-gray-100">🔍 PESO X MOD.</a>
+            <a href="/auditoria" class="block px-3 py-2 text-xs text-gray-800 hover:bg-gray-100">🔍 P-TEÑIDO</a>
+        </div>
+    </div>
+@endsection
+
 @section('content')
     <div
         class="w-auto text-white text-xs mt-2 mb-1 flex overflow-x-auto space-x-2 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-300 p-1 mt-1 sm:mt-2 sm:p-0">
@@ -12,12 +33,15 @@
         <!-- Botones alineados a la derecha -->
         <a href="" id="reset-search" class=" bg-red-500 ml-1 rounded-full p-1  sm:mt-8 flex">RESTABLECER
             BÚSQUEDA </a> <!-- el funcionamiento de este boton se realiza con JS-->
-        <a href="{{ route('telares.index') }}" class=" button-plane ml-1 rounded-full p-1  sm:mt-8 flex">TELARES 📑</a>
-        <a href="{{ route('eficiencia.index') }}" class="button-plane rounded-full ml-1 p-1 sm:mt-8 flex">EFICIENCIA STD
+        <a href="{{ route('telares.index') }}" class=" button-plane ml-1 rounded-full p-1  sm:mt-8 flex">TELARES
+            📑</a>
+        <a href="{{ route('eficiencia.index') }}" class="button-plane rounded-full ml-1 p-1 sm:mt-8 flex">EFICIENCIA
+            STD
             📑</a>
         <a href="{{ route('velocidad.index') }}" class="button-plane rounded-full ml-1 p-1 sm:mt-8 ">VELOCIDAD STD
             📑</a>
-        <a href="{{ route('calendariot1.index') }}" class="button-plane rounded-full ml-1 p-1 sm:mt-8">CALENDARIOS 🗓️</a>
+        <a href="{{ route('calendariot1.index') }}" class="button-plane rounded-full ml-1 p-1 sm:mt-8">CALENDARIOS
+            🗓️</a>
         <a href="{{ route('planeacion.aplicaciones') }}" class="button-plane rounded-full ml-2 p-1 sm:mt-8">APLICACIONES
             🧩</a>
         <button id="btnUnico" class="button-plane rounded-full ml-1 p-1 sm:mt-8 w-32">NUEVO REGISTRO 📝</button>
@@ -45,7 +69,8 @@
                 </div>
 
                 <!-- Contenedor para filtros adicionales -->
-                <div id="additional-filters" class="max-h-60 overflow-y-auto p-2 border border-gray-300 rounded-lg"></div>
+                <div id="additional-filters" class="max-h-60 overflow-y-auto p-2 border border-gray-300 rounded-lg">
+                </div>
 
 
                 <!-- Botón para agregar más filtros -->
@@ -397,9 +422,9 @@
         });
     </script>
     <!--*******************************************************************************************************************************************************************************************
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    *********************************************************************************************************************************************************************************************-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    *********************************************************************************************************************************************************************************************-->
     <!--SCRIPTS que implentan el funcionamiento de la tabla TIPO DE MOVIMIENTOS, se selecciona un registro, se obtiene el valor de num_registro y con
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
 
     <script>
         let filaSeleccionada = null;
@@ -751,5 +776,47 @@
                 /* Amarillo más intenso al hacer clic */
             }
         </style>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const btn = document.getElementById("btnReportes");
+                const menu = document.getElementById("menuReportes");
+
+                btn.addEventListener("click", function(e) {
+                    e.stopPropagation(); // Evita que el evento se propague y se cierre de inmediato
+                    const isOpen = !menu.classList.contains("hidden");
+
+                    // Cerrar si ya está abierto
+                    if (isOpen) {
+                        menu.classList.add("hidden");
+                        menu.classList.remove("scale-100", "opacity-100");
+                        menu.classList.add("scale-95", "opacity-0");
+                    } else {
+                        menu.classList.remove("hidden");
+                        // Forzar reflow para animación (truco CSS)
+                        void menu.offsetWidth;
+                        menu.classList.remove("scale-95", "opacity-0");
+                        menu.classList.add("scale-100", "opacity-100");
+                    }
+                });
+
+                // Ocultar el menú si haces clic fuera de él
+                document.addEventListener("click", function(e) {
+                    if (!btn.contains(e.target) && !menu.contains(e.target)) {
+                        menu.classList.add("hidden");
+                        menu.classList.remove("scale-100", "opacity-100");
+                        menu.classList.add("scale-95", "opacity-0");
+                    }
+                });
+
+                // También cerrar al hacer clic en una opción
+                menu.querySelectorAll("a").forEach(link => {
+                    link.addEventListener("click", () => {
+                        menu.classList.add("hidden");
+                        menu.classList.remove("scale-100", "opacity-100");
+                        menu.classList.add("scale-95", "opacity-0");
+                    });
+                });
+            });
+        </script>
     @endpush
 @endsection
