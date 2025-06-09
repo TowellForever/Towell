@@ -125,7 +125,6 @@
                     <label for="noEmpleado">Número de Empleado</label>
                     <select name="numero_empleado" id="noEmpleado" required>
                         <option value="" disabled selected>Selecciona tu número de empleado</option>
-                        <option value="1">Porfavor selecciona el área a la que correspondes</option>
                     </select>
                 </div>
 
@@ -363,6 +362,17 @@
             }
         });
     </script>
+    <!--OJO, parece que no realiza lo esperado, comprobar con el paso del tiempo si realmente recarga la pagina al presionar boton adelante-->
+    <script>
+        // Detecta si esta página fue accedida desde el historial (adelante o atrás)
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                // Si se volvió a esta página desde el historial (adelante o atrás)
+                window.location.reload(); // Fuerza recarga completa
+            }
+        });
+    </script>
+
 
 </body>
 
