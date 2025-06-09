@@ -117,7 +117,7 @@ class RequerimientoController extends Controller
 
         // Obtener inventarios desde la conexión SQL Server secundaria
         $inventarios = DB::connection('sqlsrv_ti')
-            ->table('TI_PRO.dbo.TWDISPONIBLEURDENG')
+            ->table('TI_PRO.dbo.TWDISPONIBLEURDENGO')
             ->where('INVENTLOCATIONID', 'A-JUL/TELA')
             ->get();
 
