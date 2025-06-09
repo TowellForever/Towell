@@ -160,6 +160,7 @@ class PlaneacionController extends Controller
     $hilo = $request->input('hilo');
 
     $densidad = $modelo->Tra > 40 ? 'Alta' : 'Normal';
+
     $velocidad = CatalagoVelocidad::where('telar', $telar->nombre)->where('tipo_hilo', $hilo)->where('densidad', $densidad)->value('velocidad');
 
     $eficiencia = CatalagoEficiencia::where('telar', $telar->nombre)->where('tipo_hilo', $hilo)->where('densidad', $densidad)->value('eficiencia');
@@ -176,7 +177,6 @@ class PlaneacionController extends Controller
 
     //Producción de kilogramos por DIA
     $Prod_Kg_Dia = ($modelo->P_crudo * $Std_Hr_efectivo) * 24 / 1000; //<-- <-- <-- BD en EXCEL -> PEMDAS MINE
-
     $Std_Dia = (($modelo->TIRAS * 60) / ((($modelo->TOTAL) + ((($modelo->Luchaje * 0.5) / 0.0254) / $modelo->Repeticiones_p_corte)) / $velocidad) * $eficiencia) * 24; //LISTOO
 
     $Prod_Kg_Dia1 = ($Std_Dia * $modelo->P_crudo) / 1000;
@@ -257,10 +257,10 @@ class PlaneacionController extends Controller
           $rizo = 1 * $kilos;
         }
         $TRAMA = ((((0.59 * ((((float)$modelo->PASADAS * 1.001) * $ancho_por_toalla) / 100)) / $request->input('trama_0')) * $piezas) / 1000);
-        $combinacion1 = (($c1 = (float)$request->input('calibre_1')) > 0) ? ((((0.59 * (((float)$modelo->PASADAS_C1 * 1.001) * $ancho_por_toalla)) / 100) / $c1) * $piezas) / 1000 : 0;
-        $combinacion2 = ($request->input('calibre_2') > 0) ? ((((0.59 * ((((float)$modelo->PASADAS_C2 * 1.001) * $ancho_por_toalla) / 100)) / $request->input('calibre_2')) * $piezas) / 1000) : 0;
-        $combinacion3 = ((($request->input('calibre_3') != 0 ? (0.59 * (((float)$modelo->PASADAS_C3 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
-        $combinacion4 = ((($request->input('calibre_4') != 0 ? (0.59 * (((float)$modelo->PASADAS_C4 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
+        $combinacion1 = 1; // (($c1 = (float)$request->input('calibre_1')) > 0) ? ((((0.59 * (((float)$modelo->PASADAS_C1 * 1.001) * $ancho_por_toalla)) / 100) / $c1) * $piezas) / 1000 : 0;
+        $combinacion2 = 1; //($request->input('calibre_2') > 0) ? ((((0.59 * ((((float)$modelo->PASADAS_C2 * 1.001) * $ancho_por_toalla) / 100)) / $request->input('calibre_2')) * $piezas) / 1000) : 0;
+        $combinacion3 = 1; // ((($request->input('calibre_3') != 0 ? (0.59 * (((float)$modelo->PASADAS_C3 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
+        $combinacion4 = 1; //((($request->input('calibre_4') != 0 ? (0.59 * (((float)$modelo->PASADAS_C4 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
 
         $Piel1 = ((((((((float) $modelo->Largo + (float) $modelo->Med_plano) / 100) * 1.055) * 0.00059) / ((0.00059 * 1) / (0.00059 / $calibre_pie))) *
           (((float) $request->input('cuenta_pie') - 32) / (float) $modelo->TIRAS)) * $piezas);

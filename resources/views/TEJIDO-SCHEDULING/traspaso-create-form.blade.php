@@ -174,7 +174,7 @@
 
             <div class="flex items-center">
                 <label for="hilo" class="w-20 font-medium text-gray-700">HILO:</label>
-                <select name="hilo" id="hilo" class="w-36 border border-gray-300 rounded px-2 py-1">
+                <select name="hilo" id="hilo" class="w-36 border border-gray-300 rounded px-2 py-1" required>
                     <option value="{{ $datos['Hilo'] ?? '' }}">{{ $datos['Hilo'] ?? '' }}</option>
                     <option value="H">H</option>
                     <option value="T20 PEINADO">T20 PEINADO</option>
@@ -471,8 +471,8 @@
         });
     </script>
     <!--
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    Escucha cuando el usuario escribe en cantidad y actualiza saldo con el mismo valor en tiempo real.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Escucha cuando el usuario escribe en cantidad y actualiza saldo con el mismo valor en tiempo real.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const cantidadInput = document.getElementById('cantidad');
@@ -542,13 +542,27 @@
                         console.log(Object.fromEntries(formData
                             .entries())); // Esto convierte FormData a objeto y lo muestra
 
-                        alert('Registro guardado exitosamente');
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡ÉXITO!',
+                            text: 'Registro guardado exitosamente',
+                            timer: 2500,
+                            showConfirmButton: false,
+                            timerProgressBar: true
+                        });
+
                         // Opcional: redireccionar o limpiar campos
                         window.location.href = "{{ route('planeacion.index') }}";
                     })
                     .catch(error => {
                         console.error(error);
-                        alert('Ocurrió un error al guardar el registro');
+                        Swal.fire({
+                            icon: 'error',
+                            title: '¡ERROR!',
+                            text: 'Ocurrió un error al intentar guardar su registro, por favor revise que los datos estén correctos.',
+                            confirmButtonText: 'Entendido'
+                        });
+
                     });
             });
         });
