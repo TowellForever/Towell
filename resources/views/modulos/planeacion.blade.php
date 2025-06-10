@@ -220,33 +220,40 @@
                                         @php
                                             $value = $registro->$header; // Obtener el valor del campo
 
-                                            // Lista de campos que deben mostrar fecha + hora
-                                            $camposConHora = ['Inicio_Tejido', 'Calc5', 'Fin_Tejido', 'Entrega'];
-
-                                            if (is_numeric($value)) {
-                                                // Si el valor es entero, convertirlo sin decimales
-                                                if (intval($value) == $value) {
-                                                    $formattedValue = intval($value);
-                                                } else {
-                                                    // Si tiene decimales, formatearlo a dos decimales
-                                                    $formattedValue = number_format($value, 2, '.', '');
-                                                }
-                                            } elseif (strtotime($value) && !in_array($header, ['Calibre_Rizo'])) {
-                                                if (in_array($header, $camposConHora)) {
-                                                    // Fecha con hora y minutos: "d-m-Y H:i"
-                                                    $formattedValue = \Carbon\Carbon::parse($value)->format(
-                                                        'd-m-Y H:i',
-                                                    );
-                                                } else {
-                                                    // Solo fecha: "d-m-Y"
-                                                    $formattedValue = \Carbon\Carbon::parse($value)->format('d-m-Y');
-                                                }
-                                            } else {
-                                                // Si es texto, dejarlo tal cual
+                                            // Si el header es 'Hilo', dejar valor original sin formatear
+                                            if ($header === 'Hilo') {
                                                 $formattedValue = $value;
+                                            } else {
+                                                // Lista de campos que deben mostrar fecha + hora
+                                                $camposConHora = ['Inicio_Tejido', 'Calc5', 'Fin_Tejido', 'Entrega'];
+
+                                                if (is_numeric($value)) {
+                                                    // Si el valor es entero, convertirlo sin decimales
+                                                    if (intval($value) == $value) {
+                                                        $formattedValue = intval($value);
+                                                    } else {
+                                                        // Si tiene decimales, formatearlo a dos decimales
+                                                        $formattedValue = number_format($value, 2, '.', '');
+                                                    }
+                                                } elseif (strtotime($value) && !in_array($header, ['Calibre_Rizo'])) {
+                                                    if (in_array($header, $camposConHora)) {
+                                                        // Fecha con hora y minutos: "d-m-Y H:i"
+                                                        $formattedValue = \Carbon\Carbon::parse($value)->format(
+                                                            'd-m-Y H:i',
+                                                        );
+                                                    } else {
+                                                        // Solo fecha: "d-m-Y"
+                                                        $formattedValue = \Carbon\Carbon::parse($value)->format(
+                                                            'd-m-Y',
+                                                        );
+                                                    }
+                                                } else {
+                                                    // Si es texto, dejarlo tal cual
+                                                    $formattedValue = $value;
+                                                }
                                             }
                                         @endphp
-                                        @if (is_numeric($value) && intval($value) != $value)
+                                        @if (is_numeric($value) && intval($value) != $value && $header !== 'Hilo')
                                             <td class="small px-1 py-0.5 dec-hidden"
                                                 data-valor="{{ number_format($value, 2, '.', '') }}">
                                                 {{ intval($value) }}
@@ -256,6 +263,7 @@
                                         @endif
                                     @endif
                                 @endforeach
+
                             </tr>
                         @endforeach
                     </tbody>
@@ -422,9 +430,9 @@
         });
     </script>
     <!--*******************************************************************************************************************************************************************************************
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    *********************************************************************************************************************************************************************************************-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        *********************************************************************************************************************************************************************************************-->
     <!--SCRIPTS que implentan el funcionamiento de la tabla TIPO DE MOVIMIENTOS, se selecciona un registro, se obtiene el valor de num_registro y con
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
 
     <script>
         let filaSeleccionada = null;
