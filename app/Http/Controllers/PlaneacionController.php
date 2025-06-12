@@ -149,10 +149,9 @@ class PlaneacionController extends Controller
     //traigo los datos faltantes para la creacion de un nuevo registro en la tabla TEJIDO_SCHEDULING
     $telar = CatalagoTelar::where('telar', $request->telar)->first();
 
-    $modelo = Modelos::where('CLAVE_AX', $request->clave_ax)
-      ->where('Departamento', $telar->salon)
-      ->first();
 
+    $modelo = Modelos::where('TITULO_TEMP', $request->tamano . $request->clave_ax) //PULLMAN7028
+      ->first();
     if (!$modelo) {
       return back()->with('error', 'Modelo no encontrado');
     }
@@ -168,17 +167,35 @@ class PlaneacionController extends Controller
     $Peso_gr_m2 = ($modelo->P_crudo * 10000) / ($modelo->Largo * $modelo->Ancho);
 
     // Dias efectivos
-    $inicio = Carbon::parse($request->input('fecha_inicio'));
-    $fin = Carbon::parse($request->input('fecha_fin'));
-    $diferenciaHoras = $inicio->diffInHours($fin); // Diferencia total en horas --> -->  // Convertir a días con decimales (1 día = 24 horas)
-    $Dias_Ef = round($diferenciaHoras / 24, 2); // redondeado a 2 decimales BA en EXCEL 
+    $inicio = (string) $request->input('fecha_inicio');
+    // Formateo correcto para datetime-local
+    $inicioFormateado = Carbon::createFromFormat('Y-m-d\TH:i', $inicio);
+    // Base real de Excel: 1899-12-31
+    $inicioExcel = Carbon::createFromDate(1900, 1, 1)->startOfDay();
+    // Diferencia en días exacta
+    $dias = $inicioExcel->floatDiffInDays($inicioFormateado);
+    // Ajuste por bug de Excel (bisiesto falso en 1900)
+    $inicioFloat = $dias + 2;
 
-    $Std_Hr_efectivo = ($request->input('saldo') / ($diferenciaHoras / 24)) / 24;   //=(P21/(BM21-BI21))/24   -->   (Saldos/ (fecha_fin - fecha_inicio) ) / 24  (7000 / 13.9) / 24
+    $fin = (string) $request->input('fecha_fin');
+    // Formateo correcto para datetime-local
+    $finFormateado = Carbon::createFromFormat('Y-m-d\TH:i', $fin);
+    // Base real de Excel: 1899-12-31
+    $finExcel = Carbon::createFromDate(1900, 1, 1)->startOfDay();
+    // Diferencia en días exacta
+    $dias = $finExcel->floatDiffInDays($finFormateado);
+    // Ajuste por bug de Excel (bisiesto falso en 1900)
+    $finFloat = $dias + 2;
+    $diferencia = $finFloat - $inicioFloat;
+    $Dias_Ef = $diferencia;
 
+
+
+    $Std_Hr_efectivo = ($request->input('saldo') / ($diferencia)) / 24;   //=(P21/(BM21-BI21))/24   -->   (Saldos/ (fecha_fin - fecha_inicio) ) / 24  (7000 / 13.9) / 24
     //Producción de kilogramos por DIA
     $Prod_Kg_Dia = ($modelo->P_crudo * $Std_Hr_efectivo) * 24 / 1000; //<-- <-- <-- BD en EXCEL -> PEMDAS MINE
-    $Std_Dia = (($modelo->TIRAS * 60) / ((($modelo->TOTAL) + ((($modelo->Luchaje * 0.5) / 0.0254) / $modelo->Repeticiones_p_corte)) / $velocidad) * $eficiencia) * 24; //LISTOO
 
+    $Std_Dia = (($modelo->TIRAS * 60) / ((($modelo->TOTAL) + ((($modelo->Luchaje * 0.5) / 0.0254) / $modelo->Repeticiones_p_corte)) / $velocidad) * $eficiencia) * 24; //LISTOO
     $Prod_Kg_Dia1 = ($Std_Dia * $modelo->P_crudo) / 1000;
 
     $Std_Toa_Hr_100 = (($modelo->TIRAS * 60) / ((($modelo->TOTAL / 1) + (($modelo->Luchaje * 0.5) / 0.0254) / $modelo->Repeticiones_p_corte) / $velocidad)); //LISTOO //velocidad variable pendiente
@@ -187,7 +204,7 @@ class PlaneacionController extends Controller
 
     $Dias_jornada_completa = $Horas / 24;
 
-    $ancho_por_toalla = ((int) $modelo->TRAMA_Ancho_Peine / (int)$modelo->TIRAS) * 1.001; //(AK2 / AK1) * 1.001
+    $ancho_por_toalla = ((float) $modelo->TRAMA_Ancho_Peine / (float)$modelo->TIRAS) * 1.001; //(AK2 / AK1) * 1.0
 
     //VARIABLES TEMPORALES - borrar despues de tener catalagos
     $aplic = $request->input('aplicacion');
@@ -234,15 +251,34 @@ class PlaneacionController extends Controller
 
       // Calcular la fracción para el primer y segundo día
       if ($index === 0) {
-        // Primer día: calcular la fracción desde la hora de inicio
-        $horasInicio = $Fechainicio->hour + ($Fechainicio->minute / 60); // Convertir horas y minutos a decimal
-        $horasFin = 24; // El día tiene 24 horas
-        $fraccion = round(($horasFin - $horasInicio) / 24, 3); // Calcular la fracción del día
-        $piezas = round(($fraccion * 24) * $Std_Hr_efectivo, 2);
-        $kilos = round(($piezas * $Prod_Kg_Dia) / ($Std_Hr_efectivo * 24), 2);
+        $inicio = strtotime($Fechainicio);
+        $fin = strtotime($Fechafin);
 
+        // Extraer fechas sin horas para comparar si son el mismo día
+        $diaInicio = date('Y-m-d', $inicio);
+        $diaFin = date('Y-m-d', $fin);
+
+        if ($diaInicio === $diaFin) {
+          // 🟢 Mismo día: diferencia directa entre horas
+          $diferenciaSegundos = $fin - $inicio;
+          $fraccion = $diferenciaSegundos / 86400; // fracción del día
+        } else {
+          // 🔵 Días distintos: desde hora de inicio hasta 12:00 AM del día siguiente
+          $hora = date('H', $inicio);
+          $minuto = date('i', $inicio);
+          $segundo = date('s', $inicio);
+          $segundosDesdeMedianoche = ($hora * 3600) + ($minuto * 60) + $segundo;
+          $segundosRestantes = 86400 - $segundosDesdeMedianoche;
+          $fraccion = $segundosRestantes / 86400;
+        }
+
+        // Cálculo de piezas (si aplica)
+        $piezas = round(($fraccion * 24) * $Std_Hr_efectivo, 0);
+
+
+        $kilos = ($piezas * $Prod_Kg_Dia) / ($Std_Hr_efectivo * 24);
         $cambio = $Cambios_Hilo; //si Cambios_Hilo = 1, asignamos 1
-        $rizo = 1 * $kilos; // Valor por defecto
+        $rizo = 0; // Valor por defecto
         if ($aplic === 'RZ') {
           $rizo = 1 * $kilos;
         } elseif ($aplic === 'RZ2') {
@@ -257,11 +293,11 @@ class PlaneacionController extends Controller
           $rizo = 1 * $kilos;
         }
         $TRAMA = ((((0.59 * ((((float)$modelo->PASADAS * 1.001) * $ancho_por_toalla) / 100)) / $request->input('trama_0')) * $piezas) / 1000);
-        $combinacion1 = 1; // (($c1 = (float)$request->input('calibre_1')) > 0) ? ((((0.59 * (((float)$modelo->PASADAS_C1 * 1.001) * $ancho_por_toalla)) / 100) / $c1) * $piezas) / 1000 : 0;
-        $combinacion2 = 1; //($request->input('calibre_2') > 0) ? ((((0.59 * ((((float)$modelo->PASADAS_C2 * 1.001) * $ancho_por_toalla) / 100)) / $request->input('calibre_2')) * $piezas) / 1000) : 0;
-        $combinacion3 = 1; // ((($request->input('calibre_3') != 0 ? (0.59 * (((float)$modelo->PASADAS_C3 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
-        $combinacion4 = 1; //((($request->input('calibre_4') != 0 ? (0.59 * (((float)$modelo->PASADAS_C4 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
-
+        $combinacion1 =  (($c1 = (float)$request->input('calibre_1')) > 0) ? ((((0.59 * (((float)$modelo->PASADAS_C1 * 1.001) * $ancho_por_toalla)) / 100) / $c1) * $piezas) / 1000 : 0;
+        //((((0.59 * ((([PASADAS C1 (AF)] * 1.001) * [ancho por toalla (AK)] ) / 100)) / [CALIBRE C1 (AM)]) * Piezas) / 1000)
+        $combinacion2 = ($request->input('calibre_2') > 0) ? ((((0.59 * ((((float)$modelo->PASADAS_C2 * 1.001) * $ancho_por_toalla) / 100)) / $request->input('calibre_2')) * $piezas) / 1000) : 0;
+        $combinacion3 =  ((($request->input('calibre_3') != 0 ? (0.59 * (((float)$modelo->PASADAS_C3 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
+        $combinacion4 =  ((($request->input('calibre_4') != 0 ? (0.59 * (((float)$modelo->PASADAS_C4 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
         $Piel1 = ((((((((float) $modelo->Largo + (float) $modelo->Med_plano) / 100) * 1.055) * 0.00059) / ((0.00059 * 1) / (0.00059 / $calibre_pie))) *
           (((float) $request->input('cuenta_pie') - 32) / (float) $modelo->TIRAS)) * $piezas);
         $riso = ($kilos  - ($Piel1 + $combinacion3 + $combinacion2 + $combinacion1 +  $TRAMA + $combinacion4));
@@ -292,7 +328,7 @@ class PlaneacionController extends Controller
         $kilos = round(($piezas * $Prod_Kg_Dia) / ($Std_Hr_efectivo * 24), 2);
 
         $cambio = $Cambios_Hilo; //si Cambios_Hilo = 1, asignamos 1
-        $rizo = 1; // Valor por defecto
+        $rizo = 0; // Valor por defecto
         if ($aplic === 'RZ') {
           $rizo = 1 * $kilos;
         } elseif ($aplic === 'RZ2') {
@@ -339,7 +375,7 @@ class PlaneacionController extends Controller
         $kilos = round(($piezas * $Prod_Kg_Dia) / ($Std_Hr_efectivo * 24), 2);
 
         $cambio = $Cambios_Hilo; //si Cambios_Hilo = 1, asignamos 1
-        $rizo = 1; // Valor por defecto
+        $rizo = 0; // Valor por defecto
         if ($aplic === 'RZ') {
           $rizo = 1 * $kilos;
         } elseif ($aplic === 'RZ2') {
@@ -386,10 +422,10 @@ class PlaneacionController extends Controller
 
     // Mostrar el resultado con dd()
     // AHORA VAMOS CON LAS FORMULAS RESTANTES
-    /*dd([
-      'dias_generados' => $dias,
-      'total_dias' => $totalDias,
-    ]);*/
+    //dd([
+    // 'dias_generados' => $dias,
+    //  'total_dias' => $totalDias,
+    //]);
     //procedemos con las formulas de excel tomando en cuenta las proporciones de los dias de acuerdo a las fechas de inicio y fin
 
 
