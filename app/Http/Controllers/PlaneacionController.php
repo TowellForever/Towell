@@ -189,24 +189,10 @@ class PlaneacionController extends Controller
     $inicioX = ($anio * 365.25) + ($mes * 30.44) + $dia + ($hora / 24) + ($minuto / 1440) + ($segundo / 86400);
 
     $inicioY = ($anio2 * 365.25) + ($mes2 * 30.44) + $dia2 + $hora2 / 24  +  $minuto2 / 1440   +   $segundo2  / 86400;
-    $DiferenciaZ = $inicioY - $inicioX;
+    $DiferenciaZ = round($inicioY - $inicioX, 5);
 
-    dd([
-      'inicioX'     => $inicioX,
-      'inicioY'     => $inicioY,
-      'DiferenciaZ'    => $DiferenciaZ,
-    ]);
+    $Std_Hr_efectivo = ($request->input('saldo') / ($DiferenciaZ)) / 24;   //=(P21/(BM21-BI21))/24   -->   (Saldos/ (fecha_fin - fecha_inicio) ) / 24  (7000 / 13.9) / 24
 
-
-
-
-
-
-
-
-
-
-    $Std_Hr_efectivo = ($request->input('saldo') / ($diferencia)) / 24;   //=(P21/(BM21-BI21))/24   -->   (Saldos/ (fecha_fin - fecha_inicio) ) / 24  (7000 / 13.9) / 24
     //Producción de kilogramos por DIA
     $Prod_Kg_Dia = ($modelo->P_crudo * $Std_Hr_efectivo) * 24 / 1000; //<-- <-- <-- BD en EXCEL -> PEMDAS MINE
 
@@ -288,10 +274,9 @@ class PlaneacionController extends Controller
         }
 
         // Cálculo de piezas (si aplica)
-        $piezas = round(($fraccion * 24) * $Std_Hr_efectivo, 0);
+        $piezas = round(($fraccion * 24) * $Std_Hr_efectivo, 2);
 
-
-        $kilos = ($piezas * $Prod_Kg_Dia) / ($Std_Hr_efectivo * 24);
+        $kilos = round(($piezas * $Prod_Kg_Dia) / ($Std_Hr_efectivo * 24), 2);
         $cambio = $Cambios_Hilo; //si Cambios_Hilo = 1, asignamos 1
         $rizo = 0; // Valor por defecto
         if ($aplic === 'RZ') {
@@ -307,7 +292,8 @@ class PlaneacionController extends Controller
         } elseif ($aplic === 'DC') {
           $rizo = 1 * $kilos;
         }
-        $TRAMA = ((((0.59 * ((((float)$modelo->PASADAS * 1.001) * $ancho_por_toalla) / 100)) / $request->input('trama_0')) * $piezas) / 1000);
+
+        $TRAMA = ((((0.59 * ((($modelo->PASADAS_1 * 1.001) * $ancho_por_toalla) / 100)) / (float) $request->input('trama_0')) * $piezas) / 1000);
         $combinacion1 =  (($c1 = (float)$request->input('calibre_1')) > 0) ? ((((0.59 * (((float)$modelo->PASADAS_C1 * 1.001) * $ancho_por_toalla)) / 100) / $c1) * $piezas) / 1000 : 0;
         //((((0.59 * ((([PASADAS C1 (AF)] * 1.001) * [ancho por toalla (AK)] ) / 100)) / [CALIBRE C1 (AM)]) * Piezas) / 1000)
         $combinacion2 = ($request->input('calibre_2') > 0) ? ((((0.59 * ((((float)$modelo->PASADAS_C2 * 1.001) * $ancho_por_toalla) / 100)) / $request->input('calibre_2')) * $piezas) / 1000) : 0;
@@ -339,7 +325,7 @@ class PlaneacionController extends Controller
         $realFin = $Fechafin;
         $segundos = $realFin->diffInSeconds($realInicio, true);
         $fraccion = round($segundos / 86400, 3); //agregamos esta linea de codigo para calcular las piezas
-        $piezas = round(($fraccion * 24) * $Std_Hr_efectivo, 2);
+        $piezas = round(($fraccion * 24) * $Std_Hr_efectivo, 0);
         $kilos = round(($piezas * $Prod_Kg_Dia) / ($Std_Hr_efectivo * 24), 2);
 
         $cambio = $Cambios_Hilo; //si Cambios_Hilo = 1, asignamos 1
@@ -357,7 +343,7 @@ class PlaneacionController extends Controller
         } elseif ($aplic === 'DC') {
           $rizo = 1 * $kilos;
         }
-        $TRAMA = ((((0.59 * ((((float)$modelo->PASADAS * 1.001) * $ancho_por_toalla) / 100)) / $request->input('trama_0')) * $piezas) / 1000);
+        $TRAMA = ((((0.59 * ((($modelo->PASADAS_1 * 1.001) * $ancho_por_toalla) / 100)) / (float) $request->input('trama_0')) * $piezas) / 1000);
         $combinacion1 = (($c1 = (float)$request->input('calibre_1')) > 0) ? ((((0.59 * ((float)$modelo->PASADAS_C1 * 1.001 * $ancho_por_toalla)) / 100) / $c1) * $piezas) / 1000 : 0;
         $combinacion2 = ($request->input('calibre_2') > 0) ? ((((0.59 * ((((float)$modelo->PASADAS_C2 * 1.001) * $ancho_por_toalla) / 100)) / $request->input('calibre_2')) * $piezas) / 1000) : 0;
         $combinacion3 = ((($request->input('calibre_3') != 0 ? (0.59 * (((float)$modelo->PASADAS_C3 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
@@ -405,7 +391,9 @@ class PlaneacionController extends Controller
           $rizo = 1 * $kilos;
         }
 
-        $TRAMA = ((((0.59 * ((((float)$modelo->PASADAS * 1.001) * $ancho_por_toalla) / 100)) / $request->input('trama_0')) * $piezas) / 1000);
+        $TRAMA = ((((0.59 * ((($modelo->PASADAS_1 * 1.001) * $ancho_por_toalla) / 100)) / (float) $request->input('trama_0')) * $piezas) / 1000);
+
+
         $combinacion1 = (($c1 = (float)$request->input('calibre_1')) > 0) ? ((((0.59 * ((float)$modelo->PASADAS_C1 * 1.001 * $ancho_por_toalla)) / 100) / $c1) * $piezas) / 1000 : 0;
         $combinacion2 = ($request->input('calibre_2') > 0) ? ((((0.59 * ((((float)$modelo->PASADAS_C2 * 1.001) * $ancho_por_toalla) / 100)) / $request->input('calibre_2')) * $piezas) / 1000) : 0;
         $combinacion3 = ((($request->input('calibre_3') != 0 ? (0.59 * (((float)$modelo->PASADAS_C3 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
