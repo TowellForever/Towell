@@ -294,11 +294,18 @@ class PlaneacionController extends Controller
         }
 
         $TRAMA = ((((0.59 * ((($modelo->PASADAS_1 * 1.001) * $ancho_por_toalla) / 100)) / (float) $request->input('trama_0')) * $piezas) / 1000);
-        $combinacion1 =  (($c1 = (float)$request->input('calibre_1')) > 0) ? ((((0.59 * (((float)$modelo->PASADAS_C1 * 1.001) * $ancho_por_toalla)) / 100) / $c1) * $piezas) / 1000 : 0;
-        //((((0.59 * ((([PASADAS C1 (AF)] * 1.001) * [ancho por toalla (AK)] ) / 100)) / [CALIBRE C1 (AM)]) * Piezas) / 1000)
-        $combinacion2 = ($request->input('calibre_2') > 0) ? ((((0.59 * ((((float)$modelo->PASADAS_C2 * 1.001) * $ancho_por_toalla) / 100)) / $request->input('calibre_2')) * $piezas) / 1000) : 0;
-        $combinacion3 =  ((($request->input('calibre_3') != 0 ? (0.59 * (((float)$modelo->PASADAS_C3 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
-        $combinacion4 =  ((($request->input('calibre_4') != 0 ? (0.59 * (((float)$modelo->PASADAS_C4 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
+
+        $combinacion1 =   ((((0.59 * (((float)$modelo->PASADAS_2 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('trama_0') != 0 ? (float) $request->input('trama_0') : 1)) * $piezas) / 1000;
+        $combinacion2 =   ((((0.59 * (((float)$modelo->PASADAS_3 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('calibre_1') != 0 ? (float) $request->input('calibre_1') : 1)) * $piezas) / 1000;
+        dd([
+          'PASADAS 3' => (float)$modelo->PASADAS_3,
+          'ancho x toalla' => $ancho_por_toalla,
+          'calibre_1' => (float) $request->input('calibre_1'),
+          'piezas' => $piezas,
+          'combinacion2 completato' => $combinacion2,
+        ]);
+        $combinacion3 =   ((((0.59 * (((float)$modelo->PASADAS_4 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('calibre_2') != 0 ? (float) $request->input('calibre_2') : 1)) * $piezas) / 1000;
+        $combinacion4 =   ((((0.59 * (((float)$modelo->PASADAS_5 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('calibre_3') != 0 ? (float) $request->input('calibre_3') : 1)) * $piezas) / 1000;
         $Piel1 = ((((((((float) $modelo->Largo + (float) $modelo->Med_plano) / 100) * 1.055) * 0.00059) / ((0.00059 * 1) / (0.00059 / $calibre_pie))) *
           (((float) $request->input('cuenta_pie') - 32) / (float) $modelo->TIRAS)) * $piezas);
         $riso = ($kilos  - ($Piel1 + $combinacion3 + $combinacion2 + $combinacion1 +  $TRAMA + $combinacion4));
@@ -344,13 +351,14 @@ class PlaneacionController extends Controller
           $rizo = 1 * $kilos;
         }
         $TRAMA = ((((0.59 * ((($modelo->PASADAS_1 * 1.001) * $ancho_por_toalla) / 100)) / (float) $request->input('trama_0')) * $piezas) / 1000);
-        $combinacion1 = (($c1 = (float)$request->input('calibre_1')) > 0) ? ((((0.59 * ((float)$modelo->PASADAS_C1 * 1.001 * $ancho_por_toalla)) / 100) / $c1) * $piezas) / 1000 : 0;
-        $combinacion2 = ($request->input('calibre_2') > 0) ? ((((0.59 * ((((float)$modelo->PASADAS_C2 * 1.001) * $ancho_por_toalla) / 100)) / $request->input('calibre_2')) * $piezas) / 1000) : 0;
-        $combinacion3 = ((($request->input('calibre_3') != 0 ? (0.59 * (((float)$modelo->PASADAS_C3 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
-        $combinacion4 = ((($request->input('calibre_4') != 0 ? (0.59 * (((float)$modelo->PASADAS_C4 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
+
+        $combinacion1 =   ((((0.59 * (((float)$modelo->PASADAS_2 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('trama_0') != 0 ? (float) $request->input('trama_0') : 1)) * $piezas) / 1000;
+        $combinacion2 =   ((((0.59 * (((float)$modelo->PASADAS_3 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('calibre_1') != 0 ? (float) $request->input('calibre_1') : 1)) * $piezas) / 1000;
+        $combinacion3 =   ((((0.59 * (((float)$modelo->PASADAS_4 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('calibre_2') != 0 ? (float) $request->input('calibre_2') : 1)) * $piezas) / 1000;
+        $combinacion4 =   ((((0.59 * (((float)$modelo->PASADAS_5 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('calibre_3') != 0 ? (float) $request->input('calibre_3') : 1)) * $piezas) / 1000;
+
         $Piel1 = ((((((((float) $modelo->Largo + (float) $modelo->Med_plano) / 100) * 1.055) * 0.00059) / ((0.00059 * 1) / (0.00059 / $calibre_pie))) *
           (((float) $request->input('cuenta_pie') - 32) / (float) $modelo->TIRAS)) * $piezas);
-
         $riso = ($kilos  - ($Piel1 + $combinacion3 + $combinacion2 + $combinacion1 +  $TRAMA + $combinacion4));
 
         $dias[] = [
@@ -393,13 +401,12 @@ class PlaneacionController extends Controller
 
         $TRAMA = ((((0.59 * ((($modelo->PASADAS_1 * 1.001) * $ancho_por_toalla) / 100)) / (float) $request->input('trama_0')) * $piezas) / 1000);
 
+        $combinacion1 =   ((((0.59 * (((float)$modelo->PASADAS_2 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('trama_0') != 0 ? (float) $request->input('trama_0')   : 1)) * $piezas) / 1000;
+        $combinacion2 =   ((((0.59 * (((float)$modelo->PASADAS_3 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('calibre_1') != 0 ? (float) $request->input('calibre_1') : 1)) * $piezas) / 1000;
+        $combinacion3 =   ((((0.59 * (((float)$modelo->PASADAS_4 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('calibre_2') != 0 ? (float) $request->input('calibre_2') : 1)) * $piezas) / 1000;
+        $combinacion4 =   ((((0.59 * (((float)$modelo->PASADAS_5 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('calibre_3') != 0 ? (float) $request->input('calibre_3') : 1)) * $piezas) / 1000;
 
-        $combinacion1 = (($c1 = (float)$request->input('calibre_1')) > 0) ? ((((0.59 * ((float)$modelo->PASADAS_C1 * 1.001 * $ancho_por_toalla)) / 100) / $c1) * $piezas) / 1000 : 0;
-        $combinacion2 = ($request->input('calibre_2') > 0) ? ((((0.59 * ((((float)$modelo->PASADAS_C2 * 1.001) * $ancho_por_toalla) / 100)) / $request->input('calibre_2')) * $piezas) / 1000) : 0;
-        $combinacion3 = ((($request->input('calibre_3') != 0 ? (0.59 * (((float)$modelo->PASADAS_C3 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
-        $combinacion4 = ((($request->input('calibre_4') != 0 ? (0.59 * (((float)$modelo->PASADAS_C4 * $ancho_por_toalla) / 100)) / $request->input('calibre_3') : 0)) * $piezas) / 1000;
-
-        $Piel1 = ((((((((float) $modelo->Largo + (float) $modelo->Plano) / 100) * 1.055) * 0.00059) / ((0.00059 * 1) / (0.00059 / $calibre_pie))) *
+        $Piel1 = ((((((((float) $modelo->Largo + (float) $modelo->Med_plano) / 100) * 1.055) * 0.00059) / ((0.00059 * 1) / (0.00059 / $calibre_pie))) *
           (((float) $request->input('cuenta_pie') - 32) / (float) $modelo->TIRAS)) * $piezas);
         $riso = ($kilos  - ($Piel1 + $combinacion3 + $combinacion2 + $combinacion1 +  $TRAMA + $combinacion4));
 
