@@ -25,7 +25,8 @@ class Planeacion extends Model
         'Calibre_Pie',
         'Calendario',
         'Clave_Estilo',
-        'Tamano',
+        'Clave_AX',
+        'Tamano_AX',
         'Estilo_Alternativo',
         'Nombre_Producto',
         'Saldos',
@@ -90,7 +91,7 @@ class Planeacion extends Model
         'Entrega',
         'Dif_vs_Compromiso',
         'en_proceso',
-        'num_registro',
+        'id',
         'cantidad',
     ];
 }

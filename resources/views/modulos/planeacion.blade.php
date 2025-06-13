@@ -117,7 +117,7 @@
                                     'Calibre_Pie',
                                     'Calendario',
                                     'Clave_Estilo',
-                                    'Tamano',
+                                    'Tamano_AX',
                                     'Estilo_Alternativo',
                                     'Nombre_Producto',
                                     'cantidad',
@@ -182,7 +182,7 @@
                                     'Fecha_Compromiso1',
                                     'Entrega',
                                     'Dif_vs_Compromiso',
-                                    'num_registro',
+                                    'id',
                                 ];
                             @endphp
 
@@ -202,12 +202,11 @@
                     </thead>
                     <tbody class="">
                         @foreach ($datos as $registro)
-                            <tr class="px-1 py-0.5 text-sm" data-num-registro="{{ $registro->num_registro }}"
+                            <tr class="px-1 py-0.5 text-sm" data-num-registro="{{ $registro->id }}"
                                 data-inicio="{{ $registro->Inicio_Tejido }}" data-fin="{{ $registro->Fin_Tejido }}">
                                 <!-- Agregar checkbox 'en_proceso' -->
                                 <td class="px-1 py-0.5">
-                                    <form action="{{ route('tejido_scheduling.update', $registro->num_registro) }}"
-                                        method="POST">
+                                    <form action="{{ route('tejido_scheduling.update', $registro->id) }}" method="POST">
                                         @csrf
                                         @method('PUT')
                                         <input type="checkbox" name="en_proceso" value="1"
@@ -237,9 +236,9 @@
                                                     }
                                                 } elseif (strtotime($value) && !in_array($header, ['Calibre_Rizo'])) {
                                                     if (in_array($header, $camposConHora)) {
-                                                        // Fecha con hora y minutos: "d-m-Y H:i"
+                                                        // Fecha con hora, minutos y segundos: "d-m-Y H:i:s"
                                                         $formattedValue = \Carbon\Carbon::parse($value)->format(
-                                                            'd-m-Y H:i',
+                                                            'd-m-Y H:i:s',
                                                         );
                                                     } else {
                                                         // Solo fecha: "d-m-Y"
@@ -430,9 +429,9 @@
         });
     </script>
     <!--*******************************************************************************************************************************************************************************************
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        *********************************************************************************************************************************************************************************************-->
-    <!--SCRIPTS que implentan el funcionamiento de la tabla TIPO DE MOVIMIENTOS, se selecciona un registro, se obtiene el valor de num_registro y con
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *********************************************************************************************************************************************************************************************-->
+    <!--SCRIPTS que implentan el funcionamiento de la tabla TIPO DE MOVIMIENTOS, se selecciona un registro, se obtiene el valor de id y con
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
 
     <script>
         let filaSeleccionada = null;
@@ -601,7 +600,7 @@
                 'Calibre_Pie',
                 'Calendario',
                 'Clave_Estilo',
-                'Tamano',
+                'Tamano_AX',
                 'Estilo_Alternativo',
                 'Nombre_Producto',
                 'cantidad',
@@ -666,7 +665,7 @@
                 'Fecha_Compromiso1',
                 'Entrega',
                 'Dif_vs_Compromiso',
-                'num_registro',
+                'id',
             ]; // AJUSTA esto
 
             if (tabla) {

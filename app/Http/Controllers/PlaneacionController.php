@@ -42,7 +42,7 @@ class PlaneacionController extends Controller
       'Calibre_Pie',
       'Calendario',
       'Clave_Estilo',
-      'Tamano',
+      'Tamano_AX',
       'Estilo_Alternativo',
       'Nombre_Producto',
       'Saldos',
@@ -150,13 +150,10 @@ class PlaneacionController extends Controller
     $telar = CatalagoTelar::where('telar', $request->telar)->first();
 
 
-    $modelo = Modelos::where('TITULO_TEMP', $request->tamano . $request->clave_ax) //PULLMAN7028
+    $modelo = Modelos::where('CLAVE_AX', $request->clave_ax) //MAN7028
+      ->where('Tamanio_AX', $request->tamano)
       ->where('Departamento', $telar->salon)
       ->first();
-
-    if (!$modelo) {
-      return back()->with('error', 'Modelo no encontrado');
-    }
 
     $hilo = $request->input('hilo');
 
@@ -168,47 +165,8 @@ class PlaneacionController extends Controller
 
     $Peso_gr_m2 = ($modelo->P_crudo * 10000) / ($modelo->Largo * $modelo->Ancho);
 
-
-    // Dias efectivos
-    $inicio = (string) $request->input('fecha_inicio');
-    // Formateo correcto para datetime-local
-    $inicioFormateado = Carbon::createFromFormat('Y-m-d\TH:i:s', $inicio);
-    // Base real de Excel: 1899-12-31
-    $inicioExcel = Carbon::createFromDate(1900, 1, 1)->startOfDay();
-    // Diferencia en días exacta
-    $dias = $inicioExcel->floatDiffInDays($inicioFormateado);
-    // Ajuste por bug de Excel (bisiesto falso en 1900)
-    $inicioFloat = $dias + 2;
-
-    $fin = (string) $request->input('fecha_fin');
-    // Formateo correcto para datetime-local
-    $finFormateado = Carbon::createFromFormat('Y-m-d\TH:i:s', $fin);
-
-    // Base real de Excel: 1899-12-31
-    $finExcel = Carbon::createFromDate(1900, 1, 1)->startOfDay();
-    // Diferencia en días exacta
-    $dias = $finExcel->floatDiffInDays($finFormateado);
-    // Ajuste por bug de Excel (bisiesto falso en 1900)
-    $finFloat = $dias + 2;
-    $diferencia = $finFloat - $inicioFloat;
-    $Dias_Ef = $diferencia;
-
-    $diferencia = $finFloat - $inicioFloat;
-
-    dd([
-      'inicio'     => $inicioFloat,
-      'fin'     => $finFloat,
-      'Diferencia'    => $diferencia,
-    ]);
-
-
-
-
-
-
-
+    // calculo de dias y fracciones de dias para FECHAS INICIO Y FIN
     $inicio =  $request->input('fecha_inicio');
-
     $timestamp = strtotime($inicio);
 
     $dia     = date('d', $timestamp); // Día (01-31)
@@ -219,7 +177,6 @@ class PlaneacionController extends Controller
     $segundo = date('s', $timestamp); // Segundo (00-59)
 
     $fin =  $request->input('fecha_fin');
-
     $timestamp2 = strtotime($fin);
 
     $dia2     = date('d', $timestamp2); // Día (01-31)
@@ -229,13 +186,11 @@ class PlaneacionController extends Controller
     $minuto2  = date('i', $timestamp2); // Minuto (00-59)
     $segundo2 = date('s', $timestamp2); // Segundo (00-59)
 
+    $inicioX = ($anio * 365.25) + ($mes * 30.44) + $dia + ($hora / 24) + ($minuto / 1440) + ($segundo / 86400);
 
-
-    $inicioX = $hora / 24  +  $minuto / 1440   +   $segundo / 86400;
-
-
-    $inicioY = $hora2 / 24  +  $minuto2 / 1440   +   $segundo2 + 39 / 86400;
+    $inicioY = ($anio2 * 365.25) + ($mes2 * 30.44) + $dia2 + $hora2 / 24  +  $minuto2 / 1440   +   $segundo2  / 86400;
     $DiferenciaZ = $inicioY - $inicioX;
+
     dd([
       'inicioX'     => $inicioX,
       'inicioY'     => $inicioY,
@@ -506,7 +461,7 @@ class PlaneacionController extends Controller
         'Calibre_Pie' =>  $calibre_pie ? $calibre_pie : null,
         'Calendario' => $request->input('calendario'),
         'Clave_Estilo' => $request->input('tamano') . $request->input('clave_ax'),
-        'Tamano' => $request->input('tamano'),
+        'Tamano_AX' => $request->input('tamano'),
         'Estilo_Alternativo' => null,
         'Nombre_Producto' => $modelo ? $modelo->Modelo : null,
         'Saldos' => $request->input('saldo'),
@@ -580,7 +535,7 @@ class PlaneacionController extends Controller
 
     //una vez creado el nuevo registro, la info se almacena en la variable $nuevoRegistro, y con esa informacion obtenemos el num_registro (una vez ya generado el nuevo registro en TEJIDO_SCHEDULING)
     // Ahora puedes acceder al ID o cualquier otro valor generado automáticamente
-    $tejNum = $nuevoRegistro->num_registro; // si se genera automáticamente
+    $tejNum = $nuevoRegistro->id; // si se genera automáticamente
     // o, si lo necesitas crear tú:
     foreach ($dias as $registro) {
       \App\Models\TipoMovimientos::create([
@@ -611,10 +566,10 @@ class PlaneacionController extends Controller
     return view('/catalagos/aplicaciones');
   }
 
-  public function update(Request $request, $num_registro)
+  public function update(Request $request, $id)
   {
     // Buscar el registro por Id
-    $registro = Planeacion::where('num_registro', $num_registro)->first();
+    $registro = Planeacion::where('id', $id)->first();
 
     if (!$registro) {
       return redirect()->route('planeacion.index')->with('error', 'Registro no encontrado');
