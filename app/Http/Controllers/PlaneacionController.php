@@ -151,7 +151,9 @@ class PlaneacionController extends Controller
 
 
     $modelo = Modelos::where('TITULO_TEMP', $request->tamano . $request->clave_ax) //PULLMAN7028
+      ->where('Departamento', $telar->salon)
       ->first();
+
     if (!$modelo) {
       return back()->with('error', 'Modelo no encontrado');
     }
@@ -166,10 +168,11 @@ class PlaneacionController extends Controller
 
     $Peso_gr_m2 = ($modelo->P_crudo * 10000) / ($modelo->Largo * $modelo->Ancho);
 
+
     // Dias efectivos
     $inicio = (string) $request->input('fecha_inicio');
     // Formateo correcto para datetime-local
-    $inicioFormateado = Carbon::createFromFormat('Y-m-d\TH:i', $inicio);
+    $inicioFormateado = Carbon::createFromFormat('Y-m-d\TH:i:s', $inicio);
     // Base real de Excel: 1899-12-31
     $inicioExcel = Carbon::createFromDate(1900, 1, 1)->startOfDay();
     // Diferencia en días exacta
@@ -179,7 +182,8 @@ class PlaneacionController extends Controller
 
     $fin = (string) $request->input('fecha_fin');
     // Formateo correcto para datetime-local
-    $finFormateado = Carbon::createFromFormat('Y-m-d\TH:i', $fin);
+    $finFormateado = Carbon::createFromFormat('Y-m-d\TH:i:s', $fin);
+
     // Base real de Excel: 1899-12-31
     $finExcel = Carbon::createFromDate(1900, 1, 1)->startOfDay();
     // Diferencia en días exacta
@@ -189,6 +193,62 @@ class PlaneacionController extends Controller
     $diferencia = $finFloat - $inicioFloat;
     $Dias_Ef = $diferencia;
 
+    $diferencia = $finFloat - $inicioFloat;
+
+    dd([
+      'inicio'     => $inicioFloat,
+      'fin'     => $finFloat,
+      'Diferencia'    => $diferencia,
+    ]);
+
+
+
+
+
+
+
+    $inicio =  $request->input('fecha_inicio');
+
+    $timestamp = strtotime($inicio);
+
+    $dia     = date('d', $timestamp); // Día (01-31)
+    $mes     = date('m', $timestamp); // Mes (01-12)
+    $anio    = date('Y', $timestamp); // Año completo (2025)
+    $hora    = date('H', $timestamp); // Hora en formato 24h (00-23)
+    $minuto  = date('i', $timestamp); // Minuto (00-59)
+    $segundo = date('s', $timestamp); // Segundo (00-59)
+
+    $fin =  $request->input('fecha_fin');
+
+    $timestamp2 = strtotime($fin);
+
+    $dia2     = date('d', $timestamp2); // Día (01-31)
+    $mes2     = date('m', $timestamp2); // Mes (01-12)
+    $anio2    = date('Y', $timestamp2); // Año completo (2025)
+    $hora2    = date('H', $timestamp2); // Hora en formato 24h (00-23)
+    $minuto2  = date('i', $timestamp2); // Minuto (00-59)
+    $segundo2 = date('s', $timestamp2); // Segundo (00-59)
+
+
+
+    $inicioX = $hora / 24  +  $minuto / 1440   +   $segundo / 86400;
+
+
+    $inicioY = $hora2 / 24  +  $minuto2 / 1440   +   $segundo2 + 39 / 86400;
+    $DiferenciaZ = $inicioY - $inicioX;
+    dd([
+      'inicioX'     => $inicioX,
+      'inicioY'     => $inicioY,
+      'DiferenciaZ'    => $DiferenciaZ,
+    ]);
+
+
+
+
+
+
+
+
 
 
     $Std_Hr_efectivo = ($request->input('saldo') / ($diferencia)) / 24;   //=(P21/(BM21-BI21))/24   -->   (Saldos/ (fecha_fin - fecha_inicio) ) / 24  (7000 / 13.9) / 24
@@ -196,6 +256,7 @@ class PlaneacionController extends Controller
     $Prod_Kg_Dia = ($modelo->P_crudo * $Std_Hr_efectivo) * 24 / 1000; //<-- <-- <-- BD en EXCEL -> PEMDAS MINE
 
     $Std_Dia = (($modelo->TIRAS * 60) / ((($modelo->TOTAL) + ((($modelo->Luchaje * 0.5) / 0.0254) / $modelo->Repeticiones_p_corte)) / $velocidad) * $eficiencia) * 24; //LISTOO
+
     $Prod_Kg_Dia1 = ($Std_Dia * $modelo->P_crudo) / 1000;
 
     $Std_Toa_Hr_100 = (($modelo->TIRAS * 60) / ((($modelo->TOTAL / 1) + (($modelo->Luchaje * 0.5) / 0.0254) / $modelo->Repeticiones_p_corte) / $velocidad)); //LISTOO //velocidad variable pendiente
@@ -205,7 +266,6 @@ class PlaneacionController extends Controller
     $Dias_jornada_completa = $Horas / 24;
 
     $ancho_por_toalla = ((float) $modelo->TRAMA_Ancho_Peine / (float)$modelo->TIRAS) * 1.001; //(AK2 / AK1) * 1.0
-
     //VARIABLES TEMPORALES - borrar despues de tener catalagos
     $aplic = $request->input('aplicacion');
     $calibre_pie = $modelo->Pie;
@@ -422,10 +482,10 @@ class PlaneacionController extends Controller
 
     // Mostrar el resultado con dd()
     // AHORA VAMOS CON LAS FORMULAS RESTANTES
-    //dd([
-    // 'dias_generados' => $dias,
-    //  'total_dias' => $totalDias,
-    //]);
+    dd([
+      'dias_generados' => $dias,
+      'total_dias' => $totalDias,
+    ]);
     //procedemos con las formulas de excel tomando en cuenta las proporciones de los dias de acuerdo a las fechas de inicio y fin
 
 
