@@ -191,6 +191,8 @@ class PlaneacionController extends Controller
     $inicioY = ($anio2 * 365.25) + ($mes2 * 30.44) + $dia2 + $hora2 / 24  +  $minuto2 / 1440   +   $segundo2  / 86400;
     $DiferenciaZ = round($inicioY - $inicioX, 5);
 
+    $Dias_Ef = round($DiferenciaZ / 24); // redondeado a 2 decimales BA en EXCEL
+
     $Std_Hr_efectivo = ($request->input('saldo') / ($DiferenciaZ)) / 24;   //=(P21/(BM21-BI21))/24   -->   (Saldos/ (fecha_fin - fecha_inicio) ) / 24  (7000 / 13.9) / 24
 
     //Producción de kilogramos por DIA
@@ -297,13 +299,7 @@ class PlaneacionController extends Controller
 
         $combinacion1 =   ((((0.59 * (((float)$modelo->PASADAS_2 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('trama_0') != 0 ? (float) $request->input('trama_0') : 1)) * $piezas) / 1000;
         $combinacion2 =   ((((0.59 * (((float)$modelo->PASADAS_3 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('calibre_1') != 0 ? (float) $request->input('calibre_1') : 1)) * $piezas) / 1000;
-        dd([
-          'PASADAS 3' => (float)$modelo->PASADAS_3,
-          'ancho x toalla' => $ancho_por_toalla,
-          'calibre_1' => (float) $request->input('calibre_1'),
-          'piezas' => $piezas,
-          'combinacion2 completato' => $combinacion2,
-        ]);
+
         $combinacion3 =   ((((0.59 * (((float)$modelo->PASADAS_4 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('calibre_2') != 0 ? (float) $request->input('calibre_2') : 1)) * $piezas) / 1000;
         $combinacion4 =   ((((0.59 * (((float)$modelo->PASADAS_5 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('calibre_3') != 0 ? (float) $request->input('calibre_3') : 1)) * $piezas) / 1000;
         $Piel1 = ((((((((float) $modelo->Largo + (float) $modelo->Med_plano) / 100) * 1.055) * 0.00059) / ((0.00059 * 1) / (0.00059 / $calibre_pie))) *
@@ -354,6 +350,7 @@ class PlaneacionController extends Controller
 
         $combinacion1 =   ((((0.59 * (((float)$modelo->PASADAS_2 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('trama_0') != 0 ? (float) $request->input('trama_0') : 1)) * $piezas) / 1000;
         $combinacion2 =   ((((0.59 * (((float)$modelo->PASADAS_3 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('calibre_1') != 0 ? (float) $request->input('calibre_1') : 1)) * $piezas) / 1000;
+
         $combinacion3 =   ((((0.59 * (((float)$modelo->PASADAS_4 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('calibre_2') != 0 ? (float) $request->input('calibre_2') : 1)) * $piezas) / 1000;
         $combinacion4 =   ((((0.59 * (((float)$modelo->PASADAS_5 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('calibre_3') != 0 ? (float) $request->input('calibre_3') : 1)) * $piezas) / 1000;
 
@@ -431,11 +428,7 @@ class PlaneacionController extends Controller
     }
 
     // Mostrar el resultado con dd()
-    // AHORA VAMOS CON LAS FORMULAS RESTANTES
-    dd([
-      'dias_generados' => $dias,
-      'total_dias' => $totalDias,
-    ]);
+    // AHORA VAMOS CON LAS FORMULAS RESTANTES;
     //procedemos con las formulas de excel tomando en cuenta las proporciones de los dias de acuerdo a las fechas de inicio y fin
 
 
