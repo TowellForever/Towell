@@ -83,7 +83,7 @@
             <div class="flex items-center">
                 <label for="calibre_pie" class="w-20 font-medium text-gray-700">CALIBRE PIE:</label>
                 <input type="text" name="calibre_pie" id="calibre_pie" class=" border border-gray-300 rounded px-2 py-1"
-                    value="{{ $datos['Calibre_Rizo'] ?? '' }}">
+                    value=" {{ isset($datos['Calibre_Pie']) ? number_format($datos['Calibre_Pie'], 2, '.', '') : '' }}">
             </div>
 
             <div class="flex items-center">
@@ -96,7 +96,8 @@
             <div class="flex items-center">
                 <label for="calibre_1" class="w-20 font-medium text-gray-700">TRAMA 1:</label>
                 <input type="number" step="0.01" name="calibre_1" id="calibre_1"
-                    class=" border border-gray-300 rounded px-2 py-1" value="{{ $datos['CALIBRE_C1'] ?? '' }}">
+                    class=" border border-gray-300 rounded px-2 py-1"
+                    value="{{ isset($datos['CALIBRE_C1']) ? number_format($datos['CALIBRE_C1'], 2, '.', '') : '' }}">
             </div>
             <div class="flex items-center">
                 <label for="color_1" class="w-20 font-medium text-gray-700">COLOR 1:</label>
@@ -107,7 +108,8 @@
             <div class="flex items-center">
                 <label for="calibre_2" class="w-20 font-medium text-gray-700">TRAMA 2:</label>
                 <input type="number" step="0.01" name="calibre_2" id="calibre_2"
-                    class=" border border-gray-300 rounded px-2 py-1" value="{{ $datos['CALIBRE_C2'] ?? '' }}">
+                    class=" border border-gray-300 rounded px-2 py-1"
+                    value="{{ isset($datos['CALIBRE_C2']) ? number_format($datos['CALIBRE_C2'], 2, '.', '') : '' }}">
             </div>
             <div class="flex items-center">
                 <label for="color_2" class="w-20 font-medium text-gray-700">COLOR 2:</label>
@@ -118,7 +120,8 @@
             <div class="flex items-center">
                 <label for="calibre_3" class="w-20 font-medium text-gray-700">TRAMA 3:</label>
                 <input type="number" step="0.01" name="calibre_3" id="calibre_3"
-                    class=" border border-gray-300 rounded px-2 py-1" value="{{ $datos['CALIBRE_C3'] ?? '' }}">
+                    class=" border border-gray-300 rounded px-2 py-1"
+                    value="{{ isset($datos['CALIBRE_C3']) ? number_format($datos['CALIBRE_C3'], 2, '.', '') : '' }}">
             </div>
             <div class="flex items-center">
                 <label for="color_3" class="w-20 font-medium text-gray-700">COLOR 3:</label>
@@ -139,7 +142,8 @@
             <div class="flex items-center">
                 <label for="calibre_5" class="w-20 font-medium text-gray-700">TRAMA 5:</label>
                 <input type="number" step="0.01" name="calibre_5" id="calibre_5"
-                    class=" border border-gray-300 rounded px-2 py-1" value="{{ $datos['CALIBRE_C5'] ?? '' }}">
+                    class=" border border-gray-300 rounded px-2 py-1"
+                    value="{{ isset($datos['CALIBRE_C4']) ? number_format($datos['CALIBRE_C5'], 2, '.', '') : '' }}">
             </div>
             <div class="flex items-center">
                 <label for="color_5" class="w-20 font-medium text-gray-700">COLOR 5:</label>
@@ -479,8 +483,8 @@
         });
     </script>
     <!--
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        Escucha cuando el usuario escribe en cantidad y actualiza saldo con el mismo valor en tiempo real.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                Escucha cuando el usuario escribe en cantidad y actualiza saldo con el mismo valor en tiempo real.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const cantidadInput = document.getElementById('cantidad');

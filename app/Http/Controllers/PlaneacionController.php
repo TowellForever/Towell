@@ -202,7 +202,7 @@ class PlaneacionController extends Controller
     $ancho_por_toalla = ((float) $modelo->TRAMA_Ancho_Peine / (float)$modelo->TIRAS) * 1.001; //(AK2 / AK1) * 1.0
     //VARIABLES TEMPORALES - borrar despues de tener catalagos
     $aplic = $request->input('aplicacion');
-    $calibre_pie = $modelo->Pie;
+    $calibre_pie = $request->input('calibre_pie'); // CAMBIAR DESPUES DE YA NO USAR LOS DATOS DE EXCEL, EL VALOR REAL DEBE SER EL TRAIDO DE MODELOS.
     $calibre_rizo = $modelo->Rizo;
     $Cambios_Hilo = 0;
 
@@ -293,6 +293,8 @@ class PlaneacionController extends Controller
         $combinacion4 =   ((((0.59 * (((float)$modelo->PASADAS_5 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('calibre_3') != 0 ? (float) $request->input('calibre_3') : 1)) * $piezas) / 1000;
         $Piel1 = ((((((((float) $modelo->Largo + (float) $modelo->Med_plano) / 100) * 1.055) * 0.00059) / ((0.00059 * 1) / (0.00059 / $calibre_pie))) *
           (((float) $request->input('cuenta_pie') - 32) / (float) $modelo->TIRAS)) * $piezas);
+
+
         $riso = ($kilos  - ($Piel1 + $combinacion3 + $combinacion2 + $combinacion1 +  $TRAMA + $combinacion4));
 
         $dias[] = [
@@ -386,7 +388,7 @@ class PlaneacionController extends Controller
 
         $TRAMA = ((((0.59 * ((($modelo->PASADAS_1 * 1.001) * $ancho_por_toalla) / 100)) / (float) $request->input('trama_0')) * $piezas) / 1000);
 
-        $combinacion1 =   ((((0.59 * (((float)$modelo->PASADAS_2 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('trama_0') != 0 ? (float) $request->input('trama_0')   : 1)) * $piezas) / 1000;
+        $combinacion1 =   ((((0.59 * (((float)$modelo->PASADAS_2 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('calibre_1') != 0 ? (float) $request->input('calibre_1')   : 1)) * $piezas) / 1000;
         $combinacion2 =   ((((0.59 * (((float)$modelo->PASADAS_3 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('calibre_1') != 0 ? (float) $request->input('calibre_1') : 1)) * $piezas) / 1000;
         $combinacion3 =   ((((0.59 * (((float)$modelo->PASADAS_4 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('calibre_2') != 0 ? (float) $request->input('calibre_2') : 1)) * $piezas) / 1000;
         $combinacion4 =   ((((0.59 * (((float)$modelo->PASADAS_5 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('calibre_3') != 0 ? (float) $request->input('calibre_3') : 1)) * $piezas) / 1000;
@@ -418,7 +420,7 @@ class PlaneacionController extends Controller
     // Mostrar el resultado con dd()
     // AHORA VAMOS CON LAS FORMULAS RESTANTES;
     //dd([
-    //'dias:' => $dias,
+    //  'dias:' => $dias,
     //]);
     //procedemos con las formulas de excel tomando en cuenta las proporciones de los dias de acuerdo a las fechas de inicio y fin
     $nuevoRegistro = Planeacion::create(
@@ -436,6 +438,7 @@ class PlaneacionController extends Controller
         'Calibre_Rizo' =>  $calibre_rizo ? (float) $calibre_rizo : null,
         'Calibre_Pie' =>  $calibre_pie ? $calibre_pie : null,
         'Calendario' => $request->input('calendario'),
+        'Clave_AX' => $request->input('clave_ax'),
         'Clave_Estilo' => $request->input('tamano') . $request->input('clave_ax'),
         'Tamano_AX' => $request->input('tamano'),
         'Estilo_Alternativo' => null,
