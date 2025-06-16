@@ -8,7 +8,7 @@ class Planeacion extends Model
 {
     public $timestamps = false; // Deshabilitar el manejo automático de created_at y updated_at
     protected $table = 'TEJIDO_SCHEDULING'; // si no lo tienes ya
-    protected $primaryKey = 'num_registro'; // pon aquí tu clave real
+    protected $primaryKey = 'id'; // pon aquí tu clave real
     public $incrementing = true; // si no es autoincremental
     protected $fillable = [
         'Cuenta',

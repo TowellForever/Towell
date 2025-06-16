@@ -157,7 +157,7 @@ class PlaneacionController extends Controller
 
     $hilo = $request->input('hilo');
 
-    $densidad = $modelo->Tra > 40 ? 'Alta' : 'Normal';
+    $densidad = (int) $modelo->Tra > 40 ? 'Alta' : 'Normal';
 
     $velocidad = CatalagoVelocidad::where('telar', $telar->nombre)->where('tipo_hilo', $hilo)->where('densidad', $densidad)->value('velocidad');
 
@@ -165,30 +165,21 @@ class PlaneacionController extends Controller
 
     $Peso_gr_m2 = ($modelo->P_crudo * 10000) / ($modelo->Largo * $modelo->Ancho);
 
+    function fecha_a_excel_serial($fecha)
+    {
+      // Fecha base en Excel: 1899-12-30
+      $excelBase = strtotime('1899-12-30 00:00:00');
+      $timestamp = strtotime($fecha);
+      return ($timestamp - $excelBase) / 86400;
+    }
+
     // calculo de dias y fracciones de dias para FECHAS INICIO Y FIN
-    $inicio =  $request->input('fecha_inicio');
-    $timestamp = strtotime($inicio);
+    $inicio = $request->input('fecha_inicio');
+    $fin = $request->input('fecha_fin');
 
-    $dia     = date('d', $timestamp); // Día (01-31)
-    $mes     = date('m', $timestamp); // Mes (01-12)
-    $anio    = date('Y', $timestamp); // Año completo (2025)
-    $hora    = date('H', $timestamp); // Hora en formato 24h (00-23)
-    $minuto  = date('i', $timestamp); // Minuto (00-59)
-    $segundo = date('s', $timestamp); // Segundo (00-59)
+    $inicioX = fecha_a_excel_serial($inicio);
+    $inicioY = fecha_a_excel_serial($fin);
 
-    $fin =  $request->input('fecha_fin');
-    $timestamp2 = strtotime($fin);
-
-    $dia2     = date('d', $timestamp2); // Día (01-31)
-    $mes2     = date('m', $timestamp2); // Mes (01-12)
-    $anio2    = date('Y', $timestamp2); // Año completo (2025)
-    $hora2    = date('H', $timestamp2); // Hora en formato 24h (00-23)
-    $minuto2  = date('i', $timestamp2); // Minuto (00-59)
-    $segundo2 = date('s', $timestamp2); // Segundo (00-59)
-
-    $inicioX = ($anio * 365.25) + ($mes * 30.44) + $dia + ($hora / 24) + ($minuto / 1440) + ($segundo / 86400);
-
-    $inicioY = ($anio2 * 365.25) + ($mes2 * 30.44) + $dia2 + $hora2 / 24  +  $minuto2 / 1440   +   $segundo2  / 86400;
     $DiferenciaZ = round($inicioY - $inicioX, 5);
 
     $Dias_Ef = round($DiferenciaZ / 24); // redondeado a 2 decimales BA en EXCEL
@@ -247,6 +238,14 @@ class PlaneacionController extends Controller
     $dias = [];
     $totalDias = 0;
 
+    //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
     //INICIAMOS LOS CALCULOS DE ACUERDO A LAS FORMULAS DE ARCHIVO EXCEL DE PEPE OWNER
     foreach ($periodo as $index => $dia) {
       $inicioDia = $dia->copy()->startOfDay();
@@ -276,9 +275,8 @@ class PlaneacionController extends Controller
         }
 
         // Cálculo de piezas (si aplica)
-        $piezas = round(($fraccion * 24) * $Std_Hr_efectivo, 2);
-
-        $kilos = round(($piezas * $Prod_Kg_Dia) / ($Std_Hr_efectivo * 24), 2);
+        $piezas = ($fraccion * 24) * $Std_Hr_efectivo;
+        $kilos = ($piezas * $Prod_Kg_Dia) / ($Std_Hr_efectivo * 24);
         $cambio = $Cambios_Hilo; //si Cambios_Hilo = 1, asignamos 1
         $rizo = 0; // Valor por defecto
         if ($aplic === 'RZ') {
@@ -327,8 +325,8 @@ class PlaneacionController extends Controller
         $realInicio = $inicioDia;
         $realFin = $Fechafin;
         $segundos = $realFin->diffInSeconds($realInicio, true);
-        $fraccion = round($segundos / 86400, 3); //agregamos esta linea de codigo para calcular las piezas
-        $piezas = round(($fraccion * 24) * $Std_Hr_efectivo, 0);
+        $fraccion = $segundos / 86400; //agregamos esta linea de codigo para calcular las piezas
+        $piezas = ($fraccion * 24) * $Std_Hr_efectivo;
         $kilos = round(($piezas * $Prod_Kg_Dia) / ($Std_Hr_efectivo * 24), 2);
 
         $cambio = $Cambios_Hilo; //si Cambios_Hilo = 1, asignamos 1
@@ -377,9 +375,8 @@ class PlaneacionController extends Controller
       } else {
         $fraccion = 1;
         // Días intermedios: fracción completa (1)
-        $piezas = round(($fraccion * 24) * $Std_Hr_efectivo, 2);
+        $piezas = ($fraccion * 24) * $Std_Hr_efectivo;
         $kilos = round(($piezas * $Prod_Kg_Dia) / ($Std_Hr_efectivo * 24), 2);
-
         $cambio = $Cambios_Hilo; //si Cambios_Hilo = 1, asignamos 1
         $rizo = 0; // Valor por defecto
         if ($aplic === 'RZ') {
@@ -429,6 +426,9 @@ class PlaneacionController extends Controller
 
     // Mostrar el resultado con dd()
     // AHORA VAMOS CON LAS FORMULAS RESTANTES;
+    //dd([
+    //'dias:' => $dias,
+    //]);
     //procedemos con las formulas de excel tomando en cuenta las proporciones de los dias de acuerdo a las fechas de inicio y fin
 
 
@@ -445,7 +445,7 @@ class PlaneacionController extends Controller
         'Eficiencia_Std' => $eficiencia,
         'Velocidad_STD' => $velocidad,
         'Hilo' =>  $request->input('hilo'),
-        'Calibre_Rizo' =>  $calibre_rizo ? $calibre_rizo : null,
+        'Calibre_Rizo' =>  $calibre_rizo ? (float) $calibre_rizo : null,
         'Calibre_Pie' =>  $calibre_pie ? $calibre_pie : null,
         'Calendario' => $request->input('calendario'),
         'Clave_Estilo' => $request->input('tamano') . $request->input('clave_ax'),
@@ -466,10 +466,9 @@ class PlaneacionController extends Controller
         'Largo_Crudo' => $modelo ? (float) $modelo->Largo : null,
         'Peso_Crudo' => $modelo->P_crudo ? (int) $modelo->P_crudo : null,
         'Luchaje' => $modelo ? (int) $modelo->Luchaje : null,
-        'CALIBRE_TRA' => $request->input('trama_0'),
+        'CALIBRE_TRA' => (float) $request->input('trama_0'),
         'Dobladillo' => $modelo ? $modelo->Tipo_plano : null,
         'PASADAS_TRAMA' =>  $modelo ? (int)$modelo->PASADAS : null,
-        'CALIBRE_TRA' => $request->input('trama_0'),
         'PASADAS_C1' => $modelo ? (int)$modelo->PASADAS_C1 : null,
         'PASADAS_C2' => $modelo ? (int)$modelo->PASADAS_C2 : null,
         'PASADAS_C3' => $modelo ? (int)$modelo->PASADAS_C3 : null,
