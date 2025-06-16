@@ -238,14 +238,6 @@ class PlaneacionController extends Controller
     $dias = [];
     $totalDias = 0;
 
-    //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-    //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-    //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-    //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-    //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-    //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-    //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-    //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
     //INICIAMOS LOS CALCULOS DE ACUERDO A LAS FORMULAS DE ARCHIVO EXCEL DE PEPE OWNER
     foreach ($periodo as $index => $dia) {
       $inicioDia = $dia->copy()->startOfDay();
@@ -297,7 +289,6 @@ class PlaneacionController extends Controller
 
         $combinacion1 =   ((((0.59 * (((float)$modelo->PASADAS_2 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('trama_0') != 0 ? (float) $request->input('trama_0') : 1)) * $piezas) / 1000;
         $combinacion2 =   ((((0.59 * (((float)$modelo->PASADAS_3 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('calibre_1') != 0 ? (float) $request->input('calibre_1') : 1)) * $piezas) / 1000;
-
         $combinacion3 =   ((((0.59 * (((float)$modelo->PASADAS_4 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('calibre_2') != 0 ? (float) $request->input('calibre_2') : 1)) * $piezas) / 1000;
         $combinacion4 =   ((((0.59 * (((float)$modelo->PASADAS_5 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $request->input('calibre_3') != 0 ? (float) $request->input('calibre_3') : 1)) * $piezas) / 1000;
         $Piel1 = ((((((((float) $modelo->Largo + (float) $modelo->Med_plano) / 100) * 1.055) * 0.00059) / ((0.00059 * 1) / (0.00059 / $calibre_pie))) *
@@ -430,9 +421,6 @@ class PlaneacionController extends Controller
     //'dias:' => $dias,
     //]);
     //procedemos con las formulas de excel tomando en cuenta las proporciones de los dias de acuerdo a las fechas de inicio y fin
-
-
-
     $nuevoRegistro = Planeacion::create(
       [
         'Cuenta' => (string) $request->input('cuenta_rizo'),
@@ -518,7 +506,6 @@ class PlaneacionController extends Controller
         // Aquí pueden ir más campos en el futuro
       ]
     );
-
 
     //una vez creado el nuevo registro, la info se almacena en la variable $nuevoRegistro, y con esa informacion obtenemos el num_registro (una vez ya generado el nuevo registro en TEJIDO_SCHEDULING)
     // Ahora puedes acceder al ID o cualquier otro valor generado automáticamente

@@ -116,7 +116,8 @@
                                     'Calibre_Rizo',
                                     'Calibre_Pie',
                                     'Calendario',
-                                    'Clave_Estilo',
+                                    //'Clave_Estilo',
+                                    'Clave_AX',
                                     'Tamano_AX',
                                     'Estilo_Alternativo',
                                     'Nombre_Producto',
@@ -184,6 +185,7 @@
                                     'Dif_vs_Compromiso',
                                     'id',
                                 ];
+
                             @endphp
 
                             @foreach ($headers as $index => $header)
@@ -222,6 +224,9 @@
                                             // Si el header es 'Hilo', dejar valor original sin formatear
                                             if ($header === 'Hilo') {
                                                 $formattedValue = $value;
+                                            } elseif ($header === 'Eficiencia_Std') {
+                                                // Multiplica por 100 y muestra como entero (0.78 => 78)
+                                                $formattedValue = intval($value * 100);
                                             } else {
                                                 // Lista de campos que deben mostrar fecha + hora
                                                 $camposConHora = ['Inicio_Tejido', 'Calc5', 'Fin_Tejido', 'Entrega'];
@@ -252,7 +257,7 @@
                                                 }
                                             }
                                         @endphp
-                                        @if (is_numeric($value) && intval($value) != $value && $header !== 'Hilo')
+                                        @if (is_numeric($value) && intval($value) != $value && $header !== 'Hilo' && $header !== 'Eficiencia_Std')
                                             <td class="small px-1 py-0.5 dec-hidden"
                                                 data-valor="{{ number_format($value, 2, '.', '') }}">
                                                 {{ intval($value) }}
@@ -429,9 +434,9 @@
         });
     </script>
     <!--*******************************************************************************************************************************************************************************************
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *********************************************************************************************************************************************************************************************-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *********************************************************************************************************************************************************************************************-->
     <!--SCRIPTS que implentan el funcionamiento de la tabla TIPO DE MOVIMIENTOS, se selecciona un registro, se obtiene el valor de id y con
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
 
     <script>
         let filaSeleccionada = null;
