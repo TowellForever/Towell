@@ -107,6 +107,7 @@ class PlaneacionController extends Controller
       'Entrega',
       'Dif_vs_Compromiso',
       'cantidad',
+      'Clave_AX',
     ];
 
     $query = DB::table('TEJIDO_SCHEDULING')

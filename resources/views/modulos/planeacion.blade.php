@@ -353,40 +353,6 @@
 
         });
     </script>
-    <!--Con este script todas las celdas del cuerpo de la tabla, son editables-->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            document.querySelectorAll("td").forEach(td => {
-                td.addEventListener("click", function() {
-                    if (this.querySelector("input")) return; // Evitar múltiples inputs
-
-                    let originalContent = this.innerText;
-                    let input = document.createElement("input");
-                    input.type = "text";
-                    input.value = originalContent;
-                    input.classList.add("w-full", "border", "p-1");
-
-                    input.addEventListener("blur", function() {
-                        td.innerText = this.value ||
-                            originalContent; // Guardar o restaurar valor
-                        // Aquí puedes agregar una función para guardar en la base de datos
-                        console.log("Nuevo valor:", this.value);
-                    });
-
-                    input.addEventListener("keydown", function(e) {
-                        if (e.key === "Enter") this.blur();
-                        if (e.key === "Escape") {
-                            td.innerText = originalContent;
-                        }
-                    });
-
-                    td.innerText = "";
-                    td.appendChild(input);
-                    input.focus();
-                });
-            });
-        });
-    </script>
 
     <script>
         // Mostrar modal
@@ -434,9 +400,9 @@
         });
     </script>
     <!--*******************************************************************************************************************************************************************************************
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *********************************************************************************************************************************************************************************************-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            *********************************************************************************************************************************************************************************************-->
     <!--SCRIPTS que implentan el funcionamiento de la tabla TIPO DE MOVIMIENTOS, se selecciona un registro, se obtiene el valor de id y con
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
 
     <script>
         let filaSeleccionada = null;
@@ -671,6 +637,7 @@
                 'Entrega',
                 'Dif_vs_Compromiso',
                 'id',
+                'Clave_AX',
             ]; // AJUSTA esto
 
             if (tabla) {
@@ -681,7 +648,10 @@
 
                         celdas.forEach((celda, index) => {
                             const clave = nombresColumnas[index];
-                            datosFila[clave] = celda.textContent.trim();
+                            // Esta línea es la clave:
+                            const valorConDecimales = celda.getAttribute('data-valor');
+                            datosFila[clave] = valorConDecimales ? valorConDecimales
+                            .trim() : celda.textContent.trim();
                         });
 
                         datosFilaSeleccionada = datosFila;
@@ -689,6 +659,7 @@
                     });
                 });
             }
+
 
             botonUnico.addEventListener("click", function() {
                 if (datosFilaSeleccionada) {
