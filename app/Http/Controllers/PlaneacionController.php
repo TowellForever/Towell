@@ -486,7 +486,7 @@ class PlaneacionController extends Controller
         'Plano' => $modelo ? (int) $modelo->Med_plano : null,
         'Cuenta_Pie' => $request->input('cuenta_pie'),
         'Clave_Color_Pie' => null,
-        'Color_Pie' => $modelo ? $modelo->OBS : null,
+        'Color_Pie' =>  null, // PENDIENTE, GENERABA UN SUPER ERROR  $modelo->OBS ? $modelo->OBS : null,
         'Peso_gr_m2' => is_numeric($Peso_gr_m2) ? number_format((float) str_replace(',', '.', $Peso_gr_m2), 2, '.', '') : null,
         'Dias_Ef' => is_numeric($Dias_Ef) ? number_format((float) str_replace(',', '.', $Dias_Ef), 2, '.', '') : null,
         'Prod_Kg_Dia' => is_numeric(str_replace(',', '.', $Prod_Kg_Dia1)) ? number_format((float) str_replace(',', '.', $Prod_Kg_Dia1), 2, '.', '') : null,
