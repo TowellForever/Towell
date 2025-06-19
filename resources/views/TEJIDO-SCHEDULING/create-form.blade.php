@@ -1,12 +1,21 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="mx-auto p-3 bg-white shadow rounded-lg mt-6 overflow-y-auto max-h-[600px]">
-        <h1 class="text-xl font-bold mb-4 text-gray-800 text-center">NUEVO REGISTRO TEJIDO SCHEDULING</h1>
+    <div class="mx-auto p-3 bg-white shadow rounded-lg overflow-y-auto max-h-[550px]">
+        <div class="relative w-full flex items-center  mb-2">
+            <!-- Línea horizontal -->
+            <div class="w-full border-t-8 border-gray-300"></div>
+
+            <!-- Título centrado sobre la línea -->
+            <span
+                class="absolute left-1/2 -translate-x-1/2 px-8 rounded-xl bg-blue-100 border-2 text-sm border-blue-300 shadow-lg font-semibold text-blue-800 tracking-wide uppercase"
+                style="top: 50%; transform: translate(-50%, -50%);">
+                DATOS GENERALES
+            </span>
+        </div>
         <form id="form-planeacion" action="{{ route('planeacion.store') }}" method="POST"
             class="grid grid-cols-4 gap-x-8 gap-y-4 fs-11">
             @csrf
-
             <div class="col-span-1 grid grid-cols-1 items-center">
                 <label for="no_flog" class="w-20 font-medium text-gray-700">No FLOG:</label>
                 <select id="no_flog" name="no_flog" class=" border border-gray-300 rounded px-2 py-1 select2-flog">
@@ -19,17 +28,7 @@
                 <input type="text" name="descripcion" id="descrip" class=" border border-gray-300 rounded px-2 py-1"
                     readonly>
             </div>
-
-            <div class="flex items-center">
-                <label for="telar" class="w-20 font-medium text-gray-700">TELAR:</label>
-                <select name="telar" id="telar" class="border border-gray-300 rounded px-2 py-1 text-sm" required>
-                    <option value="">-- SELECCIONA --</option>
-                    @foreach ($telares as $telar)
-                        <option value="{{ $telar->telar }}"> {{ $telar->telar }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="flex items-center mb-4">
+            <div class="flex items-center ">
                 <label for="clave_ax" class="w-20 font-medium text-gray-700">CLAVE AX:</label>
                 <select id="clave_ax" name="clave_ax"
                     class="w-34 border border-gray-300 rounded px-2 py-1 select2-modelos">
@@ -47,6 +46,49 @@
                 <input type="text" name="tamano" id="tamano" class="border rounded px-2 py-1" required>
             </div>
             <div class="flex items-center">
+                <label for="saldo" class="w-20 font-medium text-gray-700">CANTIDAD:</label>
+                <input type="number" step="0.01" name="saldo" id="saldo"
+                    class=" border border-gray-300 rounded px-2 py-1" required>
+            </div>
+
+            <div class="flex items-center">
+                <label for="calendario" class="w-20 font-medium text-gray-700">CALENDARIO:</label>
+                <select name="calendario" id="calendario" class="w-36 border border-gray-300 rounded px-2 py-1">
+                    <option value="Calendario Tej1">Calendario Tej1</option>
+                    <option value="Calendario Tej2">Calendario Tej2 </option>
+                    <option value="Calendario Tej3">Calendario Tej3 </option>
+                    <option value="Calendario Tej4">Calendario Tej4 </option>
+                    <option value="Calendario Tej5">Calendario Tej5 </option>
+                </select>
+            </div>
+
+            <div class="flex items-center">
+                <label for="aplicacion" class="w-20 font-medium text-gray-700">APLICACIÓN:</label>
+                <select name="aplicacion" id="aplicacion" class="w-36 border border-gray-300 rounded px-2 py-1">
+                    <option value="RZ">RZ</option>
+                    <option value="RZ2">RZ2</option>
+                    <option value="RZ3">RZ3</option>
+                    <option value="BOR">BOR</option>
+                    <option value="EST">EST</option>
+                    <option value="DC">DC</option>
+                </select>
+            </div>
+
+            <div class="flex items-center">
+                <label for="hilo" class="w-20 font-medium text-gray-700">HILO:</label>
+                <select name="hilo" id="hilo" class="w-36 border border-gray-300 rounded px-2 py-1">
+                    <option value="H">H</option>
+                    <option value="T20 PEINADO">T20 PEINADO</option>
+                    <option value="A12">RZ3</option>
+                    <option value="Hrpre">Hrpre</option>
+                    <option value="A20">A20</option>
+                    <option value="Fil600 (virgen)/A12">Fil600 (virgen)/A12</option>
+                    <option value="O16">O16</option>
+                    <option value="HR">HR</option>
+                    <option value="Fil (reciclado-secual)">Fil (reciclado-secual)</option>
+                </select>
+            </div>
+            <div class="flex items-center">
                 <label for="cuenta_rizo" class="w-20 font-medium text-gray-700">CUENTA RIZO:</label>
                 <input type="text" name="cuenta_rizo" id="cuenta_rizo" class=" border border-gray-300 rounded px-2 py-1"
                     required>
@@ -59,12 +101,13 @@
 
             <div class="flex items-center">
                 <label for="cuenta_pie" class="w-20 font-medium text-gray-700">CUENTA PIE:</label>
-                <input type="text" name="cuenta_pie" id="cuenta_pie" class=" border border-gray-300 rounded px-2 py-1"
-                    required>
+                <input type="text" name="cuenta_pie" id="cuenta_pie"
+                    class=" border border-gray-300 rounded px-2 py-1" required>
             </div>
             <div class="flex items-center">
                 <label for="calibre_pie" class="w-20 font-medium text-gray-700">CALIBRE PIE:</label>
-                <input type="text" name="calibre_pie" id="calibre_pie" class=" border border-gray-300 rounded px-2 py-1">
+                <input type="text" name="calibre_pie" id="calibre_pie"
+                    class=" border border-gray-300 rounded px-2 py-1">
             </div>
 
             <div class="flex items-center">
@@ -127,125 +170,79 @@
                 <input type="text" name="color_5" id="color_5" class=" border border-gray-300 rounded px-2 py-1">
             </div>
 
-            <div class="flex items-center">
-                <label for="saldo" class="w-20 font-medium text-gray-700">CANTIDAD:</label>
-                <input type="number" step="0.01" name="saldo" id="saldo"
-                    class=" border border-gray-300 rounded px-2 py-1" required>
+            <!-- - - - - - - - - - - -  - - - - - - - - - - DATOS DEL TELAR  -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  - - - - -->
+            <div class="col-span-4">
+                <!-- Aquí va el divisor -->
+                <div class="relative w-full flex items-center">
+                    <div class="w-full border-t-8 border-gray-300"></div>
+                    <span
+                        class="absolute left-1/2 -translate-x-1/2 px-8 rounded-xl bg-blue-100 border-2 border-blue-300 shadow-lg text-sm font-semibold text-blue-800 tracking-wide uppercase"
+                        style="top: 50%; transform: translate(-50%, -50%);">
+                        DATOS DEL TELAR
+                    </span>
+                </div>
+                <div class="overflow-x-auto rounded-lg shadow-lg bg-white p-1">
+                    <!-- Botón agregar fila -->
+                    <div class="flex justify-end">
+                        <button type="button" id="add-row-btn"
+                            class="w-2 justify-center flex items-center px-4 py-1.5 rounded-full bg-blue-600 hover:bg-blue-700 shadow font-medium text-base transition">
+                            <span class="">➕</span> <span class="hidden sm:inline"></span>
+                        </button>
+                    </div>
+                    <table class="min-w-full text-xs">
+                        <thead>
+                            <tr class="bg-gray-100 text-gray-700 font-semibold text-center uppercase tracking-wide">
+                                <th class="py-2 px-4">TELAR</th>
+                                <th class="py-2 px-4">COMPROMISO TEJIDO</th>
+                                <th class="py-2 px-4">FECHA CLIENTE</th>
+                                <th class="py-2 px-4">FECHA INICIO</th>
+                                <th class="py-2 px-4">FECHA FIN</th>
+                                <th class="py-2 px-4">FECHA ENTREGA</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-registros">
+                            <tr class="border-b hover:bg-blue-50">
+                                <td class="py-1 px-4 text-center">
+                                    <select name="telar[]" class="border border-gray-300 rounded px-2 py-1 text-xs w-full"
+                                        required>
+                                        <option value="">Seleccionar</option>
+                                        @foreach ($telares as $telar)
+                                            <option value="{{ $telar->telar }}">{{ $telar->telar }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td class="py-1 px-4 text-center">
+                                    <input type="date" name="fecha_compromiso_tejido[]"
+                                        class="border border-gray-300 rounded px-2 py-1 w-full" required>
+                                </td>
+                                <td class="py-1 px-4 text-center">
+                                    <input type="date" name="fecha_cliente[]"
+                                        class="border border-gray-300 rounded px-2 py-1 w-full">
+                                </td>
+                                <td class="py-1 px-4 text-center">
+                                    <input type="datetime-local" name="fecha_inicio[]"
+                                        class="border border-gray-300 rounded px-2 py-1 w-full" required>
+                                </td>
+                                <td class="py-1 px-4 text-center">
+                                    <input type="datetime-local" name="fecha_fin[]"
+                                        class="border border-gray-300 rounded px-2 py-1 w-full" required>
+                                </td>
+                                <td class="py-1 px-4 text-center">
+                                    <input type="date" name="fecha_entrega[]"
+                                        class="border border-gray-300 rounded px-2 py-1 w-full">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-
-            <div class="flex items-center">
-                <label for="calendario" class="w-20 font-medium text-gray-700">CALENDARIO:</label>
-                <select name="calendario" id="calendario" class="w-36 border border-gray-300 rounded px-2 py-1">
-                    <option value="Calendario Tej1">Calendario Tej1</option>
-                    <option value="Calendario Tej2">Calendario Tej2 </option>
-                    <option value="Calendario Tej3">Calendario Tej3 </option>
-                    <option value="Calendario Tej4">Calendario Tej4 </option>
-                    <option value="Calendario Tej5">Calendario Tej5 </option>
-                </select>
-            </div>
-
-            <div class="flex items-center">
-                <label for="aplicacion" class="w-20 font-medium text-gray-700">APLICACIÓN:</label>
-                <select name="aplicacion" id="aplicacion" class="w-36 border border-gray-300 rounded px-2 py-1">
-                    <option value="RZ">RZ</option>
-                    <option value="RZ2">RZ2</option>
-                    <option value="RZ3">RZ3</option>
-                    <option value="BOR">BOR</option>
-                    <option value="EST">EST</option>
-                    <option value="DC">DC</option>
-                </select>
-            </div>
-
-            <div class="flex items-center">
-                <label for="hilo" class="w-20 font-medium text-gray-700">HILO:</label>
-                <select name="hilo" id="hilo" class="w-36 border border-gray-300 rounded px-2 py-1">
-                    <option value="H">H</option>
-                    <option value="T20 PEINADO">T20 PEINADO</option>
-                    <option value="A12">RZ3</option>
-                    <option value="Hrpre">Hrpre</option>
-                    <option value="A20">A20</option>
-                    <option value="Fil600 (virgen)/A12">Fil600 (virgen)/A12</option>
-                    <option value="O16">O16</option>
-                    <option value="HR">HR</option>
-                    <option value="Fil (reciclado-secual)">Fil (reciclado-secual)</option>
-                </select>
-            </div>
-
-            <div class="flex items-center">
-                <label for="fecha_scheduling" class="w-20 font-medium text-gray-700">FECHA SCHEDULING:</label>
-                <input type="date" name="fecha_scheduling" id="fecha_scheduling"
-                    class=" border border-gray-300 rounded px-2 py-1">
-            </div>
-
-            <div class="flex items-center">
-                <label for="fecha_inn" class="w-20 font-medium text-gray-700">FECHA INN:</label>
-                <input type="date" name="fecha_inn" id="fecha_inn" class=" border border-gray-300 rounded px-2 py-1">
-            </div>
-
-            <div class="flex items-center">
-                <label for="fecha_compromiso_tejido" class="w-20 font-medium text-gray-700">COMPROMISO TEJIDO:</label>
-                <input type="date" name="fecha_compromiso_tejido" id="fecha_compromiso_tejido"
-                    class=" border border-gray-300 rounded px-2 py-1">
-            </div>
-
-            <div class="flex items-center">
-                <label for="fecha_cliente" class="w-20 font-medium text-gray-700">FECHA CLIENTE:</label>
-                <input type="date" name="fecha_cliente" id="fecha_cliente"
-                    class="border border-gray-300 rounded px-2 py-1">
-            </div>
-
-            <div class="flex items-center">
-                <label for="day_scheduling" class="w-20 font-medium text-gray-700">DAY SCHEDULING:</label>
-                <input type="date" name="day_scheduling" id="day_scheduling"
-                    class=" border border-gray-300 rounded px-2 py-1">
-            </div>
-
-            <div class="flex items-center ">
-                <label for="fecha_inicio" class="w-20 font-medium text-gray-700">FECHA INICIO:</label>
-                <input type="datetime-local" name="fecha_inicio" id="fecha_inicio"
-                    class="border border-gray-300 rounded px-2 py-1" required>
-            </div>
-
-            <div class="flex items-center">
-                <label for="fecha_fin" class="w-20 font-medium text-gray-700">FECHA FIN:</label>
-                <input type="datetime-local" name="fecha_fin" id="fecha_fin"
-                    class="border border-gray-300 rounded px-2 py-1" required>
-            </div>
-
-
-            <div class="flex items-center">
-                <label for="fecha_entrega" class="w-18 font-medium text-gray-700">FECHA ENTREGA:</label>
-                <input type="date" name="fecha_entrega" id="fecha_entrega"
-                    class=" border border-gray-300 rounded px-2 py-1">
-            </div>
-
-            <div class="col-span-4 text-right mt-4 ">
+            <div class="col-span-4 text-right  ">
                 <button type="submit" class="w-1/6 bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700 text-sm">
                     GUARDAR
                 </button>
             </div>
+
         </form>
-
-        <button onclick="mostrarDataTelarEnTextarea()" class="w-1/6 mt-2 px-4 py-2 bg-blue-500 text-white rounded">
-            Mostrar datos del telar
-        </button>
-
-        <button onclick="mostrarDataModeloEnTextarea()" class="w-1/6 mt-2 px-4 py-2 bg-blue-500 text-white rounded">
-            Mostrar datos del modelo
-        </button>
-
-        <button onclick="mostrarDataFLOGEnTextarea()" class="w-1/6 mt-2 px-4 py-2 bg-blue-500 text-white rounded">
-            Mostrar datos del modelo
-        </button>
-
-        <div class="mt-1">
-            <label for="datos_comodin" class="block text-lg font-semibold text-gray-800 mb-2">DATOS COMODÍN:</label>
-            <textarea id="datos_comodin" name="datos_comodin"
-                class="w-full h-[300px] border border-gray-300 rounded-lg p-4 text-sm font-mono resize-y bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-                placeholder="Aquí aparecerán los datos extraídos...">
-        </textarea>
-        </div>
-
     </div>
 
     <!--SCRIPS JS ********************************************************************************************************************************-->
@@ -440,9 +437,7 @@
             });
         });
     </script>
-    <!--
-                                                                                                                                                                                                                                                                                                    Escucha cuando el usuario escribe en cantidad y actualiza saldo con el mismo valor en tiempo real.
-                                                                                                                                                                                                                                                                                                    -->
+    <!--   Escucha cuando el usuario escribe en cantidad y actualiza saldo con el mismo valor en tiempo real.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const cantidadInput = document.getElementById('cantidad');
@@ -523,37 +518,24 @@
             });
         });
     </script>
+    <!-- JS para agregar filas dinámicamente -->
+    <script>
+        document.getElementById('add-row-btn').addEventListener('click', function() {
+            let tbody = document.getElementById('tabla-registros');
+            let firstRow = tbody.querySelector('tr');
+            // Clona la primer fila
+            let newRow = firstRow.cloneNode(true);
 
+            // Limpia los valores de los inputs y selects en la fila clonada
+            newRow.querySelectorAll('input, select').forEach(function(el) {
+                if (el.tagName === 'SELECT') {
+                    el.selectedIndex = 0;
+                } else {
+                    el.value = '';
+                }
+            });
 
-    <!-- scripts TEMPORALES para mostrar varibles globales, BORRAR!!!!! DESPUÉS-->
-    <script>
-        function mostrarDataTelarEnTextarea() {
-            if (dataTelar) {
-                const textarea = document.getElementById('datos_comodin');
-                textarea.value = JSON.stringify(dataTelar, null, 2); // Formateado bonito
-            } else {
-                alert('No hay datos del telar seleccionados.');
-            }
-        }
-    </script>
-    <script>
-        function mostrarDataModeloEnTextarea() {
-            if (dataModelo) {
-                const textarea = document.getElementById('datos_comodin');
-                textarea.value = JSON.stringify(dataModelo, null, 2); // Formateado bonito
-            } else {
-                alert('No hay datos del modelo seleccionados.');
-            }
-        }
-    </script>
-    <script>
-        function mostrarDataFLOGEnTextarea() {
-            if (dataFlog) {
-                const textarea = document.getElementById('datos_comodin');
-                textarea.value = JSON.stringify(dataFlog, null, 2); // Formateado bonito
-            } else {
-                alert('No hay datos del modelo seleccionados.');
-            }
-        }
+            tbody.appendChild(newRow);
+        });
     </script>
 @endsection

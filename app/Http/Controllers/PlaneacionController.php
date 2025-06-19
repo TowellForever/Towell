@@ -657,3 +657,10 @@ class PlaneacionController extends Controller
     return response()->json($movimientos);
   }
 }
+
+/*
+1-121            Registros originales
+627-629          Registros sin datos en 2da tabla
+643->adelante... Registros con data correcta en 2da tabla
+Pendiente: registro con id 122 (último)
+*/
