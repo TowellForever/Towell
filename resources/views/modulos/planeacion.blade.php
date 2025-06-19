@@ -23,7 +23,7 @@
 
 @section('content')
     <div
-        class="w-auto text-white text-xs mt-2 mb-1 flex overflow-x-auto space-x-2 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-300 p-1 mt-1 sm:mt-2 sm:p-0">
+        class="w-auto text-white text-xs mt-2 mb-1 flex overflow-x-auto overflow space-x-2 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-300 p-1 mt-1 sm:mt-2 sm:p-0">
 
         <!-- Botón de búsqueda (lupa) -->
         <button id="search-toggle" class="w-16 rounded-full text-white hover:bg-white sm:mt-8 flex">
@@ -95,10 +95,10 @@
         </div>
     </div>
 
-    <div class="mx-auto text-sm overflow-y-auto max-h-[80vh]">
-        <h1 class="text-3xl font-bold text-center -mt-8">PLANEACIÓN</h1>
+    <div class="mx-auto text-sm ">
         <div class="table-container relative">
-            <div class="table-container-plane table-wrapper bg-white shadow-lg rounded-lg p-1">
+            <div class="table-container-plane table-wrapper bg-white shadow-lg rounded-lg p-1
+            bigScroll">
                 <table id="tablaPlaneacion" class="celP plane-table border border-gray-300">
                     <thead>
                         <tr class="plane-thead-tr text-white">
@@ -277,7 +277,7 @@
             </div>
         </div>
         <div id="contenedorTabla2" class="text-center" style="display: none;">
-            <div class="table-wrapper bg-white shadow-lg rounded-lg p-1 overflow-x-auto">
+            <div class="table-wrapper bg-white shadow-lg rounded-lg p-1 ">
                 <table id="tablaDatosPlaneacion" class="w-full border border-gray-300 text-xs table-fixed">
                     <thead>
                         <tr class="bg-gray-800 text-white text-center">
@@ -402,9 +402,9 @@
         });
     </script>
     <!--*******************************************************************************************************************************************************************************************
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            *********************************************************************************************************************************************************************************************-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    *********************************************************************************************************************************************************************************************-->
     <!--SCRIPTS que implentan el funcionamiento de la tabla TIPO DE MOVIMIENTOS, se selecciona un registro, se obtiene el valor de id y con
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
 
     <script>
         let filaSeleccionada = null;
@@ -553,7 +553,7 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const tabla = document.getElementById("tablaPlaneacion");
+            const tabla = document.getElementById("");
             const botonUnico = document.getElementById("btnUnico");
             let datosFilaSeleccionada = null;
 

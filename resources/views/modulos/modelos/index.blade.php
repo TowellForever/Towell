@@ -3,16 +3,30 @@
 
 @section('content')
     <div class="container mx-auto">
-        <h1 class="text-3xl font-bold text-center mb-6">Lista de Modelos</h1>
+        <h1 class="text-3xl font-bold text-center -mt-6">Lista de Modelos</h1>
 
-        <div class="d-flex justify-content-center mt-4">
+        <div class="flex justify-between items-center w-full -mt-5 mb-1">
+            <!--FILTROS DE BÚSQUEDA ***************************************************************************************************************-->
+            <div class="flex items-center space-x-3 -mt-2">
+                <!-- Botón de búsqueda (lupa) -->
+                <button id="search-toggle" class="p-1 w-16 rounded-full bg-blue-500 text-white hover:bg-blue-600 mr-2">
+                    <i class="fas fa-search text-3xl"></i>
+                </button>
+
+                <!-- Botón de restablecer (cruz o refresh) -->
+                <div class="w-auto text-left">
+                    <button id="reset-search" class="p-2 rounded-full bg-red-500 text-white hover:bg-red-600 text-xs">
+                        Restablecer búsqueda
+                    </button>
+                </div>
+            </div>
             @php
                 $totalPages = ceil($total / $perPage);
                 $startPage = max(1, $currentPage - 5);
                 $endPage = min($totalPages, $currentPage + 5);
             @endphp
 
-            <nav>
+            <nav class="">
                 <ul class="pagination">
                     {{-- Botón Anterior --}}
                     @if ($currentPage > 1)
@@ -41,20 +55,6 @@
             </nav>
         </div>
 
-        <!--FILTROS DE BÚSQUEDA ***************************************************************************************************************-->
-        <div class="flex justify-center sm:mt-4 mb-1 w-1/5">
-            <!-- Botón de búsqueda (lupa) -->
-            <button id="search-toggle" class="p-1 w-16 rounded-full bg-blue-500 text-white hover:bg-blue-600 mr-5">
-                <i class="fas fa-search text-3xl"></i>
-            </button>
-
-            <!-- Botón de restablecer (cruz o refresh) -->
-            <div class="w-auto text-left">
-                <button id="reset-search" class="p-2 rounded-full bg-red-500 text-white hover:bg-red-600 mt-2 text-xs">
-                    Restablecer búsqueda
-                </button>
-            </div>
-        </div>
 
         <!-- Modal -->
         <div id="search-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
@@ -103,8 +103,8 @@
 
         <!--FIN DE FILTROS DE BÚSQUEDA ***************************************************************************************************************-->
         <!--inicia tabla MODULOS-->
-        <div class="overflow-x-auto overflow-y-auto table-container-plane table-wrapper bg-white shadow-lg rounded-lg p-1"
-            style="max-height: calc(100vh - 200px);">
+        <div class="overflow-x-auto overflow-y-auto bigScroll table-container-plane table-wrapper bg-white shadow-lg rounded-lg p-1"
+            style="max-height: calc(100vh - 100px);">
             <table class="min-w-full celP plane-table border border-gray-300 text-center">
                 <thead>
                     <tr class="plane-thead-tr text-white text-xs">

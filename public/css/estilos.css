@@ -535,3 +535,25 @@ table.celP td {
 .impresion-UE-2 {
     font-size: 12px;
 }
+
+
+/*Estilos para SCROLL más grueso - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+/*- - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+.bigScroll::-webkit-scrollbar {
+    width: 15px;
+    /* Grosor scroll vertical */
+    height: 15px;
+    /* Grosor scroll horizontal */
+}
+
+.bigScroll::-webkit-scrollbar-thumb {
+    background: #2d9a12;
+    border-radius: 2px;
+    border: 1px solid #c1c950;
+    /* Opcional: borde para que se vea más "suave" */
+}
+
+.bigScroll::-webkit-scrollbar-track {
+    background: #e3f9e0;
+    border-radius: 8px;
+}

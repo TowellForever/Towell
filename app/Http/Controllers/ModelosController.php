@@ -25,7 +25,7 @@ class ModelosController extends Controller
     }
 
     $page = $request->input('page', 1);
-    $perPage = 10;
+    $perPage = 30;
 
     $results = $query->get(); // Recuperamos todos los datos compatibles con SQL Server 2008
     $total = $results->count();
