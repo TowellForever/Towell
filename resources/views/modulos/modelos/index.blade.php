@@ -3,7 +3,7 @@
 
 @section('content')
     <div class="container mx-auto">
-        <h1 class="text-3xl font-bold text-center -mt-6">Lista de Modelos</h1>
+        <h1 class="text-3xl font-bold text-center -mt-6">LISTA DE MODELOS</h1>
 
         <div class="flex justify-between items-center w-full -mt-5 mb-1">
             <!--FILTROS DE BÚSQUEDA ***************************************************************************************************************-->
