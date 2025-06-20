@@ -47,10 +47,26 @@ class ModelosController extends Controller
   //metodos para FLOGS
   public function buscarFlogso(Request $request)
   {
-    $query = $request->input('q');
+    $query = $request->input('fingered');
 
+    // Conexión y búsqueda en la tabla con LIKE para coincidencias parciales
     $resultados = DB::connection('sqlsrv_ti')
-      ->table('TWFLOGSTABLE')
+      ->table('TWFLOGSITEMLINE')
+      ->select('INVENTSIZEID', 'ITEMID', 'IDFLOG', 'ITEMNAME')
+      ->where('IDFLOG', 'like', '%' . $query . '%') // <-- Esto busca coincidencias parciales
+      ->orderBy('IDFLOG', 'asc')
+      ->get();
+
+    return response()->json($resultados);
+  }
+}
+
+
+/* Anterior forma de buscar flogs
+  public function buscarFlogso(Request $request){
+    $query = $request->input('fingered');
+    $resultados = DB::connection('sqlsrv_ti')
+      ->table('TWFLOGSITEMLINE')
       ->select('IDFLOG', 'TIPOPEDIDO', 'NAMEPROYECT', 'ESTADOFLOG', 'CUSTNAME')
       ->whereIn('ESTADOFLOG', [3, 4, 5, 21])
       ->where('DATAAREAID', 'pro')
@@ -66,4 +82,6 @@ class ModelosController extends Controller
 
     return response()->json($resultados);
   }
-}
+ 
+ 
+ */

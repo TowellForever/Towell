@@ -145,7 +145,7 @@ class PlaneacionController extends Controller
   // STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE
   public function store(Request $request)
   {
-    //dd($request->all()); // ✅ Imprime todos los datos del formulario
+    dd($request->all()); // ✅ Imprime todos los datos del formulario
     // Crear nuevo registro con datos actuales y dejar los demás como null
 
     //traigo los datos faltantes para la creacion de un nuevo registro en la tabla TEJIDO_SCHEDULING
@@ -606,7 +606,7 @@ class PlaneacionController extends Controller
   // funcionando?
   public function buscarModelos(Request $request)
   {
-    $search = $request->input('q');
+    $search = $request->input('datosUser');
 
     $resultados = DB::table('MODELOS')
       ->select('CLAVE_AX')

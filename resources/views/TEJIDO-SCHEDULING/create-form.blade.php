@@ -70,9 +70,12 @@
                 <label for="color_4" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 4:</label>
                 <input type="text" name="color_4" id="color_4" class=" border border-gray-300 rounded px-1 py-0.5">
             </div>
-            <div class="flex items-center">
-                <label for="tamano" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TAMAÑO:</label>
-                <input type="text" name="tamano" id="tamano" class="border rounded px-1 py-0.5 -mb-1" required>
+            <div class="flex items-center ">
+                <label for="clave_ax" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CLAVE AX:</label>
+                <select id="clave_ax" name="clave_ax"
+                    class="w-34 border border-gray-300 rounded px-1 py-0.5 select2-modelos">
+                    <option value="">-- ................................... --</option>
+                </select>
             </div>
             <div class="flex items-center">
                 <label for="aplicacion" class="w-16 font-medium text-gray-700 fs-9 -mb-1">APLICACIÓN:</label>
@@ -100,12 +103,9 @@
                 <input type="number" step="0.01" name="calibre_5" id="calibre_5"
                     class=" border border-gray-300 rounded px-1 py-0.5">
             </div>
-            <div class="flex items-center ">
-                <label for="clave_ax" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CLAVE AX:</label>
-                <select id="clave_ax" name="clave_ax"
-                    class="w-34 border border-gray-300 rounded px-1 py-0.5 select2-modelos">
-                    <option value="">-- ................................... --</option>
-                </select>
+            <div class="flex items-center">
+                <label for="tamano" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TAMAÑO:</label>
+                <input type="text" name="tamano" id="tamano" class="border rounded px-1 py-0.5 -mb-1" required>
             </div>
             <div class="flex items-center">
                 <label for="hilo" class="w-16 font-medium text-gray-700 fs-9 -mb-1">HILO:</label>
@@ -134,6 +134,30 @@
                 <input type="text" name="color_5" id="color_5" class=" border border-gray-300 rounded px-1 py-0.5">
             </div>
 
+            <div class="flex items-center">
+                <label for="cuenta_rizo" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CUENTA RIZO:</label>
+                <input type="number" name="cuenta_rizo" id="cuenta_rizo"
+                    class=" border border-gray-300 rounded px-1 py-0.5">
+            </div>
+
+            <div class="flex items-center">
+                <label for="calibre_rizo" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CALIBRE RIZO:</label>
+                <input type="number" name="calibre_rizo" id="calibre_rizo"
+                    class=" border border-gray-300 rounded px-1 py-0.5">
+            </div>
+
+            <div class="flex items-center">
+                <label for="cuenta_pie" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CUENTA PIE:</label>
+                <input type="number" name="cuenta_pie" id="cuenta_pie"
+                    class=" border border-gray-300 rounded px-1 py-0.5">
+            </div>
+
+            <div class="flex items-center">
+                <label for="calibre_pie" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CALIRBE PIE:</label>
+                <input type="number" name="calibre_pie" id="calibre_pie"
+                    class=" border border-gray-300 rounded px-1 py-0.5">
+            </div>
+
             <!-- - - - - - - - - - - -  - - - - - - - - - - DATOS DEL TELAR  -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  - - - - -->
             <div class="col-span-5">
                 <!-- Aquí va el divisor -->
@@ -147,10 +171,17 @@
                 </div>
                 <div class="overflow-x-auto rounded-lg shadow-lg bg-white p-1">
                     <!-- Botón agregar fila -->
-                    <div class="flex justify-end">
+                    <!-- Contenedor de botones -->
+                    <div class="flex justify-end space-x-2">
+                        <!-- Botón agregar fila -->
                         <button type="button" id="add-row-btn"
                             class="w-2 justify-center flex items-center px-3 py-1 rounded-full bg-blue-600 hover:bg-blue-700 shadow font-medium text-base transition">
-                            <span class="">➕</span> <span class="hidden sm:inline"></span>
+                            <span>➕</span>
+                        </button>
+                        <!-- Botón eliminar última fila -->
+                        <button type="button" id="remove-row-btn"
+                            class="w-2 justify-center flex items-center px-3 py-1 rounded-full bg-red-600 hover:bg-red-700 shadow font-medium text-base transition">
+                            <span>🗑️</span>
                         </button>
                     </div>
                     <table class="min-w-full text-xss">
@@ -158,54 +189,54 @@
                             <tr class="bg-gray-100 text-gray-700 font-semibold text-center uppercase tracking-wide">
                                 <th class="py-1 px-0.5">TELAR</th>
                                 <th class="py-1 px-0.5">CANTIDAD</th>
-                                <th class="py-1 px-0.5">COMPROMISO TEJIDO</th>
-                                <th class="py-1 px-0.5">FECHA CLIENTE</th>
                                 <th class="py-1 px-0.5">FECHA INICIO</th>
                                 <th class="py-1 px-0.5">FECHA FIN</th>
+                                <th class="py-1 px-0.5">COMPROMISO TEJIDO</th>
+                                <th class="py-1 px-0.5">FECHA CLIENTE</th>
                                 <th class="py-1 px-0.5">FECHA ENTREGA</th>
                             </tr>
                         </thead>
                         <tbody id="tabla-registros">
                             <tr class="border-b hover:bg-blue-50">
-                                <td class="py-1 px-4 text-center">
-                                    <select name="telar[]"
-                                        class="border border-gray-300 rounded px-1 py-0.5 text-xs w-full" required>
+                                <td class="py-1 text-center">
+                                    <select name="telar[]" class="border border-gray-300 rounded px-1 py-0.5 text-xs w-20"
+                                        required>
                                         <option value="">Seleccionar</option>
                                         @foreach ($telares as $telar)
                                             <option value="{{ $telar->telar }}">{{ $telar->telar }}</option>
                                         @endforeach
                                     </select>
                                 </td>
-                                <td class="py-1 px-4 text-center">
+                                <td class="py-1  text-center">
                                     <input type="number" step="0.01" name="cantidad"
-                                        class="border border-gray-300 rounded px-1 py-0.5 w-full" required>
+                                        class="border border-gray-300 rounded px-1 py-0.5 w-20">
                                 </td>
-                                <td class="py-1 px-4 text-center">
-                                    <input type="date" name="fecha_compromiso_tejido[]"
-                                        class="border border-gray-300 rounded px-1 py-0.5 w-full" required>
-                                </td>
-                                <td class="py-1 px-4 text-center">
-                                    <input type="date" name="fecha_cliente[]"
-                                        class="border border-gray-300 rounded px-1 py-0.5 w-full">
-                                </td>
-                                <td class="py-1 px-4 text-center">
+                                <td class="py-1  text-center">
                                     <input type="datetime-local" name="fecha_inicio[]"
-                                        class="border border-gray-300 rounded px-1 py-0.5 w-full" required>
+                                        class="border border-gray-300 rounded px-1 py-0.5 w-34">
                                 </td>
-                                <td class="py-1 px-4 text-center">
+                                <td class="py-1 text-center">
                                     <input type="datetime-local" name="fecha_fin[]"
-                                        class="border border-gray-300 rounded px-1 py-0.5 w-full" required>
+                                        class="border border-gray-300 rounded px-1 py-0.5 w-34">
                                 </td>
-                                <td class="py-1 px-4 text-center">
-                                    <input type="date" name="fecha_entrega[]"
-                                        class="border border-gray-300 rounded px-1 py-0.5 w-full">
+                                <td class="py-1 text-center">
+                                    <input type="datetime-local" name="fecha_compromiso_tejido[]"
+                                        class="border border-gray-300 rounded px-1 py-0.5 w-34">
+                                </td>
+                                <td class="py-1 text-center">
+                                    <input type="datetime-local" name="fecha_cliente[]"
+                                        class="border border-gray-300 rounded px-1 py-0.5 w-34">
+                                </td>
+                                <td class="py-1 text-center">
+                                    <input type="datetime-local" name="fecha_entrega[]"
+                                        class="border border-gray-300 rounded px-1 py-0.5 w-34">
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-            <div class="col-span-5 text-right  ">
+            <div class="col-span-5 text-right -mt-2 -mb-2 ">
                 <button type="submit" class="w-1/6 bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700 text-sm">
                     GUARDAR
                 </button>
@@ -240,7 +271,7 @@
                     delay: 250,
                     data: function(params) {
                         return {
-                            q: params.term
+                            datosUser: params.term
                         };
                     },
                     processResults: function(data) {
@@ -411,20 +442,20 @@
             });
         });
     </script>
-
+    <!--FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS-->
     <script>
         let dataFlog = null; // almacena los datos encontrados de acuerdo a lo que haya seleccionado el usuario en No. FLOG
         $(document).ready(function() {
             // SELECT2 para No FLOG
             $('#no_flog').select2({
-                placeholder: '-- Selecciona No FLOG --',
+                placeholder: '-- Ingresa un Flog --',
                 ajax: {
                     url: '{{ route('flog.buscar') }}', // La nueva ruta que vas a crear
                     dataType: 'json',
                     delay: 250,
                     data: function(params) {
                         return {
-                            q: params.term // término de búsqueda
+                            fingered: params.term // término de búsqueda
                         };
                     },
                     processResults: function(data) {
@@ -432,7 +463,7 @@
                             results: data.map(function(item) {
                                 return {
                                     id: item.IDFLOG,
-                                    text: `${item.IDFLOG} | ${item.TIPOPEDIDO} | ${item.NAMEPROYECT} | ${item.ESTADOFLOG} | ${item.CUSTNAME}`
+                                    text: ` ${item.INVENTSIZEID} | ${item.ITEMID} | ${item.ITEMNAME} `
                                 };
 
                             })
@@ -440,7 +471,82 @@
                     },
                     cache: true
                 },
-                minimumInputLength: 2
+                minimumInputLength: 2 // minimo de caracteres a ingresar para realizar la busqueda c:
+            });
+            // 🧠 Cuando el usuario selecciona un FLOGSO, lanzamos la búsqueda y traemos sus datos
+            $('#no_flog').on('select2:select', function(e) {
+                const flogso = $('#no_flog').val();
+
+                if (flogso) {
+                    console.log('Buscando con:', flogso);
+
+                    fetch(
+                            `/modelo/detalle?flogso=${flogso}`
+                        )
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data) {
+                                console.log('Modelo encontrado:', data);
+                                // Aquí acomodo los campos como requiera, son los datos que envio el BACK como JSON (registro encontrado en modelos)
+                                $('#trama_0').val(!isNaN(parseFloat(data.Tra)) ? parseFloat(data.Tra)
+                                    .toFixed(2) : '');
+
+                                $('#color_0').val((data.OBS_A_1 ?? ''));
+
+                                $('#calibre_1').val(!isNaN(parseFloat(data.Hilo_A_1)) ? parseFloat(data
+                                    .Hilo_A_1).toFixed(2) : '');
+
+                                $('#color_1').val((data.OBS_A_2 ?? ''));
+
+                                $('#calibre_2').val(!isNaN(parseFloat(data.Hilo_A_2)) ? parseFloat(data
+                                    .Hilo_A_2).toFixed(2) : '');
+
+                                $('#color_A_2').val((data.OBS_A_3 ?? ''));
+
+                                $('#calibre_3').val(!isNaN(parseFloat(data.Hilo_A_3)) ? parseFloat(data
+                                    .Hilo_A_3).toFixed(2) : '');
+
+                                $('#color_3').val((data.OBS_A_4 ?? ''));
+
+                                $('#calibre_4').val(!isNaN(parseFloat(data.Hilo_A_4)) ? parseFloat(data
+                                    .Hilo_A_4).toFixed(2) : '');
+
+                                $('#color_4').val((data.OBS_A_5 ?? ''));
+
+                                $('#calibre_5').val(!isNaN(parseFloat(data.Hilo_A_5)) ? parseFloat(data
+                                    .Hilo_A_5).toFixed(2) : '');
+
+                                $('#color_5').val((data.OBS_R6 ?? ''));
+                                // Fechas
+                                function formatearFecha(fechaBruta) {
+                                    if (fechaBruta) {
+                                        const fecha = new Date(fechaBruta);
+                                        const año = fecha.getFullYear();
+                                        const mes = String(fecha.getMonth() + 1).padStart(2,
+                                            '0'); // Mes de 2 dígitos
+                                        const dia = String(fecha.getDate()).padStart(2,
+                                            '0'); // Día de 2 dígitos
+                                        return `${año}-${mes}-${dia}`;
+                                    }
+                                    return '';
+                                }
+
+                                // Formatear y asignar las fechas al input
+                                $('#fecha_scheduling').val(formatearFecha(data.Fecha_Compromiso));
+                                $('#fecha_inv').val(formatearFecha(data.Fecha_Orden));
+                                $('#fecha_cliente').val(formatearFecha(data.Fecha_Cumplimiento));
+
+                                //$('#fecha_compromiso_tejido').val((data.X ?? '' ));
+
+
+                                // Aquí guardamos todo el objeto (registro) de MODELOS encontrado
+                                dataModelo = data;
+                            } else {
+                                console.warn('No se encontró el modelo con esos datos');
+                            }
+                        })
+                        .catch(error => console.error('Error al obtener detalle del modelo:', error));
+                }
             });
         });
 
@@ -486,7 +592,6 @@
         document.getElementById('add-row-btn').addEventListener('click', function() {
             let tbody = document.getElementById('tabla-registros');
             let firstRow = tbody.querySelector('tr');
-            // Clona la primer fila
             let newRow = firstRow.cloneNode(true);
 
             // Limpia los valores de los inputs y selects en la fila clonada
@@ -499,6 +604,15 @@
             });
 
             tbody.appendChild(newRow);
+        });
+
+        document.getElementById('remove-row-btn').addEventListener('click', function() {
+            let tbody = document.getElementById('tabla-registros');
+            let rows = tbody.querySelectorAll('tr');
+            // Solo elimina si hay más de una fila
+            if (rows.length > 1) {
+                tbody.removeChild(rows[rows.length - 1]);
+            }
         });
     </script>
 @endsection
