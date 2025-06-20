@@ -622,10 +622,10 @@ class PlaneacionController extends Controller
   public function obtenerModelosPorClave(Request $request)
   {
     $claveAx = $request->input('clave_ax');
-    $departamento = $request->input('departamento'); // 'Salon'
+    $tamano = $request->input('tamano'); // 'Salon'
 
     $modelos = Modelos::where('CLAVE_AX', $claveAx)
-      ->where('Departamento', $departamento)
+      ->where('Tamanio_AX', $tamano)
       ->select('Modelo', 'Departamento')
       ->get();
 

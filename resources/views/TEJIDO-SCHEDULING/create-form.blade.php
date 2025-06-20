@@ -14,46 +14,43 @@
             </span>
         </div>
         <form id="form-planeacion" action="{{ route('planeacion.store') }}" method="POST"
-            class="grid grid-cols-4 gap-x-8 gap-y-4 fs-11">
+            class="grid grid-cols-5 gap-x-8 gap-y-4 fs-11">
             @csrf
-            <div class="col-span-1 grid grid-cols-1 items-center">
+
+            <div class="col-span-1 grid grid-cols-1 items-center -mb-1">
                 <label for="no_flog" class="w-20 font-medium text-gray-700">No FLOG:</label>
-                <select id="no_flog" name="no_flog" class=" border border-gray-300 rounded px-2 py-1 select2-flog">
+                <select id="no_flog" name="no_flog" class=" border border-gray-300 rounded px-1 py-0.5 select2-flog">
                     <option value="">-- SELECCIONA --</option>
                 </select>
             </div>
-
             <div class="flex items-center">
-                <label for="descrip" class="w-20 font-medium text-gray-700">DESCRIPCIÓN:</label>
-                <input type="text" name="descripcion" id="descrip" class=" border border-gray-300 rounded px-2 py-1"
+                <label for="nombre_modelo" class="w-16 font-medium text-gray-700 fs-9 -mb-1">NOMBRE MODELO:</label>
+                <input type="text" id="nombre_modelo" name="nombre_modelo"
+                    class=" border border-gray-300 rounded px-1 py-0.5" readonly>
+            </div>
+            <div class="flex items-center">
+                <label for="trama_0" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA:</label>
+                <input type="number" step="0.01" name="trama_0" id="trama_0"
+                    class=" border border-gray-300 roundedpx-1 py-0.5">
+            </div>
+            <div class="flex items-center">
+                <label for="calibre_2" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 2:</label>
+                <input type="number" step="0.01" name="calibre_2" id="calibre_2"
+                    class=" border border-gray-300 rounded px-1 py-0.5">
+            </div>
+            <div class="flex items-center">
+                <label for="calibre_4" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 4:</label>
+                <input type="number" step="0.01" name="calibre_4" id="calibre_4"
+                    class=" border border-gray-300 rounded px-1 py-0.5">
+            </div>
+            <div class="flex items-center">
+                <label for="descrip" class="w-16 font-medium text-gray-700 fs-9 -mb-1">DESCRIPCIÓN:</label>
+                <input type="text" name="descripcion" id="descrip" class=" border border-gray-300 rounded px-1 py-0.5"
                     readonly>
             </div>
-            <div class="flex items-center ">
-                <label for="clave_ax" class="w-20 font-medium text-gray-700">CLAVE AX:</label>
-                <select id="clave_ax" name="clave_ax"
-                    class="w-34 border border-gray-300 rounded px-2 py-1 select2-modelos">
-                    <option value="">-- ................................... --</option>
-                </select>
-            </div>
             <div class="flex items-center">
-                <label for="nombre_modelo" class="w-20 font-medium text-gray-700">NOMBRE MODELO:</label>
-                <input type="text" id="nombre_modelo" name="nombre_modelo"
-                    class=" border border-gray-300 rounded px-2 py-1" readonly>
-            </div>
-
-            <div class="flex items-center">
-                <label for="tamano" class="w-20 font-medium text-gray-700">TAMAÑO:</label>
-                <input type="text" name="tamano" id="tamano" class="border rounded px-2 py-1" required>
-            </div>
-            <div class="flex items-center">
-                <label for="saldo" class="w-20 font-medium text-gray-700">CANTIDAD:</label>
-                <input type="number" step="0.01" name="saldo" id="saldo"
-                    class=" border border-gray-300 rounded px-2 py-1" required>
-            </div>
-
-            <div class="flex items-center">
-                <label for="calendario" class="w-20 font-medium text-gray-700">CALENDARIO:</label>
-                <select name="calendario" id="calendario" class="w-36 border border-gray-300 rounded px-2 py-1">
+                <label for="calendario" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CALENDARIO:</label>
+                <select name="calendario" id="calendario" class="w-36 border border-gray-300 rounded px-1 py-0.5">
                     <option value="Calendario Tej1">Calendario Tej1</option>
                     <option value="Calendario Tej2">Calendario Tej2 </option>
                     <option value="Calendario Tej3">Calendario Tej3 </option>
@@ -61,10 +58,25 @@
                     <option value="Calendario Tej5">Calendario Tej5 </option>
                 </select>
             </div>
-
             <div class="flex items-center">
-                <label for="aplicacion" class="w-20 font-medium text-gray-700">APLICACIÓN:</label>
-                <select name="aplicacion" id="aplicacion" class="w-36 border border-gray-300 rounded px-2 py-1">
+                <label for="color_0" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR:</label>
+                <input type="text" name="color_0" id="color_0" class=" border border-gray-300 rounded px-1 py-0.5">
+            </div>
+            <div class="flex items-center">
+                <label for="color_2" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 2:</label>
+                <input type="text" name="color_2" id="color_2" class=" border border-gray-300 rounded px-1 py-0.5">
+            </div>
+            <div class="flex items-center">
+                <label for="color_4" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 4:</label>
+                <input type="text" name="color_4" id="color_4" class=" border border-gray-300 rounded px-1 py-0.5">
+            </div>
+            <div class="flex items-center">
+                <label for="tamano" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TAMAÑO:</label>
+                <input type="text" name="tamano" id="tamano" class="border rounded px-1 py-0.5 -mb-1" required>
+            </div>
+            <div class="flex items-center">
+                <label for="aplicacion" class="w-16 font-medium text-gray-700 fs-9 -mb-1">APLICACIÓN:</label>
+                <select name="aplicacion" id="aplicacion" class="w-36 border border-gray-300 rounded px-1 py-0.5">
                     <option value="RZ">RZ</option>
                     <option value="RZ2">RZ2</option>
                     <option value="RZ3">RZ3</option>
@@ -73,10 +85,31 @@
                     <option value="DC">DC</option>
                 </select>
             </div>
-
             <div class="flex items-center">
-                <label for="hilo" class="w-20 font-medium text-gray-700">HILO:</label>
-                <select name="hilo" id="hilo" class="w-36 border border-gray-300 rounded px-2 py-1">
+                <label for="calibre_1" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 1:</label>
+                <input type="number" step="0.01" name="calibre_1" id="calibre_1"
+                    class=" border border-gray-300 rounded px-1 py-0.5">
+            </div>
+            <div class="flex items-center">
+                <label for="calibre_3" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 3:</label>
+                <input type="number" step="0.01" name="calibre_3" id="calibre_3"
+                    class=" border border-gray-300 rounded px-1 py-0.5">
+            </div>
+            <div class="flex items-center">
+                <label for="calibre_5" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 5:</label>
+                <input type="number" step="0.01" name="calibre_5" id="calibre_5"
+                    class=" border border-gray-300 rounded px-1 py-0.5">
+            </div>
+            <div class="flex items-center ">
+                <label for="clave_ax" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CLAVE AX:</label>
+                <select id="clave_ax" name="clave_ax"
+                    class="w-34 border border-gray-300 rounded px-1 py-0.5 select2-modelos">
+                    <option value="">-- ................................... --</option>
+                </select>
+            </div>
+            <div class="flex items-center">
+                <label for="hilo" class="w-16 font-medium text-gray-700 fs-9 -mb-1">HILO:</label>
+                <select name="hilo" id="hilo" class="w-36 border border-gray-300 rounded px-1 py-0.5">
                     <option value="H">H</option>
                     <option value="T20 PEINADO">T20 PEINADO</option>
                     <option value="A12">RZ3</option>
@@ -89,89 +122,20 @@
                 </select>
             </div>
             <div class="flex items-center">
-                <label for="cuenta_rizo" class="w-20 font-medium text-gray-700">CUENTA RIZO:</label>
-                <input type="text" name="cuenta_rizo" id="cuenta_rizo" class=" border border-gray-300 rounded px-2 py-1"
-                    required>
+                <label for="color_1" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 1:</label>
+                <input type="text" name="color_1" id="color_1" class=" border border-gray-300 rounded px-1 py-0.5">
             </div>
             <div class="flex items-center">
-                <label for="calibre_rizo" class="w-20 font-medium text-gray-700">CALIBRE RIZO:</label>
-                <input type="text" name="calibre_rizo" id="calibre_rizo"
-                    class=" border border-gray-300 rounded px-2 py-1">
-            </div>
-
-            <div class="flex items-center">
-                <label for="cuenta_pie" class="w-20 font-medium text-gray-700">CUENTA PIE:</label>
-                <input type="text" name="cuenta_pie" id="cuenta_pie"
-                    class=" border border-gray-300 rounded px-2 py-1" required>
+                <label for="color_3" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 3:</label>
+                <input type="text" name="color_3" id="color_3" class=" border border-gray-300 rounded px-1 py-0.5">
             </div>
             <div class="flex items-center">
-                <label for="calibre_pie" class="w-20 font-medium text-gray-700">CALIBRE PIE:</label>
-                <input type="text" name="calibre_pie" id="calibre_pie"
-                    class=" border border-gray-300 rounded px-2 py-1">
-            </div>
-
-            <div class="flex items-center">
-                <label for="trama_0" class="w-20 font-medium text-gray-700">TRAMA:</label>
-                <input type="number" step="0.01" name="trama_0" id="trama_0"
-                    class=" border border-gray-300 rounded px-2 py-1">
-            </div>
-            <div class="flex items-center">
-                <label for="color_0" class="w-20 font-medium text-gray-700">COLOR:</label>
-                <input type="text" name="color_0" id="color_0" class=" border border-gray-300 rounded px-2 py-1">
-            </div>
-
-            <div class="flex items-center">
-                <label for="calibre_1" class="w-20 font-medium text-gray-700">TRAMA 1:</label>
-                <input type="number" step="0.01" name="calibre_1" id="calibre_1"
-                    class=" border border-gray-300 rounded px-2 py-1">
-            </div>
-            <div class="flex items-center">
-                <label for="color_1" class="w-20 font-medium text-gray-700">COLOR 1:</label>
-                <input type="text" name="color_1" id="color_1" class=" border border-gray-300 rounded px-2 py-1">
-            </div>
-
-            <div class="flex items-center">
-                <label for="calibre_2" class="w-20 font-medium text-gray-700">TRAMA 2:</label>
-                <input type="number" step="0.01" name="calibre_2" id="calibre_2"
-                    class=" border border-gray-300 rounded px-2 py-1">
-            </div>
-            <div class="flex items-center">
-                <label for="color_2" class="w-20 font-medium text-gray-700">COLOR 2:</label>
-                <input type="text" name="color_2" id="color_2" class=" border border-gray-300 rounded px-2 py-1">
-            </div>
-
-            <div class="flex items-center">
-                <label for="calibre_3" class="w-20 font-medium text-gray-700">TRAMA 3:</label>
-                <input type="number" step="0.01" name="calibre_3" id="calibre_3"
-                    class=" border border-gray-300 rounded px-2 py-1">
-            </div>
-            <div class="flex items-center">
-                <label for="color_3" class="w-20 font-medium text-gray-700">COLOR 3:</label>
-                <input type="text" name="color_3" id="color_3" class=" border border-gray-300 rounded px-2 py-1">
-            </div>
-
-            <div class="flex items-center">
-                <label for="calibre_4" class="w-20 font-medium text-gray-700">TRAMA 4:</label>
-                <input type="number" step="0.01" name="calibre_4" id="calibre_4"
-                    class=" border border-gray-300 rounded px-2 py-1">
-            </div>
-            <div class="flex items-center">
-                <label for="color_4" class="w-20 font-medium text-gray-700">COLOR 4:</label>
-                <input type="text" name="color_4" id="color_4" class=" border border-gray-300 rounded px-2 py-1">
-            </div>
-
-            <div class="flex items-center">
-                <label for="calibre_5" class="w-20 font-medium text-gray-700">TRAMA 5:</label>
-                <input type="number" step="0.01" name="calibre_5" id="calibre_5"
-                    class=" border border-gray-300 rounded px-2 py-1">
-            </div>
-            <div class="flex items-center">
-                <label for="color_5" class="w-20 font-medium text-gray-700">COLOR 5:</label>
-                <input type="text" name="color_5" id="color_5" class=" border border-gray-300 rounded px-2 py-1">
+                <label for="color_5" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 5:</label>
+                <input type="text" name="color_5" id="color_5" class=" border border-gray-300 rounded px-1 py-0.5">
             </div>
 
             <!-- - - - - - - - - - - -  - - - - - - - - - - DATOS DEL TELAR  -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  - - - - -->
-            <div class="col-span-4">
+            <div class="col-span-5">
                 <!-- Aquí va el divisor -->
                 <div class="relative w-full flex items-center">
                     <div class="w-full border-t-8 border-gray-300"></div>
@@ -185,26 +149,27 @@
                     <!-- Botón agregar fila -->
                     <div class="flex justify-end">
                         <button type="button" id="add-row-btn"
-                            class="w-2 justify-center flex items-center px-4 py-1.5 rounded-full bg-blue-600 hover:bg-blue-700 shadow font-medium text-base transition">
+                            class="w-2 justify-center flex items-center px-3 py-1 rounded-full bg-blue-600 hover:bg-blue-700 shadow font-medium text-base transition">
                             <span class="">➕</span> <span class="hidden sm:inline"></span>
                         </button>
                     </div>
-                    <table class="min-w-full text-xs">
+                    <table class="min-w-full text-xss">
                         <thead>
                             <tr class="bg-gray-100 text-gray-700 font-semibold text-center uppercase tracking-wide">
-                                <th class="py-2 px-4">TELAR</th>
-                                <th class="py-2 px-4">COMPROMISO TEJIDO</th>
-                                <th class="py-2 px-4">FECHA CLIENTE</th>
-                                <th class="py-2 px-4">FECHA INICIO</th>
-                                <th class="py-2 px-4">FECHA FIN</th>
-                                <th class="py-2 px-4">FECHA ENTREGA</th>
+                                <th class="py-1 px-0.5">TELAR</th>
+                                <th class="py-1 px-0.5">CANTIDAD</th>
+                                <th class="py-1 px-0.5">COMPROMISO TEJIDO</th>
+                                <th class="py-1 px-0.5">FECHA CLIENTE</th>
+                                <th class="py-1 px-0.5">FECHA INICIO</th>
+                                <th class="py-1 px-0.5">FECHA FIN</th>
+                                <th class="py-1 px-0.5">FECHA ENTREGA</th>
                             </tr>
                         </thead>
                         <tbody id="tabla-registros">
                             <tr class="border-b hover:bg-blue-50">
                                 <td class="py-1 px-4 text-center">
-                                    <select name="telar[]" class="border border-gray-300 rounded px-2 py-1 text-xs w-full"
-                                        required>
+                                    <select name="telar[]"
+                                        class="border border-gray-300 rounded px-1 py-0.5 text-xs w-full" required>
                                         <option value="">Seleccionar</option>
                                         @foreach ($telares as $telar)
                                             <option value="{{ $telar->telar }}">{{ $telar->telar }}</option>
@@ -212,31 +177,35 @@
                                     </select>
                                 </td>
                                 <td class="py-1 px-4 text-center">
+                                    <input type="number" step="0.01" name="cantidad"
+                                        class="border border-gray-300 rounded px-1 py-0.5 w-full" required>
+                                </td>
+                                <td class="py-1 px-4 text-center">
                                     <input type="date" name="fecha_compromiso_tejido[]"
-                                        class="border border-gray-300 rounded px-2 py-1 w-full" required>
+                                        class="border border-gray-300 rounded px-1 py-0.5 w-full" required>
                                 </td>
                                 <td class="py-1 px-4 text-center">
                                     <input type="date" name="fecha_cliente[]"
-                                        class="border border-gray-300 rounded px-2 py-1 w-full">
+                                        class="border border-gray-300 rounded px-1 py-0.5 w-full">
                                 </td>
                                 <td class="py-1 px-4 text-center">
                                     <input type="datetime-local" name="fecha_inicio[]"
-                                        class="border border-gray-300 rounded px-2 py-1 w-full" required>
+                                        class="border border-gray-300 rounded px-1 py-0.5 w-full" required>
                                 </td>
                                 <td class="py-1 px-4 text-center">
                                     <input type="datetime-local" name="fecha_fin[]"
-                                        class="border border-gray-300 rounded px-2 py-1 w-full" required>
+                                        class="border border-gray-300 rounded px-1 py-0.5 w-full" required>
                                 </td>
                                 <td class="py-1 px-4 text-center">
                                     <input type="date" name="fecha_entrega[]"
-                                        class="border border-gray-300 rounded px-2 py-1 w-full">
+                                        class="border border-gray-300 rounded px-1 py-0.5 w-full">
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-            <div class="col-span-4 text-right  ">
+            <div class="col-span-5 text-right  ">
                 <button type="submit" class="w-1/6 bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700 text-sm">
                     GUARDAR
                 </button>
@@ -292,13 +261,7 @@
             $('#clave_ax').on('select2:select', function(e) {
                 const claveAX = e.params.data.id;
 
-                // Asegúrate que dataTelar tenga el salón válido
-                const salon = dataTelar?.salon ?? null;
-
-                if (!salon) {
-                    alert('Primero selecciona un Telar para poder filtrar los modelos.');
-                    return;
-                }
+                const tamano = document.getElementById('tamano').value;
 
                 //Limpiar opciones previas
                 $('#nombre_modelo').empty().trigger('change');
@@ -307,7 +270,7 @@
                     url: '{{ route('modelos.porClave') }}',
                     data: {
                         clave_ax: claveAX,
-                        departamento: salon
+                        tamano: tamano
                     },
                     success: function(data) {
                         const opciones = data.map(item => ({
@@ -342,30 +305,30 @@
                                 $('#trama_0').val(!isNaN(parseFloat(data.Tra)) ? parseFloat(data.Tra)
                                     .toFixed(2) : '');
 
-                                $('#color_0').val((data.OBS_R1 ?? ''));
+                                $('#color_0').val((data.OBS_A_1 ?? ''));
 
-                                $('#calibre_1').val(!isNaN(parseFloat(data.Hilo_4)) ? parseFloat(data
-                                    .Hilo_4).toFixed(2) : '');
+                                $('#calibre_1').val(!isNaN(parseFloat(data.Hilo_A_1)) ? parseFloat(data
+                                    .Hilo_A_1).toFixed(2) : '');
 
-                                $('#color_1').val((data.OBS_R2 ?? ''));
+                                $('#color_1').val((data.OBS_A_2 ?? ''));
 
-                                $('#calibre_2').val(!isNaN(parseFloat(data.Hilo_5)) ? parseFloat(data
-                                    .Hilo_5).toFixed(2) : '');
+                                $('#calibre_2').val(!isNaN(parseFloat(data.Hilo_A_2)) ? parseFloat(data
+                                    .Hilo_A_2).toFixed(2) : '');
 
-                                $('#color_2').val((data.OBS_R3 ?? ''));
+                                $('#color_A_2').val((data.OBS_A_3 ?? ''));
 
-                                $('#calibre_3').val(!isNaN(parseFloat(data.Hilo_6)) ? parseFloat(data
-                                    .Hilo_6).toFixed(2) : '');
+                                $('#calibre_3').val(!isNaN(parseFloat(data.Hilo_A_3)) ? parseFloat(data
+                                    .Hilo_A_3).toFixed(2) : '');
 
-                                $('#color_3').val((data.OBS_R4 ?? ''));
+                                $('#color_3').val((data.OBS_A_4 ?? ''));
 
-                                $('#calibre_4').val(!isNaN(parseFloat(data.Hilo_7)) ? parseFloat(data
-                                    .Hilo5).Hilo_7(2) : '');
+                                $('#calibre_4').val(!isNaN(parseFloat(data.Hilo_A_4)) ? parseFloat(data
+                                    .Hilo_A_4).toFixed(2) : '');
 
-                                $('#color_4').val((data.OBS_R5 ?? ''));
+                                $('#color_4').val((data.OBS_A_5 ?? ''));
 
-                                $('#calibre_5').val(!isNaN(parseFloat(data.Hilo_8)) ? parseFloat(data
-                                    .Hilo_8).toFixed(2) : '');
+                                $('#calibre_5').val(!isNaN(parseFloat(data.Hilo_A_5)) ? parseFloat(data
+                                    .Hilo_A_5).toFixed(2) : '');
 
                                 $('#color_5').val((data.OBS_R6 ?? ''));
                                 // Fechas
