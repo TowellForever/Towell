@@ -13,4 +13,15 @@ class TejidoSchedullingController extends Controller
         $datos = $request->query(); // datos por URL
         return view('TEJIDO-SCHEDULING.traspaso-create-form', compact('datos', 'telares'));
     }
+
+    public function buscarUltimoPorTelar(Request $request)
+    {
+        $telar = $request->input('telar');
+        $registro = DB::table('TEJIDO_SCHEDULING')
+            ->where('Telar', $telar)
+            ->where('Ultimo', 'ULTIMO')
+            ->first();
+
+        return response()->json($registro); // Regresa los datos encontrados, o null si no hay
+    }
 }

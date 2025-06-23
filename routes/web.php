@@ -177,6 +177,8 @@ Route::resource('eficiencia', CatalagoEficienciaController::class);
 Route::resource('velocidad', CatalagoVelocidadController::class);
 
 Route::get('/traspasoDataRedireccion', [TejidoSchedullingController::class, 'envioDeDataPlaneacion']);
+Route::get('/Tejido-Scheduling/ultimo-por-telar', [TejidoSchedullingController::class, 'buscarUltimoPorTelar']);
+
 
 // ✅ NUEVAS RUTAS de PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION
 Route::get('/catalagos/calendarios', [CalendarioController::class, 'CalendarioT1'])->name('calendariot1.index');

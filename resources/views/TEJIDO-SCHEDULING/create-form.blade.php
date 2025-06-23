@@ -140,7 +140,7 @@
 
             <div class="flex items-center">
                 <label for="calibre_rizo" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CALIBRE RIZO:</label>
-                <input type="number" name="calibre_rizo" id="calibre_rizo"
+                <input type="number" step="0.01" name="calibre_rizo" id="calibre_rizo"
                     class=" border border-gray-300 rounded px-1 py-0.5">
             </div>
 
@@ -152,7 +152,7 @@
 
             <div class="flex items-center">
                 <label for="calibre_pie" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CALIRBE PIE:</label>
-                <input type="number" name="calibre_pie" id="calibre_pie"
+                <input type="number" step="0.01" name="calibre_pie" id="calibre_pie"
                     class=" border border-gray-300 rounded px-1 py-0.5">
             </div>
 
@@ -206,7 +206,7 @@
                                     </select>
                                 </td>
                                 <td class="py-1  text-center">
-                                    <input type="number" step="0.01" name="cantidad"
+                                    <input type="number" step="0.01" name="cantidad[]"
                                         class="border border-gray-300 rounded px-1 py-0.5 w-20">
                                 </td>
                                 <td class="py-1  text-center">
@@ -513,6 +513,36 @@
             if (rows.length > 1) {
                 tbody.removeChild(rows[rows.length - 1]);
             }
+        });
+    </script>
+    <!--SCRIPT para buscar la fecha del ultimo registro del telar seleccionado-->
+    <script>
+        $(document).ready(function() {
+            // Escucha el cambio en cualquier select de telar dentro de la tabla
+            $('#tabla-registros').on('change', 'select[name="telar[]"]', function() {
+                const telarSeleccionado = $(this).val();
+                const fila = $(this).closest('tr'); // Para identificar la fila específica
+
+                if (!telarSeleccionado) return; // No hacer nada si no seleccionan
+
+                // Hacer petición AJAX al backend
+                fetch(`/Tejido-Scheduling/ultimo-por-telar?telar=${encodeURIComponent(telarSeleccionado)}`)
+                    .then(resp => resp.json())
+                    .then(data => {
+                        if (data) {
+                            // Aquí puedes llenar otros campos de la fila, por ejemplo:
+                            fila.find('input[name="fecha_inicio[]"]').val(data ? data.Inicio_Tejido :
+                                '');
+                            // fila.find('input[name="cantidad[]"]').val(data.cantidad);
+                            // fila.find('input[name="fecha_inicio[]"]').val(data.fecha_inicio);
+                            // ... y así con los campos que necesites
+                            console.log('Datos de telar ULTIMO:', data);
+                        } else {
+                            // Puedes limpiar los campos o mostrar mensaje
+                            // fila.find('input[name="cantidad[]"]').val('');
+                        }
+                    });
+            });
         });
     </script>
 @endsection
