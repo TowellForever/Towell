@@ -634,12 +634,13 @@ class PlaneacionController extends Controller
 
   public function buscarDetalleModelo(Request $request)
   {
-    $clave = $request->input('clave_ax');
-    $modelo = $request->input('nombre_modelo');
+    //dd($request->all());
+    $clave = $request->input('itemid');
+    $tamanio = $request->input('inventsizeid');
 
     $detalle = DB::table('MODELOS')
       ->where('CLAVE_AX', $clave)
-      ->where('Modelo', $modelo)
+      ->where('Tamanio_AX', $tamanio)
       ->first();
 
     return response()->json($detalle);

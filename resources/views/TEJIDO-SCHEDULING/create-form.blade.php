@@ -70,13 +70,11 @@
                 <label for="color_4" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 4:</label>
                 <input type="text" name="color_4" id="color_4" class=" border border-gray-300 rounded px-1 py-0.5">
             </div>
-            <div class="flex items-center ">
+            <div class="flex items-center">
                 <label for="clave_ax" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CLAVE AX:</label>
-                <select id="clave_ax" name="clave_ax"
-                    class="w-34 border border-gray-300 rounded px-1 py-0.5 select2-modelos">
-                    <option value="">-- ................................... --</option>
-                </select>
+                <input type="text" name="clave_ax" id="clave_ax" class="border rounded px-1 py-0.5 -mb-1" required>
             </div>
+
             <div class="flex items-center">
                 <label for="aplicacion" class="w-16 font-medium text-gray-700 fs-9 -mb-1">APLICACIÓN:</label>
                 <select name="aplicacion" id="aplicacion" class="w-36 border border-gray-300 rounded px-1 py-0.5">
@@ -258,149 +256,7 @@
             });
         });
     </script>
-    <!-- el siguiente script es para hacer 2 selects (CLAVE AX y NOMBRE MODELO): todas las opciones son de la BD de la tabla MODELOS -->
-    <script>
-        let dataModelo = null;
-        $(document).ready(function() {
-            // PRIMER SELECT: CLAVE_AX
-            $('#clave_ax').select2({
-                placeholder: '-- Selecciona CLAVE AX --',
-                ajax: {
-                    url: '{{ route('modelos.buscar') }}',
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            datosUser: params.term
-                        };
-                    },
-                    processResults: function(data) {
-                        return {
-                            results: data.map(function(item) {
-                                return {
-                                    id: item.CLAVE_AX,
-                                    text: item.CLAVE_AX
-                                };
-                            })
-                        };
-                    },
-                    cache: true //Habilita el almacenamiento en caché de las respuestas para evitar solicitudes repetidas.
-                }
-            });
-
-            // SEGUNDO SELECT: nombre_modelo depende del valor seleccionado en clave_ax
-            $('#clave_ax').on('select2:select', function(e) {
-                const claveAX = e.params.data.id;
-
-                const tamano = document.getElementById('tamano').value;
-
-                //Limpiar opciones previas
-                $('#nombre_modelo').empty().trigger('change');
-
-                $.ajax({
-                    url: '{{ route('modelos.porClave') }}',
-                    data: {
-                        clave_ax: claveAX,
-                        tamano: tamano
-                    },
-                    success: function(data) {
-                        const opciones = data.map(item => ({
-                            id: item.Modelo,
-                            text: `${item.Modelo} - ${item.Departamento}` // 👈 Aquí concatenas 
-                        }));
-
-                        $('#nombre_modelo').select2({
-                            data: opciones,
-                            placeholder: '-- Selecciona un modelo --'
-                        });
-                    }
-                });
-            });
-
-            // 🧠 Cuando el usuario selecciona un modelo, lanzamos la búsqueda del detalle
-            $('#nombre_modelo').on('select2:select', function(e) {
-                const claveAx = $('#clave_ax').val();
-                const nombreModelo = e.params.data.id;
-
-                if (claveAx && nombreModelo) {
-                    console.log('Buscando con:', claveAx, nombreModelo);
-
-                    fetch(
-                            `/modelo/detalle?clave_ax=${claveAx}&nombre_modelo=${encodeURIComponent(nombreModelo)}`
-                        )
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data) {
-                                console.log('Modelo encontrado:', data);
-                                // Aquí acomodo los campos como requiera, son los datos que envio el BACK como JSON (registro encontrado en modelos)
-                                $('#trama_0').val(!isNaN(parseFloat(data.Tra)) ? parseFloat(data.Tra)
-                                    .toFixed(2) : '');
-
-                                $('#color_0').val((data.OBS_A_1 ?? ''));
-
-                                $('#calibre_1').val(!isNaN(parseFloat(data.Hilo_A_1)) ? parseFloat(data
-                                    .Hilo_A_1).toFixed(2) : '');
-
-                                $('#color_1').val((data.OBS_A_2 ?? ''));
-
-                                $('#calibre_2').val(!isNaN(parseFloat(data.Hilo_A_2)) ? parseFloat(data
-                                    .Hilo_A_2).toFixed(2) : '');
-
-                                $('#color_A_2').val((data.OBS_A_3 ?? ''));
-
-                                $('#calibre_3').val(!isNaN(parseFloat(data.Hilo_A_3)) ? parseFloat(data
-                                    .Hilo_A_3).toFixed(2) : '');
-
-                                $('#color_3').val((data.OBS_A_4 ?? ''));
-
-                                $('#calibre_4').val(!isNaN(parseFloat(data.Hilo_A_4)) ? parseFloat(data
-                                    .Hilo_A_4).toFixed(2) : '');
-
-                                $('#color_4').val((data.OBS_A_5 ?? ''));
-
-                                $('#calibre_5').val(!isNaN(parseFloat(data.Hilo_A_5)) ? parseFloat(data
-                                    .Hilo_A_5).toFixed(2) : '');
-
-                                $('#color_5').val((data.OBS_R6 ?? ''));
-                                // Fechas
-                                function formatearFecha(fechaBruta) {
-                                    if (fechaBruta) {
-                                        const fecha = new Date(fechaBruta);
-                                        const año = fecha.getFullYear();
-                                        const mes = String(fecha.getMonth() + 1).padStart(2,
-                                            '0'); // Mes de 2 dígitos
-                                        const dia = String(fecha.getDate()).padStart(2,
-                                            '0'); // Día de 2 dígitos
-                                        return `${año}-${mes}-${dia}`;
-                                    }
-                                    return '';
-                                }
-
-                                // Formatear y asignar las fechas al input
-                                $('#fecha_scheduling').val(formatearFecha(data.Fecha_Compromiso));
-                                $('#fecha_inv').val(formatearFecha(data.Fecha_Orden));
-                                $('#fecha_cliente').val(formatearFecha(data.Fecha_Cumplimiento));
-
-                                //$('#fecha_compromiso_tejido').val((data.X ?? '' ));
-
-
-                                // Aquí guardamos todo el objeto (registro) de MODELOS encontrado
-                                dataModelo = data;
-                            } else {
-                                console.warn('No se encontró el modelo con esos datos');
-                            }
-                        })
-                        .catch(error => console.error('Error al obtener detalle del modelo:', error));
-                }
-            });
-        });
-
-        $('#nombre_modelo').on('select2:select', function(e) {
-            const valor = e.params.data.text; // o .id si tu valor está ahí
-            const parteAntesDelGuion = valor.split('-')[0].trim();
-            $('#tamano').val(parteAntesDelGuion);
-        });
-    </script>
+    <!-- el siguiente script es para hacer selects (CLAVE AX y TAMAÑO AX): todas las opciones son de la BD de la tabla MODELOS -->
 
     <script>
         const telaresData = @json($telares); //Paso los telares al JS como objeto
@@ -473,16 +329,39 @@
                 },
                 minimumInputLength: 2 // minimo de caracteres a ingresar para realizar la busqueda c:
             });
+            // Evento al seleccionar un FLOG
+            $('#no_flog').on('select2:select', function(e) {
+                // El objeto seleccionado está en e.params.data
+                let selected = e.params.data;
+
+                // Separar los valores del texto usando '|'
+                let [INVENTSIZEID, ITEMID, ITEMNAME] = selected.text.split('|').map(s => s.trim());
+
+                // Guarda en la variable global
+                dataFlog = {
+                    IDFLOG: selected.id,
+                    INVENTSIZEID: INVENTSIZEID,
+                    ITEMID: ITEMID,
+                    ITEMNAME: ITEMNAME
+                };
+
+                // Mostrar en consola para debug
+                console.log('Datos seleccionados:', dataFlog);
+            });
             // 🧠 Cuando el usuario selecciona un FLOGSO, lanzamos la búsqueda y traemos sus datos
             $('#no_flog').on('select2:select', function(e) {
-                const flogso = $('#no_flog').val();
+                // ... Aquí tu código para asignar dataFlog
 
-                if (flogso) {
-                    console.log('Buscando con:', flogso);
+                if (dataFlog) {
+                    console.log('Buscando con:', dataFlog.ITEMID);
 
-                    fetch(
-                            `/modelo/detalle?flogso=${flogso}`
-                        )
+                    // Serializa los datos como parámetros de la URL
+                    const params = new URLSearchParams({
+                        inventsizeid: dataFlog.INVENTSIZEID,
+                        itemid: dataFlog.ITEMID,
+                    });
+
+                    fetch(`/modelo/detalle?${params.toString()}`)
                         .then(response => response.json())
                         .then(data => {
                             if (data) {
@@ -501,7 +380,7 @@
                                 $('#calibre_2').val(!isNaN(parseFloat(data.Hilo_A_2)) ? parseFloat(data
                                     .Hilo_A_2).toFixed(2) : '');
 
-                                $('#color_A_2').val((data.OBS_A_3 ?? ''));
+                                $('#color_2').val((data.OBS_A_3 ?? ''));
 
                                 $('#calibre_3').val(!isNaN(parseFloat(data.Hilo_A_3)) ? parseFloat(data
                                     .Hilo_A_3).toFixed(2) : '');
@@ -515,8 +394,29 @@
 
                                 $('#calibre_5').val(!isNaN(parseFloat(data.Hilo_A_5)) ? parseFloat(data
                                     .Hilo_A_5).toFixed(2) : '');
-
                                 $('#color_5').val((data.OBS_R6 ?? ''));
+
+                                $('#nombre_modelo').val(String(data.Modelo ?? ''));
+                                $('#clave_ax').val(data.CLAVE_AX);
+                                $('#tamano').val(data.Tamanio_AX);
+
+                                //Función para formatear el número
+                                function mostrarBonito(num) {
+                                    // Convierte a número flotante
+                                    let n = parseFloat(num);
+                                    // Si no es número, regresa vacío
+                                    if (isNaN(n)) return '';
+                                    // Si es entero (por ejemplo 5.0), muestra como entero
+                                    if (Number.isInteger(n)) return n;
+                                    // Si tiene decimales, muestra solo 2
+                                    return n.toFixed(2);
+                                }
+
+                                $('#cuenta_rizo').val(mostrarBonito(data.CUENTA));
+                                $('#calibre_rizo').val(mostrarBonito(data.Rizo));
+                                $('#cuenta_pie').val(mostrarBonito(data.CUENTA1));
+                                $('#calibre_pie').val(mostrarBonito(data.Pie));
+
                                 // Fechas
                                 function formatearFecha(fechaBruta) {
                                     if (fechaBruta) {
