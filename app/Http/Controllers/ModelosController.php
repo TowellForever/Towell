@@ -42,23 +42,6 @@ class ModelosController extends Controller
       'fillableFields' => $fillableFields,
     ]);
   }
-
-
-  //metodos para FLOGS
-  public function buscarFlogso(Request $request)
-  {
-    $query = $request->input('fingered');
-
-    // Conexión y búsqueda en la tabla con LIKE para coincidencias parciales
-    $resultados = DB::connection('sqlsrv_ti')
-      ->table('TWFLOGSITEMLINE')
-      ->select('INVENTSIZEID', 'ITEMID', 'IDFLOG', 'ITEMNAME')
-      ->where('IDFLOG', 'like', '%' . $query . '%') // <-- Esto busca coincidencias parciales
-      ->orderBy('IDFLOG', 'asc')
-      ->get();
-
-    return response()->json($resultados);
-  }
 }
 
 

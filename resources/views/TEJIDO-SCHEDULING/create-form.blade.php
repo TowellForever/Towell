@@ -44,9 +44,9 @@
                     class=" border border-gray-300 rounded px-1 py-0.5">
             </div>
             <div class="flex items-center">
-                <label for="descrip" class="w-16 font-medium text-gray-700 fs-9 -mb-1">DESCRIPCIÓN:</label>
-                <input type="text" name="descripcion" id="descrip" class=" border border-gray-300 rounded px-1 py-0.5"
-                    readonly>
+                <label for="descripcion" class="w-16 font-medium text-gray-700 fs-9 -mb-1">DESCRIPCIÓN:</label>
+                <input type="text" name="descripcion" id="descripcion"
+                    class=" border border-gray-300 rounded px-1 py-0.5">
             </div>
             <div class="flex items-center">
                 <label for="calendario" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CALENDARIO:</label>
@@ -319,9 +319,11 @@
                             results: data.map(function(item) {
                                 return {
                                     id: item.IDFLOG,
-                                    text: ` ${item.INVENTSIZEID} | ${item.ITEMID} | ${item.ITEMNAME} `
+                                    text: `${item.IDFLOG} | ${item.ITEMNAME}`,
+                                    INVENTSIZEID: item.INVENTSIZEID,
+                                    ITEMID: item.ITEMID,
+                                    ITEMNAME: item.ITEMNAME
                                 };
-
                             })
                         };
                     },
@@ -334,19 +336,13 @@
                 // El objeto seleccionado está en e.params.data
                 let selected = e.params.data;
 
-                // Separar los valores del texto usando '|'
-                let [INVENTSIZEID, ITEMID, ITEMNAME] = selected.text.split('|').map(s => s.trim());
-
                 // Guarda en la variable global
                 dataFlog = {
                     IDFLOG: selected.id,
-                    INVENTSIZEID: INVENTSIZEID,
-                    ITEMID: ITEMID,
-                    ITEMNAME: ITEMNAME
+                    INVENTSIZEID: selected.INVENTSIZEID,
+                    ITEMID: selected.ITEMID,
+                    ITEMNAME: selected.ITEMNAME
                 };
-
-                // Mostrar en consola para debug
-                console.log('Datos seleccionados:', dataFlog);
             });
             // 🧠 Cuando el usuario selecciona un FLOGSO, lanzamos la búsqueda y traemos sus datos
             $('#no_flog').on('select2:select', function(e) {
@@ -517,10 +513,12 @@
     </script>
     <!--SCRIPT para buscar la fecha del ultimo registro del telar seleccionado-->
     <script>
+        let telar = null;
         $(document).ready(function() {
             // Escucha el cambio en cualquier select de telar dentro de la tabla
             $('#tabla-registros').on('change', 'select[name="telar[]"]', function() {
                 const telarSeleccionado = $(this).val();
+                telar = telarSeleccionado;
                 const fila = $(this).closest('tr'); // Para identificar la fila específica
 
                 if (!telarSeleccionado) return; // No hacer nada si no seleccionan
@@ -533,16 +531,49 @@
                             // Aquí puedes llenar otros campos de la fila, por ejemplo:
                             fila.find('input[name="fecha_inicio[]"]').val(data ? data.Inicio_Tejido :
                                 '');
-                            // fila.find('input[name="cantidad[]"]').val(data.cantidad);
-                            // fila.find('input[name="fecha_inicio[]"]').val(data.fecha_inicio);
-                            // ... y así con los campos que necesites
-                            console.log('Datos de telar ULTIMO:', data);
                         } else {
                             // Puedes limpiar los campos o mostrar mensaje
                             // fila.find('input[name="cantidad[]"]').val('');
                         }
                     });
             });
+        });
+
+        // Escucha cuando el usuario digita en el campo cantidad
+        $('#tabla-registros').on('input', 'input[name="cantidad[]"]', function() {
+            const fila = $(this).closest('tr');
+            const cantidad = parseFloat($(this).val());
+            const clave_ax = document.getElementById('clave_ax').value;
+            const tamano = document.getElementById('tamano').value;
+            const hilo = document.getElementById('hilo').value;
+            const calendario = document.getElementById('calendario').value;
+            const fechaInicioStr = fila.find('input[name="fecha_inicio[]"]').val();
+
+            if (!cantidad || !fechaInicioStr) {
+                fila.find('input[name="fecha_fin[]"]').val('');
+                return;
+            }
+
+            // Hacer petición AJAX al backend enviando cantidad y fecha_inicio
+            fetch(
+                    `/Tejido-Scheduling/fechaFin?cantidad=${encodeURIComponent(cantidad)}&fecha_inicio=${encodeURIComponent(fechaInicioStr)}
+                    &telar=${encodeURIComponent(telar)}
+                    &clave_ax=${encodeURIComponent(clave_ax)}
+                    &tamano=${encodeURIComponent(tamano)}
+                    &hilo=${encodeURIComponent(hilo)}
+                    &calendario=${encodeURIComponent(calendario)}`
+                )
+                .then(resp => resp.json())
+                .then(data => {
+                    if (data && data.fecha) {
+                        // Aquí puedes llenar otros campos de la fila, por ejemplo:
+                        console.log('Datos de Fecha FINAL:', data);
+                        fila.find('input[name="fecha_fin[]"]').val(data ? data.fecha :
+                            '');
+                    } else {
+                        fila.find('input[name="fecha_fin[]"]').val('');
+                    }
+                });
         });
     </script>
 @endsection

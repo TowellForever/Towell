@@ -178,6 +178,7 @@ Route::resource('velocidad', CatalagoVelocidadController::class);
 
 Route::get('/traspasoDataRedireccion', [TejidoSchedullingController::class, 'envioDeDataPlaneacion']);
 Route::get('/Tejido-Scheduling/ultimo-por-telar', [TejidoSchedullingController::class, 'buscarUltimoPorTelar']);
+Route::get('/Tejido-Scheduling/fechaFin', [TejidoSchedullingController::class, 'calcularFechaFin']);
 
 
 // ✅ NUEVAS RUTAS de PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION
@@ -225,4 +226,4 @@ GET | /modelos/{id}/edit | edit() | modelos.edit
 PUT/PATCH | /modelos/{id} | update() | modelos.update
 DELETE | /modelos/{id} | destroy() | modelos.destroy
 */
-Route::get('/flogs/buscar', [App\Http\Controllers\ModelosController::class, 'buscarFlogso'])->name('flog.buscar');
+Route::get('/flogs/buscar', [App\Http\Controllers\TejidoSchedullingController::class, 'buscarFlogso'])->name('flog.buscar');
