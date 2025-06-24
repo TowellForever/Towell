@@ -52,11 +52,10 @@
             <div class="flex items-center">
                 <label for="calendario" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CALENDARIO:</label>
                 <select name="calendario" id="calendario" class="w-36 border border-gray-300 rounded px-1 py-0.5">
-                    <option value="Calendario Tej1">Calendario Tej1</option>
-                    <option value="Calendario Tej2">Calendario Tej2 </option>
+                    <option value="Calendario Tej1">Calendario Tej1</option><!-- toma en cuenta TODOS los días-->
+                    <option value="Calendario Tej2">Calendario Tej2 </option><!-- NO toma en cuenta domingos-->
                     <option value="Calendario Tej3">Calendario Tej3 </option>
-                    <option value="Calendario Tej4">Calendario Tej4 </option>
-                    <option value="Calendario Tej5">Calendario Tej5 </option>
+                    <!-- No toma en cuenta domingos y sabados solo toma en cuenta hasta las 18:29-->
                 </select>
             </div>
             <div class="flex items-center">
