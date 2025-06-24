@@ -19,7 +19,8 @@
 
             <div class="col-span-1 grid grid-cols-1 items-center -mb-1">
                 <label for="no_flog" class="w-20 font-medium text-gray-700">No FLOG:</label>
-                <select id="no_flog" name="no_flog" class=" border border-gray-300 rounded px-1 py-0.5 select2-flog">
+                <select id="no_flog" name="no_flog"
+                    class=" border border-gray-300 rounded px-1 py-0.5 select2-flog no_flog-select">
                     <option value="">-- SELECCIONA --</option>
                 </select>
             </div>
@@ -197,37 +198,37 @@
                         <tbody id="tabla-registros">
                             <tr class="border-b hover:bg-blue-50">
                                 <td class="py-1 text-center">
-                                    <select name="telar[]" class="border border-gray-300 rounded px-1 py-0.5 text-xs w-20"
-                                        required>
+                                    <select name="telar[]"
+                                        class="border border-gray-300 rounded px-1 py-0.5 text-xs w-20 ">
                                         <option value="">Seleccionar</option>
                                         @foreach ($telares as $telar)
                                             <option value="{{ $telar->telar }}">{{ $telar->telar }}</option>
                                         @endforeach
                                     </select>
                                 </td>
-                                <td class="py-1  text-center">
+                                <td class="py-1 text-center">
                                     <input type="number" step="0.01" name="cantidad[]"
-                                        class="border border-gray-300 rounded px-1 py-0.5 w-20">
+                                        class="border border-gray-300 rounded px-1 py-0.5 w-20 cantidad-input">
                                 </td>
                                 <td class="py-1  text-center">
                                     <input type="datetime-local" name="fecha_inicio[]"
-                                        class="border border-gray-300 rounded px-1 py-0.5 w-34">
+                                        class="border border-gray-300 rounded px-1 py-0.5 w-34" readonly>
                                 </td>
                                 <td class="py-1 text-center">
                                     <input type="datetime-local" name="fecha_fin[]"
-                                        class="border border-gray-300 rounded px-1 py-0.5 w-34">
+                                        class="border border-gray-300 rounded px-1 py-0.5 w-34" readonly>
                                 </td>
                                 <td class="py-1 text-center">
                                     <input type="datetime-local" name="fecha_compromiso_tejido[]"
-                                        class="border border-gray-300 rounded px-1 py-0.5 w-34">
+                                        class="border border-gray-300 rounded px-1 py-0.5 w-34" readonly>
                                 </td>
                                 <td class="py-1 text-center">
                                     <input type="datetime-local" name="fecha_cliente[]"
-                                        class="border border-gray-300 rounded px-1 py-0.5 w-34">
+                                        class="border border-gray-300 rounded px-1 py-0.5 w-34" readonly>
                                 </td>
                                 <td class="py-1 text-center">
                                     <input type="datetime-local" name="fecha_entrega[]"
-                                        class="border border-gray-300 rounded px-1 py-0.5 w-34">
+                                        class="border border-gray-300 rounded px-1 py-0.5 w-34" readonly>
                                 </td>
                             </tr>
                         </tbody>
@@ -319,10 +320,11 @@
                             results: data.map(function(item) {
                                 return {
                                     id: item.IDFLOG,
+                                    ITEMNAME: item.ITEMNAME,
                                     text: `${item.IDFLOG} | ${item.ITEMNAME}`,
                                     INVENTSIZEID: item.INVENTSIZEID,
                                     ITEMID: item.ITEMID,
-                                    ITEMNAME: item.ITEMNAME
+
                                 };
                             })
                         };
@@ -427,14 +429,6 @@
                                     return '';
                                 }
 
-                                // Formatear y asignar las fechas al input
-                                $('#fecha_scheduling').val(formatearFecha(data.Fecha_Compromiso));
-                                $('#fecha_inv').val(formatearFecha(data.Fecha_Orden));
-                                $('#fecha_cliente').val(formatearFecha(data.Fecha_Cumplimiento));
-
-                                //$('#fecha_compromiso_tejido').val((data.X ?? '' ));
-
-
                                 // Aquí guardamos todo el objeto (registro) de MODELOS encontrado
                                 dataModelo = data;
                             } else {
@@ -444,17 +438,18 @@
                         .catch(error => console.error('Error al obtener detalle del modelo:', error));
                 }
             });
-        });
+            $('#no_flog').on('select2:select', function(e) {
+                const selectedData = e.params.data;
 
-        $('#no_flog').on('select2:select', function(e) {
-            const selectedData = e.params.data;
+                // Extraer y mostrar NAMEPROYECT en el input #descrip
+                const nameProyect = selectedData.text.split('|')[2]?.trim() || '';
+                $('#descrip').val(nameProyect);
 
-            // Extraer y mostrar NAMEPROYECT en el input #descrip
-            const nameProyect = selectedData.text.split('|')[2]?.trim() || '';
-            $('#descrip').val(nameProyect);
+                // También puedes guardar el objeto si deseas usarlo después
+                dataFlog = selectedData;
 
-            // También puedes guardar el objeto si deseas usarlo después
-            dataFlog = selectedData;
+            });
+
         });
     </script>
     <!--STORE script para enviar datos al BACK, seran guardados en TEJIDO_SCHEDULING-->
@@ -576,4 +571,40 @@
                 });
         });
     </script>
+    <!--Este SCIRPT es para ocultar la 2da tabla al usuario, asi evitamos que genere algun error en caso de digitar datos primero en la 2da tabla-->
+    <script>
+        $(document).ready(function() {
+            // Por default, muestra el bloqueo
+            $('#tabla-registros').hide();
+
+            // Cuando el usuario selecciona un FLOG
+            $('#no_flog').on('select2:select', function(e) {
+                $('#tabla-registros').show();
+            });
+
+            // Si el usuario borra la selección de FLOG
+            $('#no_flog').on('select2:clear', function(e) {
+                $('#tabla-registros').hide();
+            });
+        });
+    </script>
+
+    @push('styles')
+        <style>
+            #tabla-bloqueo {
+                position: absolute;
+                background: rgba(240, 240, 240, 0.7);
+                width: 100%;
+                height: 100%;
+                z-index: 2;
+                top: 0;
+                left: 0;
+                display: none;
+            }
+
+            #tabla-registros-wrapper {
+                position: relative;
+            }
+        </style>
+    @endpush
 @endsection
