@@ -45,20 +45,23 @@ class TejidoSchedullingController extends Controller
         }
 
         $telar = $request->input('telar'); // Arreglo
+        $clave_ax = $request->input('clave_ax');
+        $tamano = $request->input('tamano');
         // ¿Cuántos telares llegaron?
 
-        //traigo los datos faltantes para la creacion de un nuevo registro en la tabla TEJIDO_SCHEDULING
-        $telar = CatalagoTelar::where('telar', $telar)->first();
 
-        $modelo = Modelos::where('CLAVE_AX', $request->clave_ax) //MAN7028
-            ->where('Tamanio_AX', $request->tamano)
-            ->where('Departamento', $telar->salon)
+        //traigo los datos faltantes para la creacion de un nuevo registro en la tabla TEJIDO_SCHEDULING
+        $telar1 = CatalagoTelar::where('telar', $telar)->first();
+
+        $modelo = Modelos::where('CLAVE_AX', $clave_ax) //MAN7028
+            ->where('Tamanio_AX', $tamano)
+            ->where('Departamento', $telar1->salon)
             ->first();
 
         $hilo = $request->input('hilo');
         $densidad = (int) $modelo->Tra > 40 ? 'Alta' : 'Normal';
-        $velocidad = CatalagoVelocidad::where('telar', $telar->nombre)->where('tipo_hilo', $hilo)->where('densidad', $densidad)->value('velocidad');
-        $eficiencia = CatalagoEficiencia::where('telar', $telar->nombre)->where('tipo_hilo', $hilo)->where('densidad', $densidad)->value('eficiencia');
+        $velocidad = CatalagoVelocidad::where('telar', $telar1->nombre)->where('tipo_hilo', $hilo)->where('densidad', $densidad)->value('velocidad');
+        $eficiencia = CatalagoEficiencia::where('telar', $telar1->nombre)->where('tipo_hilo', $hilo)->where('densidad', $densidad)->value('eficiencia');
 
         $Std_Toa_Hr_100 = (($modelo->TIRAS * 60) / ((($modelo->TOTAL / 1) + (($modelo->Luchaje * 0.5) / 0.0254) / $modelo->Repeticiones_p_corte) / $velocidad)); //LISTOO //velocidad variable pendiente
         $Horas = $request->input('cantidad') / ($Std_Toa_Hr_100 * $eficiencia);
