@@ -81,16 +81,6 @@
             transform: scale(1.1) rotate(-10deg);
         }
 
-        .input-group input,
-        .input-group select {
-            border: 1px solid #efa169;
-            /* Borde naranja */
-            box-shadow: 0 0 4px 0 #ff980080;
-            /* Sombra tipo humo naranja */
-            transition: border 0.2s, box-shadow 0.2s;
-            outline: none;
-        }
-
         .input-group input.filled,
         .input-group select.filled {
             border: 2px solid #43a047;
