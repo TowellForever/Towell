@@ -80,6 +80,29 @@
             /* azul oscuro */
             transform: scale(1.1) rotate(-10deg);
         }
+
+        .input-group input,
+        .input-group select {
+            border: 1px solid #efa169;
+            /* Borde naranja */
+            box-shadow: 0 0 4px 0 #ff980080;
+            /* Sombra tipo humo naranja */
+            transition: border 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+
+        .input-group input.filled,
+        .input-group select.filled {
+            border: 2px solid #43a047;
+            /* Borde verde */
+            box-shadow: 0 0 8px 0 #43a04780;
+            /* Sombra verde */
+        }
+
+        #name {
+            border: 2px solid #ffffff !important;
+            box-shadow: 0 0 8px 0 #5fcaff !important;
+        }
     </style>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -88,19 +111,16 @@
 <body class="fondoLog">
     <div class="login-container">
         <div class="login-box">
-            <h2>Iniciar sesión</h2>
-
+            <h2>INICIAR SESIÓN</h2>
             <!-- Formulario de login -->
             <form id="loginForm" method="POST" action="{{ url('/login') }}">
                 @csrf
 
                 <!-- Campo para Foto de perfil -->
-                <div class="input-group">
-                    <label for="photo">Foto de Perfil</label>
-
+                <div class="input-group -mt-8">
                     <!-- Cuadro donde se podrá visualizar la foto en el futuro -->
                     <div id="photo-preview" class="photo-preview">
-                        <img src="images/fotos_usuarios/TOWELLIN.png" alt="Previsualización" width="200"
+                        <img src="images/fotos_usuarios/TOWELLIN.png" alt="Previsualización" width="120"
                             id="photo-image" />
                     </div>
                 </div>
@@ -369,6 +389,24 @@
             if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
                 // Si se volvió a esta página desde el historial (adelante o atrás)
                 window.location.reload(); // Fuerza recarga completa
+            }
+        });
+    </script>
+    <script>
+        // Selecciona todos los inputs y selects dentro de .input-group
+        document.querySelectorAll('.input-group input, .input-group select').forEach(el => {
+            el.addEventListener('input', function() {
+                // Si tiene valor, pone clase "filled"; si no, la quita
+                if (this.value.trim() !== "") {
+                    this.classList.add('filled');
+                } else {
+                    this.classList.remove('filled');
+                }
+            });
+
+            // Al cargar la página, aplica el color si ya tienen valor
+            if (el.value.trim() !== "") {
+                el.classList.add('filled');
             }
         });
     </script>

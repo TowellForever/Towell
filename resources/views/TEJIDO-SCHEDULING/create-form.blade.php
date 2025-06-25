@@ -51,7 +51,9 @@
             </div>
             <div class="flex items-center">
                 <label for="calendario" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CALENDARIO:</label>
-                <select name="calendario" id="calendario" class="w-36 border border-gray-300 rounded px-1 py-0.5">
+                <select name="calendario" id="calendario"
+                    class="w-36 border border-gray-300 rounded px-1 py-0.5 select-alert">
+                    <option value="" disabled selected>Selecciona una opción</option>
                     <option value="Calendario Tej1">Calendario Tej1</option><!-- toma en cuenta TODOS los días-->
                     <option value="Calendario Tej2">Calendario Tej2 </option><!-- NO toma en cuenta domingos-->
                     <option value="Calendario Tej3">Calendario Tej3 </option>
@@ -77,7 +79,9 @@
 
             <div class="flex items-center">
                 <label for="aplicacion" class="w-16 font-medium text-gray-700 fs-9 -mb-1">APLICACIÓN:</label>
-                <select name="aplicacion" id="aplicacion" class="w-36 border border-gray-300 rounded px-1 py-0.5">
+                <select name="aplicacion" id="aplicacion"
+                    class="w-36 border border-gray-300 rounded px-1 py-0.5 select-alert">
+                    <option value="" disabled selected>Selecciona una opción</option>
                     <option value="RZ">RZ</option>
                     <option value="RZ2">RZ2</option>
                     <option value="RZ3">RZ3</option>
@@ -107,7 +111,9 @@
             </div>
             <div class="flex items-center">
                 <label for="hilo" class="w-16 font-medium text-gray-700 fs-9 -mb-1">HILO:</label>
-                <select name="hilo" id="hilo" class="w-36 border border-gray-300 rounded px-1 py-0.5">
+                <select name="hilo" id="hilo"
+                    class="w-36 border border-gray-300 rounded px-1 py-0.5 select-alert">
+                    <option value="" disabled selected>Selecciona una opción</option>
                     <option value="H">H</option>
                     <option value="T20 PEINADO">T20 PEINADO</option>
                     <option value="A12">RZ3</option>
@@ -533,7 +539,7 @@
                     .then(data => {
                         if (data) {
                             // Aquí puedes llenar otros campos de la fila, por ejemplo:
-                            fila.find('input[name="fecha_inicio[]"]').val(data ? data.Inicio_Tejido :
+                            fila.find('input[name="fecha_inicio[]"]').val(data ? data.Fin_Tejido :
                                 '');
                         } else {
                             // Puedes limpiar los campos o mostrar mensaje
@@ -583,21 +589,50 @@
     <!--Este SCIRPT es para ocultar la 2da tabla al usuario, asi evitamos que genere algun error en caso de digitar datos primero en la 2da tabla-->
     <script>
         $(document).ready(function() {
-            // Por default, muestra el bloqueo
+            // Por default, oculta la tabla
             $('#tabla-registros').hide();
 
-            // Cuando el usuario selecciona un FLOG
-            $('#no_flog').on('select2:select', function(e) {
-                $('#tabla-registros').show();
-            });
+            // Función para revisar todos los selects
+            function revisarSelects() {
+                var flog = $('#no_flog').val();
+                var hilo = $('#hilo').val();
+                var aplicacion = $('#aplicacion').val();
+                var calendario = $('#calendario').val();
 
-            // Si el usuario borra la selección de FLOG
-            $('#no_flog').on('select2:clear', function(e) {
-                $('#tabla-registros').hide();
-            });
+                // Mostrar solo si todos tienen valor
+                if (flog && hilo && aplicacion && calendario) {
+                    $('#tabla-registros').show();
+                } else {
+                    $('#tabla-registros').hide();
+                }
+            }
+
+            // Eventos para cada select
+            $('#no_flog').on('select2:select select2:clear', revisarSelects);
+            $('#hilo, #aplicacion, #calendario').on('change', revisarSelects);
+
+            // Opcional: revisar al cargar la página (por si ya hay valores preseleccionados)
+            revisarSelects();
         });
     </script>
 
+    <script>
+        document.querySelectorAll('.select-alert').forEach(sel => {
+            function revisar() {
+                // Si hay un valor seleccionado (no vacío)
+                if (sel.value && sel.value.trim() !== '') {
+                    sel.classList.add('filled');
+                } else {
+                    sel.classList.remove('filled');
+                }
+            }
+
+            // Revisar al cargar la página
+            revisar();
+            // Revisar cada vez que cambie el select
+            sel.addEventListener('change', revisar);
+        });
+    </script>
     @push('styles')
         <style>
             #tabla-bloqueo {
@@ -613,6 +648,21 @@
 
             #tabla-registros-wrapper {
                 position: relative;
+            }
+
+            /* Humo rojo por default (select sin valor) */
+            .select-alert {
+                border: 2px solid #e53935;
+                box-shadow: 0 0 5px 0 #e5393580;
+                /* rojo con transparencia */
+                transition: border 0.2s, box-shadow 0.2s;
+                outline: none;
+            }
+
+            /* Verde cuando tiene valor */
+            .select-alert.filled {
+                border: 2px solid #43a047;
+                box-shadow: 0 0 10px 0 #43a04780;
             }
         </style>
     @endpush
