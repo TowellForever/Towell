@@ -376,9 +376,9 @@
                                     confirmButtonColor: '#3085d6',
                                     background: '#fff',
                                     color: '#333'
+                                }).then(() => {
+                                    location.reload();
                                 });
-
-
                             } else {
                                 console.log('Modelo encontrado:', data);
                                 // Aquí acomodo los campos como requiera, son los datos que envio el BACK como JSON (registro encontrado en modelos)

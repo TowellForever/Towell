@@ -179,6 +179,7 @@ Route::resource('velocidad', CatalagoVelocidadController::class);
 Route::get('/traspasoDataRedireccion', [TejidoSchedullingController::class, 'envioDeDataPlaneacion']);
 Route::get('/Tejido-Scheduling/ultimo-por-telar', [TejidoSchedullingController::class, 'buscarUltimoPorTelar']);
 Route::get('/Tejido-Scheduling/fechaFin', [TejidoSchedullingController::class, 'calcularFechaFin']);
+Route::get('/Tejido-Scheduling/editar', [TejidoSchedullingController::class, 'editarRegistro']); // formulario de edición para Registros de Planeación
 
 
 // ✅ NUEVAS RUTAS de PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION

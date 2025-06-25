@@ -58,6 +58,8 @@ class TejidoSchedullingController extends Controller
             ->where('Departamento', $telar1->salon)
             ->first();
 
+        //Validación de que el MODELO exista, puede NO coincidir por el salon
+
         $hilo = $request->input('hilo');
         $densidad = (int) $modelo->Tra > 40 ? 'Alta' : 'Normal';
         $velocidad = CatalagoVelocidad::where('telar', $telar1->nombre)->where('tipo_hilo', $hilo)->where('densidad', $densidad)->value('velocidad');
@@ -189,5 +191,10 @@ class TejidoSchedullingController extends Controller
         }
 
         return response()->json($resultados);
+    }
+    public function editarRegistro(Request $request)
+    {
+        $datos = $request->query(); // datos por URL
+        return view('TEJIDO-SCHEDULING.edit', compact('datos'));
     }
 }
