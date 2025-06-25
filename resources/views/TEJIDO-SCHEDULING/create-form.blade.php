@@ -320,8 +320,8 @@
                                 return {
                                     id: item.IDFLOG,
                                     ITEMNAME: item.ITEMNAME,
-                                    text: `${item.IDFLOG} | ${item.ITEMNAME}`,
                                     INVENTSIZEID: item.INVENTSIZEID,
+                                    text: `${item.IDFLOG} | ${item.ITEMNAME} | ${item.INVENTSIZEID}`,
                                     ITEMID: item.ITEMID,
 
                                 };
@@ -361,7 +361,19 @@
                     fetch(`/modelo/detalle?${params.toString()}`)
                         .then(response => response.json())
                         .then(data => {
-                            if (data) {
+                            if (Object.keys(data).length === 0) {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'NO ENCONTRADO',
+                                    text: 'Lo sentimos, no se encontró el modelo con esos datos.',
+                                    confirmButtonText: 'Ok',
+                                    confirmButtonColor: '#3085d6',
+                                    background: '#fff',
+                                    color: '#333'
+                                });
+
+
+                            } else {
                                 console.log('Modelo encontrado:', data);
                                 // Aquí acomodo los campos como requiera, son los datos que envio el BACK como JSON (registro encontrado en modelos)
                                 $('#trama_0').val(!isNaN(parseFloat(data.Tra)) ? parseFloat(data.Tra)
@@ -430,8 +442,6 @@
 
                                 // Aquí guardamos todo el objeto (registro) de MODELOS encontrado
                                 dataModelo = data;
-                            } else {
-                                console.warn('No se encontró el modelo con esos datos');
                             }
                         })
                         .catch(error => console.error('Error al obtener detalle del modelo:', error));
@@ -440,9 +450,9 @@
             $('#no_flog').on('select2:select', function(e) {
                 const selectedData = e.params.data;
 
-                // Extraer y mostrar NAMEPROYECT en el input #descrip
+                // Extraer y mostrar NAMEPROYECT en el input #descrip - DESCRIPCION DESCRIPCION DESCRIPCION DESCRIPCION DESCRIPCION DESCRIPCION DESCRIPCION DESCRIPCION 
                 const nameProyect = selectedData.text.split('|')[2]?.trim() || '';
-                $('#descrip').val(nameProyect);
+                $('#descripcion').val(nameProyect);
 
                 // También puedes guardar el objeto si deseas usarlo después
                 dataFlog = selectedData;
