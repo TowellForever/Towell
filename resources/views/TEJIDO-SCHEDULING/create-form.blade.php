@@ -82,6 +82,7 @@
                 <select name="aplicacion" id="aplicacion"
                     class="w-36 border border-gray-300 rounded px-1 py-0.5 select-alert">
                     <option value="" disabled selected>Selecciona una opción</option>
+                    <option value="RZ">NO APLICA</option>
                     <option value="RZ">RZ</option>
                     <option value="RZ2">RZ2</option>
                     <option value="RZ3">RZ3</option>
@@ -575,13 +576,23 @@
                 )
                 .then(resp => resp.json())
                 .then(data => {
-                    if (data && data.fecha) {
+                    if (data.error) {
+                        fila.find('input[name="fecha_fin[]"]').val('');
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'NO ENCONTRADO',
+                            text: data.message,
+                            confirmButtonText: 'Entendido',
+                            confirmButtonColor: '#3085d6',
+                            background: '#fff',
+                            color: '#333'
+                        });
+                        // Si quieres, también limpia campos aquí, etc
+                    } else {
                         // Aquí puedes llenar otros campos de la fila, por ejemplo:
                         console.log('Datos de Fecha FINAL:', data);
                         fila.find('input[name="fecha_fin[]"]').val(data ? data.fecha :
                             '');
-                    } else {
-                        fila.find('input[name="fecha_fin[]"]').val('');
                     }
                 });
         });

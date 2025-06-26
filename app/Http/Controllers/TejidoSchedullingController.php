@@ -58,6 +58,14 @@ class TejidoSchedullingController extends Controller
             ->where('Departamento', $telar1->salon)
             ->first();
 
+        if (!$modelo) {
+            // Retorna un error, puedes poner un código de error personalizado si quieres
+            return response()->json([
+                'error' => true,
+                'message' => 'No se encontró un modelo con los datos del telar seleccionado.'
+            ], 404); // 404 es "Not Found", puedes usar 200 si no quieres que JS lo vea como "error"
+        }
+
         //Validación de que el MODELO exista, puede NO coincidir por el salon
 
         $hilo = $request->input('hilo');
@@ -158,10 +166,12 @@ class TejidoSchedullingController extends Controller
         //    'Horas' => $Horas,
         //    'tipo_calendario' => $tipo_calendario,
         //]);
+
+
         return response()->json(['fecha' => $fecha]);
     }
 
-    //metodos para FLOGS
+    //metodos para FLOGS BUSCAR FLOGSO BUSCAR FLOGSO BUSCAR FLOGSO BUSCAR FLOGSO BUSCAR FLOGSO BUSCAR FLOGSO BUSCAR FLOGSO BUSCAR FLOGSO BUSCAR FLOGSO BUSCAR FLOGSO BUSCAR FLOGSO BUSCAR FLOGSO
     public function buscarFlogso(Request $request)
     {
         $query = $request->input('fingered');
@@ -174,24 +184,20 @@ class TejidoSchedullingController extends Controller
             ->orderBy('IDFLOG', 'asc')
             ->get();
 
-        // 2. Si no hay resultados, buscar en TWFLOGSITEMLINE
-        if ($resultados->isEmpty()) {
-            $resultados = DB::connection('sqlsrv_ti')
-                ->table('TWFLOGSITEMLINE')
-                ->select('INVENTSIZEID', 'ITEMID', 'IDFLOG', 'ITEMNAME')
-                ->where('IDFLOG', 'like', '%' . $query . '%')
-                ->orderBy('IDFLOG', 'asc')
-                // Quitar repetidos con ->distinct()
-                ->distinct()
-                ->get();
-        } else {
-            // También puedes filtrar repetidos aquí si quieres, aunque normalmente
-            // BOMID no tiene repetidos. Si los hay, agrega ->distinct() también aquí:
-            // ->distinct()
-        }
+        // 2.  buscar en TWFLOGSITEMLINE
+        $resultados2 = DB::connection('sqlsrv_ti')
+            ->table('TWFLOGSITEMLINE')
+            ->select('INVENTSIZEID', 'ITEMID', 'IDFLOG', 'ITEMNAME')
+            ->where('IDFLOG', 'like', '%' . $query . '%')
+            ->orderBy('IDFLOG', 'asc')
+            ->distinct()
+            ->get();
 
-        return response()->json($resultados);
+        return response()->json(
+            $resultados->merge($resultados2)->values()
+        );
     }
+
     public function editarRegistro(Request $request)
     {
         $datos = $request->query(); // datos por URL
