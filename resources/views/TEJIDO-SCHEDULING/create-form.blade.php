@@ -372,8 +372,8 @@
                                 Swal.fire({
                                     icon: 'warning',
                                     title: 'NO ENCONTRADO',
-                                    text: 'Lo sentimos, no se encontró el modelo con esos datos.',
-                                    confirmButtonText: 'Ok',
+                                    text: 'Lo sentimos, no se ha encontrado el modelo con esos datos.',
+                                    confirmButtonText: 'Entendido',
                                     confirmButtonColor: '#3085d6',
                                     background: '#fff',
                                     color: '#333'
@@ -415,6 +415,7 @@
                                 $('#nombre_modelo').val(String(data.Modelo ?? ''));
                                 $('#clave_ax').val(data.CLAVE_AX);
                                 $('#tamano').val(data.Tamanio_AX);
+                                $('#descripcion').val(data.Nombre_de_Formato_Logistico);
 
                                 //Función para formatear el número
                                 function mostrarBonito(num) {
@@ -454,17 +455,18 @@
                         .catch(error => console.error('Error al obtener detalle del modelo:', error));
                 }
             });
-            $('#no_flog').on('select2:select', function(e) {
-                const selectedData = e.params.data;
 
-                // Extraer y mostrar NAMEPROYECT en el input #descrip - DESCRIPCION DESCRIPCION DESCRIPCION DESCRIPCION DESCRIPCION DESCRIPCION DESCRIPCION DESCRIPCION 
-                const nameProyect = selectedData.text.split('|')[2]?.trim() || '';
-                $('#descripcion').val(nameProyect);
+            /*   $('#no_flog').on('select2:select', function(e) {
+                        const selectedData = e.params.data;
 
-                // También puedes guardar el objeto si deseas usarlo después
-                dataFlog = selectedData;
+                        // Extraer y mostrar NAMEPROYECT en el input #descrip - DESCRIPCION DESCRIPCION DESCRIPCION DESCRIPCION DESCRIPCION DESCRIPCION DESCRIPCION DESCRIPCION 
+                        const nameProyect = selectedData.text.split('|')[2]?.trim() || '';
+                        $('#descripcion').val(nameProyect);
 
-            });
+                        // También puedes guardar el objeto si deseas usarlo después
+                        dataFlog = selectedData;
+
+                    });*/
 
         });
     </script>
