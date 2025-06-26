@@ -511,7 +511,7 @@ class PlaneacionController extends Controller
           'Calc4' => null,
           'Calc5' => null,
           'Calc6' => null,
-          'Fin_Tejido' => Carbon::parse($request->fin)->format('Y-m-d H:i:s'),
+          'Fin_Tejido' => Carbon::parse($fin)->format('Y-m-d H:i:s'),
           'Fecha_Compromiso' => null, //Carbon::parse($request->input('fecha_compromiso_tejido'))->format('Y-m-d')
           'Fecha_Compromiso1' => null, //Carbon::parse($request->input('fecha_cliente'))->format('Y-m-d')
           'Entrega' => null, //Carbon::parse($request->input('fecha_entrega'))->format('Y-m-d')
