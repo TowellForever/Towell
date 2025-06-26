@@ -143,6 +143,12 @@ class PlaneacionController extends Controller
   }
 
   // STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE STORE
+  private function fecha_a_excel_serial($fecha)
+  {
+    $excelBase = strtotime('1899-12-30 00:00:00');
+    $timestamp = strtotime($fecha);
+    return ($timestamp - $excelBase) / 86400;
+  }
   public function store(Request $request)
   {
     //dd($request->all()); // ✅ Imprime todos los datos del formulario
@@ -155,10 +161,12 @@ class PlaneacionController extends Controller
       //traigo los datos faltantes para la creacion de un nuevo registro en la tabla TEJIDO_SCHEDULING
       $telar = CatalagoTelar::where('telar', $telares[$i])->first();
 
+
       $modelo = Modelos::where('CLAVE_AX', $request->clave_ax) //MAN7028
         ->where('Tamanio_AX', $request->tamano)
         ->where('Departamento', $telar->salon)
         ->first();
+
 
       $hilo = $request->input('hilo');
 
@@ -170,32 +178,19 @@ class PlaneacionController extends Controller
 
       $Peso_gr_m2 = ($modelo->P_crudo * 10000) / ($modelo->Largo * $modelo->Ancho);
 
-      function fecha_a_excel_serial($fecha)
-      {
-        // Fecha base en Excel: 1899-12-30
-        $excelBase = strtotime('1899-12-30 00:00:00');
-        $timestamp = strtotime($fecha);
-        return ($timestamp - $excelBase) / 86400;
-      }
-
       // calculo de dias y fracciones de dias para FECHAS INICIO Y FIN
-      $inicio =  '2025-03-01 09:00:00.000'; //$request=>input('fecha_inicio');
-      $fin =     '2025-03-05 09:00:00.000'; //$request=->input('fecha_fin'); 
+      $inicio = $request->fecha_inicio[$i]; //$request=>input('fecha_inicio');
+      $fin =    $request->fecha_fin[$i]; //$request=->input('fecha_fin'); 
 
-      $inicioX = fecha_a_excel_serial($inicio);
-      $inicioY = fecha_a_excel_serial($fin);
+      $inicioX = $this->fecha_a_excel_serial($inicio);
+      $inicioY = $this->fecha_a_excel_serial($fin);
 
       $DiferenciaZ = round($inicioY - $inicioX, 5);
 
-      dd([
-        'inicio' => $inicioX,
-        'fin' => $inicioY,
-        'DiferenciaZ' => $DiferenciaZ,
-      ]);
-
       $Dias_Ef = round($DiferenciaZ / 24); // redondeado a 2 decimales BA en EXCEL
 
-      $Std_Hr_efectivo = ($request->input('saldo') / ($DiferenciaZ)) / 24;   //=(P21/(BM21-BI21))/24   -->   (Saldos/ (fecha_fin - fecha_inicio) ) / 24  (7000 / 13.9) / 24
+      $saldos = $request->input('cantidad'); // CANTIDAD = SALDOS, pero recuerda que es un arreglo
+      $Std_Hr_efectivo = ($saldos[$i] / ($DiferenciaZ)) / 24;   //=(P21/(BM21-BI21))/24   -->   (Saldos/ (fecha_fin - fecha_inicio) ) / 24  (7000 / 13.9) / 24
 
       //Producción de kilogramos por DIA
       $Prod_Kg_Dia = ($modelo->P_crudo * $Std_Hr_efectivo) * 24 / 1000; //<-- <-- <-- BD en EXCEL -> PEMDAS MINE
@@ -206,7 +201,7 @@ class PlaneacionController extends Controller
 
       $Std_Toa_Hr_100 = (($modelo->TIRAS * 60) / ((($modelo->TOTAL / 1) + (($modelo->Luchaje * 0.5) / 0.0254) / $modelo->Repeticiones_p_corte) / $velocidad)); //LISTOO //velocidad variable pendiente
 
-      $Horas = $request->input('saldo') / ($Std_Toa_Hr_100 * $eficiencia);
+      $Horas = $saldos[$i]  / ($Std_Toa_Hr_100 * $eficiencia);
 
       $Dias_jornada_completa = $Horas / 24;
 
@@ -219,7 +214,7 @@ class PlaneacionController extends Controller
 
       //Validamos que no existe el registro, en caso de red lenta o de que el user de 2 clics, no se creen multiples registros con la misma informacion.
       $cuenta = $request->input('cuenta_rizo');
-      $telarE = $request->input('telar');
+      $telarE = $telares[$i];
       $nombreModelo = $request->input('nombre_modelo');
       $inicio = now()->copy()->subSeconds(5);
       $fin = now()->copy()->addSeconds(5);
@@ -236,8 +231,8 @@ class PlaneacionController extends Controller
 
       //NUEVOS CAMPOS para TEJIDO_SCHEDULING (siguientes tablas en excel en TEJIDO_SCHEDULING)
       //Por ahora tendremos en cuentas las fechas INICIO y FIN CAPTURABLES
-      $Fechainicio = Carbon::parse($request->input('fecha_inicio'));
-      $Fechafin = Carbon::parse($request->input('fecha_fin'));
+      $Fechainicio = Carbon::parse($request->fecha_inicio[$i]);
+      $Fechafin = Carbon::parse($request->fecha_fin[$i]);
 
       if ($Fechafin->lessThanOrEqualTo($Fechainicio)) {
         return response()->json(['error' => 'La fecha fin debe ser posterior a la fecha inicio'], 422);
@@ -432,31 +427,37 @@ class PlaneacionController extends Controller
       //dd([
       //  'dias:' => $dias,
       //]);
-      //procedemos con las formulas de excel tomando en cuenta las proporciones de los dias de acuerdo a las fechas de inicio y fin
+      //procedemos con las formulas de excel tomando en cuenta las proporciones de los dias de acuerdo a las fechas de inicio y fin (float) $request->input('cuenta_rizo'),
+      $c1 = (float)$request->input('calibre_1');
+      $c2 = (float)$request->input('calibre_2');
+      $c3 = (float)$request->input('calibre_3');
+      $c4 = (float)$request->input('calibre_4');
+      $c5 = (float)$request->input('calibre_5');
+
       $nuevoRegistro = Planeacion::create(
         [
-          'Cuenta' => (string) $request->input('cuenta_rizo'),
+          'Cuenta' => (float) $request->input('cuenta_rizo'),
           'Salon' => $telar ? $telar->salon : null, //De esta forma se evita lanzar un error de laravel en caso de que $telar->telar sea nulo (no tenga valor) $telar ? $telar->salon :
-          'Telar'  => $request->input('telar'),
-          'Ultimo' =>  null,
+          'Telar'  => (float) $telares[$i],
+          'Ultimo' =>  'ULTIMO',
           'Cambios_Hilo' => null,
           'Maquina' => $telar ? $telar->nombre : null,
           'Ancho' => $modelo ? (int) $modelo->Ancho : null,
-          'Eficiencia_Std' => $eficiencia,
-          'Velocidad_STD' => $velocidad,
+          'Eficiencia_Std' => (float) $eficiencia,
+          'Velocidad_STD' =>  (float) $velocidad,
           'Hilo' =>  $request->input('hilo'),
           'Calibre_Rizo' =>  $calibre_rizo ? (float) $calibre_rizo : null,
-          'Calibre_Pie' =>  $calibre_pie ? $calibre_pie : null,
+          'Calibre_Pie' =>  $calibre_pie ? (float) $calibre_pie : null,
           'Calendario' => $request->input('calendario'),
           'Clave_AX' => $request->input('clave_ax'),
           'Clave_Estilo' => $request->input('tamano') . $request->input('clave_ax'),
           'Tamano_AX' => $request->input('tamano'),
           'Estilo_Alternativo' => null,
           'Nombre_Producto' => $modelo ? $modelo->Modelo : null,
-          'Saldos' => $request->input('saldo'),
+          'Saldos' => (float) $saldos[$i],
           'Fecha_Captura' =>  Carbon::now(),
           'Orden_Prod' => null,
-          'Fecha_Liberacion' => $request->input('fecha_scheduling'),
+          'Fecha_Liberacion' => null,
           'Id_Flog' => $request->input('no_flog'),
           'Descrip' => $request->input('descripcion'),
           'Aplic' => $request->input('aplicacion'),
@@ -469,7 +470,7 @@ class PlaneacionController extends Controller
           'Luchaje' => $modelo ? (int) $modelo->Luchaje : null,
           'CALIBRE_TRA' => (float) $request->input('trama_0'),
           'Dobladillo' => $modelo ? $modelo->Tipo_plano : null,
-          'PASADAS_TRAMA' =>  $modelo ? (int)$modelo->PASADAS : null,
+          'PASADAS_TRAMA' =>  $modelo ? (int) $modelo->PASADAS : null,
           'PASADAS_C1' => $modelo ? (int)$modelo->PASADAS_C1 : null,
           'PASADAS_C2' => $modelo ? (int)$modelo->PASADAS_C2 : null,
           'PASADAS_C3' => $modelo ? (int)$modelo->PASADAS_C3 : null,
@@ -477,23 +478,24 @@ class PlaneacionController extends Controller
           'PASADAS_C5' =>  $modelo ? (int)$modelo->X : null,
           'ancho_por_toalla' => $modelo ? (float) $ancho_por_toalla : null,
           'COLOR_TRAMA' => $modelo ? $modelo->OBS_R1 : null,
-          'CALIBRE_C1' =>  $modelo ? $request->input('calibre_1') : null,
+
+          'CALIBRE_C1' =>  $c1,
           'Clave_Color_C1' => null,
           'COLOR_C1' => $request->input('color_1'),
-          'CALIBRE_C2' =>  $request->input('calibre_2'),
+          'CALIBRE_C2' =>  $c2,
           'Clave_Color_C2' =>  null,
           'COLOR_C2' => $request->input('color_2'),
-          'CALIBRE_C3' =>  $request->input('calibre_3'),
+          'CALIBRE_C3' => $c3,
           'Clave_Color_C3' => null,
           'COLOR_C3' => $request->input('color_3'),
-          'CALIBRE_C4' =>  $request->input('calibre_4'),
+          'CALIBRE_C4' =>  $c4,
           'Clave_Color_C4' => null,
           'COLOR_C4' => $request->input('color_4'),
-          'CALIBRE_C5' =>  $request->input('calibre_5'),
+          'CALIBRE_C5' => $c5,
           'Clave_Color_C5' => null,
           'COLOR_C5' => $request->input('color_5'),
           'Plano' => $modelo ? (int) $modelo->Med_plano : null,
-          'Cuenta_Pie' => $request->input('cuenta_pie'),
+          'Cuenta_Pie' => (float) $request->input('cuenta_pie'),
           'Clave_Color_Pie' => null,
           'Color_Pie' =>  null, // PENDIENTE, GENERABA UN SUPER ERROR  $modelo->OBS ? $modelo->OBS : null,
           'Peso_gr_m2' => is_numeric($Peso_gr_m2) ? number_format((float) str_replace(',', '.', $Peso_gr_m2), 2, '.', '') : null,
@@ -505,19 +507,18 @@ class PlaneacionController extends Controller
           'Dias_jornada_completa' => is_numeric(str_replace(',', '.', $Dias_jornada_completa)) ? number_format((float) str_replace(',', '.', $Dias_jornada_completa), 2, '.', '') : null,
           'Horas' => $this->cleanDecimal($Horas), // aqui estoy utilizando una funcion privada, para omitir el escribir todo el codigo en cada parametro
           'Std_Hr_efectivo' => $this->cleanDecimal($Std_Hr_efectivo),
-          'Inicio_Tejido' => Carbon::parse($request->input('fecha_inicio'))->format('Y-m-d H:i:s'),
+          'Inicio_Tejido' => Carbon::parse($inicio)->format('Y-m-d H:i:s'),
           'Calc4' => null,
           'Calc5' => null,
           'Calc6' => null,
-          'Fin_Tejido' => Carbon::parse($request->input('fecha_fin'))->format('Y-m-d H:i:s'),
-          'Fecha_Compromiso' => Carbon::parse($request->input('fecha_compromiso_tejido'))->format('Y-m-d'),
-          'Fecha_Compromiso1' => Carbon::parse($request->input('fecha_cliente'))->format('Y-m-d'),
-          'Entrega' => Carbon::parse($request->input('fecha_entrega'))->format('Y-m-d'),
+          'Fin_Tejido' => Carbon::parse($request->fin)->format('Y-m-d H:i:s'),
+          'Fecha_Compromiso' => null, //Carbon::parse($request->input('fecha_compromiso_tejido'))->format('Y-m-d')
+          'Fecha_Compromiso1' => null, //Carbon::parse($request->input('fecha_cliente'))->format('Y-m-d')
+          'Entrega' => null, //Carbon::parse($request->input('fecha_entrega'))->format('Y-m-d')
           'Dif_vs_Compromiso' => null,
-          'cantidad' => $request->input('saldo'), // campo recién agregado 
-
-          // Aquí pueden ir más campos en el futuro
+          'cantidad' => (float) $saldos[$i], // campo recién agregado 
         ]
+
       );
 
       //una vez creado el nuevo registro, la info se almacena en la variable $nuevoRegistro, y con esa informacion obtenemos el num_registro (una vez ya generado el nuevo registro en TEJIDO_SCHEDULING)

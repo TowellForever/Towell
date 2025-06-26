@@ -24,13 +24,24 @@ class TejidoSchedullingController extends Controller
     public function buscarUltimoPorTelar(Request $request)
     {
         $telar = $request->input('telar');
+
+        // Buscar el registro que tiene ULTIMO en el campo Ultimo
         $registro = DB::table('TEJIDO_SCHEDULING')
             ->where('Telar', $telar)
             ->where('Ultimo', 'ULTIMO')
+            ->where('id', '>', 122)
             ->first();
 
-        return response()->json($registro); // Regresa los datos encontrados, o null si no hay
+        if ($registro) {
+            // Si existe, actualizamos el campo Ultimo a null
+            DB::table('TEJIDO_SCHEDULING')
+                ->where('id', $registro->id) // usa el id para asegurarte que solo ese registro cambia
+                ->update(['Ultimo' => null]);
+        }
+
+        return response()->json($registro); // Te regresa el registro (ya sin ULTIMO)
     }
+
     public function calcularFechaFin(Request $request)
     {
         //dd($request->all()); // ✅ Imprime todos los datos del formulario
