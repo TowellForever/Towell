@@ -82,9 +82,8 @@ Route::get('/modulo-urdido', function () {
 Route::get('/urdido/programar-requerimientos', function () {
     return view('modulos/urdido/programar-requerimientos');
 });
-Route::get('ingresar-folio', function () {
-    return view('modulos/urdido/ingresar_folio');
-})->name('ingresarFolio');
+Route::get('ingresar-folio', [UrdidoController::class, 'cargarOrdenesPendientesUrd'])->name('ingresarFolio');
+
 Route::post('orden-trabajo', [UrdidoController::class, 'cargarDatosUrdido'])->name('produccion.ordenTrabajo');
 Route::post('/urdido/guardar-finalizar', [UrdidoController::class, 'guardarYFinalizarUrdido'])->name('urdido.guardarFinalizar');
 Route::get('/imprimir-orden-llena-urd/{folio}', [UrdidoController::class, 'imprimirOrdenUrdido'])->name('imprimir.orden.urdido');
@@ -97,9 +96,9 @@ Route::get('/modulo-engomado', function () {
 Route::get('/engomado/programar-requerimientos', function () {
     return view('modulos/engomado/programar-requerimientos');
 });
-Route::get('/ingresar-folio-engomado', function () {
-    return view('modulos/engomado/ingresar_folio');
-})->name('ingresarFolioEngomado');
+
+Route::get('ingresar-folio-engomado', [EngomadoController::class, 'cargarOrdenesPendientesEng'])->name('ingresarFolioEngomado');
+
 Route::post('/orden-trabajo-engomado', [EngomadoController::class, 'cargarDatosEngomado'])->name('produccion.ordenTrabajoEngomado');
 Route::post('/guardar-y-finalizar-engomado', [EngomadoController::class, 'guardarYFinalizar'])->name('ordenEngomado.guardarYFinalizar'); //Ruta que sustituye a 2 amtiguas rutas de 2 botones que se unificaron
 Route::get('/imprimir-orden/{folio}', [EngomadoController::class, 'imprimirOrdenUE'])->name('imprimir.orden');
@@ -186,7 +185,7 @@ Route::get('/Tejido-Scheduling/editar', [TejidoSchedullingController::class, 'ed
 Route::get('/catalagos/calendarios', [CalendarioController::class, 'CalendarioT1'])->name('calendariot1.index');
 Route::get('/aplicaciones', [PlaneacionController::class, 'aplicaciones'])->name('planeacion.aplicaciones');
 Route::post('/calendarios/update-inline', [CalendarioController::class, 'updateInline'])->name('calendarios.update.inline');
-Route::get('/planeacion/tipo-movimientos/{id}', [PlaneacionController::class, 'obtenerPorTejNum']);
+Route::get('/planeacion/tipo-movimientos/{id}', [PlaneacionController::class, 'obtengyerPorTejNum']);
 Route::put('/tejido-en-proceso/{num_registro}', [PlaneacionController::class, 'update'])->name('tejido_scheduling.update');
 Route::get('/buscar-modelos', [PlaneacionController::class, 'buscarModelos'])->name('modelos.buscar'); //<- Rutas para SELECTS en Planeacion 
 Route::get('/modelos-por-clave', [PlaneacionController::class, 'obtenerModelosPorClave'])->name('modelos.porClave');

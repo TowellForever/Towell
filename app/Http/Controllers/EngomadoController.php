@@ -127,4 +127,10 @@ class EngomadoController extends Controller
 
         return view('modulos.programar_requerimientos.imprimir-orden-UrdEng', compact('folio', 'orden', 'julios', 'telares'));
     }
+
+    public function cargarOrdenesPendientesEng()
+    {
+        $ordenesPendientesEngo = UrdidoEngomado::where('estatus_engomado', 'en_proceso')->get();
+        return view('modulos.engomado.ingresar_folio', compact('ordenesPendientesEngo'));
+    }
 }

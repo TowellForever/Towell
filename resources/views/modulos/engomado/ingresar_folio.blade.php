@@ -77,23 +77,88 @@
             display: block;
         }
     </style>
+    <div class="flex min-h-screen h-screen from-blue-100 to-blue-300">
+        <h1 class="text-2xl font-bold text-center -ml-[200px] tracking-wide text-gray-800">ENGOMADO</h1>
+        <!-- Panel izquierdo: Captura de OT -->
+        <div class="flex-1 flex items-center justify-center">
+            <div class="glass-card w-full max-w-md p-8" id="card">
 
-    <div class="flex items-center justify-center min-h-screen bg-gradient-to-br text-white">
-        <div class="glass-card w-full max-w-md p-8" id="card">
-            <h1 class="text-2xl font-bold text-center mb-6 tracking-wide">ORDEN DE TRABAJO</h1>
-            <form id="folioForm" action="{{ route('produccion.ordenTrabajoEngomado') }}" method="POST" class="space-y-4">
-                @csrf
-                <div>
-                    <label for="folio" class="block mb-1 text-sm font-medium">Porfavor ingrese su orden de trabajo:</label>
-                    <input type="text" name="folio" id="folio"
-                        class="w-full px-4 py-2 rounded-md text-black border border-gray-300 focus:ring-2 focus:ring-blue-500 text-sm"
-                        required>
+                <h1 class="text-2xl font-bold text-center mb-6 tracking-wide text-gray-800">ORDEN DE TRABAJO</h1>
+                <form id="folioForm" action="{{ route('produccion.ordenTrabajoEngomado') }}" method="POST" class="space-y-4">
+                    @csrf
+                    <div>
+                        <label for="folio" class="block mb-1 text-sm font-medium text-center text-gray-700">
+                            Por favor ingrese su orden de trabajo
+                        </label>
+                        <input type="text" name="folio" id="folio"
+                            class="w-full px-4 py-2 rounded-md text-black border border-gray-300 focus:ring-2 focus:ring-blue-500 text-sm"
+                            required>
+                    </div>
+                    <button type="submit"
+                        class="w-full px-4 py-2 bg-blue-600 rounded-md text-white text-sm font-semibold shadow hover:shadow-lg transition-all duration-300">
+                        Cargar Información
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Panel derecho: Lista de órdenes -->
+        <div class="w-full max-w-[700px] flex flex-col p-2 h-[590px]">
+            <div class="flex flex-col bg-white bg-opacity-90 rounded-2xl shadow-lg p-2 h-full">
+                <h2 class="text-xl font-bold text-gray-800 text-center">ÓRDENES PENDIENTES</h2>
+                <div class="flex-1 flex flex-col bg-white rounded-2xl shadow-lg p-1 min-h-0">
+                    <div class="overflow-x-auto flex-1 flex flex-col min-h-0">
+                        <div class="min-w-full flex-1 flex flex-col min-h-0">
+                            <!-- Encabezados tipo tabla -->
+                            <div class="grid grid-cols-5 bg-gray-100 rounded-t-2xl">
+                                <div class="py-0.5 px-1 text-gray-700 font-bold text-sm">Folio</div>
+                                <div class="py-0.5 px-1 text-gray-700 font-bold text-sm">Tipo</div>
+                                <div class="py-0.5 px-1 text-gray-700 font-bold text-sm">Metros</div>
+                                <div class="py-0.5  text-gray-700 font-bold text-sm col-span-2">L. Maturdido</div>
+                            </div>
+                            <!-- Aquí inicia la "tabla" pero usando <ul> -->
+                            <ul class="divide-y divide-gray-200 flex-1 max-h-full overflow-y-auto min-h-0" id="orderList">
+                                @foreach ($ordenesPendientesEngo as $ordE)
+                                    <li class="order-item grid grid-cols-5 items-center   rounded-xl transition-colors cursor-pointer hover:bg-yellow-100"
+                                        data-orden="{{ $ordE->folio }}">
+                                        <span class="text-gray-700 font-medium">{{ $ordE->folio }}</span>
+                                        <span class="text-gray-700 font-medium">{{ $ordE->tipo }}</span>
+                                        <span
+                                            class="text-gray-700 font-medium">{{ fmod($ordE->metros, 1) == 0 ? intval($ordE->metros) : rtrim(rtrim(number_format($ordE->metros, 2, '.', ''), '0'), '.') }}</span>
+                                        <span class="text-gray-700 font-medium col-span-2">{{ $ordE->lmaturdido }}</span>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <button type="submit"
-                    class="w-full px-4 py-2 bg-blue-600 rounded-md text-white text-sm font-semibold shadow hover:shadow-lg transition-all duration-300">
-                    Cargar Información
-                </button>
-            </form>
+                <input type="hidden" id="selectedOrder" name="selectedOrder" value="">
+            </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const orderList = document.getElementById('orderList');
+            orderList.addEventListener('click', function(e) {
+                const items = orderList.querySelectorAll('li');
+                items.forEach(li => li.classList.remove('bg-yellow-200', 'ring', 'ring-yellow-300'));
+                let target = e.target;
+                while (target && target.tagName !== "LI") {
+                    target = target.parentElement;
+                }
+                if (target && target.classList.contains('order-item')) {
+                    target.classList.add('bg-yellow-200', 'ring', 'ring-yellow-300');
+
+                    // Obtener el folio del data-orden
+                    const folio = target.getAttribute(
+                        'data-orden'
+                    ); //data-orden es lo que alojó el folio, cuando se seleccionó un registro c:
+
+                    //input para el folio:
+                    document.getElementById('folio').value = folio;
+                }
+            });
+        });
+    </script>
 @endsection

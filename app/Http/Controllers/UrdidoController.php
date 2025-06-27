@@ -248,4 +248,10 @@ class UrdidoController extends Controller
 
         return view('modulos.urdido.imprimir_papeletas_vacias', compact('folio', 'orden', 'ordUrdido', 'telares', 'totalJulios'));
     }
+    public function cargarOrdenesPendientesUrd()
+    {
+        $ordenesPendientes = UrdidoEngomado::where('estatus_urdido', 'en_proceso')->get();
+
+        return view('modulos.urdido.ingresar_folio', compact('ordenesPendientes'));
+    }
 }

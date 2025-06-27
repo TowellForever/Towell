@@ -14,6 +14,9 @@ class UrdidoEngomado extends Model
 
     // Si el modelo tiene una clave primaria diferente a 'id', la definimos aquí
     protected $primaryKey = 'folio';
+    public $incrementing = false;
+    protected $keyType = 'string';
+
 
     // Definir si la tabla usa o no timestamps
     public $timestamps = true;
