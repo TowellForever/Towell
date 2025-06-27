@@ -211,7 +211,8 @@ class TejidoSchedullingController extends Controller
 
     public function editarRegistro(Request $request)
     {
+        $telares = DB::table('catalago_telares')->get();
         $datos = $request->query(); // datos por URL
-        return view('TEJIDO-SCHEDULING.edit', compact('datos'));
+        return view('TEJIDO-SCHEDULING.edit', compact('datos', 'telares'));
     }
 }

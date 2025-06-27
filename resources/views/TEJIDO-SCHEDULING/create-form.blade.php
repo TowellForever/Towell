@@ -25,31 +25,6 @@
                 </select>
             </div>
             <div class="flex items-center">
-                <label for="nombre_modelo" class="w-16 font-medium text-gray-700 fs-9 -mb-1">NOMBRE MODELO:</label>
-                <input type="text" id="nombre_modelo" name="nombre_modelo"
-                    class=" border border-gray-300 rounded px-1 py-0.5" readonly>
-            </div>
-            <div class="flex items-center">
-                <label for="trama_0" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA:</label>
-                <input type="number" step="0.01" name="trama_0" id="trama_0"
-                    class=" border border-gray-300 roundedpx-1 py-0.5">
-            </div>
-            <div class="flex items-center">
-                <label for="calibre_2" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 2:</label>
-                <input type="number" step="0.01" name="calibre_2" id="calibre_2"
-                    class=" border border-gray-300 rounded px-1 py-0.5">
-            </div>
-            <div class="flex items-center">
-                <label for="calibre_4" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 4:</label>
-                <input type="number" step="0.01" name="calibre_4" id="calibre_4"
-                    class=" border border-gray-300 rounded px-1 py-0.5">
-            </div>
-            <div class="flex items-center">
-                <label for="descripcion" class="w-16 font-medium text-gray-700 fs-9 -mb-1">DESCRIPCIÓN:</label>
-                <input type="text" name="descripcion" id="descripcion"
-                    class=" border border-gray-300 rounded px-1 py-0.5">
-            </div>
-            <div class="flex items-center">
                 <label for="calendario" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CALENDARIO:</label>
                 <select name="calendario" id="calendario"
                     class="w-36 border border-gray-300 rounded px-1 py-0.5 select-alert">
@@ -61,22 +36,23 @@
                 </select>
             </div>
             <div class="flex items-center">
-                <label for="color_0" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR:</label>
-                <input type="text" name="color_0" id="color_0" class=" border border-gray-300 rounded px-1 py-0.5">
+                <label for="cuenta_pie" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CUENTA PIE:</label>
+                <input type="number" name="cuenta_pie" id="cuenta_pie" class=" border border-gray-300 rounded px-1 py-0.5">
             </div>
             <div class="flex items-center">
-                <label for="color_2" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 2:</label>
-                <input type="text" name="color_2" id="color_2" class=" border border-gray-300 rounded px-1 py-0.5">
+                <label for="calibre_1" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 1:</label>
+                <input type="number" step="0.01" name="calibre_1" id="calibre_1"
+                    class=" border border-gray-300 rounded px-1 py-0.5">
             </div>
             <div class="flex items-center">
-                <label for="color_4" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 4:</label>
-                <input type="text" name="color_4" id="color_4" class=" border border-gray-300 rounded px-1 py-0.5">
+                <label for="color_3" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 3:</label>
+                <input type="text" name="color_3" id="color_3" class=" border border-gray-300 rounded px-1 py-0.5">
             </div>
             <div class="flex items-center">
-                <label for="clave_ax" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CLAVE AX:</label>
-                <input type="text" name="clave_ax" id="clave_ax" class="border rounded px-1 py-0.5 -mb-1" required>
+                <label for="descripcion" class="w-16 font-medium text-gray-700 fs-9 -mb-1">DESCRIPCIÓN:</label>
+                <input type="text" name="descripcion" id="descripcion"
+                    class=" border border-gray-300 rounded px-1 py-0.5">
             </div>
-
             <div class="flex items-center">
                 <label for="aplicacion" class="w-16 font-medium text-gray-700 fs-9 -mb-1">APLICACIÓN:</label>
                 <select name="aplicacion" id="aplicacion"
@@ -92,23 +68,22 @@
                 </select>
             </div>
             <div class="flex items-center">
-                <label for="calibre_1" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 1:</label>
-                <input type="number" step="0.01" name="calibre_1" id="calibre_1"
+                <label for="calibre_pie" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CALIRBE PIE:</label>
+                <input type="number" step="0.01" name="calibre_pie" id="calibre_pie"
                     class=" border border-gray-300 rounded px-1 py-0.5">
             </div>
             <div class="flex items-center">
-                <label for="calibre_3" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 3:</label>
-                <input type="number" step="0.01" name="calibre_3" id="calibre_3"
+                <label for="color_1" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 1:</label>
+                <input type="text" name="color_1" id="color_1" class=" border border-gray-300 rounded px-1 py-0.5">
+            </div>
+            <div class="flex items-center">
+                <label for="calibre_4" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 4:</label>
+                <input type="number" step="0.01" name="calibre_4" id="calibre_4"
                     class=" border border-gray-300 rounded px-1 py-0.5">
             </div>
             <div class="flex items-center">
-                <label for="calibre_5" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 5:</label>
-                <input type="number" step="0.01" name="calibre_5" id="calibre_5"
-                    class=" border border-gray-300 rounded px-1 py-0.5">
-            </div>
-            <div class="flex items-center">
-                <label for="tamano" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TAMAÑO:</label>
-                <input type="text" name="tamano" id="tamano" class="border rounded px-1 py-0.5 -mb-1" required>
+                <label for="clave_ax" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CLAVE AX:</label>
+                <input type="text" name="clave_ax" id="clave_ax" class="border rounded px-1 py-0.5 -mb-1" required>
             </div>
             <div class="flex items-center">
                 <label for="hilo" class="w-16 font-medium text-gray-700 fs-9 -mb-1">HILO:</label>
@@ -127,40 +102,59 @@
                 </select>
             </div>
             <div class="flex items-center">
-                <label for="color_1" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 1:</label>
-                <input type="text" name="color_1" id="color_1" class=" border border-gray-300 rounded px-1 py-0.5">
+                <label for="calibre_2" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 2:</label>
+                <input type="number" step="0.01" name="calibre_2" id="calibre_2"
+                    class=" border border-gray-300 rounded px-1 py-0.5">
             </div>
             <div class="flex items-center">
-                <label for="color_3" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 3:</label>
-                <input type="text" name="color_3" id="color_3" class=" border border-gray-300 rounded px-1 py-0.5">
+                <label for="color_4" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 4:</label>
+                <input type="text" name="color_4" id="color_4" class=" border border-gray-300 rounded px-1 py-0.5">
             </div>
             <div class="flex items-center">
-                <label for="color_5" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 5:</label>
-                <input type="text" name="color_5" id="color_5" class=" border border-gray-300 rounded px-1 py-0.5">
+                <label for="nombre_modelo" class="w-16 font-medium text-gray-700 fs-9 -mb-1">NOMBRE MODELO:</label>
+                <input type="text" id="nombre_modelo" name="nombre_modelo"
+                    class=" border border-gray-300 rounded px-1 py-0.5" readonly>
             </div>
-
             <div class="flex items-center">
                 <label for="cuenta_rizo" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CUENTA RIZO:</label>
                 <input type="number" name="cuenta_rizo" id="cuenta_rizo"
                     class=" border border-gray-300 rounded px-1 py-0.5">
             </div>
-
+            <div class="flex items-center">
+                <label for="trama_0" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA:</label>
+                <input type="number" step="0.01" name="trama_0" id="trama_0"
+                    class=" border border-gray-300 roundedpx-1 py-0.5">
+            </div>
+            <div class="flex items-center">
+                <label for="color_2" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 2:</label>
+                <input type="text" name="color_2" id="color_2" class=" border border-gray-300 rounded px-1 py-0.5">
+            </div>
+            <div class="flex items-center">
+                <label for="calibre_5" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 5:</label>
+                <input type="number" step="0.01" name="calibre_5" id="calibre_5"
+                    class=" border border-gray-300 rounded px-1 py-0.5">
+            </div>
+            <div class="flex items-center">
+                <label for="tamano" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TAMAÑO:</label>
+                <input type="text" name="tamano" id="tamano" class="border rounded px-1 py-0.5 -mb-1" required>
+            </div>
             <div class="flex items-center">
                 <label for="calibre_rizo" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CALIBRE RIZO:</label>
                 <input type="number" step="0.01" name="calibre_rizo" id="calibre_rizo"
                     class=" border border-gray-300 rounded px-1 py-0.5">
             </div>
-
             <div class="flex items-center">
-                <label for="cuenta_pie" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CUENTA PIE:</label>
-                <input type="number" name="cuenta_pie" id="cuenta_pie"
+                <label for="color_0" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR:</label>
+                <input type="text" name="color_0" id="color_0" class=" border border-gray-300 rounded px-1 py-0.5">
+            </div>
+            <div class="flex items-center">
+                <label for="calibre_3" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 3:</label>
+                <input type="number" step="0.01" name="calibre_3" id="calibre_3"
                     class=" border border-gray-300 rounded px-1 py-0.5">
             </div>
-
             <div class="flex items-center">
-                <label for="calibre_pie" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CALIRBE PIE:</label>
-                <input type="number" step="0.01" name="calibre_pie" id="calibre_pie"
-                    class=" border border-gray-300 rounded px-1 py-0.5">
+                <label for="color_5" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 5:</label>
+                <input type="text" name="color_5" id="color_5" class=" border border-gray-300 rounded px-1 py-0.5">
             </div>
 
             <!-- - - - - - - - - - - -  - - - - - - - - - - DATOS DEL TELAR  -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  - - - - -->
@@ -246,7 +240,6 @@
                     GUARDAR
                 </button>
             </div>
-
         </form>
     </div>
 
