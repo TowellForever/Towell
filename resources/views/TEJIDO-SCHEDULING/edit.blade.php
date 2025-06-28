@@ -1,12 +1,3 @@
-<?php
-$datos = [
-    // ... tus datos ...
-    'en_proceso' => 'Sí',
-    'Cuenta' => '2222',
-    // ... etc ...
-    'id' => 55,
-];
-?>
 @extends('layouts.app')
 
 @section('content')
@@ -30,146 +21,157 @@ $datos = [
                 <label for="no_flog" class="w-20 font-medium text-gray-700">No FLOG:</label>
                 <select id="no_flog" name="no_flog"
                     class=" border border-gray-300 rounded px-1 py-0.5 select2-flog no_flog-select">
-                    <option value="">-- SELECCIONA --</option>
+                    <option value="{{ $datos['Id_Flog'] }}">{{ $datos['Id_Flog'] }}</option>
                 </select>
-            </div>
-            <div class="flex items-center">
-                <label for="nombre_modelo" class="w-16 font-medium text-gray-700 fs-9 -mb-1">NOMBRE MODELO:</label>
-                <input type="text" id="nombre_modelo" name="nombre_modelo"
-                    class=" border border-gray-300 rounded px-1 py-0.5" readonly>
-            </div>
-            <div class="flex items-center">
-                <label for="trama_0" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA:</label>
-                <input type="number" step="0.01" name="trama_0" id="trama_0"
-                    class=" border border-gray-300 roundedpx-1 py-0.5">
-            </div>
-            <div class="flex items-center">
-                <label for="calibre_2" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 2:</label>
-                <input type="number" step="0.01" name="calibre_2" id="calibre_2"
-                    class=" border border-gray-300 rounded px-1 py-0.5">
-            </div>
-            <div class="flex items-center">
-                <label for="calibre_4" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 4:</label>
-                <input type="number" step="0.01" name="calibre_4" id="calibre_4"
-                    class=" border border-gray-300 rounded px-1 py-0.5">
-            </div>
-            <div class="flex items-center">
-                <label for="descripcion" class="w-16 font-medium text-gray-700 fs-9 -mb-1">DESCRIPCIÓN:</label>
-                <input type="text" name="descripcion" id="descripcion"
-                    class=" border border-gray-300 rounded px-1 py-0.5">
             </div>
             <div class="flex items-center">
                 <label for="calendario" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CALENDARIO:</label>
                 <select name="calendario" id="calendario"
                     class="w-36 border border-gray-300 rounded px-1 py-0.5 select-alert">
-                    <option value="" disabled selected>Selecciona una opción</option>
-                    <option value="Calendario Tej1">Calendario Tej1</option><!-- toma en cuenta TODOS los días-->
-                    <option value="Calendario Tej2">Calendario Tej2 </option><!-- NO toma en cuenta domingos-->
-                    <option value="Calendario Tej3">Calendario Tej3 </option>
-                    <!-- No toma en cuenta domingos y sabados solo toma en cuenta hasta las 18:29-->
+                    <option value="" disabled {{ empty($datos['Calendario'] ?? '') ? 'selected' : '' }}>Selecciona una
+                        opción</option>
+                    <option value="Calendario Tej1"
+                        {{ ($datos['Calendario'] ?? '') == 'Calendario Tej1' ? 'selected' : '' }}>Calendario Tej1</option>
+                    <option value="Calendario Tej2"
+                        {{ ($datos['Calendario'] ?? '') == 'Calendario Tej2' ? 'selected' : '' }}>Calendario Tej2</option>
+                    <option value="Calendario Tej3"
+                        {{ ($datos['Calendario'] ?? '') == 'Calendario Tej3' ? 'selected' : '' }}>Calendario Tej3</option>
                 </select>
             </div>
             <div class="flex items-center">
-                <label for="color_0" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR:</label>
-                <input type="text" name="color_0" id="color_0" class=" border border-gray-300 rounded px-1 py-0.5">
-            </div>
-            <div class="flex items-center">
-                <label for="color_2" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 2:</label>
-                <input type="text" name="color_2" id="color_2" class=" border border-gray-300 rounded px-1 py-0.5">
-            </div>
-            <div class="flex items-center">
-                <label for="color_4" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 4:</label>
-                <input type="text" name="color_4" id="color_4" class=" border border-gray-300 rounded px-1 py-0.5">
-            </div>
-            <div class="flex items-center">
-                <label for="clave_ax" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CLAVE AX:</label>
-                <input type="text" name="clave_ax" id="clave_ax" class="border rounded px-1 py-0.5 -mb-1" required>
-            </div>
-
-            <div class="flex items-center">
-                <label for="aplicacion" class="w-16 font-medium text-gray-700 fs-9 -mb-1">APLICACIÓN:</label>
-                <select name="aplicacion" id="aplicacion"
-                    class="w-36 border border-gray-300 rounded px-1 py-0.5 select-alert">
-                    <option value="" disabled selected>Selecciona una opción</option>
-                    <option value="RZ">NO APLICA</option>
-                    <option value="RZ">RZ</option>
-                    <option value="RZ2">RZ2</option>
-                    <option value="RZ3">RZ3</option>
-                    <option value="BOR">BOR</option>
-                    <option value="EST">EST</option>
-                    <option value="DC">DC</option>
-                </select>
+                <label for="cuenta_pie" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CUENTA PIE:</label>
+                <input type="number" name="cuenta_pie" id="cuenta_pie" class=" border border-gray-300 rounded px-1 py-0.5"
+                    value="{{ $datos['Cuenta_Pie'] ?? '' }}">
             </div>
             <div class="flex items-center">
                 <label for="calibre_1" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 1:</label>
                 <input type="number" step="0.01" name="calibre_1" id="calibre_1"
-                    class=" border border-gray-300 rounded px-1 py-0.5">
+                    class=" border border-gray-300 rounded px-1 py-0.5" value="{{ $datos['CALIBRE_C1'] ?? '' }}">
             </div>
             <div class="flex items-center">
-                <label for="calibre_3" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 3:</label>
-                <input type="number" step="0.01" name="calibre_3" id="calibre_3"
-                    class=" border border-gray-300 rounded px-1 py-0.5">
+                <label for="color_3" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 3:</label>
+                <input type="text" name="color_3" id="color_3" class=" border border-gray-300 rounded px-1 py-0.5"
+                    value="{{ $datos['COLOR_C3'] ?? '' }}">
             </div>
             <div class="flex items-center">
-                <label for="calibre_5" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 5:</label>
-                <input type="number" step="0.01" name="calibre_5" id="calibre_5"
-                    class=" border border-gray-300 rounded px-1 py-0.5">
+                <label for="descripcion" class="w-16 font-medium text-gray-700 fs-9 -mb-1">DESCRIPCIÓN:</label>
+                <input type="text" name="descripcion" id="descripcion" class="border border-gray-300 rounded px-1 py-0.5"
+                    value="{{ $datos['Descrip'] ?? '' }}">
             </div>
             <div class="flex items-center">
-                <label for="tamano" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TAMAÑO:</label>
-                <input type="text" name="tamano" id="tamano" class="border rounded px-1 py-0.5 -mb-1" required>
+                <label for="aplicacion" class="w-16 font-medium text-gray-700 fs-9 -mb-1">APLICACIÓN:</label>
+                <select name="aplicacion" id="aplicacion"
+                    class="w-36 border border-gray-300 rounded px-1 py-0.5 select-alert">
+                    <option value="RZ" {{ ($datos['Aplic'] ?? '') == 'RZ' ? 'selected' : '' }}>RZ</option>
+                    <option value="RZ2" {{ ($datos['Aplic'] ?? '') == 'RZ2' ? 'selected' : '' }}>RZ2</option>
+                    <option value="RZ3" {{ ($datos['Aplic'] ?? '') == 'RZ3' ? 'selected' : '' }}>RZ3</option>
+                    <option value="BOR" {{ ($datos['Aplic'] ?? '') == 'BOR' ? 'selected' : '' }}>BOR</option>
+                    <option value="EST" {{ ($datos['Aplic'] ?? '') == 'EST' ? 'selected' : '' }}>EST</option>
+                    <option value="DC" {{ ($datos['Aplic'] ?? '') == 'DC' ? 'selected' : '' }}>DC</option>
+                </select>
+            </div>
+            <div class="flex items-center">
+                <label for="calibre_pie" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CALIRBE PIE:</label>
+                <input type="number" step="0.01" name="calibre_pie" id="calibre_pie"
+                    class=" border border-gray-300 rounded px-1 py-0.5" value="{{ $datos['Calibre_Pie'] ?? '' }}">
+            </div>
+            <div class="flex items-center">
+                <label for="color_1" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 1:</label>
+                <input type="text" name="color_1" id="color_1" class=" border border-gray-300 rounded px-1 py-0.5"
+                    value="{{ $datos['COLOR_C1'] ?? '' }}">
+            </div>
+            <div class="flex items-center">
+                <label for="calibre_4" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 4:</label>
+                <input type="number" step="0.01" name="calibre_4" id="calibre_4"
+                    class=" border border-gray-300 rounded px-1 py-0.5" value="{{ $datos['CALIBRE_C4'] ?? '' }}">
+            </div>
+            <div class="flex items-center">
+                <label for="clave_ax" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CLAVE AX:</label>
+                <input type="text" name="clave_ax" id="clave_ax" class="border rounded px-1 py-0.5 -mb-1"
+                    value="{{ $datos['Clave_Estilo'] ?? '' }}" required>
             </div>
             <div class="flex items-center">
                 <label for="hilo" class="w-16 font-medium text-gray-700 fs-9 -mb-1">HILO:</label>
                 <select name="hilo" id="hilo"
                     class="w-36 border border-gray-300 rounded px-1 py-0.5 select-alert">
-                    <option value="" disabled selected>Selecciona una opción</option>
-                    <option value="H">H</option>
-                    <option value="T20 PEINADO">T20 PEINADO</option>
-                    <option value="A12">RZ3</option>
-                    <option value="Hrpre">Hrpre</option>
-                    <option value="A20">A20</option>
-                    <option value="Fil600 (virgen)/A12">Fil600 (virgen)/A12</option>
-                    <option value="O16">O16</option>
-                    <option value="HR">HR</option>
-                    <option value="Fil (reciclado-secual)">Fil (reciclado-secual)</option>
+                    <option value="" disabled {{ empty($datos['Hilo'] ?? '') ? 'selected' : '' }}>Selecciona una
+                        opción</option>
+                    <option value="H" {{ ($datos['Hilo'] ?? '') == 'H' ? 'selected' : '' }}>H</option>
+                    <option value="T20 PEINADO" {{ ($datos['Hilo'] ?? '') == 'T20 PEINADO' ? 'selected' : '' }}>T20
+                        PEINADO</option>
+                    <option value="A12" {{ ($datos['Hilo'] ?? '') == 'A12' ? 'selected' : '' }}>A12</option>
+                    <option value="Hrpre" {{ ($datos['Hilo'] ?? '') == 'Hrpre' ? 'selected' : '' }}>Hrpre</option>
+                    <option value="A20" {{ ($datos['Hilo'] ?? '') == 'A20' ? 'selected' : '' }}>A20</option>
+                    <option value="Fil600 (virgen)/A12"
+                        {{ ($datos['Hilo'] ?? '') == 'Fil600 (virgen)/A12' ? 'selected' : '' }}>Fil600 (virgen)/A12
+                    </option>
+                    <option value="O16" {{ ($datos['Hilo'] ?? '') == 'O16' ? 'selected' : '' }}>O16</option>
+                    <option value="HR" {{ ($datos['Hilo'] ?? '') == 'HR' ? 'selected' : '' }}>HR</option>
+                    <option value="Fil (reciclado-secual)"
+                        {{ ($datos['Hilo'] ?? '') == 'Fil (reciclado-secual)' ? 'selected' : '' }}>Fil (reciclado-secual)
+                    </option>
                 </select>
             </div>
             <div class="flex items-center">
-                <label for="color_1" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 1:</label>
-                <input type="text" name="color_1" id="color_1" class=" border border-gray-300 rounded px-1 py-0.5">
+                <label for="calibre_2" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 2:</label>
+                <input type="number" step="0.01" name="calibre_2" id="calibre_2"
+                    class=" border border-gray-300 rounded px-1 py-0.5" value="{{ $datos['CALIBRE_C2'] ?? '' }}">
             </div>
             <div class="flex items-center">
-                <label for="color_3" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 3:</label>
-                <input type="text" name="color_3" id="color_3" class=" border border-gray-300 rounded px-1 py-0.5">
+                <label for="color_4" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 4:</label>
+                <input type="text" name="color_4" id="color_4" class=" border border-gray-300 rounded px-1 py-0.5"
+                    value="{{ $datos['COLOR_C4'] ?? '' }}">
             </div>
             <div class="flex items-center">
-                <label for="color_5" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 5:</label>
-                <input type="text" name="color_5" id="color_5" class=" border border-gray-300 rounded px-1 py-0.5">
+                <label for="nombre_modelo" class="w-16 font-medium text-gray-700 fs-9 -mb-1">NOMBRE MODELO:</label>
+                <input type="text" id="nombre_modelo" name="nombre_modelo"
+                    class=" border border-gray-300 rounded px-1 py-0.5" value="{{ $datos['Nombre_Producto'] ?? '' }}"
+                    readonly>
             </div>
-
             <div class="flex items-center">
                 <label for="cuenta_rizo" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CUENTA RIZO:</label>
                 <input type="number" name="cuenta_rizo" id="cuenta_rizo"
-                    class=" border border-gray-300 rounded px-1 py-0.5">
+                    class=" border border-gray-300 rounded px-1 py-0.5" value="{{ $datos['Cuenta'] ?? '' }}">
             </div>
-
+            <div class="flex items-center">
+                <label for="trama_0" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA:</label>
+                <input type="number" step="0.01" name="trama_0" id="trama_0"
+                    class=" border border-gray-300 roundedpx-1 py-0.5" value="{{ $datos['CALIBRE_TRA'] ?? '' }}">
+            </div>
+            <div class="flex items-center">
+                <label for="color_2" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 2:</label>
+                <input type="text" name="color_2" id="color_2" class=" border border-gray-300 rounded px-1 py-0.5"
+                    value="{{ $datos['COLOR_C2'] ?? '' }}">
+            </div>
+            <div class="flex items-center">
+                <label for="calibre_5" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 5:</label>
+                <input type="number" step="0.01" name="calibre_5" id="calibre_5"
+                    class=" border border-gray-300 rounded px-1 py-0.5" value="{{ $datos['CALIBRE_C5'] ?? '' }}">
+            </div>
+            <div class="flex items-center">
+                <label for="tamano" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TAMAÑO:</label>
+                <input type="text" name="tamano" id="tamano" class="border rounded px-1 py-0.5 -mb-1" required
+                    value="{{ $datos['Tamano_AX'] ?? '' }}">
+            </div>
             <div class="flex items-center">
                 <label for="calibre_rizo" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CALIBRE RIZO:</label>
                 <input type="number" step="0.01" name="calibre_rizo" id="calibre_rizo"
-                    class=" border border-gray-300 rounded px-1 py-0.5">
+                    class=" border border-gray-300 rounded px-1 py-0.5" value="{{ $datos['Calibre_Rizo'] ?? '' }}">
             </div>
-
             <div class="flex items-center">
-                <label for="cuenta_pie" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CUENTA PIE:</label>
-                <input type="number" name="cuenta_pie" id="cuenta_pie"
-                    class=" border border-gray-300 rounded px-1 py-0.5">
+                <label for="color_0" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR:</label>
+                <input type="text" name="color_0" id="color_0" class=" border border-gray-300 rounded px-1 py-0.5"
+                    value="{{ $datos['COLOR_TRAMA'] ?? '' }}">
             </div>
-
             <div class="flex items-center">
-                <label for="calibre_pie" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CALIRBE PIE:</label>
-                <input type="number" step="0.01" name="calibre_pie" id="calibre_pie"
-                    class=" border border-gray-300 rounded px-1 py-0.5">
+                <label for="calibre_3" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 3:</label>
+                <input type="number" step="0.01" name="calibre_3" id="calibre_3"
+                    class=" border border-gray-300 rounded px-1 py-0.5" value="{{ $datos['CALIBRE_C3'] ?? '' }}">
+            </div>
+            <div class="flex items-center">
+                <label for="color_5" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 5:</label>
+                <input type="text" name="color_5" id="color_5" class=" border border-gray-300 rounded px-1 py-0.5"
+                    value="{{ $datos['COLOR_C5'] ?? '' }}">
             </div>
 
             <!-- - - - - - - - - - - -  - - - - - - - - - - DATOS DEL TELAR  -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  - - - - -->
@@ -459,6 +461,7 @@ $datos = [
 
                                 // Aquí guardamos todo el objeto (registro) de MODELOS encontrado
                                 dataModelo = data;
+
                             }
                         })
                         .catch(error => console.error('Error al obtener detalle del modelo:', error));
