@@ -9,7 +9,7 @@
         @if (session('error'))
             <div class="bg-red-100 text-red-800 px-4 py-2 rounded mb-3">{{ session('error') }}</div>
         @endif
-        <form method="POST" action="{{ route('modelos.update') }}" class="grid grid-cols-2 gap-4">
+        <form method="POST" action="" class="grid grid-cols-2 gap-4"> <!--{{ route('modelos.update') }}-->
             @csrf
             <input type="text" name="CLAVE_AX" value="{{ $modelo->CLAVE_AX }}" readonly
                 class="input input-bordered bg-gray-100">

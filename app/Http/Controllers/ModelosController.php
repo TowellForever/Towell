@@ -73,7 +73,7 @@ class ModelosController extends Controller
     if (!$modelo) {
       return redirect()->route('modelos.create')->with('error', 'Modelo no encontrado');
     }
-    return view('modelos.edit', compact('modelo'));
+    return view('modulos.modelos.edit', compact('modelo'));
   }
 
   public function update(Request $request)

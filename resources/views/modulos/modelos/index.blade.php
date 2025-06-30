@@ -24,7 +24,7 @@
                         class="p-2 w-20 rounded-full bg-blue-500 text-white hover:bg-blue-600 mr-2 text-xs">NUEVO 🆕
                     </a>
                 </div>
-                <div class="w-auto text-left">
+                <div class="w-auto text-left" id="editar-modelo-btn">
                     <a href="{{ route('planeacion.aplicaciones') }}"
                         class="p-2  w-20 rounded-full bg-blue-500 text-white hover:bg-blue-600 mr-2 text-xs">EDITAR 📝
                     </a>
@@ -115,7 +115,7 @@
         <!--inicia tabla MODULOS-->
         <div class="overflow-x-auto overflow-y-auto bigScroll table-container-plane table-wrapper bg-white shadow-lg rounded-lg p-1"
             style="max-height: calc(100vh - 100px);">
-            <table class="min-w-full celP plane-table border border-gray-300 text-center">
+            <table id="tablonMODELOS" class="min-w-full celP plane-table border border-gray-300 text-center">
                 <thead>
                     <tr class="plane-thead-tr text-white text-xs">
                         @foreach ($fillableFields as $field)
@@ -126,7 +126,7 @@
                 </thead>
                 <tbody class="text-xs">
                     @foreach ($modelos as $modelo)
-                        <tr>
+                        <tr data-clave-ax="{{ $modelo->CLAVE_AX }}" data-tamanio-ax="{{ $modelo->Tamanio_AX }}">
                             @foreach ($fillableFields as $field)
                                 @php
                                     $value = $modelo->$field;
@@ -241,4 +241,79 @@
             });
         @endif
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabla = document.getElementById('tablonMODELOS');
+            let selectedRow = null;
+
+            tabla.querySelectorAll('tbody tr').forEach(function(fila) {
+                // Al hacer clic, marcar como seleccionada y desmarcar las demás
+                fila.addEventListener('click', function() {
+                    // Quitar la clase de seleccionada a todas
+                    tabla.querySelectorAll('tbody tr').forEach(f => f.classList.remove(
+                        'selected-row'));
+                    // Poner la clase solo a la fila seleccionada
+                    fila.classList.add('selected-row');
+                    selectedRow = fila;
+
+                    // Obtener los datos de la fila
+                    const clave_ax = fila.getAttribute('data-clave-ax');
+                    const tamanio_ax = fila.getAttribute('data-tamanio-ax');
+                    console.log('CLAVE_AX:', clave_ax, 'Tamanio_AX:', tamanio_ax);
+
+                    // Aquí puedes hacer más cosas con los datos si necesitas
+                });
+            });
+        });
+    </script>
+    <script>
+        let selectedClaveAx = null;
+        let selectedTamanioAx = null;
+
+        // Al seleccionar una fila, guarda los datos en variables globales
+        document.querySelectorAll('#tablonMODELOS tbody tr').forEach(fila => {
+            fila.addEventListener('click', function() {
+                selectedClaveAx = fila.getAttribute('data-clave-ax');
+                selectedTamanioAx = fila.getAttribute('data-tamanio-ax');
+            });
+        });
+
+        // Al dar clic en el botón editar
+        document.getElementById('editar-modelo-btn').addEventListener('click', function(e) {
+            e.preventDefault(); // Evita el enlace por default
+
+            if (!selectedClaveAx || !selectedTamanioAx) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Selecciona un registro',
+                    text: 'Por favor, selecciona un registro de la tabla para editar.',
+                    confirmButtonColor: '#3085d6'
+                });
+                return;
+            }
+
+            // Aquí defines la ruta edit (ajusta a tu ruta real si cambian los nombres)
+            // Supongamos que la ruta es: /modelos/{clave_ax}/{tamanio_ax}/edit
+            const url =
+                `/modelos/${encodeURIComponent(selectedClaveAx)}/${encodeURIComponent(selectedTamanioAx)}/edit`;
+
+            // Abre la edición en la misma página, o usa window.open(url, '_blank') para nueva pestaña
+            window.location.href = url;
+        });
+    </script>
+
+    @push('styles')
+        <style>
+            #tablonMODELOS tbody tr:hover {
+                background-color: #fff59d !important;
+                /* Amarillo claro al pasar el mouse */
+                cursor: pointer;
+            }
+
+            #tablonMODELOS tbody tr.selected-row {
+                background-color: #ffd600 !important;
+                /* Amarillo fuerte al seleccionar */
+            }
+        </style>
+    @endpush
 @endsection
