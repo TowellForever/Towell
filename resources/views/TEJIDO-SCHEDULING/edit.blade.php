@@ -186,20 +186,6 @@
                     </span>
                 </div>
                 <div class="overflow-x-auto rounded-lg shadow-lg bg-white p-1">
-                    <!-- Botón agregar fila -->
-                    <!-- Contenedor de botones -->
-                    <div class="flex justify-end space-x-2">
-                        <!-- Botón agregar fila -->
-                        <button type="button" id="add-row-btn"
-                            class="w-2 justify-center flex items-center px-3 py-1 rounded-full bg-blue-600 hover:bg-blue-700 shadow font-medium text-base transition">
-                            <span>➕</span>
-                        </button>
-                        <!-- Botón eliminar última fila -->
-                        <button type="button" id="remove-row-btn"
-                            class="w-2 justify-center flex items-center px-3 py-1 rounded-full bg-red-600 hover:bg-red-700 shadow font-medium text-base transition">
-                            <span>🗑️</span>
-                        </button>
-                    </div>
                     <table class="min-w-full text-xss">
                         <thead>
                             <tr class="bg-gray-100 text-gray-700 font-semibold text-center uppercase tracking-wide">
@@ -216,24 +202,32 @@
                             <tr class="border-b hover:bg-blue-50">
                                 <td class="py-1 text-center">
                                     <select name="telar[]"
-                                        class="border border-gray-300 rounded px-1 py-0.5 text-xs w-20 ">
+                                        class="border border-gray-300 rounded px-1 py-0.5 text-xs w-20">
                                         <option value="">Seleccionar</option>
                                         @foreach ($telares as $telar)
-                                            <option value="{{ $telar->telar }}">{{ $telar->telar }}</option>
+                                            <option value="{{ $telar->telar }}"
+                                                @if (isset($datos['Telar']) && $datos['Telar'] == $telar->telar) selected @endif>
+                                                {{ $telar->telar }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </td>
                                 <td class="py-1 text-center">
                                     <input type="number" step="0.01" name="cantidad[]"
-                                        class="border border-gray-300 rounded px-1 py-0.5 w-20 cantidad-input">
+                                        class="border border-gray-300 rounded px-1 py-0.5 w-20 cantidad-input"
+                                        value="{{ $datos['cantidad'] ?? '' }}">
                                 </td>
                                 <td class="py-1  text-center">
                                     <input type="datetime-local" name="fecha_inicio[]"
-                                        class="border border-gray-300 rounded px-1 py-0.5 w-34" readonly>
+                                        class="border border-gray-300 rounded px-1 py-0.5 w-34"
+                                        value="{{ \Carbon\Carbon::createFromFormat('d-m-Y H:i:s', $datos['Inicio_Tejido'])->format('Y-m-d\TH:i') ?? '' }}"
+                                        readonly>
                                 </td>
                                 <td class="py-1 text-center">
                                     <input type="datetime-local" name="fecha_fin[]"
-                                        class="border border-gray-300 rounded px-1 py-0.5 w-34" readonly>
+                                        class="border border-gray-300 rounded px-1 py-0.5 w-34"
+                                        value="{{ \Carbon\Carbon::createFromFormat('d-m-Y H:i:s', $datos['Fin_Tejido'])->format('Y-m-d\TH:i') ?? '' }}"
+                                        readonly>
                                 </td>
                                 <td class="py-1 text-center">
                                     <input type="datetime-local" name="fecha_compromiso_tejido[]"
@@ -508,34 +502,7 @@
             });
         });
     </script>
-    <!-- JS para agregar filas dinámicamente -->
-    <script>
-        document.getElementById('add-row-btn').addEventListener('click', function() {
-            let tbody = document.getElementById('tabla-registros');
-            let firstRow = tbody.querySelector('tr');
-            let newRow = firstRow.cloneNode(true);
 
-            // Limpia los valores de los inputs y selects en la fila clonada
-            newRow.querySelectorAll('input, select').forEach(function(el) {
-                if (el.tagName === 'SELECT') {
-                    el.selectedIndex = 0;
-                } else {
-                    el.value = '';
-                }
-            });
-
-            tbody.appendChild(newRow);
-        });
-
-        document.getElementById('remove-row-btn').addEventListener('click', function() {
-            let tbody = document.getElementById('tabla-registros');
-            let rows = tbody.querySelectorAll('tr');
-            // Solo elimina si hay más de una fila
-            if (rows.length > 1) {
-                tbody.removeChild(rows[rows.length - 1]);
-            }
-        });
-    </script>
     <!--SCRIPT para buscar la fecha del ultimo registro del telar seleccionado-->
     <script>
         let telar = null;
