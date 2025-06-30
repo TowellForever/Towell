@@ -179,6 +179,7 @@ Route::get('/traspasoDataRedireccion', [TejidoSchedullingController::class, 'env
 Route::get('/Tejido-Scheduling/ultimo-por-telar', [TejidoSchedullingController::class, 'buscarUltimoPorTelar']);
 Route::get('/Tejido-Scheduling/fechaFin', [TejidoSchedullingController::class, 'calcularFechaFin']);
 Route::get('/Tejido-Scheduling/editar', [TejidoSchedullingController::class, 'editarRegistro']); // formulario de edición para Registros de Planeación
+Route::post('/Tejido-Scheduling/actualizar', [TejidoSchedullingController::class, 'actualizarRegistro'])->name('actualizarRegistro.add');
 
 
 // ✅ NUEVAS RUTAS de PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION

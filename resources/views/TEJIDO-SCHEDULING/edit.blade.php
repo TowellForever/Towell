@@ -13,7 +13,7 @@
                 DATOS GENERALES
             </span>
         </div>
-        <form id="form-planeacion" action="{{ route('planeacion.store') }}" method="POST"
+        <form id="form-planeacion" action="{{ route('actualizarRegistro.add') }}" method="POST"
             class="grid grid-cols-5 gap-x-8 gap-y-4 fs-11">
             @csrf
 
@@ -173,6 +173,8 @@
                 <input type="text" name="color_5" id="color_5" class=" border border-gray-300 rounded px-1 py-0.5"
                     value="{{ $datos['COLOR_C5'] ?? '' }}">
             </div>
+
+            <input type="hidden" name="id" id="id" value="{{ $datos['id'] ?? '' }}">
 
             <!-- - - - - - - - - - - -  - - - - - - - - - - DATOS DEL TELAR  -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  - - - - -->
             <div class="col-span-5">
@@ -486,12 +488,12 @@
 
                 const formData = new FormData(form);
 
-                axios.post("{{ route('planeacion.store') }}", formData)
+                axios.post("{{ route('actualizarRegistro.add') }}", formData)
                     .then(response => {
                         console.log(Object.fromEntries(formData
                             .entries())); // Esto convierte FormData a objeto y lo muestra
 
-                        alert('Registro guardado exitosamente');
+                        alert('Registro actualizado exitosamente');
                         // Opcional: redireccionar o limpiar campos
                         window.location.href = "{{ route('planeacion.index') }}";
                     })
