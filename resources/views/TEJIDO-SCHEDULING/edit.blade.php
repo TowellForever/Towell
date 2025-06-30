@@ -592,36 +592,6 @@
         });
     </script>
 
-    <!--Este SCIRPT es para ocultar la 2da tabla al usuario, asi evitamos que genere algun error en caso de digitar datos primero en la 2da tabla-->
-    <script>
-        $(document).ready(function() {
-            // Por default, oculta la tabla
-            $('#tabla-registros').hide();
-
-            // Función para revisar todos los selects
-            function revisarSelects() {
-                var flog = $('#no_flog').val();
-                var hilo = $('#hilo').val();
-                var aplicacion = $('#aplicacion').val();
-                var calendario = $('#calendario').val();
-
-                // Mostrar solo si todos tienen valor
-                if (flog && hilo && aplicacion && calendario) {
-                    $('#tabla-registros').show();
-                } else {
-                    $('#tabla-registros').hide();
-                }
-            }
-
-            // Eventos para cada select
-            $('#no_flog').on('select2:select select2:clear', revisarSelects);
-            $('#hilo, #aplicacion, #calendario').on('change', revisarSelects);
-
-            // Opcional: revisar al cargar la página (por si ya hay valores preseleccionados)
-            revisarSelects();
-        });
-    </script>
-
     <script>
         document.querySelectorAll('.select-alert').forEach(sel => {
             function revisar() {
