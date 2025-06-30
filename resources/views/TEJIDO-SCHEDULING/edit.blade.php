@@ -508,54 +508,29 @@
     <!--SCRIPT para buscar la fecha del ultimo registro del telar seleccionado-->
     <script>
         let telar = null;
-        $(document).ready(function() {
-            // Escucha el cambio en cualquier select de telar dentro de la tabla
-            $('#tabla-registros').on('change', 'select[name="telar[]"]', function() {
-                const telarSeleccionado = $(this).val();
-                telar = telarSeleccionado;
-                const fila = $(this).closest('tr'); // Para identificar la fila específica
 
-                if (!telarSeleccionado) return; // No hacer nada si no seleccionan
-
-                // Hacer petición AJAX al backend
-                fetch(`/Tejido-Scheduling/ultimo-por-telar?telar=${encodeURIComponent(telarSeleccionado)}`)
-                    .then(resp => resp.json())
-                    .then(data => {
-                        if (data) {
-                            // Aquí puedes llenar otros campos de la fila, por ejemplo:
-                            fila.find('input[name="fecha_inicio[]"]').val(data ? data.Fin_Tejido :
-                                '');
-                        } else {
-                            // Puedes limpiar los campos o mostrar mensaje
-                            // fila.find('input[name="cantidad[]"]').val('');
-                        }
-                    });
-            });
-        });
-
-        // Escucha cuando el usuario digita en el campo cantidad
-        $('#tabla-registros').on('input', 'input[name="cantidad[]"]', function() {
-            const fila = $(this).closest('tr');
-            const cantidad = parseFloat($(this).val());
+        // --- Función para calcular fecha_fin de la fila ---
+        function calcularFechaFin(fila) {
+            const cantidad = parseFloat(fila.find('input[name="cantidad[]"]').val());
             const clave_ax = document.getElementById('clave_ax').value;
             const tamano = document.getElementById('tamano').value;
             const hilo = document.getElementById('hilo').value;
             const calendario = document.getElementById('calendario').value;
             const fechaInicioStr = fila.find('input[name="fecha_inicio[]"]').val();
+            const telarSeleccionado = fila.find('select[name="telar[]"]').val();
 
             if (!cantidad || !fechaInicioStr) {
                 fila.find('input[name="fecha_fin[]"]').val('');
                 return;
             }
 
-            // Hacer petición AJAX al backend enviando cantidad y fecha_inicio
             fetch(
                     `/Tejido-Scheduling/fechaFin?cantidad=${encodeURIComponent(cantidad)}&fecha_inicio=${encodeURIComponent(fechaInicioStr)}
-                    &telar=${encodeURIComponent(telar)}
-                    &clave_ax=${encodeURIComponent(clave_ax)}
-                    &tamano=${encodeURIComponent(tamano)}
-                    &hilo=${encodeURIComponent(hilo)}
-                    &calendario=${encodeURIComponent(calendario)}`
+            &telar=${encodeURIComponent(telarSeleccionado)}
+            &clave_ax=${encodeURIComponent(clave_ax)}
+            &tamano=${encodeURIComponent(tamano)}
+            &hilo=${encodeURIComponent(hilo)}
+            &calendario=${encodeURIComponent(calendario)}`
                 )
                 .then(resp => resp.json())
                 .then(data => {
@@ -570,16 +545,53 @@
                             background: '#fff',
                             color: '#333'
                         });
-                        // Si quieres, también limpia campos aquí, etc
                     } else {
-                        // Aquí puedes llenar otros campos de la fila, por ejemplo:
-                        console.log('Datos de Fecha FINAL:', data);
-                        fila.find('input[name="fecha_fin[]"]').val(data ? data.fecha :
-                            '');
+                        fila.find('input[name="fecha_fin[]"]').val(data ? data.fecha : '');
                     }
                 });
+        }
+
+        $(document).ready(function() {
+            // --- Cuando cambian el telar ---
+            $('#tabla-registros').on('change', 'select[name="telar[]"]', function() {
+                const telarSeleccionado = $(this).val();
+                const fila = $(this).closest('tr');
+
+                if (!telarSeleccionado) return;
+
+                fetch(`/Tejido-Scheduling/ultimo-por-telar?telar=${encodeURIComponent(telarSeleccionado)}`)
+                    .then(resp => resp.json())
+                    .then(data => {
+                        if (data && data.Fin_Tejido) {
+                            fila.find('input[name="fecha_inicio[]"]').val(data.Fin_Tejido || '');
+                            // Llama a la función para calcular fecha_fin (por si ya hay cantidad)
+                            calcularFechaFin(fila);
+                        } else {
+                            // SweetAlert aquí
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'No encontrado',
+                                text: 'No existe un valor en ULTIMO para el telar seleccionado',
+                                confirmButtonText: 'Entendido',
+                                confirmButtonColor: '#3085d6',
+                                background: '#fff',
+                                color: '#333'
+                            });
+
+                            fila.find('input[name="fecha_inicio[]"]').val('');
+                            fila.find('input[name="fecha_fin[]"]').val('');
+                        }
+                    });
+            });
+
+            // --- Cuando cambian la cantidad ---
+            $('#tabla-registros').on('input', 'input[name="cantidad[]"]', function() {
+                const fila = $(this).closest('tr');
+                calcularFechaFin(fila);
+            });
         });
     </script>
+
     <!--Este SCIRPT es para ocultar la 2da tabla al usuario, asi evitamos que genere algun error en caso de digitar datos primero en la 2da tabla-->
     <script>
         $(document).ready(function() {
