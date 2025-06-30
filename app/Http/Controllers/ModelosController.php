@@ -10,28 +10,34 @@ class ModelosController extends Controller
 {
   public function index(Request $request)
   {
-    $query = Modelos::query();
-
-    // Filtros
-    if ($request->filled('column') && $request->filled('value')) {
-      $columns = $request->input('column');
-      $values = $request->input('value');
-
-      foreach ($columns as $index => $column) {
-        if (!empty($column) && isset($values[$index])) {
-          $query->where($column, 'like', '%' . $values[$index] . '%');
-        }
-      }
-    }
-
     $page = $request->input('page', 1);
     $perPage = 30;
+    $offset = ($page - 1) * $perPage;
 
-    $results = $query->get(); // Recuperamos todos los datos compatibles con SQL Server 2008
-    $total = $results->count();
+    // Armamos el query base con filtros dinámicos
+    $query = DB::table('modelos')
+      ->when($request->column && $request->value, function ($q) use ($request) {
+        $columns = $request->input('column');
+        $values = $request->input('value');
+        foreach ($columns as $index => $column) {
+          if (!empty($column) && isset($values[$index])) {
+            $q->where($column, 'like', '%' . $values[$index] . '%');
+          }
+        }
+      });
 
-    $modelos = $results->slice(($page - 1) * $perPage, $perPage)->values(); // Corte manual de la colección
+    // Contar total de registros (sin paginar)
+    $total = (clone $query)->count();
 
+    // Subconsulta con ROW_NUMBER()
+    $subQuery = $query->selectRaw('*, ROW_NUMBER() OVER (ORDER BY Telar_Actual ASC) AS row_num');
+
+    $modelos = DB::table(DB::raw("({$subQuery->toSql()}) as sub"))
+      ->mergeBindings($subQuery)
+      ->whereBetween('row_num', [$offset + 1, $offset + $perPage])
+      ->get();
+
+    // Obtener los fillable fields para mostrar columnas en la vista (usa el modelo Eloquent solo para esto)
     $fillableFields = (new Modelos())->getFillable();
 
     return view('modulos.modelos.index', [

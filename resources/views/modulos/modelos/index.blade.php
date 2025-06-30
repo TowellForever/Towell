@@ -108,15 +108,16 @@
             <table class="min-w-full celP plane-table border border-gray-300 text-center">
                 <thead>
                     <tr class="plane-thead-tr text-white text-xs">
-                        @foreach ($modelos[0]->getFillable() as $field)
+                        @foreach ($fillableFields as $field)
                             <th class="sticky top-0 z-10">{{ str_replace('_', ' ', $field) }}</th>
                         @endforeach
+
                     </tr>
                 </thead>
                 <tbody class="text-xs">
                     @foreach ($modelos as $modelo)
                         <tr>
-                            @foreach ($modelo->getFillable() as $field)
+                            @foreach ($fillableFields as $field)
                                 @php
                                     $value = $modelo->$field;
 
