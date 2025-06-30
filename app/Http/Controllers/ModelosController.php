@@ -48,6 +48,57 @@ class ModelosController extends Controller
       'fillableFields' => $fillableFields,
     ]);
   }
+
+  public function create()
+  {
+    return view('modulos.modelos.create');
+  }
+
+  public function store(Request $request)
+  {
+
+    Modelos::create($request->all());
+    return redirect()->route('modelos.index')->with('success', 'Modelo creado exitosamente');
+  }
+
+  public function edit(Request $request)
+  {
+    $clave_ax = $request->query('clave_ax');
+    $tamano_ax = $request->query('tamano_ax');
+
+    $modelo = Modelos::where('CLAVE_AX', $clave_ax)
+      ->where('Tamanio_AX', $tamano_ax)
+      ->first();
+
+    if (!$modelo) {
+      return redirect()->route('modelos.create')->with('error', 'Modelo no encontrado');
+    }
+    return view('modelos.edit', compact('modelo'));
+  }
+
+  public function update(Request $request)
+  {
+    $clave_ax = $request->input('CLAVE_AX');
+    $tamano_ax = $request->input('Tamanio_AX');
+
+    $modelo = Modelos::where('CLAVE_AX', $clave_ax)
+      ->where('Tamanio_AX', $tamano_ax)
+      ->first();
+
+    if (!$modelo) {
+      return redirect()->route('modelos.edit', [
+        'clave_ax' => $clave_ax,
+        'tamano_ax' => $tamano_ax
+      ])->with('error', 'Modelo no encontrado');
+    }
+
+    $modelo->update($request->all());
+
+    return redirect()->route('modelos.edit', [
+      'clave_ax' => $clave_ax,
+      'tamano_ax' => $tamano_ax
+    ])->with('success', 'Modelo actualizado exitosamente');
+  }
 }
 
 

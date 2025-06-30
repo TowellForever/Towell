@@ -19,6 +19,16 @@
                         Restablecer búsqueda
                     </button>
                 </div>
+                <div class="w-auto text-left">
+                    <a href="{{ route('modelos.create') }}"
+                        class="p-2 w-20 rounded-full bg-blue-500 text-white hover:bg-blue-600 mr-2 text-xs">NUEVO 🆕
+                    </a>
+                </div>
+                <div class="w-auto text-left">
+                    <a href="{{ route('planeacion.aplicaciones') }}"
+                        class="p-2  w-20 rounded-full bg-blue-500 text-white hover:bg-blue-600 mr-2 text-xs">EDITAR 📝
+                    </a>
+                </div>
             </div>
             @php
                 $totalPages = ceil($total / $perPage);
@@ -217,5 +227,18 @@
                     "{{ route('modelos.index') }}"; // Redirige a la ruta planificacion.index
             });
         });
+    </script>
+    <!-- SWEET ALERT -->
+    <script>
+        @if (session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: "{{ session('success') }}",
+                confirmButtonColor: '#3085d6',
+                timer: 1800,
+                showConfirmButton: false
+            });
+        @endif
     </script>
 @endsection
