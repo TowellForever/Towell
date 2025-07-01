@@ -84,12 +84,12 @@ class ModelosController extends Controller
     return redirect()->route('modelos.index')->with('success', 'Modelo actualizado exitosamente');
   }
 
-  public function destroy($concantena)
+  public function destroy($concatena)
   {
-    DB::table('MODELOS')->where('CONCATENA', $concantena)->delete();
+    DB::table('MODELOS')->where('CONCATENA', $concatena)->delete();
 
-    return redirect()->route('modelos.index')
-      ->with('success', 'Modelo eliminado exitosamente.');
+    // Siempre responde JSON
+    return response()->json(['success' => true, 'message' => 'Modelo eliminado exitosamente.']);
   }
 }
 

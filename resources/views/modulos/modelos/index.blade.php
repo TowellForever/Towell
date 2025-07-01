@@ -353,9 +353,14 @@
                             }
                         })
                         .then(function(response) {
-                            // Redirigir al index con mensaje
-                            window.location.href =
-                                '/modelos.index?success=Modelo+eliminado+exitosamente';
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'ELIMINADO EXITOSAMENTE',
+                                text: 'Se ha eliminado el registro selccionado.'
+                            }).then(() => {
+                                // Recarga la tabla, la página, o redirige, según lo que tú quieras:
+                                window.location.href = '/modelos';
+                            });
                         })
                         .catch(function(error) {
                             Swal.fire({
