@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Modelos extends Model
 {
     use HasFactory;
+    protected $primaryKey = ['CLAVE_AX', 'Tamanio_AX']; // ← si tienes clave compuesta (ver nota abajo)
+    public $incrementing = false; // Si no es autoincremental
+    protected $keyType = 'string'; // o 'int' si son números
 
     protected $table = 'modelos'; // Nombre de la tabla
 

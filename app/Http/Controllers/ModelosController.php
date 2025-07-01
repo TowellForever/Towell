@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Modelos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ModelosController extends Controller
 {
@@ -61,13 +62,11 @@ class ModelosController extends Controller
     return redirect()->route('modelos.index')->with('success', 'Modelo creado exitosamente');
   }
 
-  public function edit(Request $request)
+  public function edit($clave_ax, $tamanio_ax)
   {
-    $clave_ax = $request->query('clave_ax');
-    $tamano_ax = $request->query('tamano_ax');
 
     $modelo = Modelos::where('CLAVE_AX', $clave_ax)
-      ->where('Tamanio_AX', $tamano_ax)
+      ->where('Tamanio_AX', $tamanio_ax)
       ->first();
 
     if (!$modelo) {
@@ -76,31 +75,15 @@ class ModelosController extends Controller
     return view('modulos.modelos.edit', compact('modelo'));
   }
 
-  public function update(Request $request)
+  public function update(Request $request, $clave_ax, $tamanio_ax)
   {
-    $clave_ax = $request->input('CLAVE_AX');
-    $tamano_ax = $request->input('Tamanio_AX');
+    Modelos::where('CLAVE_AX', $clave_ax)
+      ->where('Tamanio_AX', $tamanio_ax)
+      ->update($request->except(['_token', '_method']));
 
-    $modelo = Modelos::where('CLAVE_AX', $clave_ax)
-      ->where('Tamanio_AX', $tamano_ax)
-      ->first();
-
-    if (!$modelo) {
-      return redirect()->route('modelos.edit', [
-        'clave_ax' => $clave_ax,
-        'tamano_ax' => $tamano_ax
-      ])->with('error', 'Modelo no encontrado');
-    }
-
-    $modelo->update($request->all());
-
-    return redirect()->route('modelos.edit', [
-      'clave_ax' => $clave_ax,
-      'tamano_ax' => $tamano_ax
-    ])->with('success', 'Modelo actualizado exitosamente');
+    return redirect()->route('modelos.index')->with('success', 'Modelo actualizado exitosamente');
   }
 }
-
 
 /* Anterior forma de buscar flogs
   public function buscarFlogso(Request $request){

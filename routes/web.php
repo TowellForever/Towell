@@ -227,5 +227,7 @@ GET | /modelos/{id}/edit | edit() | modelos.edit
 PUT/PATCH | /modelos/{id} | update() | modelos.update
 DELETE | /modelos/{id} | destroy() | modelos.destroy
 */
+Route::put('/modelos/{clave_ax}/{tamanio_ax}', [ModelosController::class, 'update'])->name('modelos.update');
+
 Route::get('/modelos/{clave_ax}/{tamanio_ax}/edit', [ModelosController::class, 'edit'])->name('modelos.edit');
 Route::get('/flogs/buscar', [App\Http\Controllers\TejidoSchedullingController::class, 'buscarFlogso'])->name('flog.buscar');
