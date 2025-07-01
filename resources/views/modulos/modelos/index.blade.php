@@ -7,28 +7,33 @@
 
         <div class="flex justify-between items-center w-full -mt-5 mb-1">
             <!--FILTROS DE BÚSQUEDA ***************************************************************************************************************-->
-            <div class="flex items-center space-x-3 -mt-2">
+            <div class="flex items-center space-x-2 -mt-2">
                 <!-- Botón de búsqueda (lupa) -->
-                <button id="search-toggle" class="p-1 w-16 rounded-full bg-blue-500 text-white hover:bg-blue-600 mr-2">
-                    <i class="fas fa-search text-3xl"></i>
+                <button id="search-toggle" class="p-1 w-16 rounded-full bg-blue-500 text-white hover:bg-blue-600">
+                    <i class="fas fa-search text-2xl"></i>
                 </button>
 
                 <!-- Botón de restablecer (cruz o refresh) -->
                 <div class="w-auto text-left">
-                    <button id="reset-search" class="p-2 rounded-full bg-red-500 text-white hover:bg-red-600 text-xs">
-                        Restablecer búsqueda
+                    <button id="reset-search"
+                        class="p-2 rounded-full bg-green-500 text-black font-bold hover:bg-green-600 text-xs">
+                        {{ strtoupper('Restablecer bÚsqueda') }}
                     </button>
                 </div>
                 <div class="w-auto text-left">
                     <a href="{{ route('modelos.create') }}"
-                        class="p-2 w-20 rounded-full bg-blue-500 text-white hover:bg-blue-600 mr-2 text-xs">NUEVO 🆕
+                        class="p-2 w-20 rounded-full bg-blue-500 text-white hover:bg-blue-600  text-xs">NUEVO 🆕
                     </a>
                 </div>
                 <div class="w-auto text-left" id="editar-modelo-btn">
                     <a href="{{ route('planeacion.aplicaciones') }}"
-                        class="p-2  w-20 rounded-full bg-blue-500 text-white hover:bg-blue-600 mr-2 text-xs">EDITAR 📝
+                        class="p-2  w-20 rounded-full bg-blue-500 text-white hover:bg-blue-600  text-xs">EDITAR 📝
                     </a>
                 </div>
+                <button id="btnDelete" class="p-1 w-16 rounded-full bg-red-500 text-white hover:bg-red-600 ">
+                    <i class="fas fa-trash text-2xl"></i>
+
+                </button>
             </div>
             @php
                 $totalPages = ceil($total / $perPage);
@@ -126,7 +131,8 @@
                 </thead>
                 <tbody class="text-xs">
                     @foreach ($modelos as $modelo)
-                        <tr data-clave-ax="{{ $modelo->CLAVE_AX }}" data-tamanio-ax="{{ $modelo->Tamanio_AX }}">
+                        <tr data-CONCATENA={{ $modelo->CONCATENA }} data-clave-ax="{{ $modelo->CLAVE_AX }}"
+                            data-tamanio-ax="{{ $modelo->Tamanio_AX }}">
                             @foreach ($fillableFields as $field)
                                 @php
                                     $value = $modelo->$field;
@@ -259,7 +265,8 @@
                     // Obtener los datos de la fila
                     const clave_ax = fila.getAttribute('data-clave-ax');
                     const tamanio_ax = fila.getAttribute('data-tamanio-ax');
-                    console.log('CLAVE_AX:', clave_ax, 'Tamanio_AX:', tamanio_ax);
+                    const concatena = fila.getAttribute('data-CONCATENA');
+                    console.log('ID:', concatena);
 
                     // Aquí puedes hacer más cosas con los datos si necesitas
                 });
@@ -286,7 +293,7 @@
                 Swal.fire({
                     icon: 'warning',
                     title: 'Selecciona un registro',
-                    text: 'Por favor, selecciona un registro de la tabla para editar.',
+                    text: 'Por favor, seleccione un registro de la tabla para editar.',
                     confirmButtonColor: '#3085d6'
                 });
                 return;
@@ -299,6 +306,66 @@
 
             // Abre la edición en la misma página, o usa window.open(url, '_blank') para nueva pestaña
             window.location.href = url;
+        });
+    </script>
+    <!--DELETE un registro tomando en cuenta su valor en CONCATENA-->
+    <script>
+        let selectedConcatena = null;
+
+        // Al seleccionar una fila, guarda los datos en variables globales
+        document.querySelectorAll('#tablonMODELOS tbody tr').forEach(fila => {
+            fila.addEventListener('click', function() {
+                selectedConcatena = fila.getAttribute('data-CONCATENA');
+            });
+        });
+
+        document.getElementById('btnDelete').addEventListener('click', function(e) {
+            e.preventDefault(); // Evita el enlace por default
+
+
+            if (!selectedConcatena) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'SELECCIONE UN REGISTRO',
+                    text: 'Por favor, seleccione un registro de la tabla para eliminar.',
+                    confirmButtonColor: '#3085d6'
+                });
+                return;
+            }
+
+            Swal.fire({
+                icon: 'warning',
+                title: 'CONFIRMACIÓN',
+                text: '¿Estás seguro de eliminar el registro?',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const url = `/modelos/${encodeURIComponent(selectedConcatena)}`;
+
+                    axios.delete(url, {
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                    .getAttribute('content')
+                            }
+                        })
+                        .then(function(response) {
+                            // Redirigir al index con mensaje
+                            window.location.href =
+                                '/modelos.index?success=Modelo+eliminado+exitosamente';
+                        })
+                        .catch(function(error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'No se pudo eliminar el modelo.'
+                            });
+                        });
+                }
+            });
         });
     </script>
 

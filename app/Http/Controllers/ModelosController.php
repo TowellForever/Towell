@@ -83,6 +83,14 @@ class ModelosController extends Controller
 
     return redirect()->route('modelos.index')->with('success', 'Modelo actualizado exitosamente');
   }
+
+  public function destroy($concantena)
+  {
+    DB::table('MODELOS')->where('CONCATENA', $concantena)->delete();
+
+    return redirect()->route('modelos.index')
+      ->with('success', 'Modelo eliminado exitosamente.');
+  }
 }
 
 /* Anterior forma de buscar flogs
