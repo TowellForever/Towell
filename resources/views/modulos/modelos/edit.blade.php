@@ -205,12 +205,11 @@
                 <div class="flex items-center mb-1">
                     <label for="{{ $field }}"
                         class="w-48 font-medium text-gray-700 fs-9 -mb-1">{{ str_replace(['_'], [' '], $field) }}:</label>
+
                     @if (in_array($field, $numbers))
                         <input type="number" step="0.01" name="{{ $field }}" id="{{ $field }}"
                             class="border border-gray-300 rounded px-1 py-0.5 w-full"
-                            value="{{ is_numeric($modelo->$field ?? null)
-                                ? rtrim(rtrim(number_format($modelo->$field, 2, '.', ''), '0'), '.')
-                                : old($field, $modelo->$field ?? '') }}">
+                            value="{{ decimales(old($field, $modelo->$field ?? '')) }}">
                     @elseif(in_array($field, $dates))
                         <input type="date" name="{{ $field }}" id="{{ $field }}"
                             class="border border-gray-300 rounded px-1 py-0.5 w-full"
