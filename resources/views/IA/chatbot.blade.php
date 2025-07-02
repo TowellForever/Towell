@@ -30,7 +30,8 @@
                     message: userMessage,
                     _token: $('meta[name="csrf-token"]').attr('content')
                 }, function(data) {
-                    $('#chat-box').append('<div class="text-left mb-2"><b>Bot:</b> ' + data
+                    $('#chat-box').append(
+                        '<div class="text-left mb-2"><b>Towellin el inteligente:</b> ' + data
                         .message + '</div>');
                     $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
                 });
