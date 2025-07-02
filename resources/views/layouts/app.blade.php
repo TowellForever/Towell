@@ -60,7 +60,7 @@
         <!-- Incluir el loader global -->
         @include('layouts.globalLoader')
 
-        <a href="/produccionProceso" class="text-3xl font-extrabold">
+        <a href="/chatbot" class="text-3xl font-extrabold">
             <img src="{{ asset('images/fondosTowell/TOWELLIN.png') }} " alt="Towelling"
                 class="absolute top-1 right-2 w-[36px] z-1">
         </a>

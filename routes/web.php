@@ -6,6 +6,7 @@ use App\Http\Controllers\CalendarioController;
 use App\Http\Controllers\CatalagoEficienciaController;
 use App\Http\Controllers\CatalagoTelarController;
 use App\Http\Controllers\CatalagoVelocidadController;
+use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\EngomadoController;
 use App\Http\Controllers\ModelosController;
 use App\Http\Controllers\PlaneacionController;
@@ -231,3 +232,7 @@ Route::put('/modelos/{clave_ax}/{tamanio_ax}', [ModelosController::class, 'updat
 
 Route::get('/modelos/{clave_ax}/{tamanio_ax}/edit', [ModelosController::class, 'edit'])->name('modelos.edit');
 Route::get('/flogs/buscar', [App\Http\Controllers\TejidoSchedullingController::class, 'buscarFlogso'])->name('flog.buscar');
+
+//Rutas para chatbot, prueba 1 de IA integrada a Laravel
+Route::get('/chatbot', [ChatbotController::class, 'index']);
+Route::post('/chatbot/message', [ChatbotController::class, 'sendMessage']);
