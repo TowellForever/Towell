@@ -19,7 +19,7 @@ use App\Http\Controllers\TejedorController;
 use App\Http\Controllers\TejidoSchedullingController;
 use App\Http\Controllers\UrdidoController;
 use App\Http\Controllers\WhatsAppController;
-use App\Models\CalendarioT1;
+
 
 //Rutas de login
 Route::get('/', function () {
