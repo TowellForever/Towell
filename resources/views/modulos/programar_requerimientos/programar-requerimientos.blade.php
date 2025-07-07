@@ -160,7 +160,8 @@
                         const cuentaInventario = cuentaInventarioFull.split("-")[0];
 
                         // Mostrar solo si coinciden tipo y cuenta
-                        if (tipoInventario === tipoSeleccionado && cuentaInventario ===
+                        if (tipoInventario.toLowerCase() === tipoSeleccionado
+                            .toLowerCase() && cuentaInventario ===
                             cuentaSeleccionada) {
                             invRow.style.display = "";
                         } else {

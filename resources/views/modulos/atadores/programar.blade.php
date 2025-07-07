@@ -9,7 +9,7 @@
 
             <!-- Tabla 1: Requerimiento desde Dynamics AX -->
             <div class="bg-white shadow-md rounded-lg p-2 custom-scroll">
-                <h2 class="text-lg font-bold bg-yellow-200 text-center py-1">Programación de Requerimientos</h2>
+                <h2 class="text-lg font-bold bg-yellow-200 text-center py-1">PROGRAMACIÓN DE ATADORES</h2>
 
                 <div class="overflow-y-auto max-h-60">
                     <!-- Botón Programar -->
@@ -72,7 +72,8 @@
             <div
                 class="bg-white rounded-lg shadow-lg w-11/12 sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-2/5 max-h-[90vh] overflow-y-auto p-6">
 
-                <h2 class="text-base font-semibold text-gray-700 mb-3 text-center border-b pb-2">📋 Captura de Requerimiento
+                <h2 class="text-base font-semibold text-gray-700 mb-3 text-center border-b pb-2"> Ingreso Completo de Datos
+                    📋
                 </h2>
 
                 <form method="POST" action="">
@@ -305,7 +306,20 @@
                     e.preventDefault();
 
                     if (!filaSeleccionada) {
-                        alert("Por favor selecciona un registro primero.");
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'ATENCIÓN',
+                            text: 'Por favor selecciona un registro primero.',
+                            confirmButtonText: 'Entendido',
+                            confirmButtonColor: '#3085d6',
+                            background: '#f4f6fb',
+                            color: '#333',
+                            allowOutsideClick: false,
+                            customClass: {
+                                popup: 'rounded-3xl shadow-lg'
+                            }
+                        });
+
                         return;
                     }
 
