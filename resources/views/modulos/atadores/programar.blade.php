@@ -307,7 +307,7 @@
 
                     if (!filaSeleccionada) {
                         Swal.fire({
-                            icon: 'warning',
+                            icon: 'info',
                             title: 'ATENCIÓN',
                             text: 'Por favor selecciona un registro primero.',
                             confirmButtonText: 'Entendido',
