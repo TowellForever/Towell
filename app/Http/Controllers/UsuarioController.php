@@ -49,13 +49,13 @@ class UsuarioController extends Controller
         // Definir los módulos y sus rutas
         $modulos = [
             ['nombre' => 'PLANEACIÓN', 'imagen' => 'planeacion.png', 'ruta' => route('planeacion.index'), 'permiso' => 'planeacion'],
-            ['nombre' => 'URDIDO', 'imagen' => 'urdido.jpg', 'ruta' => route('ingresarFolio'), 'permiso' => 'urdido'],
+            ['nombre' => 'URDIDO', 'imagen' => 'UrdEngo.png', 'ruta' => route('ingresarFolio'), 'permiso' => 'urdido'],
             ['nombre' => 'ENGOMADO', 'imagen' => 'engomado.jpg', 'ruta' => route('ingresarFolioEngomado'), 'permiso' => 'engomado'],
             ['nombre' => 'TEJIDO', 'imagen' => 'tejido.jpg', 'ruta' => '/modulo-tejido', 'permiso' => 'tejido'],
             ['nombre' => 'ATADORES', 'imagen' => 'Atadores.jpg', 'ruta' => '/atadores-juliosAtados', 'permiso' => 'atadores'],
             ['nombre' => 'TEJEDORES', 'imagen' => 'tejedores.jpg', 'ruta' => '/tejedores/formato', 'permiso' => 'tejedores'],
             ['nombre' => 'MANTENIMIENTO', 'imagen' => 'mantenimiento.png', 'ruta' => '/modulo-mantenimiento', 'permiso' => 'mantenimiento'],
-            ['nombre' => 'PROGRAMACIÓN URDIDO ENGOMADO', 'imagen' => 'UrdEngo.png', 'ruta' => '/modulo-UrdidoEngomado', 'permiso' => 'UrdidoEngomado'],
+            ['nombre' => 'PROGRAMACIÓN URDIDO ENGOMADO', 'imagen' => 'proUE.png', 'ruta' => '/modulo-UrdidoEngomado', 'permiso' => 'UrdidoEngomado'],
             ['nombre' => 'EDICIÓN ORDEN URDIDO ENGOMADO', 'imagen' => 'edit.png', 'ruta' => '/modulo-edicion-urdido-engomado', 'permiso' => 'UrdidoEngomado'],
             ['nombre' => 'CONFIGURACIÓN', 'imagen' => 'configuracion.png', 'ruta' => '/modulo-configuracion', 'permiso' => 'configuracion'],
         ];

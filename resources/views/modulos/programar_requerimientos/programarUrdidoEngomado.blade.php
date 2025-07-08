@@ -89,10 +89,18 @@
                             <select name="proveedor"
                                 class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded" required>
                                 <option value="" disabled {{ old('proveedor') ? '' : 'selected' }}></option>
-                                <option value="Max" {{ old('proveedor') == 'Max' ? 'selected' : '' }}>JIUTEPEC</option>
-                                <option value="Sergio" {{ old('proveedor') == 'Sergio' ? 'selected' : '' }}>COTTON SA
-                                    de CV</option>
-                                <option value="Lewis" {{ old('proveedor') == 'Lewis' ? 'selected' : '' }}>AIR PRIME
+                                <option value="Max" {{ old('proveedor') == 'Max' ? 'selected' : '' }}>HILADOS JIUTEPEC
+                                </option>
+                                <option value="Sergio" {{ old('proveedor') == 'Sergio' ? 'selected' : '' }}>FÁBRICA
+                                    INDUSTRIAL TEXTIL ANÁHUAC
+                                </option>
+                                <option value="Lewis" {{ old('proveedor') == 'Lewis' ? 'selected' : '' }}>TRITON
+                                    INDUSTRIAL, S.A. DE C.V.
+                                </option>
+                                <option value="Lewis" {{ old('proveedor') == 'Lewis' ? 'selected' : '' }}>
+                                    P Y T TEXTIL
+                                </option>
+                                <option value="Lewis" {{ old('proveedor') == 'Lewis' ? 'selected' : '' }}>SAJITEX
                                 </option>
 
                             </select>
