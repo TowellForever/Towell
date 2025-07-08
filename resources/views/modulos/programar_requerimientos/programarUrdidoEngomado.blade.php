@@ -89,16 +89,12 @@
                             <select name="proveedor"
                                 class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded" required>
                                 <option value="" disabled {{ old('proveedor') ? '' : 'selected' }}></option>
-                                <option value="Max" {{ old('proveedor') == 'Max' ? 'selected' : '' }}>Max Verstappen –
-                                    Red Bull</option>
-                                <option value="Sergio" {{ old('proveedor') == 'Sergio' ? 'selected' : '' }}>Sergio Pérez –
-                                    Red Bull</option>
-                                <option value="Lewis" {{ old('proveedor') == 'Lewis' ? 'selected' : '' }}>Lewis Hamilton –
-                                    Ferrari</option>
-                                <option value="Charles" {{ old('proveedor') == 'Charles' ? 'selected' : '' }}>Charles
-                                    Leclerc – Ferrari</option>
-                                <option value="Lando" {{ old('proveedor') == 'Lando' ? 'selected' : '' }}>Lando Norris –
-                                    McLaren</option>
+                                <option value="Max" {{ old('proveedor') == 'Max' ? 'selected' : '' }}>JIUTEPEC</option>
+                                <option value="Sergio" {{ old('proveedor') == 'Sergio' ? 'selected' : '' }}>COTTON SA
+                                    de CV</option>
+                                <option value="Lewis" {{ old('proveedor') == 'Lewis' ? 'selected' : '' }}>AIR PRIME
+                                </option>
+
                             </select>
                         </td>
 
@@ -252,9 +248,6 @@
                                         required>
                                         <option value="" disabled {{ old('maquinaEngomado') ? '' : 'selected' }}>
                                             Selecciona una opción</option>
-                                        <option value="West Point 1"
-                                            {{ old('maquinaEngomado') == 'West Point 1' ? 'selected' : '' }}>West Point 1
-                                        </option>
                                         <option value="West Point 2"
                                             {{ old('maquinaEngomado') == 'West Point 2' ? 'selected' : '' }}>West Point 2
                                         </option>
