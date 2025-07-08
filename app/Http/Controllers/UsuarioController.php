@@ -49,9 +49,9 @@ class UsuarioController extends Controller
         // Definir los módulos y sus rutas
         $modulos = [
             ['nombre' => 'PLANEACIÓN', 'imagen' => 'planeacion.png', 'ruta' => route('planeacion.index'), 'permiso' => 'planeacion'],
+            ['nombre' => 'TEJIDO', 'imagen' => 'tejido.jpg', 'ruta' => '/modulo-tejido', 'permiso' => 'tejido'],
             ['nombre' => 'URDIDO', 'imagen' => 'UrdEngo.png', 'ruta' => route('ingresarFolio'), 'permiso' => 'urdido'],
             ['nombre' => 'ENGOMADO', 'imagen' => 'engomado.jpg', 'ruta' => route('ingresarFolioEngomado'), 'permiso' => 'engomado'],
-            ['nombre' => 'TEJIDO', 'imagen' => 'tejido.jpg', 'ruta' => '/modulo-tejido', 'permiso' => 'tejido'],
             ['nombre' => 'ATADORES', 'imagen' => 'Atadores.jpg', 'ruta' => '/atadores-juliosAtados', 'permiso' => 'atadores'],
             ['nombre' => 'TEJEDORES', 'imagen' => 'tejedores.jpg', 'ruta' => '/tejedores/formato', 'permiso' => 'tejedores'],
             ['nombre' => 'MANTENIMIENTO', 'imagen' => 'mantenimiento.png', 'ruta' => '/modulo-mantenimiento', 'permiso' => 'mantenimiento'],

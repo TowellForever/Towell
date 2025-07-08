@@ -10,7 +10,7 @@
 </head>
 
 <body class="bg-white impresion-UE">
-    @for ($i = 0; $i < $totalJulios; $i++)
+    @for ($i = 0; $i < $orden->no_telas; $i++)
         <div class="border border-black p-5">
             <div class="flex justify-between items-center mb-1">
                 <div>

@@ -607,8 +607,6 @@ class PlaneacionController extends Controller
     $ordenes = Planeacion::where('telar', $telar)
       ->where('en_proceso', 0)
       ->get();
-
-
     // retornamos la vista correcta (no 'login')
     return view('modulos/tejido/telares/ordenes-programadas', compact('ordenes', 'telar'));
   }

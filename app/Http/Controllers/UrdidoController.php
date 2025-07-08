@@ -240,13 +240,11 @@ class UrdidoController extends Controller
         // escribir $folio = $request; Eso guarda todo el objeto Request en la variable $folio, lo cual no tiene sentido a menos que luego vayas a manipular el request completo con ese nombre (lo cual es confuso y no recomendado). 
         $orden = UrdidoEngomado::where('folio', $folio)->first();
         $julios = ConstruccionJulios::where('folio', $folio)->get(); //julios dados de alta en programacion-requerimientos
-        $totalJulios = $julios->sum(function ($item) {
-            return  $item->no_julios;
-        });
+
         $ordUrdido = OrdenUrdido::where('folio', $folio)->get(); // recupero todos los registros que coincidan con el folio enviado del front
         $telares = Requerimiento::where('orden_prod', 'like', $folio . '-%')->pluck('telar');
 
-        return view('modulos.urdido.imprimir_papeletas_vacias', compact('folio', 'orden', 'ordUrdido', 'telares', 'totalJulios'));
+        return view('modulos.urdido.imprimir_papeletas_vacias', compact('folio', 'orden', 'ordUrdido', 'telares'));
     }
     public function cargarOrdenesPendientesUrd()
     {

@@ -111,7 +111,7 @@ class EngomadoController extends Controller
         $registroGeneral->estatus_engomado = 'finalizado';
         $registroGeneral->save();
 
-        return response()->json(['message' => 'Registros guardados y engomado finalizado correctamente.']);
+        return response()->json(['message' => 'Registros guardados y engomado finalizados correctamente.']);
     }
 
 
