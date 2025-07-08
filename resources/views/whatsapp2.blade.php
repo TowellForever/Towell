@@ -73,9 +73,7 @@
             <!-- Botón -->
             <div class="md:col-span-2 text-center mt-4 flex justify-center gap-4">
                 <!-- WhatsApp -->
-                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded">
-                    Enviar por WhatsApp
-                </button>
+
 
                 <!-- Enviar por SMS -->
                 <button type="button" id="btnEnviarSms"

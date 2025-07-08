@@ -51,8 +51,13 @@
                                         @endif
                                     </td>
                                     <td class="border px-1 py-1">
-                                        {{ $req->rizo == 1 ? $req->cuenta_rizo : ($req->pie == 1 ? $req->cuenta_pie : '-') }}
+                                        {{ $req->rizo == 1
+                                            ? preg_replace('/\.0$/', '', $req->cuenta_rizo)
+                                            : ($req->pie == 1
+                                                ? preg_replace('/\.0$/', '', $req->cuenta_pie)
+                                                : '-') }}
                                     </td>
+
 
                                     <td class="border px-1 py-1">{{ \Carbon\Carbon::parse($req->fecha)->format('d-m-Y') }}
                                     </td>
