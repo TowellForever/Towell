@@ -13,6 +13,7 @@
     @for ($i = 0; $i < $orden->no_telas; $i++)
         @php
             $item = $ordEngomado[$i];
+            $ord = $orden;
         @endphp
         <div class="border border-black p-5">
             <div class="flex justify-between items-center mb-1">
@@ -47,7 +48,7 @@
                 <div>
                     <p class="mt-2"><strong>FECHA:</strong>
                         <span class="inline-block text-xs border-b-2 border-black px-2 print:border-black">
-                            {{ $orden->fecha ?? '' }}
+                            {{ \Carbon\Carbon::parse($item->fecha)->format('d-m-y') }}
                         </span>
                     </p>
                     <p class="mt-2"><strong>URDIDOR:</strong>
@@ -64,7 +65,7 @@
                 <div class="ml-auto">
                     <p class="mt-2"><strong>TURNO:</strong>
                         <span class="inline-block text-xs border-b-2 border-black px-2 print:border-black">
-                            {{ $ordUrdido[0]->turno ?? '' }}
+                            {{ $item->turno ?? '' }}
                         </span>
                     </p>
                     <p class="mt-2"><strong>CUENTA:</strong>
@@ -80,7 +81,8 @@
                 </div>
                 <div class="ml-auto">
                     <p class="mt-2"><strong>ORDEN:</strong>
-                        <span class="inline-block text-xs border-b-2 border-black px-2 print:border-black">
+                        <span
+                            class="inline-block text-xs border-b-2 border-black px-2 print:border-black">{{ $folio }}
                         </span>
                     </p>
 
@@ -123,23 +125,29 @@
                             <th style="padding: 1px; width: 2.5cm; border: 1px solid black;">METROS</th>
                             <th style="padding: 1px; width: 1.5cm; border: 1px solid black;">ROTURAS</th>
                             <th style="padding: 1px; width: 2.5cm; border: 1px solid black;">ENGOMADOR</th>
-                            <th style="padding: 1px; width: 5cm; border: 1px solid black;">OBSERVACIONES</th>
+                            <th style="padding: 1px; width: 5cm;   border: 1px solid black;">OBSERVACIONES</th>
                         </tr>
                     </thead>
-                    <tbody style="line-height: 1;">
+                    <tbody style="line-height: 1;" class="text-xs">
                         <tr>
-                            <td style="padding: 10px; border: 1px solid black;">{{ $item->fecha }}</td>
-                            <td style="padding: 10px; border: 1px solid black;">{{ $item->hora_inicio }}</td>
-                            <td style="padding: 10px; border: 1px solid black;">{{ $item->hora_fin }}</td>
-                            <td style="padding: 10px; width: 3.5cm; border: 1px solid black;">{{ $item->metros }}</td>
+                            <td style="padding: 3px; border: 1px solid black;">
+                                {{ \Carbon\Carbon::parse($item->fecha)->format('d-m-y') }}</td>
+                            <td style="padding: 3px; border: 1px solid black;">
+                                {{ \Carbon\Carbon::parse($item->hora_inicio)->format('h:i A') }}</td>
+                            <td style="padding: 3px; border: 1px solid black;">
+                                {{ \Carbon\Carbon::parse($item->hora_fin)->format('h:i A') }}</td>
+                            <td style="padding: 3px; width: 3.5cm; border: 1px solid black;">{{ $item->metros }}</td>
                             <td style="border: 1px solid black; width: 3.5cm;">
                                 <div style="display: flex; width: 100%; height: 100%;">
                                     <div style="width: 100%; padding: 4px; text-align: center;">{{ $item->roturas }}
                                     </div>
                                 </div>
                             </td>
-                            <td style="padding: 10px; width: 2.5cm; border: 1px solid black;">{{ $item->oficial }}</td>
-                            <td style="padding: 10px; width: 2.5cm; border: 1px solid black;"></td>
+                            <td style="padding: 1px; width: 2.5cm; border: 1px solid black;" class="text-xss">
+                                {{ $item->oficial }}</td>
+                            <td style="padding: 3px; width: 2.5cm; border: 1px solid black;">
+                                {{ $ord->observaciones ?? '' }}
+                            </td>
                         </tr>
                     </tbody>
 
@@ -167,17 +175,17 @@
                             <th style="padding: 1px; width: 2.5cm; border: 1px solid black;">HUMEDAD</th>
                         </tr>
                     </thead>
-                    <tbody style="line-height: 1;">
+                    <tbody style="line-height: 1;" class="text-xs">
                         <tr>
-                            <td style="padding: 10px; border: 1px solid black;">{{ $item->no_julio }}</td>
-                            <td style="padding: 10px; border: 1px solid black;">{{ $item->peso_bruto }}</td>
-                            <td style="padding: 10px; border: 1px solid black;">{{ $item->tara }}</td>
-                            <td style="padding: 10px; border: 1px solid black;">{{ $item->peso_neto }}</td>
-                            <td style="padding: 10px; border: 1px solid black;">{{ $item->turno }}</td>
-                            <td style="padding: 10px; border: 1px solid black;">{{ $item->temp_canoa_1 }}</td>
-                            <td style="padding: 10px; border: 1px solid black;">{{ $item->temp_canoa_2 }}</td>
-                            <td style="padding: 10px; border: 1px solid black;">{{ $item->temp_canoa_3 }}</td>
-                            <td style="padding: 10px; border: 1px solid black;">{{ $item->humedad }}</td>
+                            <td style="padding: 3px; border: 1px solid black;">{{ $item->no_julio }}</td>
+                            <td style="padding: 3px; border: 1px solid black;">{{ $item->peso_bruto }}</td>
+                            <td style="padding: 3px; border: 1px solid black;">{{ $item->tara }}</td>
+                            <td style="padding: 3px; border: 1px solid black;">{{ $item->peso_neto }}</td>
+                            <td style="padding: 3px; border: 1px solid black;">{{ $item->turno }}</td>
+                            <td style="padding: 3px; border: 1px solid black;">{{ $item->temp_canoa_1 }}</td>
+                            <td style="padding: 3px; border: 1px solid black;">{{ $item->temp_canoa_2 }}</td>
+                            <td style="padding: 3px; border: 1px solid black;">{{ $item->temp_canoa_3 }}</td>
+                            <td style="padding: 3px; border: 1px solid black;">{{ $item->humedad }}</td>
                         </tr>
                     </tbody>
 
