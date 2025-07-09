@@ -34,7 +34,7 @@ class EngomadoController extends Controller
         //Log::info('Data:', $requerimiento->toArray());
 
         if (!$engomadoUrd || !$julios || !$engomado || !$requerimiento || !$oficiales) {
-            return redirect()->route('ingresarFolio')->withErrors('La orden ingresada (' . $request->folio . ') no se ha encontrado. Por favor, valide el número e intente de nuevo.');
+            return redirect()->route('ingresarFolioEngomado')->withErrors('La orden ingresada (' . $request->folio . ') no se ha encontrado. Por favor, valide el número e intente de nuevo.');
         }
 
         // Pasar los datos a la vista
@@ -132,5 +132,18 @@ class EngomadoController extends Controller
     {
         $ordenesPendientesEngo = UrdidoEngomado::where('estatus_engomado', 'en_proceso')->get();
         return view('modulos.engomado.ingresar_folio', compact('ordenesPendientesEngo'));
+    }
+
+    public function imprimirPapeletasEngomado($folio)
+    {
+        //el FOLIO esta llegando como parte de la url, no como un objeto que se trata con REQUEST.
+        // escribir $folio = $request; Eso guarda todo el objeto Request en la variable $folio, lo cual no tiene sentido a menos que luego vayas a manipular el request completo con ese nombre (lo cual es confuso y no recomendado). 
+        $orden = UrdidoEngomado::where('folio', $folio)->first();
+        $julios = ConstruccionJulios::where('folio', $folio)->get(); //julios dados de alta en programacion-requerimientos
+
+        $ordEngomado = OrdenEngomado::where('folio', $folio)->get(); // recupero todos los registros que coincidan con el folio enviado del front
+        $telares = Requerimiento::where('orden_prod', 'like', $folio . '-%')->pluck('telar');
+
+        return view('modulos.engomado.imprimir_papeletas_llenas', compact('folio', 'orden', 'ordEngomado', 'telares'));
     }
 }

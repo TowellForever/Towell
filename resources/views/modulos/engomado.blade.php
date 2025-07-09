@@ -39,7 +39,7 @@
                 <div class="flex items-center mb-1">
                     <label class="w-1/4 text-sm">Engomado:</label>
                     <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" name="engomado"
-                        value="{{ $engomadoUrd->engomado ?? '' }}" required>
+                        value="{{ $engomadoUrd->maquinaEngomado ?? '' }}" required>
                 </div>
                 <label class="w-1/4 text-sm">Tipo:</label>
                 <label class="text-sm text-black font-bold"><input type="radio" name="tipo" value="Rizo"
@@ -295,9 +295,14 @@
                     const overlay = document.getElementById('finalizadoOverlay');
                     overlay.classList.add('active');
 
+                    // 👉 ABRIR la nueva pestaña con la impresión después de 3 segundos
                     setTimeout(() => {
-                        overlay.classList.remove('active');
-                    }, 4000);
+                        const papeletas = "{{ url('/imprimir-papeletas-llenas') }}/" + folio;
+                        window.open(papeletas, '_blank');
+
+                        // 👉 Redirigir a /ingresar-folio-engomado después de abrir la impresión
+                        window.location.href = '/ingresar-folio-engomado';
+                    }, 3000); // 3000 ms = 3 segundos
                 })
                 .catch(error => {
                     // Aquí entran los errores con status 422 o si se lanzó `throw`
