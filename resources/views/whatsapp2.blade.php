@@ -2,8 +2,8 @@
 
 @section('content')
     <div class="container mx-auto mt-10 max-w-2xl">
-        <h1 class="text-2xl font-bold text-center mb-6">Reportar Falla</h1>
-        <form action="/send-whatsapp2" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <h1 class="text-2xl font-bold text-center mb-6">REPORTAR FALLA</h1>
+        <form action="" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
             @csrf
 
             <!-- Telar -->
@@ -39,7 +39,7 @@
             <div class="flex items-center gap-2">
                 <label class="w-28 text-base font-semibold text-gray-800">Descripción:</label>
                 <input type="text" name="descripcion" id="descripcion"
-                    class="flex-1 p-1 border border-gray-300 rounded text-sm bg-gray-100" readonly required>
+                    class="flex-1 p-1 border border-gray-300 rounded text-sm bg-gray-100">
             </div>
 
             <!-- Fecha -->
@@ -76,7 +76,7 @@
 
 
                 <!-- Enviar por SMS -->
-                <button type="button" id="btnEnviarSms"
+                <button type="button" id="guardadoTemporal"
                     class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded">
                     Enviar por Correo Electrónico
                 </button>
@@ -84,6 +84,66 @@
 
         </form>
     </div>
+
+    <script>
+        document.getElementById('guardadoTemporal').addEventListener('click', function() {
+            // Obtén el formulario
+            const form = this.closest('form');
+
+            // Construye un objeto con los valores del formulario
+            const formData = new FormData(form);
+
+            // Convierte FormData a un objeto plano
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value
+            });
+
+            // Agrega el CSRF token si no está (por seguridad)
+            if (!data._token) {
+                data._token = document.querySelector('input[name="_token"]').value;
+            }
+
+            // Envía los datos con fetch
+            fetch('/reportes-temporales', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': data._token
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(resp => resp.json())
+                .then(resp => {
+                    if (resp.success) {
+                        // Puedes cambiar esto por un sweetalert o lo que gustes
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Guardado temporal exitosamente!',
+                            showConfirmButton: true,
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.href = '/produccionProceso';
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error al guardar',
+                            text: 'Por favor, intenta de nuevo.'
+                        });
+                    }
+                })
+                .catch(() => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error de conexión',
+                        text: 'No se pudo conectar con el servidor.'
+                    });
+                });
+        });
+    </script>
+
 
     <script>
         document.getElementById('btnEnviarSms').addEventListener('click', function() {

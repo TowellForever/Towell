@@ -22,7 +22,7 @@
                     <table class="w-full text-xs border-collapse border border-gray-300 requerimientos">
                         <thead>
                             <tr class="bg-gray-200 text-left">
-                                <th class="border px-1 py-0.5">FECHA REQUERIDA</th><!--aqui va la fecha de requerimiento-->
+                                <th class="border px-1 py-0.5">FECHA</th><!--aqui va la fecha de requerimiento-->
                                 <th class="border px-1 py-0.5">TURNO</th>
                                 <th class="border px-1 py-0.5">TELAR</th>
                                 <th class="border px-1 py-0.5">TIPO</th>

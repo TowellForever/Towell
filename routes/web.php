@@ -15,6 +15,7 @@ use App\Http\Controllers\UsuarioController;
 use App\Models\Usuario;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReporteFallaController;
+use App\Http\Controllers\ReporteTemporalController;
 use App\Http\Controllers\TejedorController;
 use App\Http\Controllers\TejidoSchedullingController;
 use App\Http\Controllers\UrdidoController;
@@ -236,3 +237,7 @@ Route::get('/flogs/buscar', [App\Http\Controllers\TejidoSchedullingController::c
 //Rutas para chatbot, prueba 1 de IA integrada a Laravel
 Route::get('/chatbot', [ChatbotController::class, 'index']);
 Route::post('/chatbot/message', [ChatbotController::class, 'sendMessage']);
+
+//RUTAS TEMPORALES
+Route::post('/reportes-temporales', [ReporteTemporalController::class, 'store'])->name('reportes-temporales.store');
+Route::get('/reportes-temporales', [\App\Http\Controllers\ReporteTemporalController::class, 'index'])->name('reportes-temporales.index');
