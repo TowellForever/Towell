@@ -8,6 +8,7 @@ use App\Http\Controllers\CatalagoTelarController;
 use App\Http\Controllers\CatalagoVelocidadController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\EngomadoController;
+use App\Http\Controllers\ExcelImportacionesController;
 use App\Http\Controllers\ModelosController;
 use App\Http\Controllers\PlaneacionController;
 use App\Http\Controllers\RequerimientoController;
@@ -237,6 +238,12 @@ Route::get('/flogs/buscar', [App\Http\Controllers\TejidoSchedullingController::c
 //Rutas para chatbot, prueba 1 de IA integrada a Laravel
 Route::get('/chatbot', [ChatbotController::class, 'index']);
 Route::post('/chatbot/message', [ChatbotController::class, 'sendMessage']);
+
+//Rutas para importaciones de excel, TEJIDO_SCHEDULING y MODELOS
+
+
+Route::get('/tejido-scheduling/import', [ExcelImportacionesController::class, 'showForm'])->name('tejido.import.form');
+Route::post('/tejido-scheduling/import', [ExcelImportacionesController::class, 'import'])->name('tejido.import');
 
 //RUTAS TEMPORALES
 Route::post('/reportes-temporales', [ReporteTemporalController::class, 'store'])->name('reportes-temporales.store');
