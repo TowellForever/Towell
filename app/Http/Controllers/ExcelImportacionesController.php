@@ -25,7 +25,6 @@ class ExcelImportacionesController extends Controller
             Excel::import(new ExcelImport, $request->file('archivo'));
             return back()->with('success', '¡Archivo importado exitosamente!');
         } catch (\Exception $e) {
-            dd($e->getMessage());
             return back()->with('error', 'Hubo un error al importar el archivo: ' . $e->getMessage());
         }
     }
