@@ -21,10 +21,10 @@ class Planeacion extends Model
         'Eficiencia_Std',
         'Velocidad_STD',
         'Hilo',
-        'Calibre_Rizo',
         'Calibre_Pie',
         'Calendario',
         'Clave_Estilo',
+        'Clave_AX',
         'Tamano_AX',
         'Estilo_Alternativo',
         'Nombre_Producto',
@@ -90,9 +90,8 @@ class Planeacion extends Model
         'Entrega',
         'Dif_vs_Compromiso',
         'en_proceso',
-        'id',
+        'Calibre_Rizo',
         'cantidad',
-        'Clave_AX',
     ];
 }
 

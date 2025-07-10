@@ -2,15 +2,9 @@
 
 @section('content')
     <div class="max-w-lg mx-auto mt-10 bg-white p-8 rounded-2xl shadow-xl">
-        <h2 class="text-2xl font-bold mb-6 text-blue-700 text-center">Importar Planeación desde Excel</h2>
+        <h2 class="text-2xl font-bold mb-6 text-blue-700 text-center">IMPORTACIÓN DE REGISTROS DESDE ARCHIVO EXCEL</h2>
 
-        @if (session('success'))
-            <div class="bg-green-100 text-green-800 border border-green-400 rounded p-3 mb-5 text-center">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        <form action="{{ route('planeacion.import') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+        <form action="{{ route('tejido.import') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
             @csrf
             <input type="file" name="archivo" required class="block w-full border p-2 rounded">
             <button type="submit"
@@ -18,4 +12,29 @@
                 Importar</button>
         </form>
     </div>
+    <script>
+        @if (session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: '{{ session('success') }}',
+                confirmButtonColor: '#3085d6',
+                timer: 3000,
+                timerProgressBar: true,
+                showConfirmButton: false
+            });
+        @endif
+
+        @if (session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: '{{ session('error') }}',
+                confirmButtonColor: '#d33',
+                timer: 5000,
+                timerProgressBar: true,
+                showConfirmButton: false
+            });
+        @endif
+    </script>
 @endsection
