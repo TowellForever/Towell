@@ -103,89 +103,109 @@ class ExcelImport implements ToModel
         $entrega              = is_numeric($row[67]) ? Date::excelToDateTimeObject($row[67])->format('Y-m-d H:i:s') : $row[67] ?? null;
         $dif_vs_compromiso    = $row[68] ?? null;
 
+        // Ejemplo: $clave_estilo = "AB1234"
+        if (preg_match('/^([A-Za-z]{1,3})[A-Za-z]*(\d+)$/', $clave_estilo, $matches)) {
+            $tamanio_ax = (string) $matches[1]; // Solo las 3 primeras letras iniciales
+            $clave_ax   = $matches[2];          // Todos los números que sigan
+        } else {
+            $tamanio_ax = null;
+            $clave_ax   = null;
+        }
 
+        /*
+            "$tamanio_ax" => "PULLMAN"
+            "$clave_ax" => "7248"
+            "$$salon" => "JACQUARD"
+        */
+
+
+        // Buscar el modelo de forma segura
+        $modelo = \App\Models\Modelos::where('CLAVE_AX', $clave_ax)
+            ->where('Tamanio_AX', $tamanio_ax)
+            ->where('Departamento', $salon)
+            ->first();
 
 
         // 2. Crear el registro principal de forma segura
         $nuevoRegistro = \App\Models\Planeacion::create([
-            'Cuenta'                => $row[0] ?? null,
-            'Salon'                 => $row[1] ?? null,
-            'Telar'                 => $row[2] ?? null,
-            'Ultimo'                => $row[3] ?? null,
-            'Cambios_Hilo'          => $row[4] ?? null,
-            'Maquina'               => $row[5] ?? null,
-            'Ancho'                 => $row[6] ?? null,
-            'Eficiencia_Std'        => $row[7] ?? null,
-            'Velocidad_STD'         => $row[8] ?? null,
-            'Hilo'                  => $row[9] ?? null,
-            'Calibre_Pie'           => $row[10] ?? null,
-            'Calendario'            => $row[11] ?? null,
-            'Clave_Estilo'          => $row[12] ?? null,
-            'Clave_AX'              => $row[13] ?? null,
-            'Tamano_AX'             => $row[14] ?? null,
-            'Estilo_Alternativo'    => $row[15] ?? null,
-            'Nombre_Producto'       => $row[16] ?? null,
-            'Saldos'                => $row[17] ?? null,
-            'Fecha_Captura'         => is_numeric($row[18]) ? Date::excelToDateTimeObject($row[18])->format('Y-m-d H:i:s') : $row[18] ?? null,
-            'Orden_Prod'            => $row[19] ?? null,
-            'Fecha_Liberacion'      => is_numeric($row[20]) ? Date::excelToDateTimeObject($row[20])->format('Y-m-d H:i:s') : $row[20] ?? null,
-            'Id_Flog'               => $row[21] ?? null,
-            'Descrip'               => $row[22] ?? null,
-            'Aplic'                 => $row[23] ?? null,
-            'Obs'                   => $row[24] ?? null,
-            'Tipo_Ped'              => $row[25] ?? null,
-            'Tiras'                 => $row[26] ?? null,
-            'Peine'                 => $row[27] ?? null,
-            'Largo_Crudo'           => $row[28] ?? null,
-            'Peso_Crudo'            => $row[29] ?? null,
-            'Luchaje'               => $row[30] ?? null,
-            'CALIBRE_TRA'           => $row[31] ?? null,
-            'Dobladillo'            => $row[32] ?? null,
-            'PASADAS_TRAMA'         => $row[33] ?? null,
-            'PASADAS_C1'            => $row[34] ?? null,
-            'PASADAS_C2'            => $row[35] ?? null,
-            'PASADAS_C3'            => $row[36] ?? null,
-            'PASADAS_C4'            => $row[37] ?? null,
-            'PASADAS_C5'            => $row[38] ?? null,
-            'ancho_por_toalla'      => $row[39] ?? null,
-            'COLOR_TRAMA'           => $row[40] ?? null,
-            'CALIBRE_C1'            => $row[41] ?? null,
-            'Clave_Color_C1'        => $row[42] ?? null,
-            'COLOR_C1'              => $row[43] ?? null,
-            'CALIBRE_C2'            => $row[44] ?? null,
-            'Clave_Color_C2'        => $row[45] ?? null,
-            'COLOR_C2'              => $row[46] ?? null,
-            'CALIBRE_C3'            => $row[47] ?? null,
-            'Clave_Color_C3'        => $row[48] ?? null,
-            'COLOR_C3'              => $row[49] ?? null,
-            'CALIBRE_C4'            => $row[50] ?? null,
-            'Clave_Color_C4'        => $row[51] ?? null,
-            'COLOR_C4'              => $row[52] ?? null,
-            'CALIBRE_C5'            => $row[53] ?? null,
-            'Clave_Color_C5'        => $row[54] ?? null,
-            'COLOR_C5'              => $row[55] ?? null,
-            'Plano'                 => $row[56] ?? null,
-            'Cuenta_Pie'            => $row[57] ?? null,
-            'Clave_Color_Pie'       => $row[58] ?? null,
-            'Color_Pie'             => $row[59] ?? null,
-            'Peso_gr_m2'            => $row[60] ?? null,
-            'Dias_Ef'               => $row[61] ?? null,
-            'Prod_Kg_Dia'           => $row[62] ?? null,
-            'Std_Dia'               => $row[63] ?? null,
-            'Prod_Kg_Dia1'          => $row[64] ?? null,
-            'Std_Toa_Hr_100'        => $row[65] ?? null,
-            'Dias_jornada_completa' => $row[66] ?? null,
-            'Horas'                 => $row[67] ?? null,
-            'Std_Hr_efectivo'       => $row[68] ?? null,
-            'Inicio_Tejido'         => is_numeric($row[69]) ? Date::excelToDateTimeObject($row[69])->format('Y-m-d H:i:s') : $row[69] ?? null,
-            'Calc4'                 => $row[70] ?? null,
-            'Calc5'                 => $row[71] ?? null,
-            'Calc6'                 => $row[72] ?? null,
-            'Fin_Tejido'            => is_numeric($row[73]) ? Date::excelToDateTimeObject($row[73])->format('Y-m-d H:i:s') : $row[73] ?? null,
-            'Fecha_Compromiso'      => is_numeric($row[74]) ? Date::excelToDateTimeObject($row[74])->format('Y-m-d H:i:s') : $row[74] ?? null,
-            'Fecha_Compromiso1'     => is_numeric($row[75]) ? Date::excelToDateTimeObject($row[75])->format('Y-m-d H:i:s') : $row[75] ?? null,
-            'Entrega'               => is_numeric($row[76]) ? Date::excelToDateTimeObject($row[76])->format('Y-m-d H:i:s') : $row[73] ?? null,
-            'Dif_vs_Compromiso'     => $row[77] ?? null,
+            'Cuenta'                => $cuenta ?? null,
+            'Salon'                 => $salon ?? null,
+            'Telar'                 => $telar ?? null,
+            'Ultimo'                => $ultimo ?? null,
+            'Cambios_Hilo'          => $cambios_hilo  ?? null,
+            'Maquina'               => $maquina ?? null,
+            'Ancho'                 => $ancho ?? null,
+            'Eficiencia_Std'        => $eficiencia_std ?? null,
+            'Velocidad_STD'         => $velocidad_std ?? null,
+            'Hilo'                  => $hilo ?? null,
+            'Calibre_Pie'           => $calibre_pie ?? null,
+            'Calendario'            => $calendario ?? null,
+            'Clave_Estilo'          => $clave_estilo ?? null,
+            'Clave_AX'              =>  $clave_ax  ?? null,
+            'Tamano_AX'             => $tamanio_ax  ?? null,
+            'Estilo_Alternativo'    =>  null,
+            'Nombre_Producto'       => $nombre_producto ?? null,
+            'Saldos'                => $saldos ?? null,
+            'Fecha_Captura'         => $fecha_captura ?? null,
+            'Orden_Prod'            => $orden_prod ?? null,
+            'Fecha_Liberacion'      => $orden_prod ?? null,
+            'Id_Flog'               =>  null,
+            'Descrip'               => $descrip ?? null,
+            'Aplic'                 => $aplic ?? null,
+            'Obs'                   => $obs ?? null,
+            'Tipo_Ped'              => $tipo_ped ?? null,
+            'Tiras'                 => $tiras ?? null,
+            'Peine'                 => $peine ?? null,
+            'Largo_Crudo'           => $largo_crudo ?? null,
+            'Peso_Crudo'            => $peso_crudo ?? null,
+            'Luchaje'               => $luchaje ?? null,
+            'CALIBRE_TRA'           => $calibre_tra ?? null,
+            'Dobladillo'            => $dobladillo ?? null,
+            'PASADAS_TRAMA'         =>  $pasadas_trama ?? null,
+            'PASADAS_C1'            => $pasadas_c1 ?? null,
+            'PASADAS_C2'            => $pasadas_c2 ?? null,
+            'PASADAS_C3'            => $pasadas_c3 ?? null,
+            'PASADAS_C4'            => $pasadas_c4 ?? null,
+            'PASADAS_C5'            => $pasadas_c5 ?? null,
+            'ancho_por_toalla'      => $ancho_por_toalla ?? null,
+            'COLOR_TRAMA'           => $color_trama ?? null,
+            'CALIBRE_C1'            => $calibre_c1 ?? null,
+            'Clave_Color_C1'        =>  null,
+            'COLOR_C1'              => $color_c1 ?? null,
+            'CALIBRE_C2'            => $calibre_c2 ?? null,
+            'Clave_Color_C2'        =>  null,
+            'COLOR_C2'              => $color_c2 ?? null,
+            'CALIBRE_C3'            => $calibre_c3 ?? null,
+            'Clave_Color_C3'        =>   null,
+            'COLOR_C3'              => $color_c3 ?? null,
+            'CALIBRE_C4'            => $calibre_c4 ?? null,
+            'Clave_Color_C4'        =>  null,
+            'COLOR_C4'              => $color_c4 ?? null,
+            'CALIBRE_C5'            => $calibre_c5 ?? null,
+            'Clave_Color_C5'        =>   null,
+            'COLOR_C5'              => $color_c5 ?? null,
+            'Plano'                 => $plano ?? null,
+            'Cuenta_Pie'            => $cuenta_pie ?? null,
+            'Clave_Color_Pie'       =>   null,
+            'Color_Pie'             => $color_pie ?? null,
+            'Peso_gr_m2'            => $peso_gr_m2 ?? null,
+            'Dias_Ef'               => $dias_ef ?? null,
+            'Prod_Kg_Dia'           => $prod_kg_dia ?? null,
+            'Std_Dia'               => $std_dia ?? null,
+            'Prod_Kg_Dia1'          => $prod_kg_dia1 ?? null,
+            'Std_Toa_Hr_100'        => $std_toa_hr_100 ?? null,
+            'Dias_jornada_completa' => $dias_jornada_completa ?? null,
+            'Horas'                 => $horas ?? null,
+            'Std_Hr_efectivo'       => $std_hr_efectivo ?? null,
+            'Inicio_Tejido'         => $inicio_tejido ?? null,
+            'Calc4'                 => $calc4 ?? null,
+            'Calc5'                 => $calc5 ?? null,
+            'Calc6'                 => $calc6 ?? null,
+            'Fin_Tejido'            => $fin_tejido ?? null,
+            'Fecha_Compromiso'      => $fecha_compromiso ?? null,
+            'Fecha_Compromiso1'     => $fecha_compromiso1 ?? null,
+            'Entrega'               => $entrega ?? null,
+            'Dif_vs_Compromiso'     => $dif_vs_compromiso ?? null,
         ]);
 
         $tejNum = $nuevoRegistro->id;
@@ -210,11 +230,6 @@ class ExcelImport implements ToModel
         $aplic = $nuevoRegistro->Aplic ?? '';
         $ancho_por_toalla = safeNumber($nuevoRegistro->ancho_por_toalla ?? 1);
 
-        // Buscar el modelo de forma segura
-        $modelo = \App\Models\Modelos::where('CLAVE_AX', (string) $nuevoRegistro->Clave_AX)
-            ->where('Tamanio_AX', $nuevoRegistro->Tamano_AX)
-            ->where('Departamento', $nuevoRegistro->Salon)
-            ->first();
 
         // Si no existe el modelo, crea uno "falso"
         if (!$modelo) {
