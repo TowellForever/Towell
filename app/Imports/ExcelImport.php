@@ -32,10 +32,79 @@ class ExcelImport implements ToModel
 {
     public function model(array $row)
     {
-        // 1. Saltar filas completamente vacías
-        if (empty(array_filter($row))) {
-            return null;
-        }
+        //guardo los datos de EXCEL en variables
+        $cuenta               = $row[0] ?? null;
+        $salon                = $row[1] ?? null;
+        $telar                = $row[2] ?? null;
+        $ultimo               = $row[3] ?? null;
+        $cambios_hilo         = $row[4] ?? null;        // Cambios Hilo
+        $maquina              = $row[5] ?? null;        // Maq
+        $ancho                = $row[6] ?? null;
+        $eficiencia_std       = $row[7] ?? null;        // Ef Std
+        $velocidad_std        = $row[8] ?? null;        // Vel
+        $hilo                 = $row[9] ?? null;
+        $calibre_pie          = $row[10] ?? null;
+        $calendario           = $row[11] ?? null;       // Jornada → Calendario (asignación sugerida)
+        $clave_estilo         = $row[12] ?? null;       // Clave mod. → Clave_Estilo (asignación sugerida) TAMAÑO_AX + CLAVE_AX
+        $no_existe            = $row[13] ?? null;       //Usar cuando no existe en base
+        $nombre_producto      = $row[14] ?? null;       // Producto → Nombre_Producto
+        $saldos               = $row[15] ?? null;
+        $fecha_captura        = $row[16] ?? null;       // Day Sheduling → Fecha_Captura (si es fecha, puedes formatearla)
+        $orden_prod           = $row[17] ?? null;       // Orden Prod.
+        $inn                  = $row[18] ?? null;       // INN → Id_Flog
+        $descrip              = $row[19] ?? null;
+        $aplic                = $row[20] ?? null;
+        $obs                  = $row[21] ?? null;
+        $tipo_ped             = $row[22] ?? null;
+        $tiras                = $row[23] ?? null;
+        $peine                = $row[24] ?? null;       // Pei.
+        $largo_crudo          = $row[25] ?? null;       // Lcr
+        $peso_crudo           = $row[26] ?? null;       // Pcr
+        $luchaje              = $row[27] ?? null;       // Luc
+        $calibre_tra          = $row[28] ?? null;       // CALIBRE TRA
+        $dobladillo           = $row[29] ?? null;       // Dob
+        $pasadas_trama        = $row[30] ?? null;       // PASADAS TRA
+        $pasadas_c1           = $row[31] ?? null;       // PASADAS C1
+        $pasadas_c2           = $row[32] ?? null;       // PASADAS C2
+        $pasadas_c3           = $row[33] ?? null;       // PASADAS C3
+        $pasadas_c4           = $row[34] ?? null;       // PASADAS C4
+        $pasadas_c5           = $row[35] ?? null;       // PASADAS C5
+        $ancho_por_toalla     = $row[36] ?? null;       // ancho por toalla
+        $color_trama          = $row[37] ?? null;       // COLOR TRA
+        $calibre_c1           = $row[38] ?? null;       // CALIBRE C1
+        $color_c1             = $row[39] ?? null;       // COLOR C1
+        $calibre_c2           = $row[40] ?? null;       // CALIBRE C2
+        $color_c2             = $row[41] ?? null;       // COLOR C2
+        $calibre_c3           = $row[42] ?? null;       // CALIBRE C3
+        $color_c3             = $row[43] ?? null;       // COLOR C3
+        $calibre_c4           = $row[44] ?? null;       // CALIBRE C4
+        $color_c4             = $row[45] ?? null;       // COLOR C4
+        $calibre_c5           = $row[46] ?? null;       // CALIBRE C5
+        $color_c5             = $row[47] ?? null;       // COLOR C5
+        $plano                = $row[48] ?? null;
+        $cuenta_pie           = $row[49] ?? null;
+        $color_pie            = $row[50] ?? null;
+        $peso_gr_m2           = $row[51] ?? null;       // Peso (gr / m²)
+        $dias_ef              = $row[52] ?? null;       // Dias Ef.
+        $prod_kg_dia          = $row[53] ?? null;       // Prod (Kg)/Día
+        $std_dia              = $row[54] ?? null;
+        $prod_kg_dia1         = $row[55] ?? null;       // Prod (Kg)/Día (columna extra en Excel, corresponde a Prod_Kg_Dia1 en BD)
+        $std_toa_hr_100       = $row[56] ?? null;       // Std (Toa/Hr) 100%
+        $dias_jornada_completa = $row[57] ?? null;       // Dias jornada completa
+        $horas                = $row[58] ?? null;
+        $std_hr_efectivo      = $row[59] ?? null;
+        $inicio_tejido        = is_numeric($row[60]) ? Date::excelToDateTimeObject($row[60])->format('Y-m-d H:i:s') : $row[60] ?? null;
+        $calc4                = $row[61] ?? null;
+        $calc5                  = $row[62] ?? null;
+        $calc6                = $row[63] ?? null;
+        $fin_tejido           = is_numeric($row[64]) ? Date::excelToDateTimeObject($row[64])->format('Y-m-d H:i:s') : $row[64] ?? null;
+        $fecha_compromiso     = is_numeric($row[65]) ? Date::excelToDateTimeObject($row[65])->format('Y-m-d H:i:s') : $row[65] ?? null;
+        $fecha_compromiso1    = is_numeric($row[66]) ? Date::excelToDateTimeObject($row[66])->format('Y-m-d H:i:s') : $row[66] ?? null;
+        $entrega              = is_numeric($row[67]) ? Date::excelToDateTimeObject($row[67])->format('Y-m-d H:i:s') : $row[67] ?? null;
+        $dif_vs_compromiso    = $row[68] ?? null;
+
+
+
 
         // 2. Crear el registro principal de forma segura
         $nuevoRegistro = \App\Models\Planeacion::create([
