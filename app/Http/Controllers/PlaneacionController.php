@@ -111,7 +111,7 @@ class PlaneacionController extends Controller
     ];
 
     $query = DB::table('TEJIDO_SCHEDULING')
-      ->where('id', '>', 121)
+      ->where('id', '>', 1000)
       ->orderBy('TELAR'); // Ascendente por defecto
 
     // Filtrar registros de acuerdo a los filtros recibidos

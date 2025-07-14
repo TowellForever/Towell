@@ -23,9 +23,9 @@ function safeDivide($a, $b, $default = 0)
 }
 
 // Función auxiliar para números seguros
-function safeNumber($value, $default = 0)
+function safeNumber($value, $decimales = 10)
 {
-    return is_numeric($value) ? $value : $default;
+    return number_format(floatval($value), $decimales, '.', '');
 }
 function formatExcelDate($value)
 {
@@ -68,7 +68,7 @@ class ExcelImport implements ToModel
         $salon                = $row[1] ?? null;
         $telar                = formatNumber($row[2] ?? null);
         $ultimo               = $row[3] ?? null;
-        $cambios_hilo         = $row[4] ?? null;
+        $cambios_hilo         = $row[4] ?? 0;
         $maquina              = $row[5] ?? null;
         $ancho                = formatNumber($row[6] ?? null);
         $eficiencia_std       = formatNumber($row[7] ?? null);
@@ -133,7 +133,6 @@ class ExcelImport implements ToModel
         $fecha_compromiso1    = formatExcelDate($row[66] ?? null);
         $entrega              = formatExcelDate($row[67] ?? null);
         $dif_vs_compromiso    = formatNumber($row[68] ?? null);
-
 
         //Define el array de variables a castear:
         $floatVars = [
@@ -214,7 +213,7 @@ class ExcelImport implements ToModel
             'Salon'                 => $salon ?? null,
             'Telar'                 => $telar ?? null,
             'Ultimo'                => $ultimo ?? null,
-            'Cambios_Hilo'          => $cambios_hilo  ?? null,
+            'Cambios_Hilo'          => $cambios_hilo ?? null,
             'Maquina'               => $maquina ?? null,
             'Ancho'                 => $ancho ?? null,
             'Eficiencia_Std'        => $eficiencia_std ?? null,
@@ -292,6 +291,7 @@ class ExcelImport implements ToModel
 
         $tejNum = $nuevoRegistro->id;
 
+
         // Fechas protegidas (si alguna es null o inválida, usa now)
         try {
             $fechaInicio = $nuevoRegistro->Inicio_Tejido ?? now();
@@ -311,122 +311,224 @@ class ExcelImport implements ToModel
         $dias = [];
         $aplic = $nuevoRegistro->Aplic ?? '';
         $ancho_por_toalla = safeNumber($nuevoRegistro->ancho_por_toalla ?? 1);
+        $Std_Hr_efectivo = safeNumber($nuevoRegistro->Std_Hr_efectivo ?? 1);
+        $Prod_Kg_Dia = safeNumber($nuevoRegistro->Prod_Kg_Dia ?? 1);
+        $Cambios_Hilo = safeNumber($nuevoRegistro->Cambios_Hilo ?? 1);
 
+        // Buscar el modelo de forma segura
+        $modelo = \App\Models\Modelos::where('CLAVE_AX', (string) $nuevoRegistro->Clave_AX)
+            ->where('Tamanio_AX', $nuevoRegistro->Tamano_AX)
+            ->where('Departamento', $nuevoRegistro->Salon)
+            ->first();
 
         // Si no existe el modelo, crea uno "falso"
         if (!$modelo) {
             $modelo = new \stdClass();
-            $modelo->PASADAS_1 = 0;
-            $modelo->PASADAS_2 = 0;
-            $modelo->PASADAS_3 = 0;
-            $modelo->PASADAS_4 = 0;
-            $modelo->PASADAS_5 = 0;
-            $modelo->Med_plano = 0;
+            $modelo->PASADAS_1 = 1;
+            $modelo->PASADAS_2 = 1;
+            $modelo->PASADAS_3 = 1;
+            $modelo->PASADAS_4 = 1;
+            $modelo->PASADAS_5 = 1;
+            $modelo->Med_plano = 1;
             $modelo->TIRAS = 1;
+            $modelo->Largo = 1;
         }
+        if (!$nuevoRegistro->CALIBRE_C1) $nuevoRegistro->CALIBRE_C1 = 1;
+        if (!$nuevoRegistro->CALIBRE_C2) $nuevoRegistro->CALIBRE_C2 = 1;
+        if (!$nuevoRegistro->CALIBRE_C3) $nuevoRegistro->CALIBRE_C3 = 1;
+        if (!$nuevoRegistro->CALIBRE_C4) $nuevoRegistro->CALIBRE_C4 = 1;
+        if (!$nuevoRegistro->Cuenta_Pie)  $nuevoRegistro->Cuenta_Pie = 32; // mínimo seguro
+        if (!$calibre_tra)                $calibre_tra = 1;
+        if (!$calibre_pie)                $calibre_pie = 1;
 
+
+        $totalDias = 0;
+
+        //INICIAMOS LOS CALCULOS DE ACUERDO A LAS FORMULAS DE ARCHIVO EXCEL DE PEPE OWNER
         foreach ($periodo as $index => $dia) {
             $inicioDia = $dia->copy()->startOfDay();
             $finDia = $dia->copy()->endOfDay();
-            $PASADAS_1 = safeNumber($modelo->PASADAS_1 ?? 0);
 
-            // Fracción del día y piezas
+            // Calcular la fracción para el primer y segundo día
             if ($index === 0) {
                 $inicio = strtotime($fechaInicioCarbon);
                 $fin = strtotime($fechaFinCarbon);
 
+                // Extraer fechas sin horas para comparar si son el mismo día
                 $diaInicio = date('Y-m-d', $inicio);
                 $diaFin = date('Y-m-d', $fin);
 
                 if ($diaInicio === $diaFin) {
+                    // 🟢 Mismo día: diferencia directa entre horas
                     $diferenciaSegundos = $fin - $inicio;
-                    $fraccion = safeDivide($diferenciaSegundos, 86400);
+                    $fraccion = $diferenciaSegundos / 86400; // fracción del día
                 } else {
+                    // 🔵 Días distintos: desde hora de inicio hasta 12:00 AM del día siguiente
                     $hora = date('H', $inicio);
                     $minuto = date('i', $inicio);
                     $segundo = date('s', $inicio);
                     $segundosDesdeMedianoche = ($hora * 3600) + ($minuto * 60) + $segundo;
                     $segundosRestantes = 86400 - $segundosDesdeMedianoche;
-                    $fraccion = safeDivide($segundosRestantes, 86400);
+                    $fraccion = $segundosRestantes / 86400;
                 }
+
+                // Cálculo de piezas (si aplica)
+                $piezas = ($fraccion * 24) * $Std_Hr_efectivo;
+                $kilos = ($piezas * $Prod_Kg_Dia) / ($Std_Hr_efectivo * 24);
+                $cambio = $Cambios_Hilo; //si Cambios_Hilo = 1, asignamos 1
+                $rizo = 0; // Valor por defecto
+                if ($aplic === 'RZ') {
+                    $rizo = 1 * $kilos;
+                } elseif ($aplic === 'RZ2') {
+                    $rizo = 2 * $kilos;
+                } elseif ($aplic === 'RZ3') {
+                    $rizo = 3 * $kilos;
+                } elseif ($aplic === 'BOR') {
+                    $rizo = 1 * $kilos;
+                } elseif ($aplic === 'EST') {
+                    $rizo = 1 * $kilos;
+                } elseif ($aplic === 'DC') {
+                    $rizo = 1 * $kilos;
+                }
+
+                $TRAMA = ((((0.59 * safeDivide((($modelo->PASADAS_1 * 1.001) * $ancho_por_toalla), 100)) / (float)$calibre_tra) * $piezas) / 1000);
+
+                $combinacion1 = ((((0.59 * safeDivide((((float)$modelo->PASADAS_2 * 1.001) * $ancho_por_toalla), 100)) / safeDivide((float) $nuevoRegistro->CALIBRE_C1, 1)) * $piezas) / 1000);
+                $combinacion2 = ((((0.59 * safeDivide((((float)$modelo->PASADAS_3 * 1.001) * $ancho_por_toalla), 100)) / safeDivide((float) $nuevoRegistro->CALIBRE_C2, 1)) * $piezas) / 1000);
+                $combinacion3 = ((((0.59 * safeDivide((((float)$modelo->PASADAS_4 * 1.001) * $ancho_por_toalla), 100)) / safeDivide((float) $nuevoRegistro->CALIBRE_C3, 1)) * $piezas) / 1000);
+                $combinacion4 = ((((0.59 * safeDivide((((float)$modelo->PASADAS_5 * 1.001) * $ancho_por_toalla), 100)) / safeDivide((float) $nuevoRegistro->CALIBRE_C4, 1)) * $piezas) / 1000);
+
+                $Piel1 = ((((((((float) $modelo->Largo + (float) $modelo->Med_plano) / 100) * 1.055) * 0.00059) /
+                    safeDivide((0.00059 * 1), safeDivide(0.00059, $calibre_pie))) *
+                    safeDivide(((float) $nuevoRegistro->Cuenta_Pie - 32), (float) $modelo->TIRAS)) * $piezas);
+
+                $riso = ($kilos - ($Piel1 + $combinacion3 + $combinacion2 + $combinacion1 + $TRAMA + $combinacion4));
+
+                $dias[] = [
+                    'fecha' => $dia->toDateString(),
+                    'fraccion_dia' => $fraccion,
+                    'piezas' => $piezas,
+                    'kilos' => $kilos,
+                    'rizo' => $rizo,
+                    'cambio' => $cambio,
+                    'trama' => $TRAMA,
+                    'combinacion1' => $combinacion1,
+                    'combinacion2' => $combinacion2,
+                    'combinacion3' => $combinacion3,
+                    'combinacion4' => $combinacion4,
+                    'piel1' => $Piel1,
+                    'riso' => $riso,
+                ];
+                $totalDias++;
+            } elseif ($dia->isSameDay($fechaFinCarbon)) {
+
+                // Último día: calcular la fracción desde 00:00 hasta la hora fin
+                $realInicio = $inicioDia;
+                $realFin = $fechaFinCarbon;
+                $segundos = $realFin->diffInSeconds($realInicio, true);
+                $fraccion = $segundos / 86400; //agregamos esta linea de codigo para calcular las piezas
+                $piezas = ($fraccion * 24) * $Std_Hr_efectivo;
+                $kilos = round(($piezas * $Prod_Kg_Dia) / ($Std_Hr_efectivo * 24), 2);
+
+                $cambio = $Cambios_Hilo; //si Cambios_Hilo = 1, asignamos 1
+                $rizo = 0; // Valor por defecto
+                if ($aplic === 'RZ') {
+                    $rizo = 1 * $kilos;
+                } elseif ($aplic === 'RZ2') {
+                    $rizo = 2 * $kilos;
+                } elseif ($aplic === 'RZ3') {
+                    $rizo = 3 * $kilos;
+                } elseif ($aplic === 'BOR') {
+                    $rizo = 1 * $kilos;
+                } elseif ($aplic === 'EST') {
+                    $rizo = 1 * $kilos;
+                } elseif ($aplic === 'DC') {
+                    $rizo = 1 * $kilos;
+                }
+                $TRAMA = ((((0.59 * safeDivide((($modelo->PASADAS_1 * 1.001) * $ancho_por_toalla), 100)) / (float)$calibre_tra) * $piezas) / 1000);
+
+                $combinacion1 = ((((0.59 * safeDivide((((float)$modelo->PASADAS_2 * 1.001) * $ancho_por_toalla), 100)) / safeDivide((float) $nuevoRegistro->CALIBRE_C1, 1)) * $piezas) / 1000);
+                $combinacion2 = ((((0.59 * safeDivide((((float)$modelo->PASADAS_3 * 1.001) * $ancho_por_toalla), 100)) / safeDivide((float) $nuevoRegistro->CALIBRE_C2, 1)) * $piezas) / 1000);
+                $combinacion3 = ((((0.59 * safeDivide((((float)$modelo->PASADAS_4 * 1.001) * $ancho_por_toalla), 100)) / safeDivide((float) $nuevoRegistro->CALIBRE_C3, 1)) * $piezas) / 1000);
+                $combinacion4 = ((((0.59 * safeDivide((((float)$modelo->PASADAS_5 * 1.001) * $ancho_por_toalla), 100)) / safeDivide((float) $nuevoRegistro->CALIBRE_C4, 1)) * $piezas) / 1000);
+
+                $Piel1 = ((((((((float) $modelo->Largo + (float) $modelo->Med_plano) / 100) * 1.055) * 0.00059) /
+                    safeDivide((0.00059 * 1), safeDivide(0.00059, $calibre_pie))) *
+                    safeDivide(((float) $nuevoRegistro->Cuenta_Pie - 32), (float) $modelo->TIRAS)) * $piezas);
+
+                $riso = ($kilos - ($Piel1 + $combinacion3 + $combinacion2 + $combinacion1 + $TRAMA + $combinacion4));
+                $dias[] = [
+                    'fecha' => $dia->toDateString(),
+                    'fraccion_dia' => round($segundos / 86400, 3),
+                    'piezas' => $piezas,
+                    'kilos' => $kilos,
+                    'rizo' => $rizo,
+                    'cambio' => $cambio,
+                    'trama' => $TRAMA,
+                    'combinacion1' => $combinacion1,
+                    'combinacion2' => $combinacion2,
+                    'combinacion3' => $combinacion3,
+                    'combinacion4' => $combinacion4,
+                    'piel1' => $Piel1,
+                    'riso' => $riso,
+                ];
+                $totalDias++;
             } else {
                 $fraccion = 1;
+                // Días intermedios: fracción completa (1)
+                $piezas = ($fraccion * 24) * $Std_Hr_efectivo;
+                $kilos = round(($piezas * $Prod_Kg_Dia) / ($Std_Hr_efectivo * 24), 2);
+                $cambio = $Cambios_Hilo; //si Cambios_Hilo = 1, asignamos 1
+                $rizo = 0; // Valor por defecto
+                if ($aplic === 'RZ') {
+                    $rizo = 1 * $kilos;
+                } elseif ($aplic === 'RZ2') {
+                    $rizo = 2 * $kilos;
+                } elseif ($aplic === 'RZ3') {
+                    $rizo = 3 * $kilos;
+                } elseif ($aplic === 'BOR') {
+                    $rizo = 1 * $kilos;
+                } elseif ($aplic === 'EST') {
+                    $rizo = 1 * $kilos;
+                } elseif ($aplic === 'DC') {
+                    $rizo = 1 * $kilos;
+                }
+
+                $TRAMA = ((((0.59 * safeDivide((($modelo->PASADAS_1 * 1.001) * $ancho_por_toalla), 100)) / (float)$calibre_tra) * $piezas) / 1000);
+
+                $combinacion1 = ((((0.59 * safeDivide((((float)$modelo->PASADAS_2 * 1.001) * $ancho_por_toalla), 100)) / safeDivide((float) $nuevoRegistro->CALIBRE_C1, 1)) * $piezas) / 1000);
+                $combinacion2 = ((((0.59 * safeDivide((((float)$modelo->PASADAS_3 * 1.001) * $ancho_por_toalla), 100)) / safeDivide((float) $nuevoRegistro->CALIBRE_C2, 1)) * $piezas) / 1000);
+                $combinacion3 = ((((0.59 * safeDivide((((float)$modelo->PASADAS_4 * 1.001) * $ancho_por_toalla), 100)) / safeDivide((float) $nuevoRegistro->CALIBRE_C3, 1)) * $piezas) / 1000);
+                $combinacion4 = ((((0.59 * safeDivide((((float)$modelo->PASADAS_5 * 1.001) * $ancho_por_toalla), 100)) / safeDivide((float) $nuevoRegistro->CALIBRE_C4, 1)) * $piezas) / 1000);
+
+                $Piel1 = ((((((((float) $modelo->Largo + (float) $modelo->Med_plano) / 100) * 1.055) * 0.00059) /
+                    safeDivide((0.00059 * 1), safeDivide(0.00059, $calibre_pie))) *
+                    safeDivide(((float) $nuevoRegistro->Cuenta_Pie - 32), (float) $modelo->TIRAS)) * $piezas);
+
+                $riso = ($kilos - ($Piel1 + $combinacion3 + $combinacion2 + $combinacion1 + $TRAMA + $combinacion4));
+
+                $dias[] = [
+                    'fecha' => $dia->toDateString(),
+                    'fraccion_dia' => 1, // Día completo
+                    'piezas' => $piezas,
+                    'kilos' => $kilos,
+                    'rizo' => $rizo,
+                    'cambio' => $cambio,
+                    'trama' => $TRAMA,
+                    'combinacion1' => $combinacion1,
+                    'combinacion2' => $combinacion2,
+                    'combinacion3' => $combinacion3,
+                    'combinacion4' => $combinacion4,
+                    'piel1' => $Piel1,
+                    'riso' => $riso,
+                ];
+                $totalDias++;
             }
-
-            $stdHrEfectivo = safeNumber($nuevoRegistro->Std_Hr_efectivo ?? 1);
-            $piezas = ($fraccion * 24) * $stdHrEfectivo;
-            $prodKgDia = safeNumber($nuevoRegistro->Prod_Kg_Dia ?? 0);
-
-            $kilos = safeDivide($piezas * $prodKgDia, $stdHrEfectivo * 24);
-
-            $calibre_tra = safeNumber($nuevoRegistro->CALIBRE_TRA ?? 1);
-
-            $TRAMA = safeDivide(
-                0.59 * (($PASADAS_1 * 1.001) * $ancho_por_toalla) / 100,
-                $calibre_tra
-            ) * $piezas / 1000;
-
-            $combinacion1 = safeDivide(
-                0.59 * (($modelo->PASADAS_2 ?? 0) * 1.001 * $ancho_por_toalla) / 100,
-                safeNumber($nuevoRegistro->CALIBRE_C1 ?? 1)
-            ) * $piezas / 1000;
-
-            $combinacion2 = safeDivide(
-                0.59 * (($modelo->PASADAS_3 ?? 0) * 1.001 * $ancho_por_toalla) / 100,
-                safeNumber($nuevoRegistro->CALIBRE_C2 ?? 1)
-            ) * $piezas / 1000;
-
-            $combinacion3 = safeDivide(
-                0.59 * (($modelo->PASADAS_4 ?? 0) * 1.001 * $ancho_por_toalla) / 100,
-                safeNumber($nuevoRegistro->CALIBRE_C3 ?? 1)
-            ) * $piezas / 1000;
-
-            $combinacion4 = safeDivide(
-                0.59 * (($modelo->PASADAS_5 ?? 0) * 1.001 * $ancho_por_toalla) / 100,
-                safeNumber($nuevoRegistro->CALIBRE_C4 ?? 1)
-            ) * $piezas / 1000;
-
-            $med_plano = safeNumber($modelo->Med_plano ?? 0);
-            $largo_crudo = safeNumber($nuevoRegistro->Largo_Crudo ?? 0);
-            $cuenta_pie = safeNumber($nuevoRegistro->Cuenta_Pie ?? 32);
-            $tiras = safeNumber($modelo->TIRAS ?? 1);
-            $calibre_pie = safeNumber($nuevoRegistro->Calibre_Pie ?? 1);
-
-            $Piel1 = safeDivide(
-                (($largo_crudo + $med_plano) / 100) * 1.055 * 0.00059,
-                safeDivide((0.00059 * 1), safeDivide(0.00059, $calibre_pie))
-            ) * safeDivide(($cuenta_pie - 32), $tiras) * $piezas;
-
-            // Calcular rizo según "Aplic"
-            $multiplicadorRizo = match ($aplic) {
-                'RZ' => 1,
-                'RZ2' => 2,
-                'RZ3' => 3,
-                'BOR', 'EST', 'DC' => 1,
-                default => 0
-            };
-            $rizo = $multiplicadorRizo * $kilos;
-
-            $riso = $kilos - ($Piel1 + $combinacion3 + $combinacion2 + $combinacion1 + $TRAMA + $combinacion4);
-
-            $cambio = safeNumber($nuevoRegistro->Cambios_Hilo ?? 0);
-
-            $dias[] = [
-                'fecha' => $dia->toDateString(),
-                'fraccion_dia' => $fraccion,
-                'piezas' => $piezas,
-                'kilos' => $kilos,
-                'rizo' => $rizo,
-                'cambio' => $cambio,
-                'trama' => $TRAMA,
-                'combinacion1' => $combinacion1,
-                'combinacion2' => $combinacion2,
-                'combinacion3' => $combinacion3,
-                'combinacion4' => $combinacion4,
-                'piel1' => $Piel1,
-                'riso' => $riso,
-            ];
         }
+
+        //dd([
+        //  'dias:' => $dias,
+        //]);
 
         foreach ($dias as $registro) {
             \App\Models\TipoMovimientos::create([
@@ -448,6 +550,7 @@ class ExcelImport implements ToModel
                 'tej_num'         => $tejNum,
             ]);
         }
+
 
         return $nuevoRegistro;
     }
