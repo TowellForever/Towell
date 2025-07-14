@@ -19,7 +19,7 @@
                 title: '¡Éxito!',
                 text: '{{ session('success') }}',
                 confirmButtonColor: '#3085d6',
-                timer: 3000,
+                timer: 9000,
                 timerProgressBar: true,
                 showConfirmButton: false
             });
@@ -31,7 +31,7 @@
                 title: 'Oops...',
                 text: '{{ session('error') }}',
                 confirmButtonColor: '#d33',
-                timer: 5000,
+                timer: 10000,
                 timerProgressBar: true,
                 showConfirmButton: false
             });
