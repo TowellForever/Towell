@@ -12,9 +12,9 @@
                     <th colspan="5">ÓRDENES PROGRAMADAS</th>
                 </tr>
             </thead>
-            <tbody class="bg-white text-black">
+            <tbody>
                 @foreach ($ordenes as $dato)
-                    <tr>
+                    <tr class="{{ $loop->iteration % 2 == 0 ? 'bg-gray-100' : 'bg-white' }}">
                         <td class="border p-2">
                             <b>Orden:</b> {{ $dato->Orden_Prod }}
                             <br><b>Cuenta Rizo:</b> {{ $dato->Cuenta }}
@@ -54,6 +54,7 @@
                     </tr>
                 @endforeach
             </tbody>
+
         </table>
     </div>
 @endsection

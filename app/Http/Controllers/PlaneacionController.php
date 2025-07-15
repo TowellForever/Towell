@@ -111,7 +111,7 @@ class PlaneacionController extends Controller
     ];
 
     $query = DB::table('TEJIDO_SCHEDULING')
-      ->where('id', '>', 1000)
+      ->where('id', '>', 125)
       ->orderBy('TELAR'); // Ascendente por defecto
 
     // Filtrar registros de acuerdo a los filtros recibidos
@@ -606,7 +606,10 @@ class PlaneacionController extends Controller
     // Traemos solo los registros en_proceso = 0 para este telar
     $ordenes = Planeacion::where('telar', $telar)
       ->where('en_proceso', 0)
+      ->where('id', '>', 125)
+      ->orderBy('Inicio_Tejido')
       ->get();
+
     // retornamos la vista correcta (no 'login')
     return view('modulos/tejido/telares/ordenes-programadas', compact('ordenes', 'telar'));
   }
