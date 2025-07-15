@@ -128,6 +128,10 @@ Route::get('/tejedores/programar-requerimientos', function () {
 Route::get('/tejedores/formato', [TejedorController::class, 'index'])->name('tejedores.index');
 Route::post('/manufactura/guardar', [TejedorController::class, 'store'])->name('manufactura.guardar');
 
+Route::post('/manufactura/{id}/update', [TejedorController::class, 'update'])->name('manufactura.update');
+
+
+
 //RUTAS DEL MODULO **mantenimiento**
 Route::get('/modulo-mantenimiento', function () {
     return view('modulos/mantenimiento');

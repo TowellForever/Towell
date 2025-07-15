@@ -19,29 +19,42 @@
             });
         </script>
     @endif
+
     @php
-        // Establece la zona horaria explícitamente (asegúrate de que coincida con tu ubicación)
-        $ahora = \Carbon\Carbon::now('America/Mexico_City');
-
-        $hora = (int) $ahora->format('H');
-        $minuto = (int) $ahora->format('i');
-        $totalMinutos = $hora * 60 + $minuto;
-
-        if ($totalMinutos >= 390 && $totalMinutos <= 869) {
-            // 06:30 - 14:29
-            $turnoActual = 1;
-        } elseif ($totalMinutos >= 870 && $totalMinutos <= 1349) {
-            // 14:30 - 22:29
-            $turnoActual = 2;
-        } else {
-            // 22:30 - 06:29
-            $turnoActual = 3;
+        // --- INICIO MAPEO DE DETALLES ---
+        $detallesArr = [];
+        if (isset($detalles) && count($detalles)) {
+            foreach ($detalles as $detalle) {
+                // La clave será: criterio-telar-turno
+                // criterio debe ser número del 1 al 10 (si no, adapta este mapeo)
+                $key = $detalle->criterio . '-' . $detalle->telar . '-' . $detalle->turno;
+                $detallesArr[$key] = $detalle->valor;
+            }
         }
+
+        // Criterios (ajusta si tu DB usa otro formato)
+        $criterios = [
+            'Papeleta de modelo y marbetes correctos.',
+            'Trama de telar correcta.',
+            'Prealimentadores.',
+            'Largo barba.',
+            'Repaso de orillas.',
+            'Tensión de Gasa de Vuelta',
+            'Torre de tramas.',
+            'Dibujo/Orilla Salpicado',
+            'Hilos falsos.',
+            'Tejido correcto (rayas - tejido abierto)',
+        ];
+        $usuarios = [
+            'jesus.alvarez' => 'Juan de Jesus',
+            'karla.mendez' => 'Karla Mendez',
+            'ricardo.lopez' => 'Ricardo López',
+            'andrea.soto' => 'Andrea Soto',
+            'fernando.ramos' => 'Fernando Ramos',
+        ];
     @endphp
 
-
-
-    <div class="md:mt-0 sm:mt-5  bg-white container overflow-y-auto overflow-x-auto md:h-[670px] sm:h-[1200px]">
+    <div class="md:mt-0 sm:mt-5 bg-white container overflow-y-auto overflow-x-auto md:h-[670px] sm:h-[1200px]">
         <div class="text-sm font-semibold -mt-2 p-0 leading-none opacity-70">
             FECHA: <strong>{{ now()->format('Y-m-d H:i') }}</strong>
         </div>
@@ -60,16 +73,6 @@
                 <div class="text-sm font-semibold md:mt-2 sm:mt-10">TURNO ACTUAL: <strong>{{ $turnoActual }}</strong></div>
                 <div>
                     ENTREGA:
-                    @php
-                        $usuarios = [
-                            'jesus.alvarez' => 'Juan de Jesus',
-                            'karla.mendez' => 'Karla Mendez',
-                            'ricardo.lopez' => 'Ricardo López',
-                            'andrea.soto' => 'Andrea Soto',
-                            'fernando.ramos' => 'Fernando Ramos',
-                        ];
-                    @endphp
-
                     <select name="entrega" id="entrega" class="form-control d-inline-block w-auto font-bold">
                         @foreach ($usuarios as $clave => $nombre)
                             <option value="{{ $clave }}" {{ $usuarioPorDefecto == $clave ? 'selected' : '' }}>
@@ -77,7 +80,6 @@
                             </option>
                         @endforeach
                     </select>
-
                 </div>
             </div>
 
@@ -85,7 +87,7 @@
                 <table class="table-auto w-full border border-black text-xs text-center">
                     <thead>
                         <tr>
-                            <th rowspan="2" class="w-1/4 border border-black px-1 py-1">Número de Tejedor</th>
+                            <th rowspan="2" class="w-1/4 border border-black px-1 py-1">Número de Criterio</th>
                             @foreach ($usuario->telares as $telar)
                                 <th colspan="3" class="border border-black border-2 px-1 py-1">{{ $telar->telar }}</th>
                                 <input type="hidden" name="telares[]" value="{{ $telar->telar }}">
@@ -100,44 +102,47 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @php
-                            $criterios = [
-                                'Papeleta de modelo y marbetes correctos.',
-                                'Trama de telar correcta.',
-                                'Prealimentadores.',
-                                'Largo barba.',
-                                'Repaso de orillas.',
-                                'Tensión de Gasa de Vuelta',
-                                'Torre de tramas.',
-                                'Dibujo/Orilla Salpicado',
-                                'Hilos falsos.',
-                                'Tejido correcto (rayas - tejido abierto)',
-                            ];
-                        @endphp
-
                         @foreach ($criterios as $i => $criterio)
                             <tr class="{{ in_array($i, [3, 9]) ? 'bg-red-500 text-white font-semibold' : '' }}">
                                 <td class="border border-black text-left px-1 py-1">{{ $i + 1 }}.-
                                     {{ $criterio }}</td>
                                 @for ($j = 0; $j < $usuario->telares->count() * 3; $j++)
                                     @php
-                                        $turno = ($j % 3) + 1;
+                                        $telarIndex = floor($j / 3); // de 0 a n_telares-1
+                                        $turno = ($j % 3) + 1; // 1,2,3
+                                        $nombreTelar = $usuario->telares[$telarIndex]->telar;
                                         $inputName = "criterios[{$i}][{$j}]";
                                         $editable = $turno === $turnoActual;
+                                        // Aquí la clave coincide con el mapeo de la DB:
+                                        $key = $i . '-' . $nombreTelar . '-' . $turno;
+                                        $valorGuardado = $detallesArr[$key] ?? 0;
                                     @endphp
                                     <td class="border border-black py-1">
-                                        <input type="hidden" name="{{ $inputName }}" value="0">
+                                        <input type="hidden" name="{{ $inputName }}" value="{{ $valorGuardado }}">
                                         <button type="button"
                                             class="estado-check px-1 py-0.5 text-xs border border-gray-400 rounded-sm"
-                                            data-target="{{ $inputName }}" data-estado="0"
+                                            data-target="{{ $inputName }}" data-estado="{{ $valorGuardado }}"
                                             {{ !$editable ? 'disabled style=opacity:0.4' : '' }}>
-                                            ⬜
+                                            @if ($valorGuardado == 1)
+                                                ✅
+                                            @elseif ($valorGuardado == 2)
+                                                ❌
+                                            @else
+                                                ⬜
+                                            @endif
                                         </button>
                                     </td>
                                 @endfor
                             </tr>
                         @endforeach
-                        <td class="border border-black text-left px-1 py-1">11.- FIRMA DEL SUPERVISOR:</td>
+                        <tr>
+                            <td colspan="{{ 1 + $usuario->telares->count() * 3 }}"
+                                class="border border-black text-left px-1 py-1">
+                                11.- FIRMA DEL SUPERVISOR:
+                                <input type="text" name="firma_supervisor" class="border px-1 py-0.5 rounded ml-2"
+                                    style="width: 200px;" autocomplete="off">
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -147,12 +152,17 @@
                     class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-1 px-3 rounded-md shadow-sm transition duration-200 ease-in-out w-auto">
                     GUARDAR
                 </button>
+                {{-- Botón EDITAR (redirecciona a edición, puedes hacer que desbloquee el formulario) --}}
+                <button id="btnEditar" type="button"
+                    class="bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium py-1 px-3 rounded-md shadow-sm transition duration-200 ease-in-out w-auto">
+                    EDITAR
+                </button>
+
                 <button type="submit"
                     class="bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-1 px-3 rounded-md shadow-sm transition duration-200 ease-in-out w-auto">
                     AUTORIZAR
                 </button>
             </div>
-
         </form>
     </div>
 
@@ -180,8 +190,6 @@
             });
         });
     </script>
-
-
 
     @push('styles')
         <style>
@@ -226,7 +234,6 @@
 
                 .bg-red-500 {
                     background-color: #e5e7eb !important;
-                    /* Tailwind's bg-gray-200 */
                 }
 
                 .text-white {
@@ -235,38 +242,10 @@
 
                 .estado-check[disabled] {
                     background-color: #e5e7eb;
-                    /* gris claro */
                     color: #9ca3af;
-                    /* texto gris */
                     border-color: #d1d5db;
                 }
             }
         </style>
     @endpush
 @endsection
-
-<!----SELECT * FROM Produccion.dbo.usuarios
-
-SELECT * FROM Produccion.dbo.catalago_telares
-
-SELECT * FROM Produccion.dbo.telares_usuario
-
-use Produccion.dbo.Produccion
-
-
-INSERT INTO Produccion.dbo.telares_usuario (usuario_id,telar_id)
-VALUES
-(10000, 11),
-(10000, 12),
-(10000, 13),
-(10000, 14),
-(10000, 15);
-
-
-UPDATE usuarios
-SET remember_token = 1
-WHERE id = 2;
-
-
-EXEC sp_help 'Produccion.dbo.telares_usuario'
->

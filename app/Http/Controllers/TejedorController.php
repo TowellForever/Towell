@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PracticasManuDetalle;
 use App\Models\Tejedor;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -10,27 +11,39 @@ use Illuminate\Support\Facades\DB;
 
 class TejedorController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    protected function obtenerTurnoActual()
     {
-        $usuario =  \App\Models\Usuario::with('telares')->find(Auth::id()); //usando la relacion creada entre usuarios y catalago_telares, buscamos los telares pertenecientes al id (numero_usuario) del usuario que esta logeado o autenticado
-
-        if ($usuario && $usuario->telares->isEmpty()) {
-            // No tiene telares asignados, porque la relación telares del usuario está vacía.
-            return redirect()->back()->with('warning', 'No tienes telares asignados.');
-        }
-
-        $ahora = Carbon::now('America/Mexico_City');
+        $ahora = \Carbon\Carbon::now('America/Mexico_City');
         $hora = (int) $ahora->format('H');
         $minuto = (int) $ahora->format('i');
         $totalMinutos = $hora * 60 + $minuto;
 
-        // Turnos en minutos:
-        // Turno 1: 06:30 (390) - 14:29 (869)
-        // Turno 2: 14:30 (870) - 22:29 (1349)
-        // Turno 3: 22:30 (1350) - 06:29 (389)
+        if ($totalMinutos >= 390 && $totalMinutos <= 869) {
+            return 1; // 06:30 - 14:29
+        } elseif ($totalMinutos >= 870 && $totalMinutos <= 1349) {
+            return 2; // 14:30 - 22:29
+        } else {
+            return 3; // 22:30 - 06:29
+        }
+    }
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request)
+    {
+
+        // 1. Usuario autenticado y telares
+        $usuario = \App\Models\Usuario::with('telares')->find(Auth::id());
+
+        if ($usuario && $usuario->telares->isEmpty()) {
+            return redirect()->back()->with('warning', 'No tienes telares asignados.');
+        }
+
+        // 2. Calcular turno y usuario por defecto según hora
+        $ahora = Carbon::now('America/Mexico_City');
+        $hora = (int) $ahora->format('H');
+        $minuto = (int) $ahora->format('i');
+        $totalMinutos = $hora * 60 + $minuto;
 
         if ($totalMinutos >= 390 && $totalMinutos <= 869) {
             $usuarioPorDefecto = 'karla.mendez'; // Turno 1
@@ -40,8 +53,37 @@ class TejedorController extends Controller
             $usuarioPorDefecto = 'andrea.soto'; // Turno 3
         }
 
-        return view('modulos.tejedores.formato-BuenasPracticasManu', compact('usuario', 'usuarioPorDefecto'));
+        // 3. Buscar práctica del usuario para el turno, entrega y fecha de hoy (opcional)
+        // Toma la entrega de la request (si viene de un select), si no, pone el usuarioPorDefecto
+        $entrega = $request->input('entrega', $usuarioPorDefecto);
+        $fechaHoy = now()->toDateString();
+        $turnoActual = $this->obtenerTurnoActual();
+
+        // Cambia Tejedor por tu modelo real, ejemplo PracticasManu
+        $practica = \App\Models\Tejedor::where('recibe', $usuario->nombre)
+            ->where('entrega', $entrega)
+            ->whereDate('fecha', $fechaHoy)
+            ->first();
+
+        $detalles = [];
+        if ($practica) {
+            // Trae detalles solo del turno actual
+            $detalles = \App\Models\PracticasManuDetalle::where('practicas_manu_id', $practica->id)
+                ->where('turno', $turnoActual)
+                ->get();
+        }
+
+        return view('modulos.tejedores.formato-BuenasPracticasManu', compact(
+            'usuario',
+            'usuarioPorDefecto',
+            'practica',
+            'detalles',
+            'turnoActual',
+            'entrega',
+            'fechaHoy'
+        ));
     }
+
 
 
     /**
@@ -54,7 +96,6 @@ class TejedorController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request);
         $request->validate([
             'recibe' => 'required|string',
             'entrega' => 'required|string',
@@ -97,15 +138,12 @@ class TejedorController extends Controller
     }
 
 
-
-
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        //
-    }
+    public function show(Request $request) {}
+
+
 
     /**
      * Show the form for editing the specified resource.
@@ -118,16 +156,11 @@ class TejedorController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+    public function update(Request $request, $id) {}
+
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        //
-    }
+    public function destroy($id) {}
 }
