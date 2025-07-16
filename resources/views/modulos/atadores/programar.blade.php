@@ -466,7 +466,26 @@
 
                 cerrarModalBtn.addEventListener("click", function() {
                     modal.classList.add("hidden");
+
+                    // Limpiar todos los campos del modal
+                    campos.forEach(name => {
+                        const el = document.getElementById(name);
+                        if (!el) return;
+                        if (el.tagName === "SELECT") {
+                            el.selectedIndex = 0; // primer opción
+                        } else if (el.type === "checkbox" || el.type === "radio") {
+                            el.checked = false;
+                        } else {
+                            el.value = "";
+                        }
+                        // Si es un campo bloqueado, vuelve a deshabilitarlo por seguridad
+                        if (["calidad_atado", "5_s_orden_limpieza", "firma_tejedor", "obs"].includes(
+                                name)) {
+                            el.disabled = true;
+                        }
+                    });
                 });
+
 
                 // =========== AUTOGUARDADO =============
 
