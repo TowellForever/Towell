@@ -119,6 +119,7 @@ Route::get('/atadores/programar-requerimientos', function () {
 Route::get('/atadores-juliosAtados',  [AtadorController::class, 'cargarDatosUrdEngAtador'])->name('datosAtadores.Atador');
 Route::post('/atadores/save', [AtadorController::class, 'save'])->name('atadores.save'); // para create/update vía AJAX
 Route::get('/atadores/show', [AtadorController::class, 'show'])->name('atadores.show'); // para mostrar registro por orden y turno vía AJAX
+Route::post('/tejedores/validar', [AtadorController::class, 'validarTejedor'])->name('tejedor.validar');
 
 
 //RUTAS DEL MODULO **tejedores** TEJEDORES TEJEDORES

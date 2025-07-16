@@ -206,7 +206,7 @@
                                 <div class="flex items-center">
                                     <label for="calidad_atado" class="w-28 text-xs text-gray-600 font-medium">CALIDAD
                                         DE ATADO (1-10):</label>
-                                    <select name="calidad_atado" id="calidad_atado"
+                                    <select name="calidad_atado" id="calidad_atado" disabled
                                         class="w-30 border border-gray-300 px-1 py-1 text-xs rounded-md bg-gray-50">
                                         <option value="1">1</option>
                                         <option value="2">2</option>
@@ -224,7 +224,7 @@
                                     <label for="5_s_orden_limpieza" class="w-28 text-xs text-gray-600 font-medium">5'S
                                         ORDEN Y
                                         LIMPIEZA 5-10:</label>
-                                    <select name="5_s_orden_limpieza" id="5_s_orden_limpieza"
+                                    <select name="5_s_orden_limpieza" id="5_s_orden_limpieza" disabled
                                         class="w-30 border border-gray-300 px-1 py-1 text-xs rounded-md bg-gray-50">
                                         <option value="1">1</option>
                                         <option value="2">2</option>
@@ -241,7 +241,7 @@
                                 <div class="flex items-center space-x-2">
                                     <label for="firma_tejedor" class="w-30 text-xs text-gray-600 font-medium">FIRMA
                                         TEJEDOR:</label>
-                                    <select id="firma_tejedor" name="firma_tejedor"
+                                    <select id="firma_tejedor" name="firma_tejedor" disabled
                                         class="text-xs border border-gray-300 rounded px-1 py-1 bg-gray-50">
                                         <option value="">-- Selecciona --</option>
                                         <option value="firma_juan.png">Juan Pérez</option>
@@ -252,7 +252,7 @@
                                 <div class="flex flex-col">
                                     <label for="obs"
                                         class="text-xs text-gray-600 font-medium mb-1">OBSERVACIONES:</label>
-                                    <textarea name="obs" id="obs" rows="3"
+                                    <textarea name="obs" id="obs" disabled rows="3"
                                         class="border border-gray-300 px-2 py-1 text-xs rounded-md bg-gray-50 resize-y w-64"></textarea>
                                 </div>
                                 <p
@@ -267,6 +267,10 @@
 
                         <!-- Botones -->
                         <div class="mt-5 flex justify-end space-x-2 border-t pt-3">
+                            <button type="button" id="btnCalificar"
+                                class="w-1/4 px-3 py-1 text-sm bg-yellow-600 text-white rounded hover:bg-yellow-700 ">
+                                CALIFICAR
+                            </button>
                             <button type="button" id="cerrarModal"
                                 class="w-1/4 px-3 py-1 text-sm bg-gray-400 text-white rounded hover:bg-gray-500">CERRAR</button>
                             <button type="button" id="btnFinalizar"
@@ -530,6 +534,92 @@
                     });
                     modal.classList.add("hidden");
                 });
+            });
+        </script>
+
+        <!--Botón CALIFICAR: pide autenticación y desbloquea si es válida-->
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const idsCalificables = [
+                    "calidad_atado",
+                    "5_s_orden_limpieza",
+                    "firma_tejedor",
+                    "obs"
+                ];
+
+                const btnCalificar = document.getElementById("btnCalificar");
+
+                btnCalificar.addEventListener("click", function() {
+                    Swal.fire({
+                        title: 'Método de autenticación',
+                        text: 'Elige cómo deseas autenticarte para calificar',
+                        icon: 'question',
+                        showDenyButton: true,
+                        showCancelButton: true,
+                        confirmButtonText: 'Contraseña',
+                        denyButtonText: `QR`,
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            pedirContrasena();
+                        } else if (result.isDenied) {
+                            Swal.fire('QR aún no implementado', 'Aquí se mostrará el escáner de QR.',
+                                'info');
+                        }
+                    });
+                });
+
+                function pedirContrasena() {
+                    Swal.fire({
+                        title: 'Ingresa la contraseña del tejedor',
+                        input: 'password',
+                        inputPlaceholder: 'Contraseña',
+                        showCancelButton: true,
+                        confirmButtonText: 'Validar',
+                        cancelButtonText: 'Cancelar',
+                        inputAttributes: {
+                            autocapitalize: 'off',
+                            autocomplete: 'off'
+                        },
+                        preConfirm: (contrasena) => {
+                            if (!contrasena) {
+                                Swal.showValidationMessage('Debes ingresar la contraseña');
+                            }
+                            // AJAX para validar en la BD
+                            return fetch("{{ route('tejedor.validar') }}", {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                    },
+                                    body: JSON.stringify({
+                                        password: contrasena
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (!data.valido) {
+                                        throw new Error(data.mensaje || 'Contraseña incorrecta');
+                                    }
+                                    return data;
+                                })
+                                .catch(error => {
+                                    Swal.showValidationMessage(
+                                        `Error: ${error}`
+                                    );
+                                });
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed && result.value && result.value.valido) {
+                            // Habilita los campos para calificar
+                            idsCalificables.forEach(id => {
+                                const campo = document.getElementById(id);
+                                if (campo) campo.disabled = false;
+                            });
+                            Swal.fire('¡Acceso autorizado!', 'Ahora puedes calificar.', 'success');
+                        }
+                    });
+                }
             });
         </script>
 

@@ -152,4 +152,18 @@ class AtadorController extends Controller
 
         return response()->json(['success' => true, 'id' => $atador->id]);
     }
+
+    public function validarTejedor(Request $request)
+    {
+        $password = $request->input('password');
+
+        // Valida contra tu tabla de tejedores o como gustes:
+        $esValido = $password === 'miclave123'; // Cambia por validación real
+
+        if ($esValido) {
+            return response()->json(['valido' => true]);
+        } else {
+            return response()->json(['valido' => false, 'mensaje' => 'Contraseña incorrecta']);
+        }
+    }
 }
