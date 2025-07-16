@@ -341,6 +341,18 @@
                     let id = mapeoInputs[name];
                     let el = document.getElementById(id);
                     if (!el) return;
+
+                    // Si es un campo de hora
+                    if (id === 'hora_paro' || id === 'hora_arranque') {
+                        // Solo toma HH:mm
+                        if (value && value.length >= 5) {
+                            // Si viene HH:mm:ss, cortamos a HH:mm
+                            value = value.substring(0, 5);
+                        }
+                        el.value = value ?? '';
+                        return;
+                    }
+
                     if (el.type === "radio") {
                         el.checked = value ? true : false;
                     } else if (el.tagName === "SELECT") {
@@ -349,6 +361,7 @@
                         el.value = value ?? "";
                     }
                 }
+
 
                 function recolectarDatos() {
                     let data = {};
