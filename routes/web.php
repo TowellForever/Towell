@@ -109,7 +109,7 @@ Route::get('/folio-pantalla/{folio}', function ($folio) {
     return view('modulos.programar_requerimientos.FolioEnPantalla')->with('folio', $folio);
 })->name('folio.pantalla');
 
-//RUTAS DEL MODULO **atadores**
+//RUTAS DEL MODULO **ATADORES ATADORES ATADORES ATADORES**
 Route::get('/modulo-atadores', function () {
     return view('modulos/atadores');
 });
@@ -117,6 +117,9 @@ Route::get('/atadores/programar-requerimientos', function () {
     return view('modulos/atadores/programar-requerimientos');
 });
 Route::get('/atadores-juliosAtados',  [AtadorController::class, 'cargarDatosUrdEngAtador'])->name('datosAtadores.Atador');
+Route::post('/atadores/save', [AtadorController::class, 'save'])->name('atadores.save'); // para create/update vía AJAX
+Route::get('/atadores/show', [AtadorController::class, 'show'])->name('atadores.show'); // para mostrar registro por orden y turno vía AJAX
+
 
 //RUTAS DEL MODULO **tejedores** TEJEDORES TEJEDORES
 Route::get('/modulo-tejedores', function () {

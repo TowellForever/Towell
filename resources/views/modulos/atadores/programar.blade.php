@@ -89,75 +89,73 @@
                                     TIEMPOS (MAX. 01:20 HRS)
                                 </p>
                                 <div class="flex items-center">
-                                    <label for="inputEstatus" class="w-28 text-xs text-gray-600 font-medium">ESTATUS
+                                    <label for="estatus_atado" class="w-28 text-xs text-gray-600 font-medium">ESTATUS
                                         ATADO:</label>
-                                    <input type="text" name="turno" id="inputEstatus"
+                                    <input type="text" name="estatus_atado" id="estatus_atado"
                                         class="w-full border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50"
                                         value="En proceso" readonly>
                                 </div>
                                 <div class="flex items-center">
-                                    <label for="inputFecha" class="w-28 text-xs text-gray-600 font-medium">FECHA
+                                    <label for="fecha_atado" class="w-28 text-xs text-gray-600 font-medium">FECHA
                                         ATADO:</label>
-                                    <input type="text" name="turno" id="inputFecha"
+                                    <input type="text" name="fecha_atado" id="fecha_atado"
                                         class="w-full border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50">
-
                                 </div>
                                 <div class="flex items-center">
-                                    <label for="inputTurno" class="w-28 text-xs text-gray-600 font-medium">TURNO:</label>
-                                    <input type="text" inputmode="numeric" pattern="[0-9]*" name="turno"
-                                        id="inputTurno"
+                                    <label for="turno" class="w-28 text-xs text-gray-600 font-medium">TURNO:</label>
+                                    <input type="text" inputmode="numeric" pattern="[0-9]*" name="turno" id="turno"
                                         class="w-full border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50"
                                         value="1" readonly>
                                 </div>
                                 <div class="flex items-center">
-                                    <label for="inputClaveAtador" class="w-28 text-xs text-gray-600 font-medium">CLAVE
+                                    <label for="clave_atador" class="w-28 text-xs text-gray-600 font-medium">CLAVE
                                         ATADOR:</label>
-                                    <input type="text" name="clave_atador" id="inputClaveAtador"
+                                    <input type="text" name="clave_atador" id="clave_atador"
                                         class="w-full border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50"
                                         value="{{ Auth::user()->numero_empleado . ' ' . Auth::user()->nombre }}" readonly>
                                 </div>
                                 <div class="flex items-center">
-                                    <label for="inputJulio" class="w-28 text-xs text-gray-600 font-medium">N°
+                                    <label for="no_julio" class="w-28 text-xs text-gray-600 font-medium">N°
                                         JULIO:</label>
-                                    <input type="text" inputmode="numeric" pattern="[0-9]*" name="num_julio"
-                                        id="inputJulio"
+                                    <input type="text" inputmode="numeric" pattern="[0-9]*" name="no_julio"
+                                        id="no_julio"
                                         class="w-full border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50">
                                 </div>
                                 <div class="flex items-center">
-                                    <label for="inputOrden" class="w-28 text-xs text-gray-600 font-medium">ORDEN:</label>
-                                    <input type="text" name="orden" id="inputOrden"
+                                    <label for="orden" class="w-28 text-xs text-gray-600 font-medium">ORDEN:</label>
+                                    <input type="text" name="orden" id="orden"
                                         class="w-full border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50"
                                         readonly>
                                 </div>
                                 <div class="flex items-center">
-                                    <label for="inputTipo2" class="w-28 text-xs text-gray-600 font-medium">R/P:</label>
-                                    <input type="text" name="tipo2" id="inputTipo"
+                                    <label for="tipo" class="w-28 text-xs text-gray-600 font-medium">R/P:</label>
+                                    <input type="text" name="tipo" id="tipo"
                                         class="w-full border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50"
                                         readonly>
                                 </div>
                                 <div class="flex items-center">
-                                    <label for="inputMetros" class="w-28 text-xs text-gray-600 font-medium">METROS:</label>
-                                    <input type="text" name="metros" id="inputMetros"
+                                    <label for="metros" class="w-28 text-xs text-gray-600 font-medium">METROS:</label>
+                                    <input type="text" name="metros" id="metros"
                                         class="w-full border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50"
                                         readonly>
                                 </div>
                                 <div class="flex items-center">
-                                    <label for="inputTelar" class="w-28 text-xs text-gray-600 font-medium">TELAR:</label>
-                                    <input type="text" name="telar" id="inputTelar"
+                                    <label for="telar" class="w-28 text-xs text-gray-600 font-medium">TELAR:</label>
+                                    <input type="text" name="telar" id="telar"
                                         class="w-full border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50"
                                         readonly>
                                 </div>
                                 <div class="flex items-center">
-                                    <label for="inputProv" class="w-28 text-xs text-gray-600 font-medium">PROV. :</label>
-                                    <input type="text" name="prov" id="inputProv" value=""
+                                    <label for="proveedor" class="w-28 text-xs text-gray-600 font-medium">PROVEEDOR
+                                        :</label>
+                                    <input type="text" name="proveedor" id="proveedor" value=""
                                         class="w-full border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50"
                                         readonly>
                                 </div>
                                 <div class="flex items-center">
-                                    <label for="inputObservacionesMermaKg"
-                                        class="w-28 text-xs text-gray-600 font-medium">MERMA KG:</label>
-                                    <input type="text" inputmode="numeric" pattern="[0-9]*"
-                                        name="observaciones_merma_kg" id="inputMermaKg"
+                                    <label for="merma_kg" class="w-28 text-xs text-gray-600 font-medium">MERMA KG:</label>
+                                    <input type="text" inputmode="numeric" pattern="[0-9]*" name="merma_kg"
+                                        id="merma_kg"
                                         class="w-full border border-gray-300 px-1 py-1 text-xs rounded-md bg-gray-50">
                                 </div>
                                 <p
@@ -173,43 +171,42 @@
                                     CALIDAD DE ATADOS <BR></BR>
                                 </p>
                                 <div class="flex items-center">
-                                    <label for="inputHoraParo" class="w-28 text-xs text-gray-600 font-medium">HORA DE
+                                    <label for="hora_paro" class="w-28 text-xs text-gray-600 font-medium">HORA DE
                                         PARO:</label>
-                                    <input type="time" name="hora_paro" id="inputHoraParo"
+                                    <input type="time" name="hora_paro" id="hora_paro"
                                         class="w-30 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50">
                                 </div>
                                 <div class="flex items-center">
-                                    <label for="inputHoraParo" class="w-28 text-xs text-gray-600 font-medium">HORA
+                                    <label for="hora_arranque" class="w-28 text-xs text-gray-600 font-medium">HORA
                                         ARRANQUE:</label>
-                                    <input type="time" name="hora_paro" id="inputHoraParo"
+                                    <input type="time" name="hora_arranque" id="hora_arranque"
                                         class="w-30 border border-gray-300 px-1 py-1 text-sm rounded-md bg-gray-50">
                                 </div>
                                 <div class="flex items-center">
-                                    <label for="inputGruaHubtex" class="w-40 text-xs text-gray-600 font-medium">GRUA
+                                    <label for="grua_hubtex" class="w-40 text-xs text-gray-600 font-medium">GRUA
                                         HUBTEX:</label>
-                                    <input type="radio" name="atadora" id="inputGruaHubtex" value="GRUA HUBTEX"
+                                    <input type="radio" name="grua_hubtex" id="grua_hubtex" value="GRUA HUBTEX"
                                         class="w-10 h-10 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500">
                                 </div>
-
                                 <div class="flex items-center">
-                                    <label for="inputAtadoraStaubli"
-                                        class="w-40 text-xs text-gray-600 font-medium">ATADORA STAUBLI:</label>
-                                    <input type="radio" name="atadora" id="inputAtadoraStaubli"
+                                    <label for="atadora_staubli" class="w-40 text-xs text-gray-600 font-medium">ATADORA
+                                        STAUBLI:</label>
+                                    <input type="radio" name="atadora_staubli" id="atadora_staubli"
                                         value="ATADORA STAUBLI"
                                         class="w-10 h-10 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500">
                                 </div>
 
                                 <div class="flex items-center">
-                                    <label for="inputAtadoraUster" class="w-40 text-xs text-gray-600 font-medium">ATADORA
+                                    <label for="atadora_uster" class="w-40 text-xs text-gray-600 font-medium">ATADORA
                                         USTER:</label>
-                                    <input type="radio" name="atadora" id="inputAtadoraUster" value="ATADORA USTER"
+                                    <input type="radio" name="atadora_uster" id="atadora_uster" value="ATADORA USTER"
                                         class="w-10 h-10 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500">
                                 </div>
 
                                 <div class="flex items-center">
-                                    <label for="inputCalidadAtado" class="w-28 text-xs text-gray-600 font-medium">CALIDAD
+                                    <label for="calidad_atado" class="w-28 text-xs text-gray-600 font-medium">CALIDAD
                                         DE ATADO (1-10):</label>
-                                    <select name="calidad_atado" id="inputCalidadAtado"
+                                    <select name="calidad_atado" id="calidad_atado"
                                         class="w-30 border border-gray-300 px-1 py-1 text-xs rounded-md bg-gray-50">
                                         <option value="1">1</option>
                                         <option value="2">2</option>
@@ -224,9 +221,10 @@
                                     </select>
                                 </div>
                                 <div class="flex items-center">
-                                    <label for="input5sOrden" class="w-28 text-xs text-gray-600 font-medium">5'S ORDEN Y
+                                    <label for="5_s_orden_limpieza" class="w-28 text-xs text-gray-600 font-medium">5'S
+                                        ORDEN Y
                                         LIMPIEZA 5-10:</label>
-                                    <select name="ordenLimpieza" id="inputOrdenLimpieza"
+                                    <select name="5_s_orden_limpieza" id="5_s_orden_limpieza"
                                         class="w-30 border border-gray-300 px-1 py-1 text-xs rounded-md bg-gray-50">
                                         <option value="1">1</option>
                                         <option value="2">2</option>
@@ -241,9 +239,9 @@
                                     </select>
                                 </div>
                                 <div class="flex items-center space-x-2">
-                                    <label for="selectFirmaTejedor" class="w-30 text-xs text-gray-600 font-medium">FIRMA
+                                    <label for="firma_tejedor" class="w-30 text-xs text-gray-600 font-medium">FIRMA
                                         TEJEDOR:</label>
-                                    <select id="selectFirmaTejedor" name="firma_tejedor"
+                                    <select id="firma_tejedor" name="firma_tejedor"
                                         class="text-xs border border-gray-300 rounded px-1 py-1 bg-gray-50">
                                         <option value="">-- Selecciona --</option>
                                         <option value="firma_juan.png">Juan Pérez</option>
@@ -252,9 +250,9 @@
                                     </select>
                                 </div>
                                 <div class="flex flex-col">
-                                    <label for="inputObservaciones"
+                                    <label for="obs"
                                         class="text-xs text-gray-600 font-medium mb-1">OBSERVACIONES:</label>
-                                    <textarea name="observaciones_merma_kg" id="inputObservaciones" rows="3"
+                                    <textarea name="obs" id="obs" rows="3"
                                         class="border border-gray-300 px-2 py-1 text-xs rounded-md bg-gray-50 resize-y w-64"></textarea>
                                 </div>
                                 <p
@@ -270,9 +268,12 @@
                         <!-- Botones -->
                         <div class="mt-5 flex justify-end space-x-2 border-t pt-3">
                             <button type="button" id="cerrarModal"
-                                class="w-1/4 px-3 py-1 text-sm bg-gray-400 text-white rounded hover:bg-gray-500">Cancelar</button>
-                            <button type="submit"
-                                class="w-1/4 px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700">Guardar</button>
+                                class="w-1/4 px-3 py-1 text-sm bg-gray-400 text-white rounded hover:bg-gray-500">CERRAR</button>
+                            <button type="button" id="btnFinalizar"
+                                class="w-1/4 px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700"
+                                disabled>
+                                FINALIZAR
+                            </button>
                         </div>
                 </form>
             </div>
@@ -284,23 +285,118 @@
 
         <script>
             document.addEventListener("DOMContentLoaded", function() {
+                // ===== VARIABLES =====
                 const filas = document.querySelectorAll("table.requerimientos tbody tr");
                 let filaSeleccionada = null;
+                const btnCapturar = document.getElementById("btnCaptura");
+                const modal = document.getElementById("capturaModal");
+                const cerrarModalBtn = document.getElementById("cerrarModal");
+
+                const campos = [
+                    "estatus_atado", "fecha_atado", "turno", "clave_atador", "no_julio", "orden", "tipo", "metros",
+                    "telar", "proveedor", "merma_kg", "hora_paro", "hora_arranque", "grua_hubtex",
+                    "atadora_staubli",
+                    "atadora_uster", "calidad_atado", "5_s_orden_limpieza", "firma_tejedor", "obs"
+                ];
+
+                const mapeoInputs = {
+                    estatus_atado: "estatus_atado",
+                    fecha_atado: "fecha_atado",
+                    turno: "turno",
+                    clave_atador: "clave_atador",
+                    no_julio: "no_julio",
+                    orden: "orden",
+                    tipo: "tipo",
+                    metros: "metros",
+                    telar: "telar",
+                    proveedor: "proveedor",
+                    merma_kg: "merma_kg",
+                    hora_paro: "hora_paro",
+                    hora_arranque: "hora_arranque",
+                    grua_hubtex: "grua_hubtex",
+                    atadora_staubli: "atadora_staubli",
+                    atadora_uster: "atadora_uster",
+                    calidad_atado: "calidad_atado",
+                    '5_s_orden_limpieza': "5_s_orden_limpieza",
+                    firma_tejedor: "firma_tejedor",
+                    obs: "obs",
+                };
+
+                // ======= FUNCIONES ===========
+
+                function getInputValue(name) {
+                    let id = mapeoInputs[name];
+                    let el = document.getElementById(id);
+                    if (!el) return "";
+                    if (el.type === "radio") {
+                        return el.checked ? el.value : "";
+                    } else if (el.tagName === "SELECT") {
+                        return el.value;
+                    } else {
+                        return el.value;
+                    }
+                }
+
+                function setInputValue(name, value) {
+                    let id = mapeoInputs[name];
+                    let el = document.getElementById(id);
+                    if (!el) return;
+                    if (el.type === "radio") {
+                        el.checked = value ? true : false;
+                    } else if (el.tagName === "SELECT") {
+                        el.value = value ?? "";
+                    } else {
+                        el.value = value ?? "";
+                    }
+                }
+
+                function recolectarDatos() {
+                    let data = {};
+                    campos.forEach(name => data[name] = getInputValue(name));
+                    return data;
+                }
+
+                function validarCompleto() {
+                    const obligatorios = [
+                        "estatus_atado", "fecha_atado", "turno", "clave_atador", "no_julio", "orden", "tipo",
+                        "metros", "telar", "proveedor", "merma_kg", "hora_paro", "hora_arranque",
+                        "calidad_atado", "5_s_orden_limpieza", "firma_tejedor"
+                    ];
+                    let llenos = obligatorios.every(name => {
+                        let valor = getInputValue(name);
+                        return valor !== null && valor !== undefined && valor !== "";
+                    });
+                    document.getElementById("btnFinalizar").disabled = !llenos;
+                }
+
+                function guardarEnServidor() {
+                    let data = recolectarDatos();
+                    fetch("{{ route('atadores.save') }}", {
+                            method: "POST",
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify(data)
+                        })
+                        .then(r => r.json())
+                        .then(resp => {
+                            if (resp.success) {
+                                // Guardado ok!
+                            }
+                        });
+                }
+
+                // ========= SELECCIÓN DE FILAS Y ABRIR MODAL =========
 
                 filas.forEach(fila => {
                     fila.classList.add("fila-hover");
-
                     fila.addEventListener("click", function() {
                         filas.forEach(f => f.classList.remove("fila-seleccionada"));
                         this.classList.add("fila-seleccionada");
                         filaSeleccionada = this;
                     });
                 });
-
-                // Botón CAPTURAR
-                const btnCapturar = document.getElementById("btnCaptura");
-                const modal = document.getElementById("capturaModal");
-                const cerrarModalBtn = document.getElementById("cerrarModal");
 
                 btnCapturar.addEventListener("click", function(e) {
                     e.preventDefault();
@@ -319,41 +415,91 @@
                                 popup: 'rounded-3xl shadow-lg'
                             }
                         });
-
                         return;
                     }
 
                     const celdas = filaSeleccionada.querySelectorAll("td");
-                    const orden = celdas[6]?.innerText || '';
+                    const orden = celdas[6]?.innerText?.trim() || '';
+                    const metros = celdas[5]?.innerText?.trim() || '';
+                    const tipo = celdas[3]?.innerText?.trim() || '';
+                    const telar = celdas[2]?.innerText?.trim() || '';
+                    const no_julio = celdas[4]?.innerText?.trim() || '';
+                    const fechaTexto = celdas[0]?.innerText?.trim() || '';
+                    const turno = celdas[1]?.innerText?.trim() || '';
 
-                    document.getElementById("inputOrden").value = celdas[6]?.innerText || '';
-                    document.getElementById("inputMetros").value = celdas[5]?.innerText || '';
-                    document.getElementById("inputTipo").value = celdas[3]?.innerText || '';
-                    document.getElementById("inputTelar").value = celdas[2]?.innerText || '';
-                    document.getElementById("inputJulio").value = celdas[4]?.innerText || '';
-                    const fechaTexto = celdas[0]?.innerText?.trim();
-                    document.getElementById("inputFecha").value = fechaTexto ?
-                        fechaTexto : '';
+                    // Prellenar campos base desde la fila seleccionada
+                    setInputValue("orden", orden);
+                    setInputValue("metros", metros);
+                    setInputValue("tipo", tipo);
+                    setInputValue("telar", telar);
+                    setInputValue("no_julio", no_julio);
+                    setInputValue("fecha_atado", fechaTexto);
+                    setInputValue("turno", turno);
 
-
-                    // Buscar el proveedor en base al orden
-                    const resultado = atadoresData.find(item => item.orden_prod === orden);
-                    if (resultado) {
-                        document.getElementById("inputProv").value = resultado.proveedor;
-                    } else {
-                        document.getElementById("inputProv").value = '';
+                    // Buscar el proveedor localmente en el listado JS (atadoresData)
+                    let proveedor = '';
+                    if (typeof atadoresData !== 'undefined' && Array.isArray(atadoresData)) {
+                        const resultado = atadoresData.find(item => item.orden_prod == orden);
+                        if (resultado) proveedor = resultado.proveedor || '';
                     }
+                    setInputValue("proveedor", proveedor);
 
+                    // Ahora, consulta al backend por si ya existe el registro y sobreescribe TODO
+                    abrirModalAtador(orden, turno);
+
+                    // Mostrar modal
                     modal.classList.remove("hidden");
                 });
 
                 cerrarModalBtn.addEventListener("click", function() {
                     modal.classList.add("hidden");
                 });
+
+                // =========== AUTOGUARDADO =============
+
+                Object.entries(mapeoInputs).forEach(([name, id]) => {
+                    let el = document.getElementById(id);
+                    if (el) {
+                        el.addEventListener("change", function() {
+                            guardarEnServidor();
+                            validarCompleto();
+                        });
+                        el.addEventListener("input", function() {
+                            guardarEnServidor();
+                            validarCompleto();
+                        });
+                    }
+                });
+
+                // ========== SHOW: CARGA DESDE BACKEND =========
+
+                window.abrirModalAtador = function(orden, turno) {
+                    fetch(`{{ route('atadores.show') }}?orden=${orden}&turno=${turno}`)
+                        .then(r => r.json())
+                        .then(data => {
+                            // data puede ser null, {}, o un objeto lleno
+                            // Considera null o objeto vacío como "sin registro"
+                            if (data && Object.keys(data).length > 0) {
+                                campos.forEach(name => setInputValue(name, data[name] ?? ""));
+                            }
+                            validarCompleto();
+                        });
+                };
+
+
+
+                // ======= FINALIZAR ========
+                document.getElementById("btnFinalizar").addEventListener("click", function() {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Finalizado!',
+                        text: 'El registro se guardó correctamente.',
+                        confirmButtonColor: '#3085d6'
+                    });
+                    modal.classList.add("hidden");
+                });
             });
         </script>
-
-
 
         @push('styles')
             <style>
