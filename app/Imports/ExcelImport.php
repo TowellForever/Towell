@@ -207,6 +207,9 @@ class ExcelImport implements ToModel
             ->where('Departamento', $salon)
             ->first();
 
+        //obtengo el calibre del rizo, extrayendolo del registro encontrado en MODELOS
+        $calibre_rizo = (float) ($modelo?->Rizo ?? 0);
+
         // 2. Crear el registro principal de forma segura
         $nuevoRegistro = \App\Models\Planeacion::create([
             'Cuenta'                => $cuenta ?? null,
@@ -287,6 +290,8 @@ class ExcelImport implements ToModel
             'Fecha_Compromiso1'     => $fecha_compromiso1 ?? null,
             'Entrega'               => $entrega ?? null,
             'Dif_vs_Compromiso'     => $dif_vs_compromiso ?? null,
+            'Calibre_Rizo'           => $calibre_rizo ?? null,
+            'cantidad'               => $saldos ?? null,
         ]);
 
         $tejNum = $nuevoRegistro->id;
@@ -315,11 +320,6 @@ class ExcelImport implements ToModel
         $Prod_Kg_Dia = safeNumber($nuevoRegistro->Prod_Kg_Dia ?? 1);
         $Cambios_Hilo = safeNumber($nuevoRegistro->Cambios_Hilo ?? 1);
 
-        // Buscar el modelo de forma segura
-        $modelo = \App\Models\Modelos::where('CLAVE_AX', (string) $nuevoRegistro->Clave_AX)
-            ->where('Tamanio_AX', $nuevoRegistro->Tamano_AX)
-            ->where('Departamento', $nuevoRegistro->Salon)
-            ->first();
 
         // Si no existe el modelo, crea uno "falso"
         if (!$modelo) {
