@@ -82,7 +82,7 @@ class Modelos extends Model
         'C1_A_1',
         'Hilo_A_2',
         'OBS_A_2',
-        'PASADAS_C2',
+        'PASADAS_2',
         'C2_A_2',
         'Hilo_A_3',
         'OBS_A_3',
