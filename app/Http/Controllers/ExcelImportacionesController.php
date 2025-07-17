@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Imports\ExcelImport;
 use App\Models\Planeacion;
+use App\Models\RegistroImportacionesExcel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -45,6 +47,14 @@ class ExcelImportacionesController extends Controller
             // 5. Actualiza en_proceso en los nuevos registros
             $this->actualizarEnProceso();
 
+            //contamos registros insertados y guardamos el registro de la importacion en la tabla: registro_importaciones_excel
+            //Cuenta los registros actuales en Planeacion (TEJIDO_SCHEDULING)
+            $total = \App\Models\Planeacion::count();
+            RegistroImportacionesExcel::create([
+                'usuario' => Auth::user()->nombre, // O 'email', según tu modelo User
+                'total_registros' => $total,
+            ]);
+
             DB::commit(); // 🚩 TERMINA y guarda todo
             return back()->with('success', '¡Archivo importado exitosamente!');
         } catch (\Exception $e) {
@@ -52,8 +62,6 @@ class ExcelImportacionesController extends Controller
             return back()->with('error', 'Hubo un error al importar el archivo: ' . $e->getMessage());
         }
     }
-
-
 
 
     // En tu controlador, después de importar
