@@ -548,6 +548,7 @@
                 ];
 
                 const btnCalificar = document.getElementById("btnCalificar");
+                const tejedor = document.getElementById("firma_tejedor");
 
                 btnCalificar.addEventListener("click", function() {
                     Swal.fire({
