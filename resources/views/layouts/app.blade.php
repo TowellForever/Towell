@@ -65,6 +65,34 @@
                 class="absolute top-1 right-2 w-[36px] z-1">
         </a>
 
+        <a href="#" id="logout-btn" class="absolute top-1 right-[1000px] z-1 btn btn-danger text-xs">
+            CERRAR SESIÓN
+        </a>
+
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+            @csrf
+        </form>
+
+        <script>
+            document.getElementById('logout-btn').addEventListener('click', function(event) {
+                event.preventDefault();
+                Swal.fire({
+                    title: '¿CONFIRMA PARA CERRAR SESIÓN?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, salir',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('logout-form').submit();
+                    }
+                });
+            });
+        </script>
+
+
         <!-- Nombre del usuario -->
         <p class="hidden md:block nombreApp text-black font-bold uppercase text-xs">
             {{ Auth::user()->nombre }}

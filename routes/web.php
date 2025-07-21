@@ -27,6 +27,7 @@ use App\Http\Controllers\WhatsAppController;
 Route::get('/', function () {
     return view('login');
 });
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/login', [AuthController::class, 'login']);
 // Ruta para obtener el nombre y la foto del empleado
 Route::get('/obtener-nombre/{noEmpleado}', function ($noEmpleado) {
