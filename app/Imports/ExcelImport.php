@@ -232,7 +232,7 @@ class ExcelImport implements ToModel
             'Saldos'                => $saldos ?? null,
             'Fecha_Captura'         => $fecha_captura ?? null,
             'Orden_Prod'            => $orden_prod ?? null,
-            'Fecha_Liberacion'      =>  null,
+            'Fecha_Liberacion'      =>  $inn,
             'Id_Flog'               =>  null,
             'Descrip'               => $descrip ?? null,
             'Aplic'                 => $aplic ?? null,

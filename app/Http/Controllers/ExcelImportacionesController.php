@@ -56,6 +56,7 @@ class ExcelImportacionesController extends Controller
             ]);
 
             DB::commit(); // 🚩 TERMINA y guarda todo
+            // EN EL CONTROLADOR, solo regresa con el mensaje
             return back()->with('success', '¡Archivo importado exitosamente!');
         } catch (\Exception $e) {
             DB::rollBack(); // 🚩 Si hay error, DESHACE TODO

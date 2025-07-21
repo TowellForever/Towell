@@ -19,9 +19,11 @@
                 title: '¡Éxito!',
                 text: '{{ session('success') }}',
                 confirmButtonColor: '#3085d6',
-                timer: 9000,
+                timer: 2000,
                 timerProgressBar: true,
                 showConfirmButton: false
+            }).then(() => {
+                window.location.href = "{{ route('planeacion.index') }}";
             });
         @endif
 
