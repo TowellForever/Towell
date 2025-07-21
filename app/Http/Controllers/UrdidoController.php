@@ -17,6 +17,23 @@ use Illuminate\Support\Facades\Validator;
 class UrdidoController extends Controller
 {
     //
+
+    protected function obtenerTurnoActual()
+    {
+        $ahora = \Carbon\Carbon::now('America/Mexico_City');
+        $hora = (int) $ahora->format('H');
+        $minuto = (int) $ahora->format('i');
+        $totalMinutos = $hora * 60 + $minuto;
+
+        if ($totalMinutos >= 390 && $totalMinutos <= 869) {
+            return 1; // 06:30 - 14:29
+        } elseif ($totalMinutos >= 870 && $totalMinutos <= 1349) {
+            return 2; // 14:30 - 22:29
+        } else {
+            return 3; // 22:30 - 06:29
+        }
+    }
+
     public function cargarDatosUrdido(Request $request)
     {
         $folio = $request->folio;
@@ -33,8 +50,10 @@ class UrdidoController extends Controller
             return redirect()->route('ingresarFolio')->withErrors('La orden ingresada (' . $request->folio . ') no se ha encontrado. Por favor, valide el número e intente de nuevo.');
         }
 
+        $turnoActual = $this->obtenerTurnoActual();
+
         // Pasar los datos a la vista
-        return view('modulos/urdido', compact('urdido', 'construccion', 'requerimiento', 'ordenUrdido', 'julios', 'oficiales'));
+        return view('modulos/urdido', compact('urdido', 'construccion', 'requerimiento', 'ordenUrdido', 'julios', 'oficiales', 'turnoActual'));
     }
 
     //mewtodo para insertar o actualizar registro de ORDEN-URDIDO y FINALIZARLO - se unificó dado que solicitaron borrar uno de los 2 botones.
