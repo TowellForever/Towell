@@ -51,7 +51,7 @@
         <a href="{{ route('modelos.index') }}" class="button-plane-2 rounded-full ml-1 p-1 sm:mt-8">MODELOS 🛠️</a>
 
         <!--<button id="btnEditar" class="button-plane rounded-full ml-1 p-1 sm:mt-8 w-24">EDITAR
-                    🛠️</button>VISTA EDICION y METODO EN CONTROLLER pendientes-->
+                                                                            🛠️</button>VISTA EDICION y METODO EN CONTROLLER pendientes-->
 
         <button id="btnImportExcel" class="bg-green-500 rounded-full ml-1 p-1 sm:mt-8 w-24">EXCEL
         </button>
@@ -125,13 +125,13 @@
                                     'Calibre_Rizo',
                                     'Calibre_Pie',
                                     'Calendario',
-                                    //'Clave_Estilo',
+                                    'Clave_Estilo', // <-- descomentado aquí
                                     'Clave_AX',
                                     'Tamano_AX',
                                     'Estilo_Alternativo',
                                     'Nombre_Producto',
-                                    'cantidad',
                                     'Saldos',
+                                    'cantidad', // <-- aquí va cantidad, después de Saldos
                                     'Fecha_Captura',
                                     'Orden_Prod',
                                     'Fecha_Liberacion',
@@ -198,17 +198,19 @@
                             @endphp
 
                             @foreach ($headers as $index => $header)
-                                <th class="plane-th border border-gray-400 pt-2 pr-4 pb-4 pl-4 relative"
-                                    data-index="{{ $index }}">
-                                    {{ $header }}
-                                    <div class="absolute top-6 right-0 flex">
-                                        <button class="toggle-column bg-red-500 text-white text-xs px-0.5 py-0.5"
-                                            data-index="{{ $index }}">⛔</button>
-                                        <button class="pin-column bg-blue-500 text-white text-xs px-0.5 py-0.5 ml-0.5"
-                                            data-index="{{ $index }}">📌</button>
-                                    </div>
-                                </th>
-                            @endforeach
+    @if ($header !== 'id')
+        <th class="plane-th border border-gray-400 pt-2 pr-4 pb-4 pl-4 relative"
+            data-index="{{ $index }}">
+            {{ $header }}
+            <div class="absolute top-6 right-0 flex">
+                <button class="toggle-column bg-red-500 text-white text-xs px-0.5 py-0.5"
+                    data-index="{{ $index }}">⛔</button>
+                <button class="pin-column bg-blue-500 text-white text-xs px-0.5 py-0.5 ml-0.5"
+                    data-index="{{ $index }}">📌</button>
+            </div>
+        </th>
+    @endif @endforeach
+
                         </tr>
                     </thead>
                     <tbody class="">
@@ -225,43 +227,33 @@
                                     </form>
                                 </td>
                                 @foreach ($headers as $header)
-                                    @if ($header !== 'en_proceso')
-                                        {{-- Evita mostrar la columna "en_proceso" OTRA VEZ --}}
+                                    @if ($header !== 'en_proceso' && $header !== 'id')
+                                        {{-- Aquí va tu lógica y el <td> --}}
                                         @php
-                                            $value = $registro->$header; // Obtener el valor del campo
-
-                                            // Si el header es 'Hilo', dejar valor original sin formatear
+                                            $value = $registro->$header;
                                             if ($header === 'Hilo') {
                                                 $formattedValue = $value;
                                             } elseif ($header === 'Eficiencia_Std') {
-                                                // Multiplica por 100 y muestra como entero (0.78 => 78)
                                                 $formattedValue = intval($value * 100);
                                             } else {
-                                                // Lista de campos que deben mostrar fecha + hora
                                                 $camposConHora = ['Inicio_Tejido', 'Calc5', 'Fin_Tejido', 'Entrega'];
-
                                                 if (is_numeric($value)) {
-                                                    // Si el valor es entero, convertirlo sin decimales
                                                     if (intval($value) == $value) {
                                                         $formattedValue = intval($value);
                                                     } else {
-                                                        // Si tiene decimales, formatearlo a dos decimales
                                                         $formattedValue = number_format($value, 2, '.', '');
                                                     }
                                                 } elseif (strtotime($value) && !in_array($header, ['Calibre_Rizo'])) {
                                                     if (in_array($header, $camposConHora)) {
-                                                        // Fecha con hora, minutos y segundos: "d-m-Y H:i:s"
                                                         $formattedValue = \Carbon\Carbon::parse($value)->format(
                                                             'd-m-Y H:i:s',
                                                         );
                                                     } else {
-                                                        // Solo fecha: "d-m-Y"
                                                         $formattedValue = \Carbon\Carbon::parse($value)->format(
                                                             'd-m-Y',
                                                         );
                                                     }
                                                 } else {
-                                                    // Si es texto, dejarlo tal cual
                                                     $formattedValue = $value;
                                                 }
                                             }
@@ -409,9 +401,9 @@
         });
     </script>
     <!--*******************************************************************************************************************************************************************************************
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    *********************************************************************************************************************************************************************************************-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            *********************************************************************************************************************************************************************************************-->
     <!--SCRIPTS que implentan el funcionamiento de la tabla TIPO DE MOVIMIENTOS, se selecciona un registro, se obtiene el valor de id y con
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
 
     <script>
         let filaSeleccionada = null;
@@ -580,11 +572,12 @@
                 'Calibre_Pie',
                 'Calendario',
                 'Clave_Estilo',
+                'Clave_AX', // <- movido aquí
                 'Tamano_AX',
                 'Estilo_Alternativo',
                 'Nombre_Producto',
-                'cantidad',
                 'Saldos',
+                'cantidad', // <- después de Saldos
                 'Fecha_Captura',
                 'Orden_Prod',
                 'Fecha_Liberacion',
@@ -645,9 +638,9 @@
                 'Fecha_Compromiso1',
                 'Entrega',
                 'Dif_vs_Compromiso',
-                'id',
-                'Clave_AX',
-            ]; // AJUSTA esto
+                'id', // id siempre al final
+            ];
+
 
             if (tabla) {
                 tabla.querySelectorAll("tbody tr").forEach(fila => {

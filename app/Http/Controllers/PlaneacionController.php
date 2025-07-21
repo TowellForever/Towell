@@ -42,6 +42,7 @@ class PlaneacionController extends Controller
       'Calibre_Pie',
       'Calendario',
       'Clave_Estilo',
+      'Clave_AX',
       'Tamano_AX',
       'Estilo_Alternativo',
       'Nombre_Producto',
@@ -88,15 +89,15 @@ class PlaneacionController extends Controller
       'Cuenta_Pie',
       'Clave_Color_Pie',
       'Color_Pie',
-      'Peso____(gr_/_m²)',
+      'Peso_gr_m2',           // corregido
       'Dias_Ef',
-      'Prod_(Kg)/Día',
-      'Std/Dia',
-      'Prod_(Kg)/Día1',
-      'Std_(Toa/Hr)_100%',
+      'Prod_Kg_Dia',          // corregido
+      'Std_Dia',              // corregido
+      'Prod_Kg_Dia1',         // corregido
+      'Std_Toa_Hr_100',       // corregido
       'Dias_jornada_completa',
       'Horas',
-      'Std/Hrefectivo',
+      'Std_Hr_efectivo',      // corregido
       'Inicio_Tejido',
       'Calc4',
       'Calc5',
@@ -107,8 +108,9 @@ class PlaneacionController extends Controller
       'Entrega',
       'Dif_vs_Compromiso',
       'cantidad',
-      'Clave_AX',
+      'id',                   // agregado id
     ];
+
 
     $query = DB::table('TEJIDO_SCHEDULING')
       ->where('id', '>', 125)

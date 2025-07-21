@@ -89,6 +89,7 @@ class Planeacion extends Model
         'Fecha_Compromiso1',
         'Entrega',
         'Dif_vs_Compromiso',
+        'id',
         'en_proceso',
         'Calibre_Rizo',
         'cantidad',
