@@ -56,52 +56,44 @@ class UrdidoController extends Controller
         return view('modulos/urdido', compact('urdido', 'construccion', 'requerimiento', 'ordenUrdido', 'julios', 'oficiales', 'turnoActual'));
     }
 
-    //mewtodo para insertar o actualizar registro de ORDEN-URDIDO y FINALIZARLO - se unificó dado que solicitaron borrar uno de los 2 botones.
-    public function guardarYFinalizarUrdido(Request $request)
+    //mewtodo para insertar o actualizar registro de ORDEN-URDIDO y antes de FINALIZARLO - se habia unificado dado que solicitaron borrar uno de los 2 botones.
+    public function autoguardar(Request $request)
     {
-        // Validación inicial del folio general
+
         $folio = $request->input('folio');
+        $id2 = $request->input('id2');
 
-        if (!$folio) {
-            return response()->json(['message' => 'Folio no proporcionado.'], 400);
+        // Busca el registro
+        $orden = OrdenUrdido::where('folio', $folio)->where('id2', $id2)->first();
+
+        // Si ya está finalizado, no permite editar
+        if ($orden && $orden->estatus_urdido === 'finalizado') {
+            return response()->json(['message' => 'Ya no se puede editar'], 403);
         }
 
-        // Guardar o actualizar registros de orden_urdido
-        $registros = $request->input('registros');
-
-        foreach ($registros as $registro) {
-            // Validar los datos
-            $validated = Validator::make($registro, [
-                'folio' => 'required',
-                'id2' => 'required',
-                'fecha' => 'required',
-            ])->validate();
-
-            // Buscar si ya existe un registro con el mismo 'id2' y 'folio'
-            $existente = OrdenUrdido::where('id2', $registro['id2'])
-                ->where('folio', $registro['folio'])
-                ->first();
-
-            // Actualizar o crear
-            if ($existente) {
-                $existente->update($registro);
-            } else {
-                OrdenUrdido::create($registro);
-            }
+        // Actualiza o crea con todos los campos
+        if ($orden) {
+            $orden->fill($request->all());
+            $orden->save();
+            return response()->json(['message' => 'Actualizado']);
+        } else {
+            OrdenUrdido::create($request->all());
+            return response()->json(['message' => 'Creado']);
         }
-
-        // Actualizar estatus en urdido_engomado
-        $registroUrdido = \App\Models\UrdidoEngomado::where('folio', $folio)->first();
-
-        if (!$registroUrdido) {
-            return response()->json(['message' => 'Registro en urdido_engomado no encontrado.'], 404);
-        }
-
-        $registroUrdido->estatus_urdido = 'finalizado';
-        $registroUrdido->save();
-
-        return response()->json(['message' => 'Registros guardados y estatus actualizado a FINALIZADO.']);
     }
+
+
+
+    public function finalizarUrdido(Request $request)
+    {
+        $folio = $request->input('folio');
+        // Actualiza todos los registros del folio a 'finalizado'
+        OrdenUrdido::where('folio', $folio)
+            ->update(['estatus_urdido' => 'finalizado']);
+        return response()->json(['message' => 'Finalizado']);
+    }
+
+
     //Metodo para la impresion de Urdido ya CON DATOS
     public function imprimirOrdenUrdido($folio)
     {

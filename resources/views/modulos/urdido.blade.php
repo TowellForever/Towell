@@ -170,7 +170,7 @@
                                         value="{{ isset($orden->hora_inicio) ? \Illuminate\Support\Str::limit($orden->hora_inicio, 5, '') : '' }}">
                                     <button type="button"
                                         class="text-xs px-1 py-0.5 border rounded bg-gray-100 hover:bg-blue-100"
-                                        onclick="setTimeNow('{{ $horaInicioId }}')">✅</button>
+                                        onclick="setTimeNow('{{ $horaInicioId }}')">✚🕒</button>
                                 </div>
                             </td>
 
@@ -182,7 +182,7 @@
                                         value="{{ isset($orden->hora_fin) ? \Illuminate\Support\Str::limit($orden->hora_fin, 5, '') : '' }}">
                                     <button type="button"
                                         class="text-xs px-1 py-0.5 border rounded bg-gray-100 hover:bg-red-100"
-                                        onclick="setTimeNowAndSync('{{ $horaFinId }}', '{{ 'hora_inicio_' . ($registroIndex + 1) }}')">✅</button>
+                                        onclick="setTimeNowAndSync('{{ $horaFinId }}', '{{ 'hora_inicio_' . ($registroIndex + 1) }}')">✚🕒</button>
                                 </div>
                             </td>
 
@@ -248,9 +248,8 @@
         </table>
         <div class="mt-4 text-right">
             @if ($urdido->estatus_urdido == 'en_proceso')
-                <button id="guardarYFinalizar"
-                    class="ml-10 btn bg-blue-600 text-white w-40 h-12 hover:bg-blue-400">Guardar
-                    y Finalizar</button>
+                <button id="Finalizar"
+                    class="ml-10 btn bg-blue-600 text-white w-40 h-12 hover:bg-blue-400">Finalizar</button>
             @endif
             @if ($urdido->estatus_urdido == 'finalizado')
                 <button onclick="reimprimir()" class="w-1/5 px-4 py-2 bg-green-600 text-white rounded">
@@ -286,126 +285,6 @@
             }
         }
     </script>
-
-    <script>
-        document.getElementById("guardarYFinalizar").addEventListener("click", function() {
-            const inputs = document.querySelectorAll(
-                'input[name^="datos"], select[name^="datos"]'
-            ); //Recoger todos los datos de entradas (input y select) con nombres que empiecen con datos
-            let formData = {};
-            let erroresPorFila = {}; //almacenará campos faltantes para mostrar un resumen amigable si hay errores.
-            let folio = document.getElementById("folio").value;
-
-            if (!folio) {
-                alert("No se encontró el folio.");
-                return;
-            }
-
-            Swal.fire({
-                title: 'CONFIRME ESTA ACCIÓN',
-                text: '¿Desea guardar y finalizar este urdido?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Sí',
-                cancelButtonText: 'No'
-            }).then(result => {
-                if (!result.isConfirmed) return;
-
-                // Aquí continúa tu lógica solo si confirmó
-
-
-
-                // Agrupar datos por fila
-                inputs.forEach(input => {
-                    const match = input.name.match(/datos\[(\d+)\]\[(\w+)\]/);
-                    if (match) {
-                        const index = match[1];
-                        const key = match[2];
-
-                        if (!formData[index]) {
-                            formData[index] = {};
-                        }
-
-                        let value = input.tagName.toLowerCase() === "select" ?
-                            input.options[input.selectedIndex].value :
-                            input.value.trim();
-
-                        formData[index][key] = value;
-
-                        // Validar campos obligatorios
-                        const camposOpcionales = ['tara', 'peso_neto', 'hilatura', 'maquina',
-                            'operacion',
-                            'transferencia',
-                        ];
-                        if (!value && !camposOpcionales.includes(key)) {
-                            if (!erroresPorFila[index]) {
-                                erroresPorFila[index] = [];
-                            }
-                            erroresPorFila[index].push(key);
-                        }
-                    }
-                });
-
-                // Mostrar errores si los hay
-                if (Object.keys(erroresPorFila).length > 0) {
-                    let mensaje = "Por favor completa los campos faltantes en las siguientes filas:\n\n";
-                    for (const index in erroresPorFila) {
-                        mensaje += `● Fila ${parseInt(index)}: ${erroresPorFila[index].join(', ')}\n`;
-                    }
-
-                    alert(mensaje);
-                    return;
-                }
-
-                // Enviar petición al backend
-                fetch("{{ route('urdido.guardarFinalizar') }}", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
-                                .getAttribute(
-                                    "content")
-                        },
-                        body: JSON.stringify({
-                            folio: folio,
-                            registros: Object.values(formData)
-                        })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        // Mostrar mensaje de finalizado
-                        const overlay = document.getElementById('finalizadoOverlay');
-                        overlay.classList.add('active');
-
-                        setTimeout(() => {
-                            overlay.classList.remove('active');
-                        }, 3000);
-
-                        // Desactivar botón
-                        const btn = document.getElementById("guardarYFinalizar");
-                        btn.disabled = true;
-                        btn.innerText = "Finalizado";
-
-                        // 👉 ABRIR la nueva pestaña con la impresión después de 3 segundos
-                        setTimeout(() => {
-                            const url = "{{ url('/imprimir-orden-llena-urd') }}/" + folio;
-                            const papeletas = "{{ url('/imprimir-papeletas-pequenias') }}/" +
-                                folio;
-                            window.open(url, '_blank');
-                            window.open(papeletas, '_blank');
-
-                        }, 3000); // 3000 ms = 3 segundos
-
-
-                    })
-                    .catch(error => {
-                        console.error("Error:", error);
-                        alert("Ocurrió un error al guardar y finalizar.");
-                    });
-            });
-        });
-    </script>
-
 
     <script>
         function mostrarModalErrores(mensaje) {
@@ -470,13 +349,23 @@
 
         function getCurrentTime() {
             const now = new Date();
-            return now.toTimeString().slice(0, 5);
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            return h + ":" + m;
         }
+
 
         // Botón para poner la hora actual en cualquier input de time
         function setTimeNow(inputId) {
             const input = document.getElementById(inputId);
-            if (input) input.value = getCurrentTime();
+            if (input) {
+                const now = new Date();
+                const h = String(now.getHours()).padStart(2, '0');
+                const m = String(now.getMinutes()).padStart(2, '0');
+                input.value = h + ":" + m;
+                // 🔥 Dispara el evento 'change'
+                input.dispatchEvent(new Event('change'));
+            }
         }
 
         // Botón para poner la hora actual en hora_fin Y sincronizar como inicio en la siguiente fila
@@ -484,11 +373,165 @@
             const time = getCurrentTime();
             const finInput = document.getElementById(finId);
             const nextInput = document.getElementById(nextInicioId);
-            if (finInput) finInput.value = time;
-            if (nextInput) nextInput.value = time;
+
+            if (finInput) {
+                finInput.value = time;
+                finInput.dispatchEvent(new Event('change')); // ¡Aquí sí!
+            }
+            if (nextInput) {
+                nextInput.value = time;
+                nextInput.dispatchEvent(new Event('change')); // ¡Y aquí también!
+            }
         }
     </script>
 
+    <script>
+        document.querySelectorAll('input[name^="datos"], select[name^="datos"]').forEach(el => {
+            el.addEventListener('change', function() {
+                const match = this.name.match(/datos\[(\d+)\]\[(\w+)\]/);
+                if (!match) return;
+                const index = match[1];
+
+                // Encuentra la fila de la tabla
+                const row = this.closest('tr');
+                // Recolecta TODOS los campos de la fila con el mismo índice
+                const inputs = row.querySelectorAll('input[name^="datos[' + index +
+                    ']"], select[name^="datos[' + index + ']"]');
+
+                let registro = {};
+                inputs.forEach(input => {
+                    const matchInput = input.name.match(/datos\[\d+\]\[(\w+)\]/);
+                    if (matchInput) {
+                        let key = matchInput[1];
+                        let value = input.value;
+                        if (input.tagName.toLowerCase() === "select") {
+                            value = input.options[input.selectedIndex].value;
+                        }
+                        registro[key] = value;
+                    }
+                });
+
+                // Asegúrate que folio y id2 estén incluidos (puede ser redundante)
+                registro['folio'] = document.getElementById("folio").value;
+                if (!registro['id2']) {
+                    registro['id2'] = row.querySelector('input[name$="[id2]"]').value;
+                }
+
+                // AJAX call por registro completo
+                fetch("{{ route('urdido.autoguardar') }}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+                        },
+                        body: JSON.stringify(registro)
+                    })
+                    .then(resp => resp.json())
+                    .then(data => {
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Guardado',
+                            showConfirmButton: false,
+                            timer: 1000,
+                            timerProgressBar: true,
+                            background: '#ecfdf5',
+                            customClass: {
+                                title: 'text-green-800 text-xs font-semibold'
+                            }
+                        });
+                    })
+                    .catch(e => {
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            icon: 'error',
+                            title: 'No se pudo guardar',
+                            showConfirmButton: false,
+                            timer: 1500,
+                            timerProgressBar: true,
+                            background: '#fee2e2',
+                            customClass: {
+                                title: 'text-red-800 text-xs font-semibold'
+                            }
+                        });
+                    });
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const finalizarBtn = document.getElementById("Finalizar");
+            if (finalizarBtn) {
+                finalizarBtn.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    // Confirma con SweetAlert2
+                    Swal.fire({
+                        title: '¿Seguro que deseas finalizar?',
+                        text: "Ya no podrás editar los datos después.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Sí, finalizar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Obtén el folio (ajusta el selector según tu HTML)
+                            const folio = document.getElementById("folio").value;
+                            fetch("{{ route('urdido.finalizar') }}", {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        "X-CSRF-TOKEN": document.querySelector(
+                                            'meta[name="csrf-token"]').content,
+                                    },
+                                    body: JSON.stringify({
+                                        folio: folio
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    // Muestra mensaje de éxito
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: '¡Finalizado!',
+                                        text: 'Los datos han sido finalizados y bloqueados.',
+                                        timer: 1800,
+                                        showConfirmButton: false
+                                    });
+
+                                    // Deshabilita todos los inputs y selects de la tabla
+                                    document.querySelectorAll(
+                                        'table input, table select, table button').forEach(
+                                        el => {
+                                            el.disabled = true;
+                                            el.classList.add('bg-gray-100',
+                                                'text-gray-400');
+                                        });
+
+                                    // Opcional: deshabilita el botón "Finalizar"
+                                    finalizarBtn.disabled = true;
+                                    finalizarBtn.innerText = "Finalizado";
+                                    finalizarBtn.classList.add('bg-gray-400',
+                                        'hover:bg-gray-400');
+
+                                })
+                                .catch(error => {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: 'No se pudo finalizar. Intenta nuevamente.',
+                                        timer: 2000,
+                                        showConfirmButton: false
+                                    });
+                                });
+                        }
+                    });
+                });
+            }
+        });
+    </script>
 
     @push('styles')
         <style>
