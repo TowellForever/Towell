@@ -1,43 +1,40 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container mx-auto p-6 bg-white shadow-lg rounded-lg mt-2 overflow-y-auto md:h-[600px]">
-        <h1 class="text-3xl font-bold text-center mb-2">PRODUCCIÓN DE URDIDO</h1>
+    <div class="container mx-auto p-2 bg-white shadow-lg rounded-lg mt-[1px] overflow-y-auto md:h-[600px]">
         <div id="finalizadoOverlay">FINALIZADO CORRECTAMENTE</div>
 
         <!-- Formulario -->
-        <form class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2">
+        <form class="grid grid-cols-1 md:grid-cols-4 ">
             <!-- Primera columna -->
-            <div class="text-sm">
+            <div class="text-sm ">
                 <div class="flex items-center mb-1">
                     <label class="w-1/4 text-sm">FOLIO:</label>
-                    <input id="folio" type="text" class="w-2/6 border rounded p-1 text-xs font-bold"
+                    <input id="folio" type="text" class="w-2/4 border rounded p-1 text-xs font-bold"
                         value="{{ explode('-', $requerimiento->orden_prod)[0] ?? '' }}" readonly>
                 </div>
                 <div class="flex items-center mb-1">
                     <label class="w-1/4 text-sm">CUENTA:</label>
-                    <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold"
-                        value="{{ isset($urdido->cuenta) ? (intval($urdido->cuenta) == $urdido->cuenta ? intval($urdido->cuenta) : $urdido->cuenta) : '' }}
-"
+                    <input type="text" class="w-2/4 border rounded p-1 text-xs font-bold"
+                        value="{{ isset($urdido->cuenta) ? (intval($urdido->cuenta) == $urdido->cuenta ? intval($urdido->cuenta) : $urdido->cuenta) : '' }}"
                         readonly>
                 </div>
                 <div class="flex items-center mb-1">
                     <label class="w-1/4 text-sm">URDIDO:</label>
-                    <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold"
+                    <input type="text" class="w-2/4 border rounded p-1 text-xs font-bold"
                         value="{{ $urdido->urdido ?? '' }}" readonly>
                 </div>
-                <div class="flex items-center mb-1">
-                    <label class="w-1/4 text-sm">PROVEEDOR:</label>
-                    <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold"
-                        value="{{ $urdido->proveedor ?? '' }}" readonly>
-                </div>
-
             </div>
 
             <!-- Segunda columna -->
             <div class="text-sm">
                 <div class="flex items-center mb-1">
-                    <label class="w-1/4 text-sm">TIPO:</label>
+                    <label class="w-1/3 text-sm">PROVEEDOR:</label>
+                    <input type="text" class="w-3/6 border rounded p-1 text-xs font-bold"
+                        value="{{ $urdido->proveedor ?? '' }}" readonly>
+                </div>
+                <div class="flex items-center mb-1">
+                    <label class="w-1/3 text-sm">TIPO:</label>
                     <div class="flex items-center">
                         <label class="text-sm text-black font-semibold">
                             <input type="radio" name="tipo" value="Rizo"
@@ -50,31 +47,34 @@
                     </div>
                 </div>
                 <div class="flex items-center mb-1">
-                    <label class="w-1/4 text-sm ">METROS:</label>
-                    <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold"
+                    <label class="w-1/3 text-sm ">METROS:</label>
+                    <input type="text" class="w-3/6 border rounded p-1 text-xs font-bold"
                         value="{{ rtrim(rtrim($urdido->metros, '0'), '.') }}" readonly>
-                </div>
-                <div class="flex items-center mb-1">
-                    <label class="w-1/4 text-sm ">DESTINO:</label>
-                    <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold"
-                        value="{{ $urdido->destino . ' ' . $requerimiento->telar ?? '' }}" readonly>
-                </div>
-                <div class="flex items-center mb-1">
-                    <label class="w-1/4 text-sm">ORDENADO POR:</label>
-                    <input type="text" class="w-2/6 border rounded p-1 text-xs font-bold" value="pending">
                 </div>
             </div>
 
-            <!-- Tercera columna -->
+            <!-- tercera columna -->
+            <div class="text-sm">
+                <div class="flex items-center mb-1">
+                    <label class="w-1/3 text-sm ">DESTINO:</label>
+                    <input type="text" class="w-3/6 border rounded p-1 text-xs font-bold"
+                        value="{{ $urdido->destino . ' ' . $requerimiento->telar ?? '' }}" readonly>
+                </div>
+                <div class="flex items-center mb-1">
+                    <label class="w-1/3 text-sm">ORDENADO POR:</label>
+                    <input type="text" class="w-3/6 border rounded p-1 text-xs font-bold" value="pending">
+                </div>
+            </div>
+
+            <!-- cuarta columna -->
             <div>
                 <!-- Tabla de Construcción -->
-                <h2 class="text font-semibold">CONSTRUCCIÓN: </h2>
+                <h2 class="text font-semibold text-sm">CONSTRUCCIÓN: </h2>
                 <table class="w-full border-collapse border border-gray-300  font-bold">
                     <thead>
                         <tr class="bg-gray-200 text-xs">
-                            <th class="border p-1 w-1/5 text-center font-bold">No. JULIO</th>
-                            <th class="border p-1 w-1/5 text-center font-bold">HILOS</th>
-                            <th class="border p-1 text-center font-bold">OBSERVACIONES</th>
+                            <th class="border p-1  text-center font-bold">No. JULIO</th>
+                            <th class="border p-1  text-center font-bold">HILOS</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -83,7 +83,6 @@
                             <tr class="text-xs">
                                 <td class="border p-0.5 text-center">{{ $registroConstruccion->no_julios ?? '' }}</td>
                                 <td class="border p-0.5 text-center">{{ $registroConstruccion->hilos ?? '' }}</td>
-                                <td class="border p-0.5 text-center">{{ $registroConstruccion->observaciones ?? '' }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -92,7 +91,6 @@
         </form>
 
         <!-- Tabla de Datos -->
-        <h2 class="text-sm font-bold mt-2">Registro de Producción</h2>
         <table class="w-full border-collapse border border-gray-300 mt-2 text-center">
             <thead>
                 <tr class="bg-gray-200 text-xs">
@@ -140,9 +138,8 @@
                             </td>
                             <!--OFICIAL, select dinámico-->
                             <td class="border p-1 w-30">
-                                <select class="w-24 border rounded p-1 text-xs"
-                                    name="datos[{{ $registroIndex }}][oficial]" id="oficial_{{ $registroIndex }}"
-                                    onchange="updateOficialTipo({{ $registroIndex }})">
+                                <select class="w-24 border rounded p-1 text-xs" name="datos[{{ $registroIndex }}][oficial]"
+                                    id="oficial_{{ $registroIndex }}" onchange="updateOficialTipo({{ $registroIndex }})">
                                     <option value="{{ Auth::user()->nombre }}">{{ Auth::user()->nombre }}</option>
                                     @foreach ($oficiales as $of)
                                         <option value="{{ $of->oficial }}" data-tipo="{{ $of->tipo }}"

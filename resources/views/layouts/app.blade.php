@@ -65,9 +65,27 @@
                 class="absolute top-1 right-2 w-[36px] z-1">
         </a>
 
-        <a href="#" id="logout-btn" class="absolute top-1 right-[1000px] z-1 btn btn-danger text-xs">
-            CERRAR SESIÓN
-        </a>
+        @if (Route::currentRouteName() === 'produccion.index')
+            <a href="#" id="logout-btn" class="absolute top-1 right-[1000px] z-1 btn btn-warning text-xs">
+                CERRAR SESIÓN
+            </a>
+        @endif
+
+        <!-- El siguiente if, es para injertar un titulo en la parte de app.balde, esto por solicitud del jefazo, solo funciona en la pagina de informacion del modulo de urdido-->
+        @if (Route::currentRouteName() === 'produccion.ordenTrabajo')
+            <h2 class="fixed top-[5px] left-[280px] z-50 -translate-x-1/2 px-4 py-2 text-xl md:text-2xl font-extrabold bg-transparent pointer-events-none select-none"
+                style="
+            background: transparent;
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(90deg, #3b82f6 10%, #60a5fa 50%, #2563eb 90%);
+        ">
+                PRODUCCIÓN DE URDIDO
+            </h2>
+        @endif
+
 
         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
             @csrf
