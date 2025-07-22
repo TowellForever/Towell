@@ -262,7 +262,6 @@ class RequerimientoController extends Controller
                 'urdido' => 'required',
                 'proveedor' => 'required',
                 'destino' => 'required',
-                'metros' => 'required|numeric',
                 'nucleo' => 'required',
                 'no_telas' => 'required|integer',
                 'lmaturdido' => 'required',
@@ -310,6 +309,10 @@ class RequerimientoController extends Controller
                     })
                     ->update(['orden_prod' => $folio]);
             }
+
+            $metros = (float) $request->input('metros'); // Para decimales
+
+
             // Insertar en urdido_engomado
             DB::table('urdido_engomado')->insert([
                 'folio' => $folioBase,
@@ -318,7 +321,7 @@ class RequerimientoController extends Controller
                 'proveedor' => $request->input('proveedor'),
                 'tipo' => $request->input('tipo'),
                 'destino' => $request->input('destino'),
-                'metros' => $request->input('metros'),
+                'metros' => $metros,
                 'nucleo' => $request->input('nucleo'),
                 'no_telas' => $request->input('no_telas'),
                 'balonas' => $request->input('balonas'),

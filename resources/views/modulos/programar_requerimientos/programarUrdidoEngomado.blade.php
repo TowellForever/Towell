@@ -89,18 +89,25 @@
                             <select name="proveedor"
                                 class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded" required>
                                 <option value="" disabled {{ old('proveedor') ? '' : 'selected' }}></option>
-                                <option value="Max" {{ old('proveedor') == 'Max' ? 'selected' : '' }}>HILADOS JIUTEPEC
+                                <option value="HILADOS JIUTEPEC"
+                                    {{ old('proveedor') == 'HILADOS JIUTEPEC' ? 'selected' : '' }}>HILADOS JIUTEPEC
                                 </option>
-                                <option value="Sergio" {{ old('proveedor') == 'Sergio' ? 'selected' : '' }}>FÁBRICA
+                                <option value="FÁBRICA INDUSTRIAL TEXTIL ANÁHUAC"
+                                    {{ old('proveedor') ==
+                                    'FÁBRICA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              INDUSTRIAL TEXTIL ANÁHUAC'
+                                        ? 'selected'
+                                        : '' }}>
+                                    FÁBRICA
                                     INDUSTRIAL TEXTIL ANÁHUAC
                                 </option>
-                                <option value="Lewis" {{ old('proveedor') == 'Lewis' ? 'selected' : '' }}>TRITON
+                                <option value="TRITON INDUSTRIAL, S.A. DE C.V."
+                                    {{ old('proveedor') == 'TRITON INDUSTRIAL, S.A. DE C.V.' ? 'selected' : '' }}>TRITON
                                     INDUSTRIAL, S.A. DE C.V.
                                 </option>
-                                <option value="Lewis" {{ old('proveedor') == 'Lewis' ? 'selected' : '' }}>
+                                <option value="P Y T TEXTIL" {{ old('proveedor') == 'P Y T TEXTIL' ? 'selected' : '' }}>
                                     P Y T TEXTIL
                                 </option>
-                                <option value="Lewis" {{ old('proveedor') == 'Lewis' ? 'selected' : '' }}>SAJITEX
+                                <option value="SAJITEX" {{ old('proveedor') == 'SAJITEX' ? 'selected' : '' }}>SAJITEX
                                 </option>
 
                             </select>
@@ -114,21 +121,16 @@
                             <input type="text" name="destino" value="{{ $datos->salon ?? '' }}"
                                 class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded" readonly>
                         </td>
+
                         <td class="border px-1 py-0.5">
-                            <select name="metros"
-                                class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded" required>
-                                <option value="" disabled {{ old('metros') === null ? 'selected' : '' }}>Selecciona
-                                </option>
-                                @for ($i = 1000; $i <= 10000; $i += 1000)
-                                    <option value="{{ $i }}" {{ old('metros') == $i ? 'selected' : '' }}>
-                                        {{ $i }}
-                                    </option>
-                                @endfor
-                            </select>
+                            <input type="number" name="metros"
+                                class="w-full px-1 py-1 text-xs border border-gray-300 rounded" placeholder="Ingresa metros"
+                                value="{{ old('metros') }}" min="0" step="1" required>
                             @error('metros')
                                 <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
                             @enderror
                         </td>
+
                     </tr>
                 </tbody>
             </table>
