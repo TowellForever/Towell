@@ -91,7 +91,6 @@
                     <textarea class="text-sm w-full border rounded resize-none font-bold" rows="3" readonly maxlength="300">
 {{ $urdido->observaciones }}
 </textarea>
-
                 </div>
             </div>
         </form>
@@ -139,12 +138,12 @@
                             <input type="hidden" name="datos[{{ $registroIndex }}][folio]"
                                 value="{{ $registroConstruccion->folio ?? '' }}">
                             <td class="border p-1">
-                                <input class="w-24 p-1" type="date" name="datos[{{ $registroIndex }}][fecha]"
+                                <input class="w-[70px] p-1" type="date" name="datos[{{ $registroIndex }}][fecha]"
                                     value="{{ $orden && $orden->fecha ? \Carbon\Carbon::parse($orden->fecha)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d') }}">
                             </td>
                             <!--OFICIAL, select dinámico-->
-                            <td class="border p-1 w-30">
-                                <select class="w-24 border rounded p-1 text-xs"
+                            <td class="border p-1 w-[75px]">
+                                <select class="w-[75px] border rounded p-1 text-xs"
                                     name="datos[{{ $registroIndex }}][oficial]" id="oficial_{{ $registroIndex }}"
                                     onchange="updateOficialTipo({{ $registroIndex }})">
                                     <option value="{{ Auth::user()->nombre }}">{{ Auth::user()->nombre }}</option>
@@ -156,45 +155,45 @@
                                     @endforeach
                                 </select>
                             </td>
-                            <td class="border p-1"><input type="text" inputmode="numeric" pattern="[0-9]*"
-                                    name="datos[{{ $registroIndex }}][turno]" class="w-10 border rounded p-1 text-xs"
-                                    value="{{ $turnoActual ?? '' }}"></td>
+                            <td class="border "><input type="text" inputmode="numeric" pattern="[0-9]*"
+                                    name="datos[{{ $registroIndex }}][turno]"
+                                    class="w-5 font-bold border rounded p-1 text-xs text-center"
+                                    value="{{ $turnoActual ?? '' }}">
+                            </td>
 
                             @php
                                 // Solo para ejemplo: crea un id único por fila para manipular los campos
                                 $horaInicioId = 'hora_inicio_' . $registroIndex;
                                 $horaFinId = 'hora_fin_' . $registroIndex;
                             @endphp
-
-                            <td class="border p-1">
+                            <td class="border p-0.5">
                                 <div style="display: flex; align-items: center; gap: 3px;">
                                     <input type="time" id="{{ $horaInicioId }}"
                                         name="datos[{{ $registroIndex }}][hora_inicio]"
-                                        class="w-24 border rounded p-1 text-xs"
+                                        class="w-[90px] border rounded p-1 text-xs"
                                         value="{{ isset($orden->hora_inicio) ? \Illuminate\Support\Str::limit($orden->hora_inicio, 5, '') : '' }}">
                                     <button type="button"
-                                        class="text-xs px-1 py-0.5 border rounded bg-gray-100 hover:bg-blue-100"
+                                        class="text-xs w-8 px-1 py-0.5 border rounded bg-gray-100 hover:bg-blue-100"
                                         onclick="setTimeNow('{{ $horaInicioId }}')">🕒</button>
                                 </div>
                             </td>
-
-                            <td class="border p-1">
+                            <td class="border p-0.5">
                                 <div style="display: flex; align-items: center; gap: 3px;">
                                     <input type="time" id="{{ $horaFinId }}"
                                         name="datos[{{ $registroIndex }}][hora_fin]"
-                                        class="w-24 border rounded p-1 text-xs"
+                                        class="w-[90px] border rounded p-1 text-xs"
                                         value="{{ isset($orden->hora_fin) ? \Illuminate\Support\Str::limit($orden->hora_fin, 5, '') : '' }}">
                                     <button type="button"
-                                        class="text-xs px-1 py-0.5 border rounded bg-gray-100 hover:bg-red-100"
+                                        class="text-xs w-8 px-1 py-0.5 border rounded bg-gray-100 hover:bg-red-100"
                                         onclick="setTimeNowAndSync('{{ $horaFinId }}', '{{ 'hora_inicio_' . ($registroIndex + 1) }}')">🕒</button>
                                 </div>
                             </td>
 
                             <td class="border p-1 w-30">
-                                <select class="w-10 border rounded p-1 text-xs"
+                                <select class="w-10 border rounded p-1 text-xs text-center no-arrow"
                                     name="datos[{{ $registroIndex }}][no_julio]" id="no_julio_{{ $registroIndex }}"
                                     onchange="updateValues({{ $registroIndex }})">
-                                    <option value="">+</option>
+                                    <option value="">🧵</option>
                                     @foreach ($julios as $julio)
                                         <option value="{{ $julio->no_julio }}" data-tara="{{ $julio->tara }}"
                                             data-tipo="{{ $julio->tipo }}"
@@ -204,25 +203,24 @@
                                     @endforeach
                                 </select>
                             </td>
-
                             <td class="border p-1">{{ $registroConstruccion->hilos ?? '' }}
                                 <input type="hidden" name="datos[{{ $registroIndex }}][hilos]"
                                     value="{{ $registroConstruccion->hilos ?? '' }}">
                             </td>
-
-                            <td class="border p-1">
-                                <input class="w-10 border rounded p-1 text-xs" type="text" inputmode="numeric"
+                            <td class="border">
+                                <input class="w-14 border rounded text-xs text-center" type="text" inputmode="numeric"
                                     pattern="[0-9]*" name="datos[{{ $registroIndex }}][peso_bruto]"
                                     value="{{ $orden->peso_bruto ?? '' }}" id="peso_bruto_{{ $registroIndex }}"
                                     onchange="updatePesoNeto({{ $registroIndex }})">
                             </td>
 
-                            <td class="border p-1">
-                                <input class="w-14 p-1 text-xs" type="text" name="datos[{{ $registroIndex }}][tara]"
-                                    id="tara_{{ $registroIndex }}" value="{{ $orden->tara ?? '' }}" readonly>
+                            <td class="border">
+                                <input class="w-10 text-center text-xs" type="text"
+                                    name="datos[{{ $registroIndex }}][tara]" id="tara_{{ $registroIndex }}"
+                                    value="{{ $orden->tara ?? '' }}" readonly>
                             </td>
-                            <td class="border p-1">
-                                <input class="w-14 p-1 text-xs" type="text"
+                            <td class="border">
+                                <input class="w-12 text-center  text-xs" type="text"
                                     name="datos[{{ $registroIndex }}][peso_neto]" id="peso_neto_{{ $registroIndex }}"
                                     value="{{ $orden->peso_neto ?? '' }}" readonly>
                             </td>
@@ -237,14 +235,14 @@
                             <td class="border p-1"><input type="text" inputmode="numeric" pattern="[0-9]*"
                                     name="datos[{{ $registroIndex }}][maquina]" class="w-10 border rounded p-1 text-xs"
                                     value="{{ $orden->maquina ?? '' }}"></td>
-                            <td class="border 1">
+                            <td class="border p-1">
                                 <input type="text" inputmode="numeric" pattern="[0-9]*"
                                     name="datos[{{ $registroIndex }}][operacion]" class="w-10 border rounded p-1 text-xs"
                                     value="{{ $orden->operacion ?? '' }}">
                             </td>
-                            <td class="border "><input type="text" inputmode="numeric" pattern="[0-9]*"
+                            <td class="border p-1"><input type="text" inputmode="numeric" pattern="[0-9]*"
                                     name="datos[{{ $registroIndex }}][transferencia]"
-                                    class="w-10 border rounded p text-xs" value="{{ $orden->transferencia ?? '' }}">
+                                    class="w-10 border rounded p-1 text-xs" value="{{ $orden->transferencia ?? '' }}">
                             </td>
                         </tr>
                     @endfor
@@ -562,6 +560,20 @@
             #finalizadoOverlay.active {
                 opacity: 1;
                 pointer-events: auto;
+            }
+
+            /* Quita la flechita de todos los select */
+            .no-arrow {
+                appearance: none;
+                /* Estándar */
+                -webkit-appearance: none;
+                /* Safari/Chrome */
+                -moz-appearance: none;
+                /* Firefox */
+                background: none;
+                /* Opcional: elimina fondo por defecto */
+                padding-right: 0.5rem;
+                /* Ajusta si ves raro el texto */
             }
         </style>
     @endpush
