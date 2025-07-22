@@ -69,8 +69,7 @@
             <!-- cuarta columna -->
             <div>
                 <!-- Tabla de Construcción -->
-                <h2 class="text font-semibold text-sm">CONSTRUCCIÓN: </h2>
-                <table class="w-full border-collapse border border-gray-300  font-bold">
+                <table class="w-full border-collapse border border-gray-300  font-bold mb-[2px]">
                     <thead>
                         <tr class="bg-gray-200 text-xs">
                             <th class="border p-1  text-center font-bold">No. JULIO</th>
@@ -87,34 +86,41 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div class="flex items-center">
+                    <label class="w-1/3 fs-9 font-bold">OBSERVACIONES: &nbsp;</label>
+                    <textarea class="text-sm w-full border rounded resize-none font-bold" rows="3" readonly maxlength="300">
+{{ $urdido->observaciones }}
+</textarea>
+
+                </div>
             </div>
         </form>
 
         <!-- Tabla de Datos -->
         <table class="w-full border-collapse border border-gray-300 mt-2 text-center">
             <thead>
-                <tr class="bg-gray-200 text-xs">
-                    <th class="border p-0.5" colspan="11"></th>
-                    <th class="p-0.5 text-center border-2 border-black" colspan="4">ROTURAS</th>
+                <tr class="bg-gray-200">
+                    <th class="border pt-0.5" colspan="11"></th>
+                    <th class="fs-10 text-center border-2 border-black" colspan="4">ROTURAS</th>
                 </tr>
-                <tr class="bg-gray-200 text-xs">
-                    <th class="border p-1">FECHA</th>
-                    <th class="border p-1">OFICIAL</th>
-                    <th class="border p-1">TURNO</th>
+                <tr class="bg-gray-200 fs-10">
+                    <th class="border">FECHA</th>
+                    <th class="border">OFICIAL</th>
+                    <th class="border">TURNO</th>
 
-                    <th class="border p-1">H. INIC.</th>
-                    <th class="border p-1">H. FIN</th>
+                    <th class="border">H. INIC.</th>
+                    <th class="border">H. FIN</th>
 
-                    <th class="border p-1">No. JULIO</th>
-                    <th class="border p-1">HILOS</th>
-                    <th class="border p-1">Kg. BRUTO</th>
-                    <th class="border p-1">TARA</th>
-                    <th class="border p-1 W-30">Kg. NETO</th>
-                    <th class="border p-1">METROS</th>
-                    <th class="border p-1">HILAT.</th>
-                    <th class="border p-1">MÁQ.</th>
-                    <th class="border p-1">OPERAC.</th>
-                    <th class="border p-1">TRANSF.</th>
+                    <th class="border">No. JULIO</th>
+                    <th class="border">HILOS</th>
+                    <th class="border">Kg. BRUTO</th>
+                    <th class="border">TARA</th>
+                    <th class="border W-30">Kg. NETO</th>
+                    <th class="border">METROS</th>
+                    <th class="border">HILAT.</th>
+                    <th class="border">MÁQ.</th>
+                    <th class="border">OPERAC.</th>
+                    <th class="border">TRANSF.</th>
                 </tr>
             </thead>
             <tbody>
@@ -138,8 +144,9 @@
                             </td>
                             <!--OFICIAL, select dinámico-->
                             <td class="border p-1 w-30">
-                                <select class="w-24 border rounded p-1 text-xs" name="datos[{{ $registroIndex }}][oficial]"
-                                    id="oficial_{{ $registroIndex }}" onchange="updateOficialTipo({{ $registroIndex }})">
+                                <select class="w-24 border rounded p-1 text-xs"
+                                    name="datos[{{ $registroIndex }}][oficial]" id="oficial_{{ $registroIndex }}"
+                                    onchange="updateOficialTipo({{ $registroIndex }})">
                                     <option value="{{ Auth::user()->nombre }}">{{ Auth::user()->nombre }}</option>
                                     @foreach ($oficiales as $of)
                                         <option value="{{ $of->oficial }}" data-tipo="{{ $of->tipo }}"
@@ -167,7 +174,7 @@
                                         value="{{ isset($orden->hora_inicio) ? \Illuminate\Support\Str::limit($orden->hora_inicio, 5, '') : '' }}">
                                     <button type="button"
                                         class="text-xs px-1 py-0.5 border rounded bg-gray-100 hover:bg-blue-100"
-                                        onclick="setTimeNow('{{ $horaInicioId }}')">✚🕒</button>
+                                        onclick="setTimeNow('{{ $horaInicioId }}')">🕒</button>
                                 </div>
                             </td>
 
@@ -179,16 +186,15 @@
                                         value="{{ isset($orden->hora_fin) ? \Illuminate\Support\Str::limit($orden->hora_fin, 5, '') : '' }}">
                                     <button type="button"
                                         class="text-xs px-1 py-0.5 border rounded bg-gray-100 hover:bg-red-100"
-                                        onclick="setTimeNowAndSync('{{ $horaFinId }}', '{{ 'hora_inicio_' . ($registroIndex + 1) }}')">✚🕒</button>
+                                        onclick="setTimeNowAndSync('{{ $horaFinId }}', '{{ 'hora_inicio_' . ($registroIndex + 1) }}')">🕒</button>
                                 </div>
                             </td>
 
-
                             <td class="border p-1 w-30">
-                                <select class="w-24 border rounded p-1 text-xs"
+                                <select class="w-10 border rounded p-1 text-xs"
                                     name="datos[{{ $registroIndex }}][no_julio]" id="no_julio_{{ $registroIndex }}"
                                     onchange="updateValues({{ $registroIndex }})">
-                                    <option value="">Seleccionar</option>
+                                    <option value="">+</option>
                                     @foreach ($julios as $julio)
                                         <option value="{{ $julio->no_julio }}" data-tara="{{ $julio->tara }}"
                                             data-tipo="{{ $julio->tipo }}"
@@ -231,12 +237,14 @@
                             <td class="border p-1"><input type="text" inputmode="numeric" pattern="[0-9]*"
                                     name="datos[{{ $registroIndex }}][maquina]" class="w-10 border rounded p-1 text-xs"
                                     value="{{ $orden->maquina ?? '' }}"></td>
-                            <td class="border p-1"><input type="text" inputmode="numeric" pattern="[0-9]*"
+                            <td class="border 1">
+                                <input type="text" inputmode="numeric" pattern="[0-9]*"
                                     name="datos[{{ $registroIndex }}][operacion]" class="w-10 border rounded p-1 text-xs"
-                                    value="{{ $orden->operacion ?? '' }}"></td>
-                            <td class="border p-1"><input type="text" inputmode="numeric" pattern="[0-9]*"
+                                    value="{{ $orden->operacion ?? '' }}">
+                            </td>
+                            <td class="border "><input type="text" inputmode="numeric" pattern="[0-9]*"
                                     name="datos[{{ $registroIndex }}][transferencia]"
-                                    class="w-10 border rounded p-1 text-xs" value="{{ $orden->transferencia ?? '' }}">
+                                    class="w-10 border rounded p text-xs" value="{{ $orden->transferencia ?? '' }}">
                             </td>
                         </tr>
                     @endfor
