@@ -88,7 +88,7 @@ class UrdidoController extends Controller
     {
         $folio = $request->input('folio');
         // Actualiza todos los registros del folio a 'finalizado'
-        OrdenUrdido::where('folio', $folio)
+        UrdidoEngomado::where('folio', $folio)
             ->update(['estatus_urdido' => 'finalizado']);
         return response()->json(['message' => 'Finalizado']);
     }
