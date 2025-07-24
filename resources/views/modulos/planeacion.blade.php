@@ -23,7 +23,7 @@
 
 @section('content')
     <div
-        class="w-auto text-white text-xs mt-2 mb-1 flex overflow-x-auto overflow space-x-2 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-300 p-1 mt-1 sm:mt-2 sm:p-0">
+        class="w-auto text-white text-xs mt-2 mb-1 flex  space-x-2 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-300 p-1 mt-1 sm:mt-2 sm:p-0">
 
         <!-- Botón de búsqueda (lupa) -->
         <button id="search-toggle" class="w-16 rounded-full text-white hover:bg-white sm:mt-8 flex">
@@ -51,10 +51,18 @@
         <a href="{{ route('modelos.index') }}" class="button-plane-2 rounded-full ml-1 p-1 sm:mt-8">MODELOS 🛠️</a>
 
         <!--<button id="btnEditar" class="button-plane rounded-full ml-1 p-1 sm:mt-8 w-24">EDITAR
-                                                                            🛠️</button>VISTA EDICION y METODO EN CONTROLLER pendientes-->
+                                                                                                                                                                                                                                                                🛠️</button>VISTA EDICION y METODO EN CONTROLLER pendientes-->
 
-        <button id="btnImportExcel" class="bg-green-500 rounded-full ml-1 p-1 sm:mt-8 w-24">EXCEL
+        <button id="btnImportExcel" class="bg-green-500 rounded-full ml-1 p-1 sm:mt-8 button-plane w-24">EXCEL
         </button>
+
+        <button
+            class="w-[40px] h-[40px] rounded-full p-1   items-center justify-center text-2xl hover:bg-blue-100 focus:ring-2 mt-6"
+            @click="moverArriba(registro.id)">🔼</button>
+        <button
+            class="w-[40px] h-[40px] rounded-full p-1   items-center justify-center text-2xl hover:bg-blue-100 focus:ring-2 mt-6"
+            @click="moverAbajo(registro.id)">🔽</button>
+
     </div>
 
     <!-- Modal -->
@@ -401,9 +409,9 @@
         });
     </script>
     <!--*******************************************************************************************************************************************************************************************
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            *********************************************************************************************************************************************************************************************-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *********************************************************************************************************************************************************************************************-->
     <!--SCRIPTS que implentan el funcionamiento de la tabla TIPO DE MOVIMIENTOS, se selecciona un registro, se obtiene el valor de id y con
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
 
     <script>
         let filaSeleccionada = null;
@@ -731,19 +739,20 @@
             /* Estilos para los botones */
             .button-plane {
                 background-color: #0876d1;
-                /* Fondo azul */
                 color: white;
-                /* Color del texto */
                 padding: 8px 2px;
-                /* Espaciado interno */
                 text-decoration: none;
-                /* Elimina el subrayado */
-
                 transition: background-color 0.3s ease;
-                /* Efecto de transición */
                 text-align: center;
-                /* Centra el texto en cada botón */
+
+                /* Centrado vertical y horizontal con flex */
+                display: flex;
+                align-items: center;
+                /* Centra verticalmente */
+                justify-content: center;
+                /* Centra horizontalmente */
             }
+
 
             .button-plane-2 {
                 background-color: #7839ed;
