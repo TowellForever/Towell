@@ -51,17 +51,18 @@
         <a href="{{ route('modelos.index') }}" class="button-plane-2 rounded-full ml-1 p-1 sm:mt-8">MODELOS 🛠️</a>
 
         <!--<button id="btnEditar" class="button-plane rounded-full ml-1 p-1 sm:mt-8 w-24">EDITAR
-                                                                                                                                                                                                                                                                🛠️</button>VISTA EDICION y METODO EN CONTROLLER pendientes-->
+                                                                                                                                                                                                                                                                                                                                                                                                                        🛠️</button>VISTA EDICION y METODO EN CONTROLLER pendientes-->
 
         <button id="btnImportExcel" class="bg-green-500 rounded-full ml-1 p-1 sm:mt-8 button-plane w-24">EXCEL
         </button>
 
         <button
-            class="w-[40px] h-[40px] rounded-full p-1   items-center justify-center text-2xl hover:bg-blue-100 focus:ring-2 mt-6"
-            @click="moverArriba(registro.id)">🔼</button>
+            class="w-[40px] h-[40px] rounded-full p-1 items-center justify-center text-2xl hover:bg-blue-100 focus:ring-2 mt-6"
+            onclick="moverArriba()">🔼</button>
         <button
-            class="w-[40px] h-[40px] rounded-full p-1   items-center justify-center text-2xl hover:bg-blue-100 focus:ring-2 mt-6"
-            @click="moverAbajo(registro.id)">🔽</button>
+            class="w-[40px] h-[40px] rounded-full p-1 items-center justify-center text-2xl hover:bg-blue-100 focus:ring-2 mt-6"
+            onclick="moverAbajo()">🔽</button>
+
 
     </div>
 
@@ -224,7 +225,9 @@
                     <tbody class="">
                         @foreach ($datos as $registro)
                             <tr class="px-1 py-0.5 text-sm" data-num-registro="{{ $registro->id }}"
-                                data-inicio="{{ $registro->Inicio_Tejido }}" data-fin="{{ $registro->Fin_Tejido }}">
+                                data-inicio="{{ $registro->Inicio_Tejido }}" data-fin="{{ $registro->Fin_Tejido }}"
+                                onclick="seleccionarRegistro({{ $registro->id }}, '{{ $registro->Telar }}'
+                                , this)">
                                 <!-- Agregar checkbox 'en_proceso' -->
                                 <td class="px-1 py-0.5">
                                     <form action="{{ route('tejido_scheduling.update', $registro->id) }}" method="POST">
@@ -409,9 +412,9 @@
         });
     </script>
     <!--*******************************************************************************************************************************************************************************************
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *********************************************************************************************************************************************************************************************-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        *********************************************************************************************************************************************************************************************-->
     <!--SCRIPTS que implentan el funcionamiento de la tabla TIPO DE MOVIMIENTOS, se selecciona un registro, se obtiene el valor de id y con
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
 
     <script>
         let filaSeleccionada = null;
@@ -829,6 +832,62 @@
                     });
                 });
             });
+        </script>
+        <script>
+            // Variable global para guardar el registro seleccionado
+            let registroSeleccionado = null;
+
+            // Función para seleccionar y marcar una fila
+            function seleccionarRegistro(id, telar) {
+                registroSeleccionado = {
+                    id: id,
+                    telar: telar
+                };
+                // Imprime el valor en la consola
+                console.log('Registro seleccionado:', registroSeleccionado);
+            }
+
+            // Función para subir registro
+            function moverArriba() {
+                if (!registroSeleccionado) {
+                    alert("Selecciona un registro primero.");
+                    return;
+                }
+                moverRegistro(registroSeleccionado, 'arriba');
+            }
+
+            // Función para bajar registro
+            function moverAbajo() {
+                if (!registroSeleccionado) {
+                    alert("Selecciona un registro primero.");
+                    return;
+                }
+                moverRegistro(registroSeleccionado, 'abajo');
+            }
+
+            // Función que envía la petición al backend
+            function moverRegistro(registro, accion) {
+                fetch('/tejido-scheduling/mover', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        },
+                        body: JSON.stringify({
+                            id: registro.id,
+                            telar: registro.telar,
+                            accion: accion
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.ok) {
+                            location.reload();
+                        } else {
+                            alert(data.error || 'Ocurrió un error al reordenar.');
+                        }
+                    });
+            }
         </script>
     @endpush
 @endsection

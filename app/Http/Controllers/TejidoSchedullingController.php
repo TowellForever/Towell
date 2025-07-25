@@ -572,4 +572,51 @@ class TejidoSchedullingController extends Controller
 
         return redirect()->route('planeacion.index')->with('success', 'Registro actualizado correctamente');
     }
+
+    public function moverRegistro(Request $request)
+    {
+        $id = (int) $request->input('id');
+        $telar = (int) $request->input('telar');
+        $accion = $request->input('accion'); // 'arriba' o 'abajo'
+
+        $registroActual = Planeacion::findOrFail($id);
+
+        // Obtén todos los registros del mismo telar, ordenados por 'orden'
+        $registros = Planeacion::where('Telar', $telar)
+            ->orderBy('orden')
+            ->get();
+
+        $index = $registros->search(function ($item) use ($id) {
+            return $item->id == $id;
+        });
+
+        if ($index === false) {
+            return response()->json(['ok' => false, 'error' => 'No se encontró el registro.']);
+        }
+
+        if ($accion == 'arriba' && $index > 0) {
+            $otro = $registros[$index - 1];
+        } elseif ($accion == 'abajo' && $index < ($registros->count() - 1)) {
+            $otro = $registros[$index + 1];
+        } else {
+            return response()->json(['ok' => false, 'error' => 'No se puede mover más.']);
+        }
+
+        // Intercambiar los valores de 'orden'
+        DB::beginTransaction();
+        try {
+            $tmpOrden = $registroActual->orden;
+            $registroActual->orden = $otro->orden;
+            $otro->orden = $tmpOrden;
+
+            $registroActual->save();
+            $otro->save();
+
+            DB::commit();
+            return response()->json(['ok' => true]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['ok' => false, 'error' => $e->getMessage()]);
+        }
+    }
 }

@@ -193,6 +193,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/Tejido-Scheduling/fechaFin', [TejidoSchedullingController::class, 'calcularFechaFin']);
     Route::get('/Tejido-Scheduling/editar', [TejidoSchedullingController::class, 'editarRegistro']); // formulario de edición para Registros de Planeación
     Route::post('/Tejido-Scheduling/actualizar', [TejidoSchedullingController::class, 'actualizarRegistro'])->name('actualizarRegistro.add');
+    Route::post('/tejido-scheduling/mover', [TejidoSchedullingController::class, 'moverRegistro'])->name('tejido.mover'); //ruta para subir
+
 
 
     // ✅ NUEVAS RUTAS de PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION  PLANEACION
