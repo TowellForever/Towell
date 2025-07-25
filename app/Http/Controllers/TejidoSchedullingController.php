@@ -620,9 +620,9 @@ class TejidoSchedullingController extends Controller
         }
     }
 
+    // MOSTRAMOS VISTA PARA PLAN DE VENTAS, RECUPERAMOS DATA DE LA BD DE TI_PRO
     public function showBlade()
     {
-
         // Conexión a la BD TI_PRO
         $flogs = DB::connection('sqlsrv_ti')->table('TI_PRO.dbo.TWFLOGSTABLE')
             ->select('IDFLOG', 'ESTADOFLOG', 'NAMEPROYECT', 'CUSTNAME')

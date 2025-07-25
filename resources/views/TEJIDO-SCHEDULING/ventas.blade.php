@@ -10,10 +10,10 @@
                 <table class="min-w-full border text-sm text-left bg-white">
                     <thead class="bg-gray-100">
                         <tr>
-                            <th class="px-4 py-2 border">ID Flog</th>
-                            <th class="px-4 py-2 border">Estado</th>
-                            <th class="px-4 py-2 border">Proyecto</th>
-                            <th class="px-4 py-2 border">Cliente</th>
+                            <th class="px-4 py-2 border">ID FLOG</th>
+                            <th class="px-4 py-2 border">ESTADO FLOG</th>
+                            <th class="px-4 py-2 border">PROYECTO</th>
+                            <th class="px-4 py-2 border">NOMBRE DEL CLIENTE</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,14 +36,14 @@
                 <table class="min-w-full border text-sm text-left bg-white">
                     <thead class="bg-gray-100">
                         <tr>
-                            <th class="px-4 py-2 border">Ancho</th>
-                            <th class="px-4 py-2 border">Item ID</th>
-                            <th class="px-4 py-2 border">Nombre</th>
-                            <th class="px-4 py-2 border">Talla</th>
-                            <th class="px-4 py-2 border">Tipo Hilo</th>
-                            <th class="px-4 py-2 border">Valor Agregado</th>
-                            <th class="px-4 py-2 border">Cancelación</th>
-                            <th class="px-4 py-2 border">Por Entregar</th>
+                            <th class="px-4 py-2 border">ANCHO</th>
+                            <th class="px-4 py-2 border">ARTÍCULO</th>
+                            <th class="px-4 py-2 border">NOMBRE</th>
+                            <th class="px-4 py-2 border">TAMAÑO</th>
+                            <th class="px-4 py-2 border">TIPO DE HILO</th>
+                            <th class="px-4 py-2 border">VALOR AGREGADO</th>
+                            <th class="px-4 py-2 border">CANCELACIÓN</th>
+                            <th class="px-4 py-2 border">CANTIDAD</th>
                         </tr>
                     </thead>
                     <tbody>
