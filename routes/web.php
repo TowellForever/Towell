@@ -252,10 +252,9 @@ DELETE | /modelos/{id} | destroy() | modelos.destroy
     Route::post('/chatbot/message', [ChatbotController::class, 'sendMessage']);
 
     //Rutas para importaciones de excel, TEJIDO_SCHEDULING y MODELOS
-
-
     Route::get('/tejido-scheduling/import', [ExcelImportacionesController::class, 'showForm'])->name('tejido.import.form');
     Route::post('/tejido-scheduling/import', [ExcelImportacionesController::class, 'import'])->name('tejido.import');
+    Route::get('/tejido-scheduling/ventas', [TejidoSchedullingController::class, 'showBlade'])->name('tejido.scheduling.ventas');
 
     //RUTAS TEMPORALES
     Route::post('/reportes-temporales', [ReporteTemporalController::class, 'store'])->name('reportes-temporales.store');

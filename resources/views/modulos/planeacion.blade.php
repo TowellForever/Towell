@@ -51,10 +51,16 @@
         <a href="{{ route('modelos.index') }}" class="button-plane-2 rounded-full ml-1 p-1 sm:mt-8">MODELOS 🛠️</a>
 
         <!--<button id="btnEditar" class="button-plane rounded-full ml-1 p-1 sm:mt-8 w-24">EDITAR
-                                                                                                                                                                                                                                                                                                                                                                                                                        🛠️</button>VISTA EDICION y METODO EN CONTROLLER pendientes-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        🛠️</button>VISTA EDICION y METODO EN CONTROLLER pendientes-->
 
-        <button id="btnImportExcel" class="bg-green-500 rounded-full ml-1 p-1 sm:mt-8 button-plane w-24">EXCEL
+        <button id="btnImportExcel"
+            class="bg-green-500 hover:bg-green-300 rounded-full ml-1 p-1 sm:mt-8 button-plane w-24">EXCEL
         </button>
+        <button id="btnCompras"
+            class="bg-yellow-400 hover:bg-yellow-200 rounded-full ml-1 p-1 sm:mt-8 button-plane w-24 text-black">
+            VENTAS
+        </button>
+
 
         <button
             class="w-[40px] h-[40px] rounded-full p-1 items-center justify-center text-2xl hover:bg-blue-100 focus:ring-2 mt-6"
@@ -412,9 +418,9 @@
         });
     </script>
     <!--*******************************************************************************************************************************************************************************************
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        *********************************************************************************************************************************************************************************************-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        *********************************************************************************************************************************************************************************************-->
     <!--SCRIPTS que implentan el funcionamiento de la tabla TIPO DE MOVIMIENTOS, se selecciona un registro, se obtiene el valor de id y con
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
 
     <script>
         let filaSeleccionada = null;
@@ -702,6 +708,11 @@
             window.location.href = "{{ route('tejido.import.form') }}";
         });
     </script>
+    <script>
+        document.getElementById('btnCompras').addEventListener('click', function() {
+            window.location.href = "{{ route('tejido.scheduling.ventas') }}";
+        });
+    </script>
 
     @push('styles')
         <style>
@@ -780,6 +791,7 @@
                 /* Cambio de color en hover */
             }
 
+
             #tablaPlaneacion tbody tr:hover {
                 background-color: #fef08a;
                 /* Amarillo suave */
@@ -850,7 +862,15 @@
             // Función para subir registro
             function moverArriba() {
                 if (!registroSeleccionado) {
-                    alert("Selecciona un registro primero.");
+                    Swal.fire({
+                        title: '¡Atención!',
+                        text: 'Selecciona un registro primero.',
+                        icon: 'warning',
+                        confirmButtonText: 'Entendido',
+                        confirmButtonColor: '#f6c23e',
+                        background: '#fff3cd',
+                        color: '#856404'
+                    });
                     return;
                 }
                 moverRegistro(registroSeleccionado, 'arriba');
@@ -859,7 +879,15 @@
             // Función para bajar registro
             function moverAbajo() {
                 if (!registroSeleccionado) {
-                    alert("Selecciona un registro primero.");
+                    Swal.fire({
+                        title: '¡Atención!',
+                        text: 'Selecciona un registro primero.',
+                        icon: 'warning',
+                        confirmButtonText: 'Entendido',
+                        confirmButtonColor: '#f6c23e',
+                        background: '#fff3cd',
+                        color: '#856404'
+                    });
                     return;
                 }
                 moverRegistro(registroSeleccionado, 'abajo');

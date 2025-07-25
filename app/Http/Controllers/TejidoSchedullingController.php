@@ -619,4 +619,23 @@ class TejidoSchedullingController extends Controller
             return response()->json(['ok' => false, 'error' => $e->getMessage()]);
         }
     }
+
+    public function showBlade()
+    {
+
+        // Conexión a la BD TI_PRO
+        $flogs = DB::connection('sqlsrv_ti')->table('TI_PRO.dbo.TWFLOGSTABLE')
+            ->select('IDFLOG', 'ESTADOFLOG', 'NAMEPROYECT', 'CUSTNAME')
+            ->where('ESTADOFLOG', 4)
+            ->where('TIPOPEDIDO', 1)
+            ->get();
+
+        $lineas = DB::connection('sqlsrv_ti')->table('TI_PRO.dbo.TWFLOGSITEMLINE')
+            ->select('ANCHO', 'ITEMID', 'ITEMNAME', 'INVENTSIZEID', 'TIPOHILOID', 'VALORAGREGADO', 'FECHACANCELACION', 'PORENTREGAR')
+            ->where('ESTADOLINEA', 0)
+            ->where('PORENTREGAR', '!=', 0)
+            ->get();
+
+        return view('TEJIDO-SCHEDULING.ventas', compact('flogs', 'lineas'));
+    }
 }
