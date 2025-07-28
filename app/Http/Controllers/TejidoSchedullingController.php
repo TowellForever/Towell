@@ -189,7 +189,6 @@ class TejidoSchedullingController extends Controller
     public function buscarFlogso(Request $request)
     {
         $query = $request->input('fingered');
-        dd($query);
 
         // 1. Buscar primero en TWFLOGBOMID
         $resultados = DB::connection('sqlsrv_ti')
@@ -622,9 +621,9 @@ class TejidoSchedullingController extends Controller
     }
 
     // MOSTRAMOS VISTA PARA PLAN DE VENTAS, RECUPERAMOS DATA DE LA BD DE TI_PRO
-    public function showBlade()
+    public function showBlade(Request $request)
     {
-        $lineasConFlog = DB::connection('sqlsrv_ti')
+        $query = DB::connection('sqlsrv_ti')
             ->table('TI_PRO.dbo.TWFLOGSITEMLINE as l')
             ->join('TI_PRO.dbo.TWFLOGSTABLE as f', 'l.IDFLOG', '=', 'f.IDFLOG')
             ->select(
@@ -644,16 +643,40 @@ class TejidoSchedullingController extends Controller
             ->where('f.ESTADOFLOG', 4)
             ->where('f.TIPOPEDIDO', 1)
             ->where('l.ESTADOLINEA', 0)
-            ->where('l.PORENTREGAR', '!=', 0)
-            ->groupBy(
-                'f.IDFLOG',
-                'f.ESTADOFLOG',
-                'f.NAMEPROYECT',
-                'f.CUSTNAME'
-            )
+            ->where('l.PORENTREGAR', '!=', 0);
+
+        // 🔍 Aplica filtros si vienen desde el modal
+        $columns = $request->input('column', []);
+        $values = $request->input('value', []);
+
+        foreach ($columns as $i => $col) {
+            $val = $values[$i] ?? null;
+            if ($col && $val) {
+                $query->where($col, 'LIKE', '%' . $val . '%');
+            }
+        }
+
+        $lineasConFlog = $query
+            ->groupBy('f.IDFLOG', 'f.ESTADOFLOG', 'f.NAMEPROYECT', 'f.CUSTNAME')
             ->orderBy('f.IDFLOG')
             ->get();
 
-        return view('TEJIDO-SCHEDULING.ventas', compact('lineasConFlog'));
+        // 👇 esto es para el modal
+        $headers = [
+            'f.IDFLOG',
+            'f.ESTADOFLOG',
+            'f.NAMEPROYECT',
+            'f.CUSTNAME',
+            'l.ANCHO',
+            'l.ITEMID',
+            'l.ITEMNAME',
+            'l.INVENTSIZEID',
+            'l.TIPOHILOID',
+            'l.VALORAGREGADO',
+            'l.FECHACANCELACION',
+            'l.PORENTREGAR'
+        ];
+
+        return view('TEJIDO-SCHEDULING.ventas', compact('lineasConFlog', 'headers'));
     }
 }
