@@ -643,6 +643,12 @@
             sel.addEventListener('change', revisar);
         });
     </script>
+
+    <script>
+        const datosPrecargados = @json($datosPrecargados);
+        console.log("📦 Datos precargados desde la URL:", datosPrecargados);
+    </script>
+
     @push('styles')
         <style>
             #tabla-bloqueo {

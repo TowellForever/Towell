@@ -50,7 +50,8 @@
                                 data-fechacancelacion="{{ $linea->FECHACANCELACION }}"
                                 data-porentregar="{{ $linea->PORENTREGAR }}">
                                 <td class="px-1 py-0.5 border">{{ $linea->IDFLOG }}</td>
-                                <td class="px-1 py-0.5 border">{{ $linea->ESTADOFLOG }}</td>
+                                <td class="px-1 py-0.5 border">{{ $linea->ESTADOFLOG == 4 ? 'Aprobado por finanzas' : '' }}
+                                </td>
                                 <td class="px-1 py-0.5 border">{{ $linea->NAMEPROYECT }}</td>
                                 <td class="px-1 py-0.5 border">{{ $linea->CUSTNAME }}</td>
                                 <td class="px-1 py-0.5 border">{{ decimales($linea->ANCHO) }}</td>
