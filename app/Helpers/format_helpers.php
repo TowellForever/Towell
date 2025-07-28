@@ -9,3 +9,22 @@ if (!function_exists('decimales')) {
         return $valor;
     }
 }
+
+if (!function_exists('formatearFecha')) {
+    function formatearFecha($fecha)
+    {
+        if (empty($fecha)) return '';
+
+        try {
+            $carbon = \Carbon\Carbon::parse($fecha);
+
+            if ($carbon->format('H:i:s') === '00:00:00') {
+                return $carbon->format('d-m-Y'); // año con 4 dígitos
+            } else {
+                return $carbon->format('d-m-Y H:i'); // hora visible si no es cero
+            }
+        } catch (\Exception $e) {
+            return $fecha;
+        }
+    }
+}

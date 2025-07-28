@@ -208,6 +208,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/modelo/detalle', [PlaneacionController::class, 'buscarDetalleModelo'])->name('modelos.detalle'); // ruta pra obtener DETALLES del registro del modelo, de acuerdo con la CLAVE_AX y el NOMBRE_MODELO
     Route::get('/telares/datos', [PlaneacionController::class, 'obtenerDatosTelar'])->name('telares.datos');
 
+
     // Rutas de catálogos
     Route::resource('telares', CatalagoTelarController::class);
     Route::resource('eficiencia', CatalagoEficienciaController::class);

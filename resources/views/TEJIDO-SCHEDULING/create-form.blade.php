@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@php
+    $datosPrecargados = request()->all(); // <-- aquí captamos los datos si vienen por GET
+@endphp
+
 @section('content')
     <div class="mx-auto p-3 bg-white shadow rounded-lg overflow-y-auto max-h-[550px]">
         <div class="relative w-full flex items-center  mb-2">
