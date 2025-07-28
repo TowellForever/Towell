@@ -623,60 +623,65 @@ class TejidoSchedullingController extends Controller
     // MOSTRAMOS VISTA PARA PLAN DE VENTAS, RECUPERAMOS DATA DE LA BD DE TI_PRO
     public function showBlade(Request $request)
     {
-        $query = DB::connection('sqlsrv_ti')
-            ->table('TI_PRO.dbo.TWFLOGSITEMLINE as l')
-            ->join('TI_PRO.dbo.TWFLOGSTABLE as f', 'l.IDFLOG', '=', 'f.IDFLOG')
-            ->select(
-                'f.IDFLOG',
-                'f.ESTADOFLOG',
-                'f.NAMEPROYECT',
-                'f.CUSTNAME',
-                DB::raw('MAX(l.ANCHO) as ANCHO'),
-                DB::raw('MAX(l.ITEMID) as ITEMID'),
-                DB::raw('MAX(l.ITEMNAME) as ITEMNAME'),
-                DB::raw('MAX(l.INVENTSIZEID) as INVENTSIZEID'),
-                DB::raw('MAX(l.TIPOHILOID) as TIPOHILOID'),
-                DB::raw('MAX(l.VALORAGREGADO) as VALORAGREGADO'),
-                DB::raw('MAX(l.FECHACANCELACION) as FECHACANCELACION'),
-                DB::raw('SUM(l.PORENTREGAR) as PORENTREGAR')
-            )
-            ->where('f.ESTADOFLOG', 4)
-            ->where('f.TIPOPEDIDO', 1)
-            ->where('l.ESTADOLINEA', 0)
-            ->where('l.PORENTREGAR', '!=', 0);
+        try {
+            $query = DB::connection('sqlsrv_ti')
+                ->table('TI_PRO.dbo.TWFLOGSITEMLINE as l')
+                ->join('TI_PRO.dbo.TWFLOGSTABLE as f', 'l.IDFLOG', '=', 'f.IDFLOG')
+                ->select(
+                    'f.IDFLOG',
+                    'f.ESTADOFLOG',
+                    'f.NAMEPROYECT',
+                    'f.CUSTNAME',
+                    DB::raw('MAX(l.ANCHO) as ANCHO'),
+                    DB::raw('MAX(l.ITEMID) as ITEMID'),
+                    DB::raw('MAX(l.ITEMNAME) as ITEMNAME'),
+                    DB::raw('MAX(l.INVENTSIZEID) as INVENTSIZEID'),
+                    DB::raw('MAX(l.TIPOHILOID) as TIPOHILOID'),
+                    DB::raw('MAX(l.VALORAGREGADO) as VALORAGREGADO'),
+                    DB::raw('MAX(l.FECHACANCELACION) as FECHACANCELACION'),
+                    DB::raw('SUM(l.PORENTREGAR) as PORENTREGAR')
+                )
+                ->where('f.ESTADOFLOG', 4)
+                ->where('f.TIPOPEDIDO', 1)
+                ->where('l.ESTADOLINEA', 0)
+                ->where('l.PORENTREGAR', '!=', 0);
 
-        // 🔍 Aplica filtros si vienen desde el modal
-        $columns = $request->input('column', []);
-        $values = $request->input('value', []);
+            // 🔍 Aplica filtros si vienen desde el modal
+            $columns = $request->input('column', []);
+            $values = $request->input('value', []);
 
-        foreach ($columns as $i => $col) {
-            $val = $values[$i] ?? null;
-            if ($col && $val) {
-                $query->where($col, 'LIKE', '%' . $val . '%');
+            foreach ($columns as $i => $col) {
+                $val = $values[$i] ?? null;
+                if ($col && $val) {
+                    $query->where($col, 'LIKE', '%' . $val . '%');
+                }
             }
+
+            $lineasConFlog = $query
+                ->groupBy('f.IDFLOG', 'f.ESTADOFLOG', 'f.NAMEPROYECT', 'f.CUSTNAME')
+                ->orderBy('f.IDFLOG')
+                ->get();
+
+            // 👇 esto es para el modal
+            $headers = [
+                'f.IDFLOG'          => 'ID FLOG',
+                'f.ESTADOFLOG'      => 'Estado FLOG',
+                'f.NAMEPROYECT'     => 'Proyecto',
+                'f.CUSTNAME'        => 'Nombre del Cliente',
+                'l.ANCHO'           => 'Ancho',
+                'l.ITEMID'          => 'Artículo',
+                'l.ITEMNAME'        => 'Nombre',
+                'l.INVENTSIZEID'    => 'Tamaño',
+                'l.TIPOHILOID'      => 'Tipo de Hilo',
+                'l.VALORAGREGADO'   => 'Valor Agregado',
+                'l.FECHACANCELACION' => 'Cancelación',
+                'l.PORENTREGAR'     => 'Cantidad',
+            ];
+
+            return view('TEJIDO-SCHEDULING.ventas', compact('lineasConFlog', 'headers'));
+        } catch (\Exception $e) {
+            // Redirige a la misma vista pero con mensaje de error
+            return redirect()->back()->with('error', 'Ocurrió un error al cargar los datos: ' . $e->getMessage());
         }
-
-        $lineasConFlog = $query
-            ->groupBy('f.IDFLOG', 'f.ESTADOFLOG', 'f.NAMEPROYECT', 'f.CUSTNAME')
-            ->orderBy('f.IDFLOG')
-            ->get();
-
-        // 👇 esto es para el modal
-        $headers = [
-            'f.IDFLOG',
-            'f.ESTADOFLOG',
-            'f.NAMEPROYECT',
-            'f.CUSTNAME',
-            'l.ANCHO',
-            'l.ITEMID',
-            'l.ITEMNAME',
-            'l.INVENTSIZEID',
-            'l.TIPOHILOID',
-            'l.VALORAGREGADO',
-            'l.FECHACANCELACION',
-            'l.PORENTREGAR'
-        ];
-
-        return view('TEJIDO-SCHEDULING.ventas', compact('lineasConFlog', 'headers'));
     }
 }

@@ -1,6 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: "{{ session('error') }}",
+                confirmButtonColor: '#3085d6'
+            });
+        </script>
+    @endif
+
     <div class="p-2">
         <div class="-mt-7">
             <div class="relative w-full flex items-center justify-center my-6">
@@ -8,7 +19,7 @@
 
                 <span
                     class="relative z-10 px-4 py-1 bg-white text-gray-800 text-xl font-bold border border-gray-400 rounded-md shadow-sm">
-                    PLAN DE VENTAS
+                    ALTAS DE COMPRAS ESPECIALES
                 </span>
             </div>
             <div class="w-full flex -mt-8 mb-8">
@@ -38,9 +49,10 @@
                             <select name="column[]"
                                 class="form-control p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="">Selecciona una columna</option>
-                                @foreach ($headers as $header)
-                                    <option value="{{ $header }}">{{ $header }}</option>
+                                @foreach ($headers as $key => $header)
+                                    <option value="{{ $key }}">{{ $header }}</option>
                                 @endforeach
+
                             </select>
                             <input type="text" name="value[]"
                                 class="form-control p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -156,7 +168,14 @@
             });
 
             if (seleccionados.length === 0) {
-                alert("Selecciona al menos una fila.");
+                Swal.fire({
+                    icon: 'info',
+                    title: 'ATENCIÓN!',
+                    text: 'Marca la casilla de al menos una fila.',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Entendido'
+                });
+
                 return;
             }
 
@@ -183,8 +202,8 @@
         // Agregar más filtros
         document.getElementById('add-filter').addEventListener('click', function() {
             const newFilter = `
-                <div class="flex gap-4 items-center mt-4 bg-gray-100 p-3 rounded-lg shadow-md">
-                    <select name="column[]" class="form-control p-2 border border-gray-400 rounded-md text-gray-800 focus:ring-2 focus:ring-blue-400">
+                <div class="flex gap-4 items-center bg-gray-300 p-1 rounded-lg shadow-md mt-1">
+                    <select name="column[]" class="form-control p-1 border border-gray-400 rounded-md text-gray-800 focus:ring-2 focus:ring-blue-400">
                         <option value="">Selecciona una columna</option>
                         @foreach ($headers as $header)
                             <option value="{{ $header }}">{{ $header }}</option>
