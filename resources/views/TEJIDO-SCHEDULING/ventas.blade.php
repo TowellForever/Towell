@@ -1,62 +1,54 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="p-6">
-        <h1 class="text-2xl font-bold mb-4">Resumen de Flogs</h1>
+    <div class="p-2">
+        <div class="-mt-7">
+            <div class="relative w-full flex items-center justify-center my-6">
+                <div class="absolute top-1/2 left-0 w-full border-t-8 border-gray-300 z-0"></div>
 
-        <div class="mb-1">
-            <h2 class="text-xl font-semibold mb-2">TWFLOGSTABLE</h2>
-            <div class="max-h-[300px] overflow-y-auto rounded shadow border border-gray-200 bg-white">
-                <table class="min-w-full border text-sm text-left bg-white">
-                    <thead class="bg-gray-100">
-                        <tr>
-                            <th class="px-4 py-2 border">ID FLOG</th>
-                            <th class="px-4 py-2 border">ESTADO FLOG</th>
-                            <th class="px-4 py-2 border">PROYECTO</th>
-                            <th class="px-4 py-2 border">NOMBRE DEL CLIENTE</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($flogs as $f)
-                            <tr class="hover:bg-blue-100 transition-colors duration-150">
-                                <td class="px-4 py-2 border">{{ $f->IDFLOG }}</td>
-                                <td class="px-4 py-2 border">{{ $f->ESTADOFLOG }}</td>
-                                <td class="px-4 py-2 border">{{ $f->NAMEPROYECT }}</td>
-                                <td class="px-4 py-2 border">{{ $f->CUSTNAME }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                <span
+                    class="relative z-10 px-4 py-1 bg-white text-gray-800 text-xl font-bold border border-gray-400 rounded-md shadow-sm">
+                    PLAN DE VENTAS
+                </span>
             </div>
-        </div>
 
-        <div class="mt-6">
-            <h2 class="text-xl font-semibold mb-2">TWFLOGSITEMLINE</h2>
-            <div class="max-h-[300px] overflow-y-auto rounded shadow border border-gray-200 bg-white">
-                <table class="min-w-full border text-sm text-left bg-white">
-                    <thead class="bg-gray-100">
+            <div class="max-h-[500px] overflow-y-auto rounded shadow border border-gray-200 bg-white -mt-4">
+                <table class="min-w-full border text-xs text-left">
+                    <thead class="bg-blue-200">
                         <tr>
-                            <th class="px-4 py-2 border">ANCHO</th>
-                            <th class="px-4 py-2 border">ARTÍCULO</th>
-                            <th class="px-4 py-2 border">NOMBRE</th>
-                            <th class="px-4 py-2 border">TAMAÑO</th>
-                            <th class="px-4 py-2 border">TIPO DE HILO</th>
-                            <th class="px-4 py-2 border">VALOR AGREGADO</th>
-                            <th class="px-4 py-2 border">CANCELACIÓN</th>
-                            <th class="px-4 py-2 border">CANTIDAD</th>
+                            <th class="px-1 py-0.5 border">ID FLOG</th>
+                            <th class="px-1 py-0.5 border">ESTADO FLOG</th>
+                            <th class="px-1 py-0.5 border">PROYECTO</th>
+                            <th class="px-1 py-0.5 border">NOMBRE DEL CLIENTE</th>
+                            <th class="px-1 py-0.5 border">ANCHO</th>
+                            <th class="px-1 py-0.5 border">ARTÍCULO</th>
+                            <th class="px-1 py-0.5 border">NOMBRE</th>
+                            <th class="px-1 py-0.5 border">TAMAÑO</th>
+                            <th class="px-1 py-0.5 border">TIPO DE HILO</th>
+                            <th class="px-1 py-0.5 border">VALOR AGREGADO</th>
+                            <th class="px-1 py-0.5 border">CANCELACIÓN</th>
+                            <th class="px-1 py-0.5 border">CANTIDAD</th>
+                            <th class="px-1 py-0.5 border">SELECCIONAR</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($lineas as $l)
+                        @foreach ($lineasConFlog as $linea)
                             <tr class="hover:bg-blue-100 transition-colors duration-150">
-                                <td class="px-4 py-2 border">{{ $l->ANCHO }}</td>
-                                <td class="px-4 py-2 border">{{ $l->ITEMID }}</td>
-                                <td class="px-4 py-2 border">{{ $l->ITEMNAME }}</td>
-                                <td class="px-4 py-2 border">{{ $l->INVENTSIZEID }}</td>
-                                <td class="px-4 py-2 border">{{ $l->TIPOHILOID }}</td>
-                                <td class="px-4 py-2 border">{{ $l->VALORAGREGADO }}</td>
-                                <td class="px-4 py-2 border">{{ $l->FECHACANCELACION }}</td>
-                                <td class="px-4 py-2 border">{{ $l->PORENTREGAR }}</td>
+                                <td class="px-1 py-0.5 border">{{ $linea->IDFLOG }}</td>
+                                <td class="px-1 py-0.5 border">{{ $linea->ESTADOFLOG }}</td>
+                                <td class="px-1 py-0.5 border">{{ $linea->NAMEPROYECT }}</td>
+                                <td class="px-1 py-0.5 border">{{ $linea->CUSTNAME }}</td>
+                                <td class="px-1 py-0.5 border">{{ $linea->ANCHO }}</td>
+                                <td class="px-1 py-0.5 border">{{ $linea->ITEMID }}</td>
+                                <td class="px-1 py-0.5 border">{{ $linea->ITEMNAME }}</td>
+                                <td class="px-1 py-0.5 border">{{ $linea->INVENTSIZEID }}</td>
+                                <td class="px-1 py-0.5 border">{{ $linea->TIPOHILOID }}</td>
+                                <td class="px-1 py-0.5 border">{{ $linea->VALORAGREGADO }}</td>
+                                <td class="px-1 py-0.5 border">{{ $linea->FECHACANCELACION }}</td>
+                                <td class="px-1 py-0.5 border">{{ $linea->PORENTREGAR }}</td>
+                                <td class="px-1 py-0.5 border">
+                                    <input type="checkbox" class="form-checkbox text-blue-500" />
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>

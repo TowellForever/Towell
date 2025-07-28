@@ -623,19 +623,29 @@ class TejidoSchedullingController extends Controller
     // MOSTRAMOS VISTA PARA PLAN DE VENTAS, RECUPERAMOS DATA DE LA BD DE TI_PRO
     public function showBlade()
     {
-        // Conexión a la BD TI_PRO
-        $flogs = DB::connection('sqlsrv_ti')->table('TI_PRO.dbo.TWFLOGSTABLE')
-            ->select('IDFLOG', 'ESTADOFLOG', 'NAMEPROYECT', 'CUSTNAME')
-            ->where('ESTADOFLOG', 4)
-            ->where('TIPOPEDIDO', 1)
+        $lineasConFlog = DB::connection('sqlsrv_ti')
+            ->table('TI_PRO.dbo.TWFLOGSITEMLINE as l')
+            ->join('TI_PRO.dbo.TWFLOGSTABLE as f', 'l.IDFLOG', '=', 'f.IDFLOG')
+            ->select(
+                'f.IDFLOG',
+                'f.ESTADOFLOG',
+                'f.NAMEPROYECT',
+                'f.CUSTNAME',
+                'l.ANCHO',
+                'l.ITEMID',
+                'l.ITEMNAME',
+                'l.INVENTSIZEID',
+                'l.TIPOHILOID',
+                'l.VALORAGREGADO',
+                'l.FECHACANCELACION',
+                'l.PORENTREGAR'
+            )
+            ->where('f.ESTADOFLOG', 4)
+            ->where('f.TIPOPEDIDO', 1)
+            ->where('l.ESTADOLINEA', 0)
+            ->where('l.PORENTREGAR', '!=', 0)
             ->get();
 
-        $lineas = DB::connection('sqlsrv_ti')->table('TI_PRO.dbo.TWFLOGSITEMLINE')
-            ->select('ANCHO', 'ITEMID', 'ITEMNAME', 'INVENTSIZEID', 'TIPOHILOID', 'VALORAGREGADO', 'FECHACANCELACION', 'PORENTREGAR')
-            ->where('ESTADOLINEA', 0)
-            ->where('PORENTREGAR', '!=', 0)
-            ->get();
-
-        return view('TEJIDO-SCHEDULING.ventas', compact('flogs', 'lineas'));
+        return view('TEJIDO-SCHEDULING.ventas', compact('lineasConFlog'));
     }
 }
