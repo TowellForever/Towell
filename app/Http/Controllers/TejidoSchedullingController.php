@@ -631,19 +631,26 @@ class TejidoSchedullingController extends Controller
                 'f.ESTADOFLOG',
                 'f.NAMEPROYECT',
                 'f.CUSTNAME',
-                'l.ANCHO',
-                'l.ITEMID',
-                'l.ITEMNAME',
-                'l.INVENTSIZEID',
-                'l.TIPOHILOID',
-                'l.VALORAGREGADO',
-                'l.FECHACANCELACION',
-                'l.PORENTREGAR'
+                DB::raw('MAX(l.ANCHO) as ANCHO'),
+                DB::raw('MAX(l.ITEMID) as ITEMID'),
+                DB::raw('MAX(l.ITEMNAME) as ITEMNAME'),
+                DB::raw('MAX(l.INVENTSIZEID) as INVENTSIZEID'),
+                DB::raw('MAX(l.TIPOHILOID) as TIPOHILOID'),
+                DB::raw('MAX(l.VALORAGREGADO) as VALORAGREGADO'),
+                DB::raw('MAX(l.FECHACANCELACION) as FECHACANCELACION'),
+                DB::raw('SUM(l.PORENTREGAR) as PORENTREGAR')
             )
             ->where('f.ESTADOFLOG', 4)
             ->where('f.TIPOPEDIDO', 1)
             ->where('l.ESTADOLINEA', 0)
             ->where('l.PORENTREGAR', '!=', 0)
+            ->groupBy(
+                'f.IDFLOG',
+                'f.ESTADOFLOG',
+                'f.NAMEPROYECT',
+                'f.CUSTNAME'
+            )
+            ->orderBy('f.IDFLOG')
             ->get();
 
         return view('TEJIDO-SCHEDULING.ventas', compact('lineasConFlog'));
