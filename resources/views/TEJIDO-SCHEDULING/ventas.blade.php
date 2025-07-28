@@ -12,6 +12,12 @@
                 </span>
             </div>
             <div class="w-full flex -mt-8 mb-8">
+                <!-- Botón de búsqueda (lupa) -->
+                <button id="search-toggle"
+                    class="w-16 -mt-4 rounded-full text-white bg-transparent hover:bg-white/20 flex items-center justify-center z-[49] relative">
+                    <span style="font-size: 34px;">🔎</span>
+                </button>
+
                 <div class="w-auto ml-auto ">
                     <button id="enviarSeleccionados"
                         class="px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700 transition shadow">
@@ -20,7 +26,7 @@
                 </div>
             </div>
 
-            <div class="max-h-[500px] overflow-y-auto rounded shadow border border-gray-200 bg-white -mt-6">
+            <div class="max-h-[500px] overflow-y-auto rounded shadow border border-gray-200 bg-white -mt-8">
                 <table class="min-w-full border text-xs text-left">
                     <thead class="bg-blue-200">
                         <tr>
@@ -82,7 +88,9 @@
                 const datos = {
                     IDFLOG: fila.dataset.idflog,
                     ITEMID: fila.dataset.itemid,
-                    ITEMNAME: fila.dataset.itemname
+                    ITEMNAME: fila.dataset.itemname,
+                    INVENTSIZEID: fila.dataset.inventsizeid,
+                    CANTIDAD: fila.dataset.porentregar
                     // Agrega los campos que quieras pasar
                 };
                 seleccionados.push(datos);

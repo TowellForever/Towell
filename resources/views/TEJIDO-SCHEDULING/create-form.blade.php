@@ -1,8 +1,10 @@
 @extends('layouts.app')
 
 @php
-    $datosPrecargados = request()->all(); // <-- aquí captamos los datos si vienen por GET
+    $datosPrecargados = request()->all();
+    $idflogSeleccionado = $datosPrecargados['IDFLOG'] ?? '';
 @endphp
+
 
 @section('content')
     <div class="mx-auto p-3 bg-white shadow rounded-lg overflow-y-auto max-h-[550px]">
@@ -22,12 +24,19 @@
             @csrf
 
             <div class="col-span-1 grid grid-cols-1 items-center -mb-1">
-                <label for="no_flog" class="w-20 font-medium text-gray-700">No FLOG:</label>
+                <label for="no_flog" class="w-20 font-medium text-gray-700">NO. FLOG:</label>
                 <select id="no_flog" name="no_flog"
-                    class=" border border-gray-300 rounded px-1 py-0.5 select2-flog no_flog-select">
+                    class="border border-gray-300 rounded px-1 py-0.5 select2-flog no_flog-select">
                     <option value="">-- SELECCIONA --</option>
+
+                    {{-- Si hay valor precargado, lo ponemos como opción activa --}}
+                    @if ($idflogSeleccionado)
+                        <option value="{{ $idflogSeleccionado }}" selected>{{ $idflogSeleccionado }}</option>
+                    @endif
                 </select>
+
             </div>
+
             <div class="flex items-center">
                 <label for="calendario" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CALENDARIO:</label>
                 <select name="calendario" id="calendario"
@@ -303,19 +312,21 @@
         });
     </script>
     <!--FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS FLOGS-->
+
     <script>
-        let dataFlog = null; // almacena los datos encontrados de acuerdo a lo que haya seleccionado el usuario en No. FLOG
+        let dataFlog = null;
+
         $(document).ready(function() {
-            // SELECT2 para No FLOG
+            // Inicializar Select2
             $('#no_flog').select2({
                 placeholder: '-- Ingresa un Flog --',
                 ajax: {
-                    url: '{{ route('flog.buscar') }}', // La nueva ruta que vas a crear
+                    url: '{{ route('flog.buscar') }}',
                     dataType: 'json',
                     delay: 250,
                     data: function(params) {
                         return {
-                            fingered: params.term // término de búsqueda
+                            fingered: params.term
                         };
                     },
                     processResults: function(data) {
@@ -327,36 +338,29 @@
                                     INVENTSIZEID: item.INVENTSIZEID,
                                     text: `${item.IDFLOG} | ${item.ITEMNAME} | ${item.INVENTSIZEID}`,
                                     ITEMID: item.ITEMID,
-
                                 };
                             })
                         };
                     },
                     cache: true
                 },
-                minimumInputLength: 2 // minimo de caracteres a ingresar para realizar la busqueda c:
+                minimumInputLength: 2
             });
-            // Evento al seleccionar un FLOG
-            $('#no_flog').on('select2:select', function(e) {
-                // El objeto seleccionado está en e.params.data
-                let selected = e.params.data;
 
-                // Guarda en la variable global
+            // Al seleccionar un flog
+            $('#no_flog').on('select2:select', function(e) {
+                let selected = e.params.data;
                 dataFlog = {
                     IDFLOG: selected.id,
                     INVENTSIZEID: selected.INVENTSIZEID,
                     ITEMID: selected.ITEMID,
                     ITEMNAME: selected.ITEMNAME
                 };
-            });
-            // 🧠 Cuando el usuario selecciona un FLOGSO, lanzamos la búsqueda y traemos sus datos
-            $('#no_flog').on('select2:select', function(e) {
-                // ... Aquí tu código para asignar dataFlog
+                console.log('EN LA MIRA:', dataFlog.ITEMID);
 
                 if (dataFlog) {
                     console.log('Buscando con:', dataFlog.ITEMID);
 
-                    // Serializa los datos como parámetros de la URL
                     const params = new URLSearchParams({
                         inventsizeid: dataFlog.INVENTSIZEID,
                         itemid: dataFlog.ITEMID,
@@ -375,77 +379,52 @@
                                     background: '#fff',
                                     color: '#333'
                                 }).then(() => {
-                                    location.reload();
+
                                 });
                             } else {
                                 console.log('Modelo encontrado:', data);
-                                // Aquí acomodo los campos como requiera, son los datos que envio el BACK como JSON (registro encontrado en modelos)
-                                $('#trama_0').val(!isNaN(parseFloat(data.Tra)) ? parseFloat(data.Tra)
-                                    .toFixed(2) : '');
 
-                                $('#color_0').val((data.OBS_A_1 ?? ''));
+                                function mostrarBonito(num) {
+                                    let n = parseFloat(num);
+                                    if (isNaN(n)) return '';
+                                    if (Number.isInteger(n)) return n;
+                                    return n.toFixed(2);
+                                }
 
-                                $('#calibre_1').val(!isNaN(parseFloat(data.Hilo_A_1)) ? parseFloat(data
-                                    .Hilo_A_1).toFixed(2) : '');
-
-                                $('#color_1').val((data.OBS_A_2 ?? ''));
-
-                                $('#calibre_2').val(!isNaN(parseFloat(data.Hilo_A_2)) ? parseFloat(data
-                                    .Hilo_A_2).toFixed(2) : '');
-
-                                $('#color_2').val((data.OBS_A_3 ?? ''));
-
-                                $('#calibre_3').val(!isNaN(parseFloat(data.Hilo_A_3)) ? parseFloat(data
-                                    .Hilo_A_3).toFixed(2) : '');
-
-                                $('#color_3').val((data.OBS_A_4 ?? ''));
-
-                                $('#calibre_4').val(!isNaN(parseFloat(data.Hilo_A_4)) ? parseFloat(data
-                                    .Hilo_A_4).toFixed(2) : '');
-
-                                $('#color_4').val((data.OBS_A_5 ?? ''));
-
-                                $('#calibre_5').val(!isNaN(parseFloat(data.Hilo_A_5)) ? parseFloat(data
-                                    .Hilo_A_5).toFixed(2) : '');
-                                $('#color_5').val((data.OBS_R6 ?? ''));
+                                $('#trama_0').val(mostrarBonito(data.Tra));
+                                $('#color_0').val(data.OBS_A_1 ?? '');
+                                $('#calibre_1').val(mostrarBonito(data.Hilo_A_1));
+                                $('#color_1').val(data.OBS_A_2 ?? '');
+                                $('#calibre_2').val(mostrarBonito(data.Hilo_A_2));
+                                $('#color_2').val(data.OBS_A_3 ?? '');
+                                $('#calibre_3').val(mostrarBonito(data.Hilo_A_3));
+                                $('#color_3').val(data.OBS_A_4 ?? '');
+                                $('#calibre_4').val(mostrarBonito(data.Hilo_A_4));
+                                $('#color_4').val(data.OBS_A_5 ?? '');
+                                $('#calibre_5').val(mostrarBonito(data.Hilo_A_5));
+                                $('#color_5').val(data.OBS_R6 ?? '');
 
                                 $('#nombre_modelo').val(String(data.Modelo ?? ''));
                                 $('#clave_ax').val(data.CLAVE_AX);
                                 $('#tamano').val(data.Tamanio_AX);
                                 $('#descripcion').val(data.Nombre_de_Formato_Logistico);
 
-                                //Función para formatear el número
-                                function mostrarBonito(num) {
-                                    // Convierte a número flotante
-                                    let n = parseFloat(num);
-                                    // Si no es número, regresa vacío
-                                    if (isNaN(n)) return '';
-                                    // Si es entero (por ejemplo 5.0), muestra como entero
-                                    if (Number.isInteger(n)) return n;
-                                    // Si tiene decimales, muestra solo 2
-                                    return n.toFixed(2);
-                                }
-
                                 $('#cuenta_rizo').val(mostrarBonito(data.CUENTA));
                                 $('#calibre_rizo').val(mostrarBonito(data.Rizo));
                                 $('#cuenta_pie').val(mostrarBonito(data.CUENTA1));
                                 $('#calibre_pie').val(mostrarBonito(data.Pie));
 
-                                // Fechas
                                 function formatearFecha(fechaBruta) {
                                     if (fechaBruta) {
                                         const fecha = new Date(fechaBruta);
                                         const año = fecha.getFullYear();
-                                        const mes = String(fecha.getMonth() + 1).padStart(2,
-                                            '0'); // Mes de 2 dígitos
-                                        const dia = String(fecha.getDate()).padStart(2,
-                                            '0'); // Día de 2 dígitos
+                                        const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+                                        const dia = String(fecha.getDate()).padStart(2, '0');
                                         return `${año}-${mes}-${dia}`;
                                     }
                                     return '';
                                 }
 
-                                // Aquí guardamos todo el objeto (registro) de MODELOS encontrado
                                 dataModelo = data;
                             }
                         })
@@ -453,20 +432,29 @@
                 }
             });
 
-            /*   $('#no_flog').on('select2:select', function(e) {
-                        const selectedData = e.params.data;
+            // 🚀 Precargar FLOG automáticamente si viene desde la URL
+            @if ($idflogSeleccionado)
+                const valorPreseleccionado = {
+                    id: '{{ $idflogSeleccionado }}',
+                    text: '{{ $idflogSeleccionado }}',
+                    ITEMID: '{{ $datosPrecargados['ITEMID'] ?? '' }}',
+                    ITEMNAME: '{{ $datosPrecargados['ITEMNAME'] ?? '' }}',
+                    INVENTSIZEID: '{{ $datosPrecargados['INVENTSIZEID'] ?? '' }}'
+                };
 
-                        // Extraer y mostrar NAMEPROYECT en el input #descrip - DESCRIPCION DESCRIPCION DESCRIPCION DESCRIPCION DESCRIPCION DESCRIPCION DESCRIPCION DESCRIPCION 
-                        const nameProyect = selectedData.text.split('|')[2]?.trim() || '';
-                        $('#descripcion').val(nameProyect);
+                const newOption = new Option(valorPreseleccionado.text, valorPreseleccionado.id, true, true);
+                $('#no_flog').append(newOption).trigger('change');
 
-                        // También puedes guardar el objeto si deseas usarlo después
-                        dataFlog = selectedData;
-
-                    });*/
-
+                $('#no_flog').trigger({
+                    type: 'select2:select',
+                    params: {
+                        data: valorPreseleccionado
+                    }
+                });
+            @endif
         });
     </script>
+
     <!--STORE script para enviar datos al BACK, seran guardados en TEJIDO_SCHEDULING-->
     <script>
         document.addEventListener("DOMContentLoaded", function() {

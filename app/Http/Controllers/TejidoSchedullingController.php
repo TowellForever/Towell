@@ -189,6 +189,7 @@ class TejidoSchedullingController extends Controller
     public function buscarFlogso(Request $request)
     {
         $query = $request->input('fingered');
+        dd($query);
 
         // 1. Buscar primero en TWFLOGBOMID
         $resultados = DB::connection('sqlsrv_ti')
