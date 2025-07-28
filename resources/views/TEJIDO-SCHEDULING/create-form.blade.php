@@ -3,6 +3,7 @@
 @php
     $datosPrecargados = request()->all();
     $idflogSeleccionado = $datosPrecargados['IDFLOG'] ?? '';
+    $cantidadTotal = $datosPrecargados['CANTIDAD'] ?? '';
 @endphp
 
 
@@ -219,10 +220,12 @@
                                         @endforeach
                                     </select>
                                 </td>
+
                                 <td class="py-1 text-center">
                                     <input type="number" step="0.01" name="cantidad[]"
                                         class="border border-gray-300 rounded px-1 py-0.5 w-20 cantidad-input">
                                 </td>
+
                                 <td class="py-1  text-center">
                                     <input type="datetime-local" name="fecha_inicio[]"
                                         class="border border-gray-300 rounded px-1 py-0.5 w-34" readonly>

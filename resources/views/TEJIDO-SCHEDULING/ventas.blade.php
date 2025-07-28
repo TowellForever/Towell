@@ -68,9 +68,10 @@
                                 <td class="px-1 py-0.5 border">{{ $linea->VALORAGREGADO }}</td>
                                 <td class="px-1 py-0.5 border">{{ formatearFecha($linea->FECHACANCELACION) }}</td>
                                 <td class="px-1 py-0.5 border">{{ decimales($linea->PORENTREGAR) }}</td>
-                                <td class="px-1 py-0.5 border">
-                                    <input type="checkbox" class="form-checkbox text-blue-500 fila-checkbox" />
+                                <td class="text-center align-middle border">
+                                    <input type="checkbox" class="form-checkbox text-blue-500 fila-checkbox w-5 h-5" />
                                 </td>
+
                             </tr>
                         @endforeach
                     </tbody>
