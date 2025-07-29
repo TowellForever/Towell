@@ -623,6 +623,25 @@ class TejidoSchedullingController extends Controller
     // MOSTRAMOS VISTA PARA PLAN DE VENTAS, RECUPERAMOS DATA DE LA BD DE TI_PRO
     public function showBlade(Request $request)
     {
+        // Si NO hay filtros, limpia la sesión y NO uses filtros para la consulta
+        if (!$request->has('column') && !$request->has('value')) {
+            session()->forget('filtros_busqueda');
+            $columns = [];
+            $values = [];
+        } else {
+            // Si hay filtros en request, guárdalos
+            if ($request->has('column') && $request->has('value')) {
+                session()->put('filtros_busqueda', [
+                    'column' => $request->input('column', []),
+                    'value' => $request->input('value', [])
+                ]);
+            }
+            // Usa filtros de request
+            $columns = $request->input('column', []);
+            $values = $request->input('value', []);
+        }
+
+        // Tu consulta aquí, usando SOLO $columns y $values
 
         try {
             $query = DB::connection('sqlsrv_ti')
@@ -647,10 +666,7 @@ class TejidoSchedullingController extends Controller
                 ->where('l.ESTADOLINEA', 0)
                 ->where('l.PORENTREGAR', '!=', 0);
 
-            // 🔍 Aplica filtros si vienen desde el modal
-            $columns = $request->input('column', []);
-            $values = $request->input('value', []);
-
+            // Aplica filtros si los hay
             foreach ($columns as $i => $col) {
                 $val = $values[$i] ?? null;
                 if ($col && $val) {

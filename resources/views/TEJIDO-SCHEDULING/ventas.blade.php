@@ -16,7 +16,6 @@
         <div class="-mt-7">
             <div class="relative w-full flex items-center justify-center my-6">
                 <div class="absolute top-1/2 left-0 w-full border-t-8 border-gray-300 z-0"></div>
-
                 <span
                     class="relative z-10 px-4 py-1 bg-white text-gray-800 text-xl font-bold border border-gray-400 rounded-md shadow-sm">
                     ALTAS DE COMPRAS ESPECIALES
@@ -28,9 +27,9 @@
                     class="w-16 -mt-6 rounded-full text-white bg-transparent hover:bg-white/20 flex items-center justify-center z-[49] relative">
                     <span style="font-size: 40px;">🔎</span>
                 </button>
-                <a href="" id="reset-search"
-                    class="text-xs bg-red-500 ml-1 font-bold rounded-full p-1 h-6">RESTABLECER
-                    BÚSQUEDA </a> <!-- el funcionamiento de este boton se realiza con JS-->
+                <a href="" id="reset-search" class="text-xs bg-red-500 ml-1 font-bold rounded-full p-1 h-6">
+                    RESTABLECER BÚSQUEDA
+                </a>
 
                 <div class="w-auto ml-auto ">
                     <button id="enviarSeleccionados"
@@ -151,6 +150,7 @@
                 </table>
             </div>
         </div>
+
     </div>
 
     <script>
@@ -357,9 +357,9 @@
     </script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            document.getElementById("reset-search").addEventListener("click", function() {
-                window.location.href =
-                    "/tejido-scheduling/ventas"; // 
+            document.getElementById("reset-search").addEventListener("click", function(e) {
+                e.preventDefault(); // <-- esto es CLAVE, evita que siga el href="#"
+                window.location.href = "{{ route('tejido.scheduling.ventas') }}";
             });
         });
     </script>
