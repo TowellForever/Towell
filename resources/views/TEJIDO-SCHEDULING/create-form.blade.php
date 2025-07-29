@@ -5,6 +5,8 @@
     $idflogSeleccionado = $datosPrecargados['IDFLOG'] ?? '';
     $cantidadTotal = $datosPrecargados['CANTIDAD'] ?? '';
     $Hilo = $datosPrecargados['TIPOHILO'] ?? '';
+    $aplicacion = $datosPrecargados['APLICACION'] ?? '';
+    $rasurado = $datosPrecargados['RASURADOCRUDO'] ?? '';
 @endphp
 
 
@@ -72,7 +74,7 @@
                 <label for="aplicacion" class="w-16 font-medium text-gray-700 fs-9 -mb-1">APLICACIÓN:</label>
                 <select name="aplicacion" id="aplicacion"
                     class="w-36 border border-gray-300 rounded px-1 py-0.5 select-alert">
-                    <option value="" disabled selected>Selecciona una opción</option>
+                    <option value="{{ $aplicacion }}">{{ $aplicacion }}</option>
                     <option value="RZ">NO APLICA</option>
                     <option value="RZ">RZ</option>
                     <option value="RZ2">RZ2</option>
@@ -171,11 +173,19 @@
                 <label for="color_5" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 5:</label>
                 <input type="text" name="color_5" id="color_5" class=" border border-gray-300 rounded px-1 py-0.5">
             </div>
+            <div class="flex items-center">
+                <label for="rasurado" class="w-16 font-medium text-gray-700 fs-9 -mb-1">RASURADO:</label>
+                <input type="text" value="{{ $rasurado == 0 ? 'NO' : ($rasurado == 1 || $rasurado == 2 ? 'SI' : '') }}"
+                    readonly class="font-bold">
+            </div>
+            <!-- Tu div flotante de cantidad -->
             @if ($cantidadTotal !== null && $cantidadTotal !== '')
                 <div
-                    class="flex items-center justify-center border-2 border-blue-400 rounded-2xl shadow-lg bg-white p-1 mx-auto my-2 w-fit min-w-[180px]">
+                    class="absolute top-0 left-[300px] mt-2 z-20
+                    border-2 border-blue-400 rounded-2xl shadow-lg bg-white p-1
+                    min-w-[120px] flex items-center justify-center">
                     <label class="font-bold text-blue-700 fs-12 tracking-wide whitespace-nowrap">
-                        CANTIDAD: <span class="text-gray-800">{{ number_format($cantidadTotal, 0, '.', ',') }}</span>
+                        CANTIDAD TOTAL: <span class="text-gray-800">{{ number_format($cantidadTotal, 0, '.', ',') }}</span>
                     </label>
                 </div>
             @endif
