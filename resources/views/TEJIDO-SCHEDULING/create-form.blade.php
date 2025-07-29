@@ -4,6 +4,7 @@
     $datosPrecargados = request()->all();
     $idflogSeleccionado = $datosPrecargados['IDFLOG'] ?? '';
     $cantidadTotal = $datosPrecargados['CANTIDAD'] ?? '';
+    $Hilo = $datosPrecargados['TIPOHILO'] ?? '';
 @endphp
 
 
@@ -103,7 +104,7 @@
                 <label for="hilo" class="w-16 font-medium text-gray-700 fs-9 -mb-1">HILO:</label>
                 <select name="hilo" id="hilo"
                     class="w-36 border border-gray-300 rounded px-1 py-0.5 select-alert">
-                    <option value="" disabled selected>Selecciona una opción</option>
+                    <option value="{{ $Hilo }}">{{ $Hilo }}</option>
                     <option value="H">H</option>
                     <option value="T20 PEINADO">T20 PEINADO</option>
                     <option value="A12">RZ3</option>
@@ -170,6 +171,15 @@
                 <label for="color_5" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 5:</label>
                 <input type="text" name="color_5" id="color_5" class=" border border-gray-300 rounded px-1 py-0.5">
             </div>
+            @if ($cantidadTotal !== null && $cantidadTotal !== '')
+                <div
+                    class="flex items-center justify-center border-2 border-blue-400 rounded-2xl shadow-lg bg-white p-1 mx-auto my-2 w-fit min-w-[180px]">
+                    <label class="font-bold text-blue-700 fs-12 tracking-wide whitespace-nowrap">
+                        CANTIDAD: <span class="text-gray-800">{{ number_format($cantidadTotal, 0, '.', ',') }}</span>
+                    </label>
+                </div>
+            @endif
+
 
             <!-- - - - - - - - - - - -  - - - - - - - - - - DATOS DEL TELAR  -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  - - - - -->
             <div class="col-span-5">

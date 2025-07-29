@@ -33,7 +33,7 @@
 
                 <div class="w-auto ml-auto ">
                     <button id="enviarSeleccionados"
-                        class="px-5 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700 transition shadow">
+                        class="font-bold px-5 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700 transition shadow">
                         Programar
                     </button>
                 </div>
@@ -126,7 +126,8 @@
                                 data-inventsizeid="{{ $linea->INVENTSIZEID }}" data-tipohiloid="{{ $linea->TIPOHILOID }}"
                                 data-valoragregado="{{ $linea->VALORAGREGADO }}"
                                 data-fechacancelacion="{{ $linea->FECHACANCELACION }}"
-                                data-porentregar="{{ $linea->PORENTREGAR }}">
+                                data-porentregar="{{ $linea->PORENTREGAR }}"
+                                data-rasuradocrudo="{{ $linea->RASURADOCRUDO }}">
                                 <td class="px-1 py-0.5 border">{{ $linea->IDFLOG }}</td>
                                 <td class="px-1 py-0.5 border">{{ $linea->ESTADOFLOG == 4 ? 'Aprobado por finanzas' : '' }}
                                 </td>
@@ -139,15 +140,18 @@
                                 <td class="px-1 py-0.5 border">{{ $linea->TIPOHILOID }}</td>
                                 <td class="px-1 py-0.5 border">{{ $linea->VALORAGREGADO }}</td>
                                 <td class="px-1 py-0.5 border">{{ formatearFecha($linea->FECHACANCELACION) }}</td>
-                                <td class="px-1 py-0.5 border">{{ decimales($linea->PORENTREGAR) }}</td>
+                                <td class="px-1 py-0.5 border font-semibold">
+                                    {{ number_format($linea->PORENTREGAR, 0, '.', ',') }}</td>
                                 <td class="text-center align-middle border">
                                     <input type="checkbox" class="form-checkbox text-blue-500 fila-checkbox w-5 h-5" />
                                 </td>
 
                             </tr>
                         @endforeach
+
                     </tbody>
                 </table>
+
             </div>
         </div>
 
@@ -164,8 +168,10 @@
                     ITEMID: fila.dataset.itemid,
                     ITEMNAME: fila.dataset.itemname,
                     INVENTSIZEID: fila.dataset.inventsizeid,
-                    CANTIDAD: fila.dataset.porentregar
-                    // Agrega los campos que quieras pasar
+                    CANTIDAD: fila.dataset.porentregar,
+                    RASURADOCRUDO: fila.dataset.rasuradocrudo,
+                    TIPOHILO: fila.dataset.tipohiloid,
+                    // Agrega los campos que quieras pasar, para lograr agregarlo aqui, antes debe colar en TR:   data-rasuradocrudo="{{ $linea->RASURADOCRUDO }}"
                 };
                 seleccionados.push(datos);
             });
@@ -360,6 +366,23 @@
             document.getElementById("reset-search").addEventListener("click", function(e) {
                 e.preventDefault(); // <-- esto es CLAVE, evita que siga el href="#"
                 window.location.href = "{{ route('tejido.scheduling.ventas') }}";
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Selecciona todos los checkboxes de la clase que uso
+            const checkboxes = document.querySelectorAll('.fila-checkbox');
+
+            checkboxes.forEach(function(checkbox) {
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        // Cuando uno se selecciona, desmarca todos los demás
+                        checkboxes.forEach(cb => {
+                            if (cb !== this) cb.checked = false;
+                        });
+                    }
+                });
             });
         });
     </script>

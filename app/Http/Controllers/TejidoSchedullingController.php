@@ -659,7 +659,8 @@ class TejidoSchedullingController extends Controller
                     DB::raw('MAX(l.TIPOHILOID) as TIPOHILOID'),
                     DB::raw('MAX(l.VALORAGREGADO) as VALORAGREGADO'),
                     DB::raw('MAX(l.FECHACANCELACION) as FECHACANCELACION'),
-                    DB::raw('SUM(l.PORENTREGAR) as PORENTREGAR')
+                    DB::raw('SUM(l.PORENTREGAR) as PORENTREGAR'),
+                    DB::raw('MAX(l.RASURADOCRUDO) as RASURADOCRUDO')
                 )
                 ->where('f.ESTADOFLOG', 4)
                 ->where('f.TIPOPEDIDO', 1)
@@ -676,8 +677,9 @@ class TejidoSchedullingController extends Controller
 
             $lineasConFlog = $query
                 ->groupBy('f.IDFLOG', 'f.ESTADOFLOG', 'f.NAMEPROYECT', 'f.CUSTNAME')
-                ->orderBy('f.IDFLOG')
+                ->orderBy('FECHACANCELACION')
                 ->get();
+
 
             // 👇 esto es para el modal
             $headers = [
