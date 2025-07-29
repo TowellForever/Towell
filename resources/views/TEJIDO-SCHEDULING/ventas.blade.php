@@ -97,7 +97,7 @@
                     </div>
                 @endif
 
-                <table class="min-w-full border text-xs text-left">
+                <table class="min-w-full border text-xs text-left ordenable">
                     <thead class="bg-blue-200">
                         <tr>
                             <th class="px-1 py-0.5 border">ID FLOG</th>
@@ -225,4 +225,133 @@
             button.parentElement.remove();
         }
     </script>
+
+    <!-- SCRIPT para filtros de ordenación ASC o DESC en cada columna-->
+    <script>
+        // Configura el tipo de dato para cada columna (ajusta según tu tabla)
+        const tipoColumna = [
+            'idflog', // 0 IDFLOG (por mes natural)
+            'texto', // 1 ESTADO FLOG
+            'texto', // 2 PROYECTO
+            'texto', // 3 NOMBRE DEL CLIENTE
+            'numero', // 4 ANCHO
+            'texto', // 5 ARTÍCULO
+            'texto', // 6 NOMBRE
+            'texto', // 7 TAMAÑO
+            'texto', // 8 TIPO DE HILO
+            'texto', // 9 VALOR AGREGADO
+            'fecha', // 10 CANCELACIÓN
+            'numero', // 11 CANTIDAD
+            'ninguno' // 12 SELECCIONAR
+        ];
+
+        function parseFecha(str) {
+            if (!str) return null;
+            str = str.replace(/-/g, '/');
+            let partes = str.split('/');
+            if (partes.length === 3) {
+                if (partes[2].length === 4) { // dd/mm/yyyy
+                    return new Date(partes[2], partes[1] - 1, partes[0]);
+                } else if (partes[0].length === 4) { // yyyy/mm/dd
+                    return new Date(partes[0], partes[1] - 1, partes[2]);
+                }
+            }
+            let fecha = new Date(str);
+            return isNaN(fecha) ? null : fecha;
+        }
+
+        // --- FUNCIONES ESPECIALES PARA IDFLOG ---
+        function mesIndexEnID(idflog) {
+            const meses = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
+            const match = idflog.match(/-([A-Z]{3})\d{2}-/i);
+            if (!match) return -1;
+            return meses.indexOf(match[1].toUpperCase());
+        }
+
+        function anioEnID(idflog) {
+            const match = idflog.match(/-[A-Z]{3}(\d{2})-/i);
+            if (!match) return -1;
+            // Puedes sumar 2000 si quieres año completo: return 2000 + parseInt(match[1], 10);
+            return parseInt(match[1], 10);
+        }
+        // --- FIN FUNCIONES ESPECIALES ---
+
+        function ordenarTabla(th, columnaIndex) {
+            const tabla = th.closest('table');
+            const tbody = tabla.querySelector('tbody');
+            const filas = Array.from(tbody.querySelectorAll('tr'));
+            const ascendente = th.dataset.orden !== 'asc';
+
+            // Limpiar iconos y orden
+            tabla.querySelectorAll('th').forEach(header => {
+                header.dataset.orden = '';
+                header.innerHTML = header.innerHTML.replace(' 🔼', '').replace(' 🔽', '');
+            });
+
+            th.dataset.orden = ascendente ? 'asc' : 'desc';
+            th.innerHTML += ascendente ? ' 🔼' : ' 🔽';
+
+            filas.sort((a, b) => {
+                let aTexto = a.children[columnaIndex]?.innerText.trim() || '';
+                let bTexto = b.children[columnaIndex]?.innerText.trim() || '';
+                const tipo = tipoColumna[columnaIndex] || 'texto';
+
+                if (tipo === 'idflog') {
+                    // Ordena primero por año, luego mes, luego texto
+                    let anioA = anioEnID(aTexto),
+                        anioB = anioEnID(bTexto);
+                    if (anioA !== anioB) return ascendente ? anioA - anioB : anioB - anioA;
+                    let mesA = mesIndexEnID(aTexto),
+                        mesB = mesIndexEnID(bTexto);
+                    if (mesA !== mesB) return ascendente ? mesA - mesB : mesB - mesA;
+                    return ascendente ?
+                        aTexto.localeCompare(bTexto, undefined, {
+                            sensitivity: 'base'
+                        }) :
+                        bTexto.localeCompare(aTexto, undefined, {
+                            sensitivity: 'base'
+                        });
+                }
+                if (tipo === 'numero') {
+                    let aNum = parseFloat(aTexto.replace(',', '').replace(/[^0-9.\-]/g, '')) || 0;
+                    let bNum = parseFloat(bTexto.replace(',', '').replace(/[^0-9.\-]/g, '')) || 0;
+                    return ascendente ? aNum - bNum : bNum - aNum;
+                }
+                if (tipo === 'fecha') {
+                    let aFecha = parseFecha(aTexto);
+                    let bFecha = parseFecha(bTexto);
+                    if (!aFecha && !bFecha) return 0;
+                    if (!aFecha) return ascendente ? 1 : -1;
+                    if (!bFecha) return ascendente ? -1 : 1;
+                    return ascendente ? aFecha - bFecha : bFecha - aFecha;
+                }
+                if (tipo === 'texto') {
+                    return ascendente ?
+                        aTexto.localeCompare(bTexto, undefined, {
+                            sensitivity: 'base'
+                        }) :
+                        bTexto.localeCompare(aTexto, undefined, {
+                            sensitivity: 'base'
+                        });
+                }
+                return 0;
+            });
+
+            tbody.innerHTML = '';
+            filas.forEach(fila => tbody.appendChild(fila));
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('table.ordenable thead th').forEach((th, idx) => {
+                th.style.cursor = 'pointer';
+                if (tipoColumna[idx] !== 'ninguno') {
+                    th.addEventListener('click', function() {
+                        ordenarTabla(th, idx);
+                    });
+                }
+            });
+        });
+    </script>
+
+
 @endsection
