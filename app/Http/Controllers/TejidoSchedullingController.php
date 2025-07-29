@@ -623,6 +623,7 @@ class TejidoSchedullingController extends Controller
     // MOSTRAMOS VISTA PARA PLAN DE VENTAS, RECUPERAMOS DATA DE LA BD DE TI_PRO
     public function showBlade(Request $request)
     {
+
         try {
             $query = DB::connection('sqlsrv_ti')
                 ->table('TI_PRO.dbo.TWFLOGSITEMLINE as l')

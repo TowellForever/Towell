@@ -28,6 +28,9 @@
                     class="w-16 -mt-6 rounded-full text-white bg-transparent hover:bg-white/20 flex items-center justify-center z-[49] relative">
                     <span style="font-size: 40px;">🔎</span>
                 </button>
+                <a href="" id="reset-search"
+                    class="text-xs bg-red-500 ml-1 font-bold rounded-full p-1 h-6">RESTABLECER
+                    BÚSQUEDA </a> <!-- el funcionamiento de este boton se realiza con JS-->
 
                 <div class="w-auto ml-auto ">
                     <button id="enviarSeleccionados"
@@ -352,6 +355,13 @@
             });
         });
     </script>
-
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("reset-search").addEventListener("click", function() {
+                window.location.href =
+                    "/tejido-scheduling/ventas"; // 
+            });
+        });
+    </script>
 
 @endsection
