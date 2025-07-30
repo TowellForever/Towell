@@ -26,7 +26,6 @@
         <form id="form-planeacion" action="{{ route('planeacion.store') }}" method="POST"
             class="grid grid-cols-5 gap-x-8 gap-y-4 fs-11">
             @csrf
-
             <div class="col-span-1 grid grid-cols-1 items-center -mb-1 ">
                 <label for="no_flog" class="w-20 font-medium text-gray-700">NO. FLOG:</label>
                 <select id="no_flog" name="no_flog "
@@ -44,12 +43,12 @@
                 <label for="calendario" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CALENDARIO:</label>
                 <select name="calendario" id="calendario"
                     class="w-36 border border-gray-300 rounded px-1 py-0.5 select-alert arribaAbajo">
-                    <option value="" disabled selected>Selecciona una opción</option>
                     <option value="Calendario Tej1">Calendario Tej1</option><!-- toma en cuenta TODOS los días-->
-                    <option value="Calendario Tej2">Calendario Tej2 </option><!-- NO toma en cuenta domingos-->
+                    <option value="Calendario Tej2" selected>Calendario Tej2 </option><!-- NO toma en cuenta domingos-->
                     <option value="Calendario Tej3">Calendario Tej3 </option>
                     <!-- No toma en cuenta domingos y sabados solo toma en cuenta hasta las 18:29-->
                 </select>
+
             </div>
             <div class="flex items-center">
                 <label for="cuenta_pie" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CUENTA PIE:</label>
@@ -347,6 +346,7 @@
 
     <script>
         let dataFlog = null;
+        let flogCayente = @json($idflogSeleccionado);
 
         $(document).ready(function() {
             // Inicializar Select2
@@ -405,13 +405,15 @@
                                 Swal.fire({
                                     icon: 'warning',
                                     title: 'NO ENCONTRADO',
-                                    text: 'Lo sentimos, no se ha encontrado el modelo con esos datos.',
+                                    text: 'Lo sentimos, no se ha encontrado el modelo ' +
+                                        flogCayente + '.',
                                     confirmButtonText: 'Entendido',
                                     confirmButtonColor: '#3085d6',
                                     background: '#fff',
                                     color: '#333'
                                 }).then(() => {
-
+                                    window.location.href =
+                                        "{{ route('tejido.scheduling.ventas') }}";
                                 });
                             } else {
                                 console.log('Modelo encontrado:', data);
