@@ -549,6 +549,23 @@ class PlaneacionController extends Controller
         ]);
       }
     }
+
+    // Paso 1: Busca los dos registros con Ultimo = 'ULTIMO' de ese Telar
+    $registros = DB::table('TEJIDO_SCHEDULING')
+      ->where('Telar', $nuevoRegistro->Telar) // Ajusta si tu campo es distinto
+      ->where('Ultimo', 'ULTIMO')
+      ->orderBy('Inicio_Tejido', 'asc') // O el campo de fecha que uses
+      ->get();
+
+    // Paso 2: Si hay más de 1, toma el que tiene la fecha menor
+    if ($registros->count() > 1) {
+      $registroFechaMenor = $registros->first(); // ya están ordenados ascendente
+      // Paso 3: Actualiza ese registro a NULL
+      DB::table('TEJIDO_SCHEDULING')
+        ->where('id', $registroFechaMenor->id)
+        ->update(['Ultimo' => null]);
+    }
+
     return redirect()->route('planeacion.index')->with('success', 'Registro guardado correctamente');
   }
 

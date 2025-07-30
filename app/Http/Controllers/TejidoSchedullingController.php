@@ -40,17 +40,9 @@ class TejidoSchedullingController extends Controller
         $registro = DB::table('TEJIDO_SCHEDULING')
             ->where('Telar', $telar)
             ->where('Ultimo', 'ULTIMO')
-            ->where('id', '>', 122)
             ->first();
 
-        if ($registro) {
-            // Si existe, actualizamos el campo Ultimo a null
-            DB::table('TEJIDO_SCHEDULING')
-                ->where('id', $registro->id) // usa el id para asegurarte que solo ese registro cambia
-                ->update(['Ultimo' => null]);
-        }
-
-        return response()->json($registro); // Te regresa el registro (ya sin ULTIMO)
+        return response()->json($registro); // Te regresa el registro 
     }
 
     public function calcularFechaFin(Request $request)
