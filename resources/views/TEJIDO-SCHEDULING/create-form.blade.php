@@ -27,10 +27,10 @@
             class="grid grid-cols-5 gap-x-8 gap-y-4 fs-11">
             @csrf
 
-            <div class="col-span-1 grid grid-cols-1 items-center -mb-1">
+            <div class="col-span-1 grid grid-cols-1 items-center -mb-1 ">
                 <label for="no_flog" class="w-20 font-medium text-gray-700">NO. FLOG:</label>
-                <select id="no_flog" name="no_flog"
-                    class="border border-gray-300 rounded px-1 py-0.5 select2-flog no_flog-select">
+                <select id="no_flog" name="no_flog "
+                    class="border border-gray-300 rounded px-1 py-0.5 select2-flog no_flog-select arribaAbajo">
                     <option value="">-- SELECCIONA --</option>
 
                     {{-- Si hay valor precargado, lo ponemos como opción activa --}}
@@ -38,13 +38,12 @@
                         <option value="{{ $idflogSeleccionado }}" selected>{{ $idflogSeleccionado }}</option>
                     @endif
                 </select>
-
             </div>
 
             <div class="flex items-center">
                 <label for="calendario" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CALENDARIO:</label>
                 <select name="calendario" id="calendario"
-                    class="w-36 border border-gray-300 rounded px-1 py-0.5 select-alert">
+                    class="w-36 border border-gray-300 rounded px-1 py-0.5 select-alert arribaAbajo">
                     <option value="" disabled selected>Selecciona una opción</option>
                     <option value="Calendario Tej1">Calendario Tej1</option><!-- toma en cuenta TODOS los días-->
                     <option value="Calendario Tej2">Calendario Tej2 </option><!-- NO toma en cuenta domingos-->
@@ -54,26 +53,28 @@
             </div>
             <div class="flex items-center">
                 <label for="cuenta_pie" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CUENTA PIE:</label>
-                <input type="number" name="cuenta_pie" id="cuenta_pie" class=" border border-gray-300 rounded px-1 py-0.5">
+                <input type="number" name="cuenta_pie" id="cuenta_pie"
+                    class=" border border-gray-300 rounded px-1 py-0.5 arribaAbajo">
             </div>
             <div class="flex items-center">
                 <label for="calibre_1" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 1:</label>
                 <input type="number" step="0.01" name="calibre_1" id="calibre_1"
-                    class=" border border-gray-300 rounded px-1 py-0.5">
+                    class=" border border-gray-300 rounded px-1 py-0.5 arribaAbajo">
             </div>
             <div class="flex items-center">
                 <label for="color_3" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 3:</label>
-                <input type="text" name="color_3" id="color_3" class=" border border-gray-300 rounded px-1 py-0.5">
+                <input type="text" name="color_3" id="color_3"
+                    class=" border border-gray-300 rounded px-1 py-0.5 arribaAbajo">
             </div>
             <div class="flex items-center">
                 <label for="descripcion" class="w-16 font-medium text-gray-700 fs-9 -mb-1">DESCRIPCIÓN:</label>
                 <input type="text" name="descripcion" id="descripcion"
-                    class=" border border-gray-300 rounded px-1 py-0.5">
+                    class=" border border-gray-300 rounded px-1 py-0.5 arribaAbajo">
             </div>
             <div class="flex items-center">
                 <label for="aplicacion" class="w-16 font-medium text-gray-700 fs-9 -mb-1">APLICACIÓN:</label>
                 <select name="aplicacion" id="aplicacion"
-                    class="w-36 border border-gray-300 rounded px-1 py-0.5 select-alert">
+                    class="w-36 border border-gray-300 rounded px-1 py-0.5 select-alert arribaAbajo">
                     <option value="{{ $aplicacion }}">{{ $aplicacion }}</option>
                     <option value="RZ">NO APLICA</option>
                     <option value="RZ">RZ</option>
@@ -87,25 +88,27 @@
             <div class="flex items-center">
                 <label for="calibre_pie" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CALIRBE PIE:</label>
                 <input type="number" step="0.01" name="calibre_pie" id="calibre_pie"
-                    class=" border border-gray-300 rounded px-1 py-0.5">
+                    class=" border border-gray-300 rounded px-1 py-0.5 arribaAbajo">
             </div>
             <div class="flex items-center">
                 <label for="color_1" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 1:</label>
-                <input type="text" name="color_1" id="color_1" class=" border border-gray-300 rounded px-1 py-0.5">
+                <input type="text" name="color_1" id="color_1"
+                    class=" border border-gray-300 rounded px-1 py-0.5 arribaAbajo">
             </div>
             <div class="flex items-center">
                 <label for="calibre_4" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 4:</label>
                 <input type="number" step="0.01" name="calibre_4" id="calibre_4"
-                    class=" border border-gray-300 rounded px-1 py-0.5">
+                    class=" border border-gray-300 rounded px-1 py-0.5 arribaAbajo">
             </div>
             <div class="flex items-center">
                 <label for="clave_ax" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CLAVE AX:</label>
-                <input type="text" name="clave_ax" id="clave_ax" class="border rounded px-1 py-0.5 -mb-1" required>
+                <input type="text" name="clave_ax" id="clave_ax" class="border rounded px-1 py-0.5 -mb-1 arribaAbajo"
+                    required>
             </div>
             <div class="flex items-center">
                 <label for="hilo" class="w-16 font-medium text-gray-700 fs-9 -mb-1">HILO:</label>
                 <select name="hilo" id="hilo"
-                    class="w-36 border border-gray-300 rounded px-1 py-0.5 select-alert">
+                    class="w-36 border border-gray-300 rounded px-1 py-0.5 select-alert arribaAbajo">
                     <option value="{{ $Hilo }}">{{ $Hilo }}</option>
                     <option value="H">H</option>
                     <option value="T20 PEINADO">T20 PEINADO</option>
@@ -121,62 +124,68 @@
             <div class="flex items-center">
                 <label for="calibre_2" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 2:</label>
                 <input type="number" step="0.01" name="calibre_2" id="calibre_2"
-                    class=" border border-gray-300 rounded px-1 py-0.5">
+                    class=" border border-gray-300 rounded px-1 py-0.5 arribaAbajo">
             </div>
             <div class="flex items-center">
                 <label for="color_4" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 4:</label>
-                <input type="text" name="color_4" id="color_4" class=" border border-gray-300 rounded px-1 py-0.5">
+                <input type="text" name="color_4" id="color_4"
+                    class=" border border-gray-300 rounded px-1 py-0.5 arribaAbajo">
             </div>
             <div class="flex items-center">
                 <label for="nombre_modelo" class="w-16 font-medium text-gray-700 fs-9 -mb-1">NOMBRE MODELO:</label>
                 <input type="text" id="nombre_modelo" name="nombre_modelo"
-                    class=" border border-gray-300 rounded px-1 py-0.5" readonly>
+                    class=" border border-gray-300 rounded px-1 py-0.5 arribaAbajo" readonly>
             </div>
             <div class="flex items-center">
                 <label for="cuenta_rizo" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CUENTA RIZO:</label>
                 <input type="number" name="cuenta_rizo" id="cuenta_rizo"
-                    class=" border border-gray-300 rounded px-1 py-0.5">
+                    class=" border border-gray-300 rounded px-1 py-0.5 arribaAbajo">
             </div>
             <div class="flex items-center">
                 <label for="trama_0" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA:</label>
                 <input type="number" step="0.01" name="trama_0" id="trama_0"
-                    class=" border border-gray-300 roundedpx-1 py-0.5">
+                    class=" border border-gray-300 roundedpx-1 py-0.5 arribaAbajo">
             </div>
             <div class="flex items-center">
                 <label for="color_2" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 2:</label>
-                <input type="text" name="color_2" id="color_2" class=" border border-gray-300 rounded px-1 py-0.5">
+                <input type="text" name="color_2" id="color_2"
+                    class=" border border-gray-300 rounded px-1 py-0.5 arribaAbajo">
             </div>
             <div class="flex items-center">
                 <label for="calibre_5" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 5:</label>
                 <input type="number" step="0.01" name="calibre_5" id="calibre_5"
-                    class=" border border-gray-300 rounded px-1 py-0.5">
+                    class=" border border-gray-300 rounded px-1 py-0.5 arribaAbajo">
             </div>
             <div class="flex items-center">
                 <label for="tamano" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TAMAÑO:</label>
-                <input type="text" name="tamano" id="tamano" class="border rounded px-1 py-0.5 -mb-1" required>
+                <input type="text" name="tamano" id="tamano" class="border rounded px-1 py-0.5 -mb-1 arribaAbajo"
+                    required>
             </div>
             <div class="flex items-center">
-                <label for="calibre_rizo" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CALIBRE RIZO:</label>
+                <label for="calibre_rizo" class="w-16 font-medium text-gray-700 fs-9 -mb-1">CALIBRE
+                    RIZO:</label>
                 <input type="number" step="0.01" name="calibre_rizo" id="calibre_rizo"
-                    class=" border border-gray-300 rounded px-1 py-0.5">
+                    class=" border border-gray-300 rounded px-1 py-0.5 arribaAbajo">
             </div>
             <div class="flex items-center">
                 <label for="color_0" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR:</label>
-                <input type="text" name="color_0" id="color_0" class=" border border-gray-300 rounded px-1 py-0.5">
+                <input type="text" name="color_0" id="color_0"
+                    class=" border border-gray-300 rounded px-1 py-0.5 arribaAbajo">
             </div>
             <div class="flex items-center">
                 <label for="calibre_3" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 3:</label>
                 <input type="number" step="0.01" name="calibre_3" id="calibre_3"
-                    class=" border border-gray-300 rounded px-1 py-0.5">
+                    class=" border border-gray-300 rounded px-1 py-0.5 arribaAbajo">
             </div>
             <div class="flex items-center">
                 <label for="color_5" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 5:</label>
-                <input type="text" name="color_5" id="color_5" class=" border border-gray-300 rounded px-1 py-0.5">
+                <input type="text" name="color_5" id="color_5"
+                    class=" border border-gray-300 rounded px-1 py-0.5 arribaAbajo">
             </div>
             <div class="flex items-center">
                 <label for="rasurado" class="w-16 font-medium text-gray-700 fs-9 -mb-1">RASURADO:</label>
                 <input type="text" value="{{ $rasurado == 0 ? 'NO' : ($rasurado == 1 || $rasurado == 2 ? 'SI' : '') }}"
-                    readonly class="font-bold">
+                    readonly class="font-bold arribaAbajo">
             </div>
             <!-- Tu div flotante de cantidad -->
             @if ($cantidadTotal !== null && $cantidadTotal !== '')
@@ -659,6 +668,48 @@
         const datosPrecargados = @json($datosPrecargados);
         console.log("📦 Datos precargados desde la URL:", datosPrecargados);
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const campos = Array.from(document.querySelectorAll('#form-planeacion .arribaAbajo'));
+            const cols = 5; // Número de columnas de tu grid
+            const rows = Math.ceil(campos.length / cols);
+
+            campos.forEach((campo, i) => {
+                campo.addEventListener('keydown', function(e) {
+                    // Enter o Tab
+                    if ((e.key === 'Enter' || e.key === 'Tab') && !e.shiftKey) {
+                        e.preventDefault();
+
+                        // Cálculo de fila y columna actuales
+                        let filaActual = Math.floor(i / cols);
+                        let colActual = i % cols;
+
+                        // Última fila de la columna
+                        if (filaActual === rows - 1 || i + cols >= campos.length) {
+                            // Si NO es la última columna, ve al primer input de la siguiente columna
+                            if (colActual < cols - 1) {
+                                let nextIndex = (colActual + 1);
+                                if (nextIndex < campos.length) {
+                                    campos[nextIndex].focus();
+                                }
+                            } else {
+                                // Opcional: si quieres que al llegar a la última columna haga algo más (como volver al principio)
+                                // campos[0].focus();
+                            }
+                        } else {
+                            // Baja a la celda de abajo (misma columna)
+                            let nextIndex = i + cols;
+                            if (nextIndex < campos.length) {
+                                campos[nextIndex].focus();
+                            }
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
 
     @push('styles')
         <style>
