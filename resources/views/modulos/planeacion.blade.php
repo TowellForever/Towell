@@ -29,13 +29,14 @@
         </button>
         <!--SEGUNDO CONTENEDOR para botones-->
         <!-- Botones alineados a la derecha -->
-        <a href="" id="reset-search" class=" bg-red-500 ml-1 rounded-full p-1  sm:mt-8 flex">RESTABLECER
-            BÚSQUEDA </a> <!-- el funcionamiento de este boton se realiza con JS-->
+        <a href="" id="reset-search"
+            class="text-xs bg-red-500 ml-1 rounded-full  sm:mt-8 flex font-bold px-4 py-2">RESTABLECER
+            BÚSQUEDA 🧹</a> <!-- el funcionamiento de este boton se realiza con JS-->
 
-        <div class=" bg-gray-500 ml-1 rounded-full p-1 sm:mt-8 relative">
+        <div class=" bg-blue-500 ml-1 rounded-full p-1 sm:mt-8 relative">
             <button id="btnCatalogos"
-                class=" text-white font-bold px-4 py-1 rounded-md shadow hover:bg-gray-700 transition-all duration-200 cursor-pointer text-xs">
-                CATÁLOGOS
+                class=" text-white font-bold px-4 py-1 rounded-md shadow hover:bg-blue-700 transition-all duration-200 cursor-pointer text-xs">
+                CATÁLOGOS 📚
             </button>
             <div id="menuCatalogos"
                 class="hidden absolute bg-white border border-gray-300 mt-1 w-40 rounded-md shadow-lg z-[99] transition transform scale-95 opacity-0"
@@ -52,30 +53,27 @@
                 <a href="{{ route('planeacion.aplicaciones') }}"
                     class="button-plane rounded-full ml-2 p-1 mt-1">APLICACIONES
                     🧩</a>
+                <a href="{{ route('modelos.index') }}" class="button-plane-2 rounded-full ml-1 p-1 mt-1">MODELOS 🛠️</a>
             </div>
         </div>
 
-        <button id="btnUnico" class="button-plane rounded-full ml-1 p-1 sm:mt-8 w-32">NUEVO REGISTRO 📝</button>
-
-        <a href="{{ route('modelos.index') }}" class="button-plane-2 rounded-full ml-1 p-1 sm:mt-8">MODELOS 🛠️</a>
-
-        <button id="btnEditar"
-            class="button-plane rounded-full ml-1 p-1 sm:mt-8 w-24">EDITAR🛠️</button><!--VISTA EDICION y METODO EN CONTROLLER pendientes-->
-        <button id="btnImportExcel"
-            class="bg-green-500 hover:bg-green-300 rounded-full ml-1 p-1 sm:mt-8 button-plane w-24">EXCEL
-        </button>
-
-        <div class=" bg-yellow-500 ml-1 rounded-full p-1 sm:mt-8 relative">
-            <button id="btnCE"
-                class=" text-white font-bold px-4 py-1 rounded-md shadow hover:bg-yellow-700 transition-all duration-200 cursor-pointer text-xs">
-                COMPRAS ESPECIALES
+        <div class=" bg-green-500 ml-1 rounded-full p-1 sm:mt-8 relative">
+            <button id="btnNuevo"
+                class=" text-white font-bold px-4 py-1 rounded-md shadow hover:bg-green-700 transition-all duration-200 cursor-pointer text-xs">
+                NUEVO 💡
             </button>
-            <div id="menuCE"
+            <div id="menuNuevo"
                 class="hidden absolute bg-white border border-gray-300 mt-1 w-40 rounded-md shadow-lg z-[99] transition transform scale-95 opacity-0"
                 style="left: 0px;">
                 <button id="btnCompras"
                     class="bg-yellow-400 hover:bg-yellow-200 rounded-full ml-1 p-1 mt-1 button-plane w-36 text-black">
-                    ALTAS C.E.
+                    ALTAS C. E. 🛒
+                </button>
+                <button id="btnUnico" class="button-plane rounded-full ml-1 p-1 mt-1 w-36">NUEVO REGISTRO 📝</button>
+                <button id="btnEditar" class="button-plane rounded-full ml-1 p-1 mt-1 w-36">EDITAR
+                    🛠️</button><!--VISTA EDICION y METODO EN CONTROLLER pendientes-->
+                <button id="btnImportExcel"
+                    class="bg-green-500 hover:bg-green-300 rounded-full ml-1 p-1 mt-1 button-plane w-36">EXCEL
                 </button>
             </div>
         </div>
@@ -434,9 +432,9 @@
         });
     </script>
     <!--*******************************************************************************************************************************************************************************************
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        *********************************************************************************************************************************************************************************************-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            *********************************************************************************************************************************************************************************************-->
     <!--SCRIPTS que implentan el funcionamiento de la tabla TIPO DE MOVIMIENTOS, se selecciona un registro, se obtiene el valor de id y con
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ese valor se filtran los datos de la tabla tipo_movimientos para mostrarlos en la tabla de abajo-->
 
     <script>
         let filaSeleccionada = null;
@@ -783,7 +781,6 @@
                 /* Centra horizontalmente */
             }
 
-
             .button-plane-2 {
                 background-color: #7839ed;
                 /* Fondo azul */
@@ -800,6 +797,12 @@
                 /* Efecto de transición */
                 text-align: center;
                 /* Centra el texto en cada botón */
+                /* Centrado vertical y horizontal con flex */
+                display: flex;
+                align-items: center;
+                /* Centra verticalmente */
+                justify-content: center;
+                /* Centra horizontalmente */
             }
 
             .button-plane:hover {
@@ -865,48 +868,6 @@
             document.addEventListener("DOMContentLoaded", function() {
                 const btn = document.getElementById("btnCatalogos");
                 const menu = document.getElementById("menuCatalogos");
-
-                btn.addEventListener("click", function(e) {
-                    e.stopPropagation(); // Evita que el evento se propague y se cierre de inmediato
-                    const isOpen = !menu.classList.contains("hidden");
-
-                    // Cerrar si ya está abierto
-                    if (isOpen) {
-                        menu.classList.add("hidden");
-                        menu.classList.remove("scale-100", "opacity-100");
-                        menu.classList.add("scale-95", "opacity-0");
-                    } else {
-                        menu.classList.remove("hidden");
-                        // Forzar reflow para animación (truco CSS)
-                        void menu.offsetWidth;
-                        menu.classList.remove("scale-95", "opacity-0");
-                        menu.classList.add("scale-100", "opacity-100");
-                    }
-                });
-
-                // Ocultar el menú si haces clic fuera de él
-                document.addEventListener("click", function(e) {
-                    if (!btn.contains(e.target) && !menu.contains(e.target)) {
-                        menu.classList.add("hidden");
-                        menu.classList.remove("scale-100", "opacity-100");
-                        menu.classList.add("scale-95", "opacity-0");
-                    }
-                });
-
-                // También cerrar al hacer clic en una opción
-                menu.querySelectorAll("a").forEach(link => {
-                    link.addEventListener("click", () => {
-                        menu.classList.add("hidden");
-                        menu.classList.remove("scale-100", "opacity-100");
-                        menu.classList.add("scale-95", "opacity-0");
-                    });
-                });
-            });
-        </script>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                const btn = document.getElementById("btnCE");
-                const menu = document.getElementById("menuCE");
 
                 btn.addEventListener("click", function(e) {
                     e.stopPropagation(); // Evita que el evento se propague y se cierre de inmediato
@@ -1016,6 +977,48 @@
                         }
                     });
             }
+        </script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const btn = document.getElementById("btnNuevo");
+                const menu = document.getElementById("menuNuevo");
+
+                btn.addEventListener("click", function(e) {
+                    e.stopPropagation(); // Evita que el evento se propague y se cierre de inmediato
+                    const isOpen = !menu.classList.contains("hidden");
+
+                    // Cerrar si ya está abierto
+                    if (isOpen) {
+                        menu.classList.add("hidden");
+                        menu.classList.remove("scale-100", "opacity-100");
+                        menu.classList.add("scale-95", "opacity-0");
+                    } else {
+                        menu.classList.remove("hidden");
+                        // Forzar reflow para animación (truco CSS)
+                        void menu.offsetWidth;
+                        menu.classList.remove("scale-95", "opacity-0");
+                        menu.classList.add("scale-100", "opacity-100");
+                    }
+                });
+
+                // Ocultar el menú si haces clic fuera de él
+                document.addEventListener("click", function(e) {
+                    if (!btn.contains(e.target) && !menu.contains(e.target)) {
+                        menu.classList.add("hidden");
+                        menu.classList.remove("scale-100", "opacity-100");
+                        menu.classList.add("scale-95", "opacity-0");
+                    }
+                });
+
+                // También cerrar al hacer clic en una opción
+                menu.querySelectorAll("a").forEach(link => {
+                    link.addEventListener("click", () => {
+                        menu.classList.add("hidden");
+                        menu.classList.remove("scale-100", "opacity-100");
+                        menu.classList.add("scale-95", "opacity-0");
+                    });
+                });
+            });
         </script>
     @endpush
 @endsection
