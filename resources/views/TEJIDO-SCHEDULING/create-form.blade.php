@@ -347,6 +347,11 @@
         let dataFlog = null;
         let flogCayente = @json($idflogSeleccionado);
 
+        function getParam(name) {
+            return new URLSearchParams(window.location.search).get(name);
+        }
+
+
         $(document).ready(function() {
             // Inicializar Select2
             $('#no_flog').select2({
@@ -411,8 +416,14 @@
                                     background: '#fff',
                                     color: '#333'
                                 }).then(() => {
-                                    window.location.href =
-                                        "{{ route('tejido.scheduling.ventas') }}";
+                                    // Solo redirige si NO viene de Planeacion
+                                    if (getParam('from') === 'planeacion') {
+
+                                    } else {
+                                        window.location.href =
+                                            "{{ route('tejido.scheduling.ventas') }}";
+                                    }
+                                    // Si viene de Planeacion, no hace nada (solo cierra el modal)
                                 });
                             } else {
                                 console.log('Modelo encontrado:', data);
@@ -710,7 +721,6 @@
             });
         });
     </script>
-
 
     @push('styles')
         <style>
