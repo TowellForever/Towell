@@ -9,7 +9,6 @@
     $rasurado = $datosPrecargados['RASURADOCRUDO'] ?? '';
 @endphp
 
-
 @section('content')
     <div class="mx-auto p-3 bg-white shadow rounded-lg overflow-y-auto max-h-[550px]">
         <div class="relative w-full flex items-center  mb-2">
@@ -27,7 +26,7 @@
             class="grid grid-cols-5 gap-x-8 gap-y-4 fs-11">
             @csrf
             <div class="col-span-1 grid grid-cols-1 items-center -mb-1 ">
-                <label for="no_flog" class="w-20 font-medium text-gray-700">NO. FLOG:</label>
+                <label for="no_flog" class="w-19 font-medium text-gray-700">NO. FLOG:</label>
                 <select id="no_flog" name="no_flog "
                     class="border border-gray-300 rounded px-1 py-0.5 select2-flog no_flog-select arribaAbajo">
                     <option value="">-- SELECCIONA --</option>
@@ -121,6 +120,11 @@
                 </select>
             </div>
             <div class="flex items-center">
+                <label for="rasurado" class="w-16 font-medium text-gray-700 fs-9 -mb-1">RASURADO:</label>
+                <input type="text" value="{{ $rasurado == 0 ? 'NO' : ($rasurado == 1 || $rasurado == 2 ? 'SI' : '') }}"
+                    readonly class=" border font-bold border-gray-300 rounded px-1 py-0.5 arribaAbajo">
+            </div>
+            <div class="flex items-center">
                 <label for="calibre_2" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 2:</label>
                 <input type="number" step="0.01" name="calibre_2" id="calibre_2"
                     class=" border border-gray-300 rounded px-1 py-0.5 arribaAbajo">
@@ -180,13 +184,8 @@
                 <label for="color_5" class="w-16 font-medium text-gray-700 fs-9 -mb-1">COLOR 5:</label>
                 <input type="text" name="color_5" id="color_5"
                     class=" border border-gray-300 rounded px-1 py-0.5 arribaAbajo">
-            </div>
-            <div class="flex items-center">
-                <label for="rasurado" class="w-16 font-medium text-gray-700 fs-9 -mb-1">RASURADO:</label>
-                <input type="text" value="{{ $rasurado == 0 ? 'NO' : ($rasurado == 1 || $rasurado == 2 ? 'SI' : '') }}"
-                    readonly class="font-bold arribaAbajo">
-            </div>
-            <!-- Tu div flotante de cantidad -->
+            </div> <!-- Tu div flotante de cantidad -->
+
             @if ($cantidadTotal !== null && $cantidadTotal !== '')
                 <div
                     class="absolute top-0 left-[300px] mt-2 z-20

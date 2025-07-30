@@ -31,6 +31,9 @@
                     RESTABLECER BÚSQUEDA
                 </a>
 
+                <a href="{{ route('modelos.index') }}"
+                    class="bg-orange-500 hover:bg-orange-300 ml-2 text-xs font-bold rounded-full p-1 h-6">MODELOS 🛠️</a>
+
                 <div class="w-auto ml-auto ">
                     <button id="enviarSeleccionados"
                         class="font-bold px-5 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700 transition shadow">
