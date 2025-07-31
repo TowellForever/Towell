@@ -725,6 +725,22 @@
         });
     </script>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Detecta el formulario por su id (ajusta el id si es diferente)
+            const form = document.getElementById('form-planeacion');
+
+            if (form) {
+                form.addEventListener('keydown', function(e) {
+                    // Si el usuario presiona Enter y NO está en un textarea
+                    if (e.key === 'Enter' && e.target.type !== 'textarea') {
+                        e.preventDefault();
+                    }
+                });
+            }
+        });
+    </script>
+
     @push('styles')
         <style>
             #tabla-bloqueo {
