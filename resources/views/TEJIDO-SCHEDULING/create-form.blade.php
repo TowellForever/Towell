@@ -249,7 +249,7 @@
                                 </td>
 
                                 <td class="py-1 text-center">
-                                    <input type="number" step="0.01" name="cantidad[]"
+                                    <input type="number" step="0.01" name="cantidad[]" id="cantidad"
                                         class="border border-gray-300 rounded px-1 py-0.5 w-20 cantidad-input">
                                 </td>
 
@@ -611,14 +611,17 @@
                         fila.find('input[name="fecha_fin[]"]').val('');
                         Swal.fire({
                             icon: 'warning',
-                            title: 'NO ENCONTRADO',
+                            title: 'TELAR INVÁLIDO',
                             text: data.message,
                             confirmButtonText: 'Entendido',
                             confirmButtonColor: '#3085d6',
                             background: '#fff',
                             color: '#333'
                         });
-                        // Si quieres, también limpia campos aquí, etc
+                        // si es necesario, también limpia campos aquí, etc
+                        fila.find('input[name="fecha_fin[]"]').val('');
+                        fila.find('input[name="cantidad[]"]').val('');
+
                     } else {
                         // Aquí puedes llenar otros campos de la fila, por ejemplo:
                         console.log('Datos de Fecha FINAL:', data);
