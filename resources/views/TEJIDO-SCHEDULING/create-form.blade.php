@@ -188,22 +188,25 @@
                     class=" border border-gray-300 rounded px-1 py-0.5 arribaAbajo">
             </div> <!-- Tu div flotante de cantidad -->
 
-            @if ($cantidadTotal !== null && $cantidadTotal !== '')
-                <div
-                    class="absolute top-0 left-[300px] mt-2 z-20
-                    border-2 border-blue-400 rounded-2xl shadow-lg bg-white p-1
-                    min-w-[120px] flex items-center justify-center">
-                    <label class="font-bold text-blue-700 fs-12 tracking-wide whitespace-nowrap">
-                        CANTIDAD TOTAL: <span class="text-gray-800">{{ number_format($cantidadTotal, 0, '.', ',') }}</span>
-                    </label>
-                </div>
-            @endif
-
-
             <!-- - - - - - - - - - - -  - - - - - - - - - - DATOS DEL TELAR  -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  - - - - -->
             <div class="col-span-5">
                 <!-- Aquí va el divisor -->
                 <div class="relative w-full flex items-center">
+                    {{-- CANTIDAD TOTAL ESQUINA IZQUIERDA ARRIBA --}}
+                    @if ($cantidadTotal !== null && $cantidadTotal !== '')
+                        <div
+                            class="absolute top-0 left-0 mt-3 ml-16 z-20
+                                border border-gray-400 rounded-md shadow bg-white px-0.5
+                                min-w-[140px] flex items-center">
+                            <span class="font-semibold text-gray-700 text-xs tracking-wide">
+                                Cantidad total:
+                            </span>
+                            <span class="ml-2 text-sm font-bold text-gray-900">
+                                {{ number_format($cantidadTotal, 0, '.', ',') }}
+                            </span>
+                        </div>
+                    @endif
+
                     <div class="w-full border-t-8 border-gray-300"></div>
                     <span
                         class="absolute left-1/2 -translate-x-1/2 px-8 rounded-xl bg-blue-100 border-2 border-blue-300 shadow-lg text-sm font-semibold text-blue-800 tracking-wide uppercase"
