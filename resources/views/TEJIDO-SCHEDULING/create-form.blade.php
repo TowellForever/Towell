@@ -7,6 +7,8 @@
     $Hilo = $datosPrecargados['TIPOHILO'] ?? '';
     $aplicacion = $datosPrecargados['APLICACION'] ?? '';
     $rasurado = $datosPrecargados['RASURADOCRUDO'] ?? '';
+    $fechacancelacion = $datosPrecargados['FECHACANCE'] ?? '';
+
 @endphp
 
 @section('content')
@@ -265,13 +267,16 @@
                                     <input type="datetime-local" name="fecha_compromiso_tejido[]"
                                         class="border border-gray-300 rounded px-1 py-0.5 w-34" readonly>
                                 </td>
+
                                 <td class="py-1 text-center">
                                     <input type="datetime-local" name="fecha_cliente[]"
-                                        class="border border-gray-300 rounded px-1 py-0.5 w-34" readonly>
+                                        class="border border-gray-300 rounded px-1 py-0.5 w-34" readonly
+                                        value="{{ formatearFechaInputLocal($fechacancelacion) }}">
                                 </td>
                                 <td class="py-1 text-center">
                                     <input type="datetime-local" name="fecha_entrega[]"
-                                        class="border border-gray-300 rounded px-1 py-0.5 w-34" readonly>
+                                        class="border border-gray-300 rounded px-1 py-0.5 w-34" readonly
+                                        value="{{ formatearFechaInputLocal($fechacancelacion) }}">
                                 </td>
                             </tr>
                         </tbody>
