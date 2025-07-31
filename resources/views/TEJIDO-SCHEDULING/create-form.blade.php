@@ -123,8 +123,9 @@
             </div>
             <div class="flex items-center">
                 <label for="rasurado" class="w-16 font-medium text-gray-700 fs-9 -mb-1">RASURADO:</label>
-                <input type="text" value="{{ $rasurado == 0 ? 'NO' : ($rasurado == 1 || $rasurado == 2 ? 'SI' : '') }}"
-                    readonly class=" border font-bold border-gray-300 rounded px-1 py-0.5 arribaAbajo">
+                <input type="text" name="rasurado"
+                    value="{{ $rasurado == 0 ? 'NO' : ($rasurado == 1 || $rasurado == 2 ? 'SI' : '') }}" readonly
+                    class=" border font-bold border-gray-300 rounded px-1 py-0.5 arribaAbajo">
             </div>
             <div class="flex items-center">
                 <label for="calibre_2" class="w-16 font-medium text-gray-700 fs-9 -mb-1">TRAMA 2:</label>
@@ -199,7 +200,7 @@
                                 border border-gray-400 rounded-md shadow bg-white px-0.5
                                 min-w-[140px] flex items-center">
                             <span class="font-semibold text-gray-700 text-xs tracking-wide">
-                                Cantidad total:
+                                Cantidad pedido:
                             </span>
                             <span class="ml-2 text-sm font-bold text-gray-900">
                                 {{ number_format($cantidadTotal, 0, '.', ',') }}

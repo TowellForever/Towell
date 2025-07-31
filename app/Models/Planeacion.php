@@ -93,6 +93,7 @@ class Planeacion extends Model
         'en_proceso',
         'Calibre_Rizo',
         'cantidad',
+        'rasurado',
     ];
 }
 

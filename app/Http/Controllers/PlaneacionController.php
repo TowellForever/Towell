@@ -437,6 +437,9 @@ class PlaneacionController extends Controller
       $c4 = (float)$request->input('calibre_4');
       $c5 = (float)$request->input('calibre_5');
 
+      //conversion de valor de rasurado a booleano
+      $rasurado = (strtoupper($request->input('rasurado')) === 'SI') ? 1 : 0;
+
       $nuevoRegistro = Planeacion::create(
         [
           'Cuenta' => (float) $request->input('cuenta_rizo'),
@@ -520,6 +523,7 @@ class PlaneacionController extends Controller
           'Entrega' => null, //Carbon::parse($request->input('fecha_entrega'))->format('Y-m-d')
           'Dif_vs_Compromiso' => null,
           'cantidad' => (float) $saldos[$i], // campo recién agregado 
+          'rasurado' => $rasurado,
         ]
 
       );
