@@ -681,6 +681,7 @@ class TejidoSchedullingController extends Controller
                 })
                 ->join('TI_PRO.dbo.TWFLOGSTABLE as f', 'l.IDFLOG', '=', 'f.IDFLOG')
                 ->select(
+                    DB::raw('COUNT(b.ITEMID) as CANTIDAD_ITEMID'),           // Total de registros
                     DB::raw('MAX(f.IDFLOG) as IDFLOG'),
                     DB::raw('MAX(f.ESTADOFLOG) as ESTADOFLOG'),
                     DB::raw('MAX(f.NAMEPROYECT) as NAMEPROYECT'),
@@ -694,9 +695,8 @@ class TejidoSchedullingController extends Controller
                     DB::raw('MAX(l.FECHACANCELACION) as FECHACANCELACION'),
                     DB::raw('MAX(l.RASURADOCRUDO) as RASURADOCRUDO'),
                     DB::raw('MAX(l.ITEMTYPEID) as ITEMTYPEID'),
-                    DB::raw('SUM(l.PORENTREGAR) as PORENTREGAR'),
+                    DB::raw('MAX(l.PORENTREGAR) as PORENTREGAR'),
                     DB::raw('SUM(b.BOMQTY) as BOMQTY'),
-                    DB::raw('SUM(l.PORENTREGAR * b.BOMQTY) as CANTIDAD_TOTAL')
                 )
                 ->whereBetween('l.ITEMTYPEID', [10, 19])
                 ->where('f.ESTADOFLOG', 4)
@@ -706,6 +706,82 @@ class TejidoSchedullingController extends Controller
                 ->groupBy('b.REFRECID')
                 ->get();
 
+            $batasFelpaza = DB::connection('sqlsrv_ti')
+                ->table('TI_PRO.dbo.TWFLOGSITEMLINE as l')
+                ->join('TI_PRO.dbo.TWFLOGBOMID as b', function ($join) {
+                    $join->on('b.IDFLOG', '=', 'l.IDFLOG')
+                        ->on('b.REFRECID', '=', 'l.RECID');
+                })
+                ->join('TI_PRO.dbo.TWFLOGSTABLE as f', 'l.IDFLOG', '=', 'f.IDFLOG')
+                ->select(
+                    'b.ITEMID as BOM_ITEMID',
+                    'b.BOMQTY',
+                    'b.REFRECID',
+                    'b.IDFLOG as BOM_IDFLOG',
+                    'f.IDFLOG',
+                    'f.ESTADOFLOG',
+                    'f.NAMEPROYECT',
+                    'f.CUSTNAME',
+                    'l.ANCHO',
+                    'l.ITEMID as LINE_ITEMID',
+                    'l.ITEMNAME',
+                    'l.INVENTSIZEID',
+                    'l.TIPOHILOID',
+                    'l.VALORAGREGADO',
+                    'l.FECHACANCELACION',
+                    'l.RASURADOCRUDO',
+                    'l.ITEMTYPEID',
+                    'l.PORENTREGAR'
+                )
+                ->whereBetween('l.ITEMTYPEID', [10, 19])
+                ->where('f.ESTADOFLOG', 4)
+                ->where('f.TIPOPEDIDO', 1)
+                ->where('l.ESTADOLINEA', 0)
+                ->where('l.PORENTREGAR', '!=', 0)
+                ->get();
+
+            // Solo IDs (esto te da un array simple con los valores de IDFLOG)
+            // Creamos un array agrupado por IDFLOG y BOM_ITEMID
+            $agrupados = [];
+
+            foreach ($batasFelpaza as $registro) {
+                $key = $registro->IDFLOG . '-' . $registro->BOM_ITEMID;
+
+                // Si aún no existe el grupo, inicialízalo
+                if (!isset($agrupados[$key])) {
+                    $agrupados[$key] = [
+                        'IDFLOG'           => $registro->IDFLOG,
+                        'ITEMID'           => $registro->BOM_ITEMID,
+                        'SUM_PORENTREGAR'  => 0,
+                        'SUM_BOMQTY'       => 0,
+                        'COUNT_BOMQTY'     => 0,
+                        'NAMEPROYECT'      => $registro->NAMEPROYECT,
+                        'CUSTNAME'         => $registro->CUSTNAME,
+                        'ESTADOFLOG'       => $registro->ESTADOFLOG,
+                        'ANCHO'            => $registro->ANCHO,
+                        'ITEMNAME'         => $registro->ITEMNAME,
+                        'INVENTSIZEID'     => $registro->INVENTSIZEID,
+                        'TIPOHILOID'       => $registro->TIPOHILOID,
+                        'VALORAGREGADO'    => $registro->VALORAGREGADO,
+                        'FECHACANCELACION' => $registro->FECHACANCELACION,
+                    ];
+                }
+
+                // Acumula la suma de BOMQTY y la suma de PORENTREGAR
+                $agrupados[$key]['SUM_BOMQTY'] += $registro->BOMQTY;
+                $agrupados[$key]['SUM_PORENTREGAR'] += $registro->PORENTREGAR;
+                $agrupados[$key]['COUNT_BOMQTY'] += 1; // Cuenta cuántos registros hay
+            }
+
+            // Ahora calculamos el PROMEDIO y la cantidad total
+            foreach ($agrupados as &$grupo) {
+                $grupo['PROMEDIO_BOMQTY'] = $grupo['COUNT_BOMQTY'] > 0
+                    ? $grupo['SUM_BOMQTY'] / $grupo['COUNT_BOMQTY']
+                    : 0;
+                $grupo['CANTIDAD_TOTAL'] = $grupo['SUM_PORENTREGAR'] * $grupo['PROMEDIO_BOMQTY'];
+            }
+
+            $batasAgrupadas = collect(array_values($agrupados));
 
             // 👇 esto es para el modal
             $headers = [
@@ -723,10 +799,9 @@ class TejidoSchedullingController extends Controller
                 'l.PORENTREGAR'     => 'Cantidad',
             ];
 
-            dd($batasFelpa);
-
-            return view('TEJIDO-SCHEDULING.ventas', compact('lineasConFlog', 'batasFelpa', 'headers'));
+            return view('TEJIDO-SCHEDULING.ventas', compact('lineasConFlog', 'batasAgrupadas', 'headers'));
         } catch (\Exception $e) {
+            dd($e);
             return redirect()->back()->with('error', 'Ocurrió un error al cargar los datos: ' . $e->getMessage());
         }
     }

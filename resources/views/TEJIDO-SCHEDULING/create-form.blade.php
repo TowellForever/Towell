@@ -124,7 +124,7 @@
             <div class="flex items-center">
                 <label for="rasurado" class="w-16 font-medium text-gray-700 fs-9 -mb-1">RASURADO:</label>
                 <input type="text" name="rasurado"
-                    value="{{ $rasurado == 0 ? 'NO' : ($rasurado == 1 || $rasurado == 2 ? 'SI' : '') }}" readonly
+                    value="{{ $rasurado == 0 ? 'NO' : ($rasurado == 1 || $rasurado == 2 ? 'SI' : '') }}"
                     class=" border font-bold border-gray-300 rounded px-1 py-0.5 arribaAbajo">
             </div>
             <div class="flex items-center">
