@@ -473,7 +473,7 @@ button:hover {
     position: sticky;
     top: 0;
     /* Se fija en la parte superior cuando se desplaza */
-    background-color: #12a60a;
+    background-color: #1CC6DD;
     /* Verde Excel */
     z-index: 10;
 }

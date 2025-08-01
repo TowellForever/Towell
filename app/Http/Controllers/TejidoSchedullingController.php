@@ -612,7 +612,7 @@ class TejidoSchedullingController extends Controller
         }
     }
 
-    // MOSTRAMOS VISTA PARA PLAN DE VENTAS, RECUPERAMOS DATA DE LA BD DE TI_PRO
+    // MOSTRAMOS VISTA PARA ALTA DE COMPRAS ESPECIALES, RECUPERAMOS DATA DE LA BD DE TI_PRO
     public function showBlade(Request $request)
     {
         // Si NO hay filtros, limpia la sesión y NO uses filtros para la consulta
@@ -633,9 +633,8 @@ class TejidoSchedullingController extends Controller
             $values = $request->input('value', []);
         }
 
-        // Tu consulta aquí, usando SOLO $columns y $values
-
         try {
+            // 1. QUERY PRINCIPAL, EXCLUYENDO BATA/FELPA
             $query = DB::connection('sqlsrv_ti')
                 ->table('TI_PRO.dbo.TWFLOGSITEMLINE as l')
                 ->join('TI_PRO.dbo.TWFLOGSTABLE as f', 'l.IDFLOG', '=', 'f.IDFLOG')
@@ -657,9 +656,10 @@ class TejidoSchedullingController extends Controller
                 ->where('f.ESTADOFLOG', 4)
                 ->where('f.TIPOPEDIDO', 1)
                 ->where('l.ESTADOLINEA', 0)
-                ->where('l.PORENTREGAR', '!=', 0);
+                ->where('l.PORENTREGAR', '!=', 0)
+                ->whereNotBetween('l.ITEMTYPEID', [10, 19]);
 
-            // Aplica filtros si los hay
+            // ...tus filtros dinámicos
             foreach ($columns as $i => $col) {
                 $val = $values[$i] ?? null;
                 if ($col && $val) {
@@ -670,6 +670,40 @@ class TejidoSchedullingController extends Controller
             $lineasConFlog = $query
                 ->groupBy('f.IDFLOG', 'f.ESTADOFLOG', 'f.NAMEPROYECT', 'f.CUSTNAME')
                 ->orderBy('FECHACANCELACION')
+                ->get();
+
+            // 2. BATA/FELPA (OTRO OBJETO)
+            $batasFelpa = DB::connection('sqlsrv_ti')
+                ->table('TI_PRO.dbo.TWFLOGSITEMLINE as l')
+                ->join('TI_PRO.dbo.TWFLOGBOMID as b', function ($join) {
+                    $join->on('b.IDFLOG', '=', 'l.IDFLOG')
+                        ->on('b.REFRECID', '=', 'l.RECID');
+                })
+                ->join('TI_PRO.dbo.TWFLOGSTABLE as f', 'l.IDFLOG', '=', 'f.IDFLOG')
+                ->select(
+                    DB::raw('MAX(f.IDFLOG) as IDFLOG'),
+                    DB::raw('MAX(f.ESTADOFLOG) as ESTADOFLOG'),
+                    DB::raw('MAX(f.NAMEPROYECT) as NAMEPROYECT'),
+                    DB::raw('MAX(f.CUSTNAME) as CUSTNAME'),
+                    DB::raw('MAX(l.ANCHO) as ANCHO'),
+                    DB::raw('MAX(l.ITEMID) as ITEMID'),
+                    DB::raw('MAX(l.ITEMNAME) as ITEMNAME'),
+                    DB::raw('MAX(l.INVENTSIZEID) as INVENTSIZEID'),
+                    DB::raw('MAX(l.TIPOHILOID) as TIPOHILOID'),
+                    DB::raw('MAX(l.VALORAGREGADO) as VALORAGREGADO'),
+                    DB::raw('MAX(l.FECHACANCELACION) as FECHACANCELACION'),
+                    DB::raw('MAX(l.RASURADOCRUDO) as RASURADOCRUDO'),
+                    DB::raw('MAX(l.ITEMTYPEID) as ITEMTYPEID'),
+                    DB::raw('SUM(l.PORENTREGAR) as PORENTREGAR'),
+                    DB::raw('SUM(b.BOMQTY) as BOMQTY'),
+                    DB::raw('SUM(l.PORENTREGAR * b.BOMQTY) as CANTIDAD_TOTAL')
+                )
+                ->whereBetween('l.ITEMTYPEID', [10, 19])
+                ->where('f.ESTADOFLOG', 4)
+                ->where('f.TIPOPEDIDO', 1)
+                ->where('l.ESTADOLINEA', 0)
+                ->where('l.PORENTREGAR', '!=', 0)
+                ->groupBy('b.REFRECID')
                 ->get();
 
 
@@ -689,9 +723,10 @@ class TejidoSchedullingController extends Controller
                 'l.PORENTREGAR'     => 'Cantidad',
             ];
 
-            return view('TEJIDO-SCHEDULING.ventas', compact('lineasConFlog', 'headers'));
+            dd($batasFelpa);
+
+            return view('TEJIDO-SCHEDULING.ventas', compact('lineasConFlog', 'batasFelpa', 'headers'));
         } catch (\Exception $e) {
-            // Redirige a la misma vista pero con mensaje de error
             return redirect()->back()->with('error', 'Ocurrió un error al cargar los datos: ' . $e->getMessage());
         }
     }
