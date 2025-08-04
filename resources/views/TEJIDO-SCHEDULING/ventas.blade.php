@@ -208,7 +208,7 @@
                     TIPOHILO: fila.dataset.tipohiloid,
                     APLICACION: fila.dataset.valoragregado,
                     FECHACANCE: fila.dataset.fechacancelacion,
-                    // Agrega los campos que quieras pasar, para lograr agregarlo aqui, antes debe colar en TR:   data-rasuradocrudo="{{ $linea->RASURADOCRUDO }}"
+                    // Agrega los campos que quieras pasar, para lograr agregarlo aqui, antes debe colar en TR:   data radurado $linea->RASURADOCRUDO "
                 };
                 seleccionados.push(datos);
             });

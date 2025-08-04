@@ -674,7 +674,7 @@ class TejidoSchedullingController extends Controller
                 ->get();
 
             // 2. Haces tu consulta
-            $batasFelpaza = DB::connection('sqlsrv_ti')
+            $batasFelpazaQuery = DB::connection('sqlsrv_ti')
                 ->table('TI_PRO.dbo.TWFLOGSITEMLINE as l')
                 ->join('TI_PRO.dbo.TWFLOGBOMID as b', function ($join) {
                     $join->on('b.IDFLOG', '=', 'l.IDFLOG')
@@ -706,8 +706,17 @@ class TejidoSchedullingController extends Controller
                 ->where('f.TIPOPEDIDO', 1)
                 ->where('l.ESTADOLINEA', 0)
                 ->where('l.PORENTREGAR', '!=', 0)
-                ->orderBy('b.FECHACANCELACION', 'asc')
-                ->get();
+                ->orderBy('b.FECHACANCELACION', 'asc');
+
+            // 👉 **AGREGA LOS FILTROS AQUÍ**
+            foreach ($columns as $i => $col) {
+                $val = $values[$i] ?? null;
+                if ($col && $val) {
+                    $batasFelpazaQuery->where($col, 'LIKE', '%' . $val . '%');
+                }
+            }
+
+            $batasFelpaza = $batasFelpazaQuery->get();
 
             // 3. Agrupa y suma por BOM_IDFLOG y BOM_ITEMID
             $detalleFlogItem = [];
