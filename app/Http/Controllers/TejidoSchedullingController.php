@@ -673,7 +673,7 @@ class TejidoSchedullingController extends Controller
                 ->orderBy('FECHACANCELACION')
                 ->get();
 
-            // 2. BATA/FELPA (OTRO OBJETO) 
+            // 2. Haces tu consulta
             $batasFelpaza = DB::connection('sqlsrv_ti')
                 ->table('TI_PRO.dbo.TWFLOGSITEMLINE as l')
                 ->join('TI_PRO.dbo.TWFLOGBOMID as b', function ($join) {
@@ -681,7 +681,7 @@ class TejidoSchedullingController extends Controller
                         ->on('b.REFRECID', '=', 'l.RECID');
                 })
                 ->join('TI_PRO.dbo.TWFLOGSTABLE as f', 'l.IDFLOG', '=', 'f.IDFLOG')
-                ->select( // AQUI es donde traigo todos los datos necesarios de TWFLOGCOMID
+                ->select(
                     'b.ITEMID as BOM_ITEMID',
                     'b.BOMQTY',
                     'b.REFRECID',
@@ -706,52 +706,42 @@ class TejidoSchedullingController extends Controller
                 ->where('f.TIPOPEDIDO', 1)
                 ->where('l.ESTADOLINEA', 0)
                 ->where('l.PORENTREGAR', '!=', 0)
-                ->orderBy('b.FECHACANCELACION', 'asc') // <--- con esta linea automatizamos que las lineas de codigo se muestren en orden de acuerdo a la fecha.
+                ->orderBy('b.FECHACANCELACION', 'asc')
                 ->get();
 
-
-            // Solo IDs (esto te da un array simple con los valores de IDFLOG)
-            // Creamos un array agrupado por IDFLOG y BOM_ITEMID
-            $agrupados = [];
+            // 3. Agrupa y suma por BOM_IDFLOG y BOM_ITEMID
+            $detalleFlogItem = [];
 
             foreach ($batasFelpaza as $registro) {
-                $key = $registro->IDFLOG . '-' . $registro->BOM_ITEMID;
+                $bomIdFlog = $registro->BOM_IDFLOG;
+                $bomItemId = $registro->BOM_ITEMID;
+                $grupoKey = $bomIdFlog . '-' . $bomItemId;
 
-                // Si aún no existe el grupo, inicialízalo
-                if (!isset($agrupados[$key])) {
-                    $agrupados[$key] = [
-                        'IDFLOG'           => $registro->IDFLOG,
-                        'ITEMID'           => $registro->BOM_ITEMID,
-                        'SUM_PORENTREGAR'  => 0,
-                        'SUM_BOMQTY'       => 0,
-                        'COUNT_BOMQTY'     => 0,
-                        'NAMEPROYECT'      => $registro->NAMEPROYECT,
-                        'CUSTNAME'         => $registro->CUSTNAME,
-                        'ESTADOFLOG'       => $registro->ESTADOFLOG,
-                        'ANCHO'            => $registro->ANCHO,
-                        'ITEMNAME'         => $registro->ITEMNAME,
-                        'INVENTSIZEID'     => $registro->INVENTSIZEID,
-                        'TIPOHILOID'       => $registro->TIPOHILOID,
-                        'VALORAGREGADO'    => $registro->VALORAGREGADO,
+                if (!isset($detalleFlogItem[$grupoKey])) {
+                    $detalleFlogItem[$grupoKey] = [
+                        'IDFLOG'      => $bomIdFlog,
+                        'ESTADOFLOG'      => $registro->ESTADOFLOG,
+                        'BOM_ITEMID'      => $bomItemId,
+                        'NAMEPROYECT'     => $registro->NAMEPROYECT,
+                        'CUSTNAME'        => $registro->CUSTNAME,
+                        'ANCHO'           => $registro->ANCHO,
+                        'ITEMID'          => $registro->LINE_ITEMID,
+                        'ITEMNAME'        => $registro->ITEMNAME,
+                        'INVENTSIZEID'    => $registro->INVENTSIZEID,
+                        'TIPOHILOID'      => $registro->TIPOHILOID,
+                        'VALORAGREGADO'   => $registro->VALORAGREGADO,
                         'FECHACANCELACION' => $registro->FECHACANCELACION,
+                        'suma_total'      => 0,
+                        // Si quieres el detalle completo de cada registro:
+                        // 'detalles'     => [],
                     ];
                 }
 
-                // Acumula la suma de BOMQTY y la suma de PORENTREGAR
-                $agrupados[$key]['SUM_BOMQTY'] += $registro->BOMQTY;
-                $agrupados[$key]['SUM_PORENTREGAR'] += $registro->PORENTREGAR;
-                $agrupados[$key]['COUNT_BOMQTY'] += 1; // Cuenta cuántos registros hay
-            }
+                $detalleFlogItem[$grupoKey]['suma_total'] += $registro->PORENTREGAR * $registro->BOMQTY;
 
-            // Ahora calculamos el PROMEDIO y la cantidad total
-            foreach ($agrupados as &$grupo) {
-                $grupo['PROMEDIO_BOMQTY'] = $grupo['COUNT_BOMQTY'] > 0
-                    ? $grupo['SUM_BOMQTY'] / $grupo['COUNT_BOMQTY']
-                    : 0;
-                $grupo['CANTIDAD_TOTAL'] = $grupo['SUM_PORENTREGAR'] * $grupo['PROMEDIO_BOMQTY'];
+                // Si quieres guardar detalle de cada registro:
+                // $detalleFlogItem[$grupoKey]['detalles'][] = $registro;
             }
-
-            $batasAgrupadas = collect(array_values($agrupados));
 
             // 👇 esto es para el modal
             $headers = [
@@ -769,7 +759,7 @@ class TejidoSchedullingController extends Controller
                 'l.PORENTREGAR'     => 'Cantidad',
             ];
 
-            return view('TEJIDO-SCHEDULING.ventas', compact('lineasConFlog', 'batasAgrupadas', 'headers'));
+            return view('TEJIDO-SCHEDULING.ventas', compact('lineasConFlog', 'detalleFlogItem', 'headers'));
         } catch (\Exception $e) {
             dd($e);
             return redirect()->back()->with('error', 'Ocurrió un error al cargar los datos: ' . $e->getMessage());

@@ -153,7 +153,7 @@
                                 </tr>
                             @endforeach
 
-                            @foreach ($batasAgrupadas as $bata)
+                            @foreach ($detalleFlogItem as $bata)
                                 <tr class="bg-blue-200 hover:bg-blue-300 transition-colors duration-150" style="color: #111"
                                     data-idflog="{{ $bata['IDFLOG'] }}" data-estadoflog="{{ $bata['ESTADOFLOG'] }}"
                                     data-nameproyect="{{ $bata['NAMEPROYECT'] }}" data-custname="{{ $bata['CUSTNAME'] }}"
@@ -163,7 +163,7 @@
                                     data-tipohiloid="{{ $bata['TIPOHILOID'] }}"
                                     data-valoragregado="{{ $bata['VALORAGREGADO'] }}"
                                     data-fechacancelacion="{{ $bata['FECHACANCELACION'] }}"
-                                    data-porentregar="{{ $bata['CANTIDAD_TOTAL'] }}">
+                                    data-porentregar="{{ $bata['suma_total'] }}">
                                     <td class="px-1 py-0.5 border">{{ $bata['IDFLOG'] }}</td>
                                     <td class="px-1 py-0.5 border">
                                         {{ $bata['ESTADOFLOG'] == 4 ? 'Aprobado por finanzas' : '' }}</td>
@@ -177,7 +177,7 @@
                                     <td class="px-1 py-0.5 border">{{ $bata['VALORAGREGADO'] }}</td>
                                     <td class="px-1 py-0.5 border">{{ formatearFecha($bata['FECHACANCELACION']) }}</td>
                                     <td class="px-1 py-0.5 border font-semibold">
-                                        {{ decimales($bata['CANTIDAD_TOTAL']) }}
+                                        {{ decimales($bata['suma_total']) }}
                                     </td>
                                     <td class="text-center align-middle border">
                                         <input type="checkbox"
