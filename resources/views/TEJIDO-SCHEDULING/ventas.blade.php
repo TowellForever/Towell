@@ -101,90 +101,93 @@
                         </ul>
                     </div>
                 @endif
-
-                <table class="min-w-full border text-xs text-left ordenable">
-                    <thead class="bg-blue-300">
-                        <tr>
-                            <th class="px-1 py-0.5 border">ID FLOG</th>
-                            <th class="px-1 py-0.5 border">ESTADO FLOG</th>
-                            <th class="px-1 py-0.5 border">PROYECTO</th>
-                            <th class="px-1 py-0.5 border">NOMBRE DEL CLIENTE</th>
-                            <th class="px-1 py-0.5 border">ANCHO</th>
-                            <th class="px-1 py-0.5 border">ARTÍCULO</th>
-                            <th class="px-1 py-0.5 border">NOMBRE</th>
-                            <th class="px-1 py-0.5 border">TAMAÑO</th>
-                            <th class="px-1 py-0.5 border">TIPO DE HILO</th>
-                            <th class="px-1 py-0.5 border">VALOR AGREGADO</th>
-                            <th class="px-1 py-0.5 border">CANCELACIÓN</th>
-                            <th class="px-1 py-0.5 border">CANTIDAD</th>
-                            <th class="px-1 py-0.5 border">SELECCIONAR</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($lineasConFlog as $linea)
-                            <tr class="hover:bg-orange-200 transition-colors duration-150"
-                                data-idflog="{{ $linea->IDFLOG }}" data-estadoflog="{{ $linea->ESTADOFLOG }}"
-                                data-nameproyect="{{ $linea->NAMEPROYECT }}" data-custname="{{ $linea->CUSTNAME }}"
-                                data-ancho="{{ $linea->ANCHO }}" data-itemid="{{ $linea->ITEMID }}"
-                                data-itemname="{{ $linea->ITEMNAME }}" data-inventsizeid="{{ $linea->INVENTSIZEID }}"
-                                data-tipohiloid="{{ $linea->TIPOHILOID }}"
-                                data-valoragregado="{{ $linea->VALORAGREGADO }}"
-                                data-fechacancelacion="{{ $linea->FECHACANCELACION }}"
-                                data-porentregar="{{ $linea->PORENTREGAR }}"
-                                data-rasuradocrudo="{{ $linea->RASURADOCRUDO }}">
-                                <td class="px-1 py-0.5 border">{{ $linea->IDFLOG }}</td>
-                                <td class="px-1 py-0.5 border">{{ $linea->ESTADOFLOG == 4 ? 'Aprobado por finanzas' : '' }}
-                                </td>
-                                <td class="px-1 py-0.5 border">{{ $linea->NAMEPROYECT }}</td>
-                                <td class="px-1 py-0.5 border">{{ $linea->CUSTNAME }}</td>
-                                <td class="px-1 py-0.5 border">{{ decimales($linea->ANCHO) }}</td>
-                                <td class="px-1 py-0.5 border">{{ $linea->ITEMID }}</td>
-                                <td class="px-1 py-0.5 border">{{ $linea->ITEMNAME }}</td>
-                                <td class="px-1 py-0.5 border">{{ $linea->INVENTSIZEID }}</td>
-                                <td class="px-1 py-0.5 border">{{ $linea->TIPOHILOID }}</td>
-                                <td class="px-1 py-0.5 border">{{ $linea->VALORAGREGADO }}</td>
-                                <td class="px-1 py-0.5 border">{{ formatearFecha($linea->FECHACANCELACION) }}</td>
-                                <td class="px-1 py-0.5 border font-semibold">
-                                    {{ decimales($linea->PORENTREGAR) }}</td>
-                                <td class="text-center align-middle border">
-                                    <input type="checkbox" class="form-checkbox text-blue-500 fila-checkbox w-5 h-5" />
-                                </td>
+                <div class="max-h-[600px] overflow-y-auto border rounded bigScroll">
+                    <table class="min-w-full border text-xs text-left ordenable ">
+                        <thead class="bg-blue-300">
+                            <tr>
+                                <th class="px-1 py-0.5 border sticky top-0 bg-blue-300 z-10">ID FLOG</th>
+                                <th class="px-1 py-0.5 border sticky top-0 bg-blue-300 z-10">ESTADO FLOG</th>
+                                <th class="px-1 py-0.5 border sticky top-0 bg-blue-300 z-10">PROYECTO</th>
+                                <th class="px-1 py-0.5 border sticky top-0 bg-blue-300 z-10">NOMBRE DEL CLIENTE</th>
+                                <th class="px-1 py-0.5 border sticky top-0 bg-blue-300 z-10">ANCHO</th>
+                                <th class="px-1 py-0.5 border sticky top-0 bg-blue-300 z-10">ARTÍCULO</th>
+                                <th class="px-1 py-0.5 border sticky top-0 bg-blue-300 z-10">NOMBRE</th>
+                                <th class="px-1 py-0.5 border sticky top-0 bg-blue-300 z-10">TAMAÑO</th>
+                                <th class="px-1 py-0.5 border sticky top-0 bg-blue-300 z-10">TIPO DE HILO</th>
+                                <th class="px-1 py-0.5 border sticky top-0 bg-blue-300 z-10">VALOR AGREGADO</th>
+                                <th class="px-1 py-0.5 border sticky top-0 bg-blue-300 z-10">CANCELACIÓN</th>
+                                <th class="px-1 py-0.5 border sticky top-0 bg-blue-300 z-10">CANTIDAD</th>
+                                <th class="px-1 py-0.5 border sticky top-0 bg-blue-300 z-10">SELECCIONAR</th>
                             </tr>
-                        @endforeach
+                        </thead>
+                        <tbody>
+                            @foreach ($lineasConFlog as $linea)
+                                <tr class="hover:bg-orange-200 transition-colors duration-150"
+                                    data-idflog="{{ $linea->IDFLOG }}" data-estadoflog="{{ $linea->ESTADOFLOG }}"
+                                    data-nameproyect="{{ $linea->NAMEPROYECT }}" data-custname="{{ $linea->CUSTNAME }}"
+                                    data-ancho="{{ $linea->ANCHO }}" data-itemid="{{ $linea->ITEMID }}"
+                                    data-itemname="{{ $linea->ITEMNAME }}" data-inventsizeid="{{ $linea->INVENTSIZEID }}"
+                                    data-tipohiloid="{{ $linea->TIPOHILOID }}"
+                                    data-valoragregado="{{ $linea->VALORAGREGADO }}"
+                                    data-fechacancelacion="{{ $linea->FECHACANCELACION }}"
+                                    data-porentregar="{{ $linea->PORENTREGAR }}"
+                                    data-rasuradocrudo="{{ $linea->RASURADOCRUDO }}">
+                                    <td class="px-1 py-0.5 border">{{ $linea->IDFLOG }}</td>
+                                    <td class="px-1 py-0.5 border">
+                                        {{ $linea->ESTADOFLOG == 4 ? 'Aprobado por finanzas' : '' }}
+                                    </td>
+                                    <td class="px-1 py-0.5 border">{{ $linea->NAMEPROYECT }}</td>
+                                    <td class="px-1 py-0.5 border">{{ $linea->CUSTNAME }}</td>
+                                    <td class="px-1 py-0.5 border">{{ decimales($linea->ANCHO) }}</td>
+                                    <td class="px-1 py-0.5 border">{{ $linea->ITEMID }}</td>
+                                    <td class="px-1 py-0.5 border">{{ $linea->ITEMNAME }}</td>
+                                    <td class="px-1 py-0.5 border">{{ $linea->INVENTSIZEID }}</td>
+                                    <td class="px-1 py-0.5 border">{{ $linea->TIPOHILOID }}</td>
+                                    <td class="px-1 py-0.5 border">{{ $linea->VALORAGREGADO }}</td>
+                                    <td class="px-1 py-0.5 border">{{ formatearFecha($linea->FECHACANCELACION) }}</td>
+                                    <td class="px-1 py-0.5 border font-semibold">
+                                        {{ decimales($linea->PORENTREGAR) }}</td>
+                                    <td class="text-center align-middle border">
+                                        <input type="checkbox" class="form-checkbox text-blue-500 fila-checkbox w-5 h-5" />
+                                    </td>
+                                </tr>
+                            @endforeach
 
-                        @foreach ($batasAgrupadas as $bata)
-                            <tr class="bg-blue-200 hover:bg-blue-300 transition-colors duration-150" style="color: #111"
-                                data-idflog="{{ $bata['IDFLOG'] }}" data-estadoflog="{{ $bata['ESTADOFLOG'] }}"
-                                data-nameproyect="{{ $bata['NAMEPROYECT'] }}" data-custname="{{ $bata['CUSTNAME'] }}"
-                                data-ancho="{{ $bata['ANCHO'] }}" data-itemid="{{ $bata['ITEMID'] }}"
-                                data-itemname="{{ $bata['ITEMNAME'] }}" data-inventsizeid="{{ $bata['INVENTSIZEID'] }}"
-                                data-tipohiloid="{{ $bata['TIPOHILOID'] }}"
-                                data-valoragregado="{{ $bata['VALORAGREGADO'] }}"
-                                data-fechacancelacion="{{ $bata['FECHACANCELACION'] }}"
-                                data-porentregar="{{ $bata['CANTIDAD_TOTAL'] }}">
-                                <td class="px-1 py-0.5 border">{{ $bata['IDFLOG'] }}</td>
-                                <td class="px-1 py-0.5 border">
-                                    {{ $bata['ESTADOFLOG'] == 4 ? 'Aprobado por finanzas' : '' }}</td>
-                                <td class="px-1 py-0.5 border">{{ $bata['NAMEPROYECT'] }}</td>
-                                <td class="px-1 py-0.5 border">{{ $bata['CUSTNAME'] }}</td>
-                                <td class="px-1 py-0.5 border">{{ decimales($bata['ANCHO']) }}</td>
-                                <td class="px-1 py-0.5 border">{{ $bata['ITEMID'] }}</td>
-                                <td class="px-1 py-0.5 border">{{ $bata['ITEMNAME'] }}</td>
-                                <td class="px-1 py-0.5 border">{{ $bata['INVENTSIZEID'] }}</td>
-                                <td class="px-1 py-0.5 border">{{ $bata['TIPOHILOID'] }}</td>
-                                <td class="px-1 py-0.5 border">{{ $bata['VALORAGREGADO'] }}</td>
-                                <td class="px-1 py-0.5 border">{{ $bata['FECHACANCELACION'] }}</td>
-                                <td class="px-1 py-0.5 border font-semibold">
-                                    {{ decimales($bata['CANTIDAD_TOTAL']) }}
-                                </td>
-                                <td class="text-center align-middle border">
-                                    <input type="checkbox" class="form-checkbox text-blue-500 fila-checkbox w-5 h-5" />
-                                </td>
-                            </tr>
-                        @endforeach
-
-                    </tbody>
-                </table>
+                            @foreach ($batasAgrupadas as $bata)
+                                <tr class="bg-blue-200 hover:bg-blue-300 transition-colors duration-150" style="color: #111"
+                                    data-idflog="{{ $bata['IDFLOG'] }}" data-estadoflog="{{ $bata['ESTADOFLOG'] }}"
+                                    data-nameproyect="{{ $bata['NAMEPROYECT'] }}" data-custname="{{ $bata['CUSTNAME'] }}"
+                                    data-ancho="{{ $bata['ANCHO'] }}" data-itemid="{{ $bata['ITEMID'] }}"
+                                    data-itemname="{{ $bata['ITEMNAME'] }}"
+                                    data-inventsizeid="{{ $bata['INVENTSIZEID'] }}"
+                                    data-tipohiloid="{{ $bata['TIPOHILOID'] }}"
+                                    data-valoragregado="{{ $bata['VALORAGREGADO'] }}"
+                                    data-fechacancelacion="{{ $bata['FECHACANCELACION'] }}"
+                                    data-porentregar="{{ $bata['CANTIDAD_TOTAL'] }}">
+                                    <td class="px-1 py-0.5 border">{{ $bata['IDFLOG'] }}</td>
+                                    <td class="px-1 py-0.5 border">
+                                        {{ $bata['ESTADOFLOG'] == 4 ? 'Aprobado por finanzas' : '' }}</td>
+                                    <td class="px-1 py-0.5 border">{{ $bata['NAMEPROYECT'] }}</td>
+                                    <td class="px-1 py-0.5 border">{{ $bata['CUSTNAME'] }}</td>
+                                    <td class="px-1 py-0.5 border">{{ decimales($bata['ANCHO']) }}</td>
+                                    <td class="px-1 py-0.5 border">{{ $bata['ITEMID'] }}</td>
+                                    <td class="px-1 py-0.5 border">{{ $bata['ITEMNAME'] }}</td>
+                                    <td class="px-1 py-0.5 border">{{ $bata['INVENTSIZEID'] }}</td>
+                                    <td class="px-1 py-0.5 border">{{ $bata['TIPOHILOID'] }}</td>
+                                    <td class="px-1 py-0.5 border">{{ $bata['VALORAGREGADO'] }}</td>
+                                    <td class="px-1 py-0.5 border">{{ formatearFecha($bata['FECHACANCELACION']) }}</td>
+                                    <td class="px-1 py-0.5 border font-semibold">
+                                        {{ decimales($bata['CANTIDAD_TOTAL']) }}
+                                    </td>
+                                    <td class="text-center align-middle border">
+                                        <input type="checkbox"
+                                            class="form-checkbox text-blue-500 fila-checkbox w-5 h-5" />
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

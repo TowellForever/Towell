@@ -612,7 +612,8 @@ class TejidoSchedullingController extends Controller
         }
     }
 
-    // MOSTRAMOS VISTA PARA ALTA DE COMPRAS ESPECIALES, RECUPERAMOS DATA DE LA BD DE TI_PRO
+    // MOSTRAMOS VISTA PARA ALTA DE COMPRAS ESPECIALES, RECUPERAMOS DATA DE LA BD DE TI_PRO CE CE CE CE CE
+    // ALTAS DE COMPRAS ESPECIALES, ALTAS COMPRAS ESPECIALES ALTAS COMPRAS ESPECIALES ALTAS COMPRAS ESPECIALES ALTAS COMPRAS ESPECIALES ALTAS COMPRAS ESPECIALES ALTAS 
     public function showBlade(Request $request)
     {
         // Si NO hay filtros, limpia la sesión y NO uses filtros para la consulta
@@ -672,40 +673,7 @@ class TejidoSchedullingController extends Controller
                 ->orderBy('FECHACANCELACION')
                 ->get();
 
-            // 2. BATA/FELPA (OTRO OBJETO)
-            $batasFelpa = DB::connection('sqlsrv_ti')
-                ->table('TI_PRO.dbo.TWFLOGSITEMLINE as l')
-                ->join('TI_PRO.dbo.TWFLOGBOMID as b', function ($join) {
-                    $join->on('b.IDFLOG', '=', 'l.IDFLOG')
-                        ->on('b.REFRECID', '=', 'l.RECID');
-                })
-                ->join('TI_PRO.dbo.TWFLOGSTABLE as f', 'l.IDFLOG', '=', 'f.IDFLOG')
-                ->select(
-                    DB::raw('COUNT(b.ITEMID) as CANTIDAD_ITEMID'),           // Total de registros
-                    DB::raw('MAX(f.IDFLOG) as IDFLOG'),
-                    DB::raw('MAX(f.ESTADOFLOG) as ESTADOFLOG'),
-                    DB::raw('MAX(f.NAMEPROYECT) as NAMEPROYECT'),
-                    DB::raw('MAX(f.CUSTNAME) as CUSTNAME'),
-                    DB::raw('MAX(l.ANCHO) as ANCHO'),
-                    DB::raw('MAX(l.ITEMID) as ITEMID'),
-                    DB::raw('MAX(l.ITEMNAME) as ITEMNAME'),
-                    DB::raw('MAX(l.INVENTSIZEID) as INVENTSIZEID'),
-                    DB::raw('MAX(l.TIPOHILOID) as TIPOHILOID'),
-                    DB::raw('MAX(l.VALORAGREGADO) as VALORAGREGADO'),
-                    DB::raw('MAX(l.FECHACANCELACION) as FECHACANCELACION'),
-                    DB::raw('MAX(l.RASURADOCRUDO) as RASURADOCRUDO'),
-                    DB::raw('MAX(l.ITEMTYPEID) as ITEMTYPEID'),
-                    DB::raw('MAX(l.PORENTREGAR) as PORENTREGAR'),
-                    DB::raw('SUM(b.BOMQTY) as BOMQTY'),
-                )
-                ->whereBetween('l.ITEMTYPEID', [10, 19])
-                ->where('f.ESTADOFLOG', 4)
-                ->where('f.TIPOPEDIDO', 1)
-                ->where('l.ESTADOLINEA', 0)
-                ->where('l.PORENTREGAR', '!=', 0)
-                ->groupBy('b.REFRECID')
-                ->get();
-
+            // 2. BATA/FELPA (OTRO OBJETO) 
             $batasFelpaza = DB::connection('sqlsrv_ti')
                 ->table('TI_PRO.dbo.TWFLOGSITEMLINE as l')
                 ->join('TI_PRO.dbo.TWFLOGBOMID as b', function ($join) {
@@ -713,7 +681,7 @@ class TejidoSchedullingController extends Controller
                         ->on('b.REFRECID', '=', 'l.RECID');
                 })
                 ->join('TI_PRO.dbo.TWFLOGSTABLE as f', 'l.IDFLOG', '=', 'f.IDFLOG')
-                ->select(
+                ->select( // AQUI es donde traigo todos los datos necesarios de TWFLOGCOMID
                     'b.ITEMID as BOM_ITEMID',
                     'b.BOMQTY',
                     'b.REFRECID',
@@ -722,14 +690,14 @@ class TejidoSchedullingController extends Controller
                     'f.ESTADOFLOG',
                     'f.NAMEPROYECT',
                     'f.CUSTNAME',
-                    'l.ANCHO',
-                    'l.ITEMID as LINE_ITEMID',
-                    'l.ITEMNAME',
-                    'l.INVENTSIZEID',
-                    'l.TIPOHILOID',
+                    'b.ANCHO',
+                    'b.ITEMID as LINE_ITEMID',
+                    'b.ITEMNAME',
+                    'b.INVENTSIZEID',
+                    'b.TIPOHILOID',
                     'l.VALORAGREGADO',
-                    'l.FECHACANCELACION',
-                    'l.RASURADOCRUDO',
+                    'b.FECHACANCELACION',
+                    'b.RASURADO',
                     'l.ITEMTYPEID',
                     'l.PORENTREGAR'
                 )
@@ -738,7 +706,9 @@ class TejidoSchedullingController extends Controller
                 ->where('f.TIPOPEDIDO', 1)
                 ->where('l.ESTADOLINEA', 0)
                 ->where('l.PORENTREGAR', '!=', 0)
+                ->orderBy('b.FECHACANCELACION', 'asc') // <--- con esta linea automatizamos que las lineas de codigo se muestren en orden de acuerdo a la fecha.
                 ->get();
+
 
             // Solo IDs (esto te da un array simple con los valores de IDFLOG)
             // Creamos un array agrupado por IDFLOG y BOM_ITEMID
