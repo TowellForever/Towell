@@ -646,6 +646,243 @@ class TejidoSchedullingController extends Controller
 
                 $registro->save();
 
+                // a partir de aqui tendremos los calculos de la 2da tabla (PIEZAS, KILOS, ETCÉTERA) - - - - - - - - - - - - - - -  - - - - - - - - - - -  
+                // Buscar el registro principal
+                $id = $registro->id;
+
+                $hilo = $registro->Hilo;
+                $velocidad = $registro->Velocidad_STD;
+                $eficiencia = $registro->Eficiencia_Std;
+                $Std_Hr_efectivo = $registro->Std_Hr_efectivo;
+                $Prod_Kg_Dia = $registro->Prod_Kg_Dia;
+                $Cambios_Hilo = $registro->Cambios_Hilo;
+                $aplic = $registro->Aplic;
+                $ancho_por_toalla = $registro->ancho_por_toalla;
+
+
+
+
+                $calibre_pie = $registro->Calibre_Pie;
+                $calibre_rizo = $registro->Calibre_Rizo;
+
+
+                // --- Fechas inicio y fin ---
+                $Fechainicio = Carbon::parse($registro->Inicio_Tejido);
+                $Fechafin =  Carbon::parse($registro->Fin_Tejido);
+
+
+
+                // --- Periodo de días ---
+                $periodo = CarbonPeriod::create($Fechainicio->copy()->startOfDay(), $Fechafin->copy()->endOfDay());
+
+                $dias = [];
+                $totalDias = 0;
+                //INICIAMOS LOS CALCULOS DE ACUERDO A LAS FORMULAS DE ARCHIVO EXCEL DE PEPE OWNER
+                foreach ($periodo as $index => $dia) {
+                    $inicioDia = $dia->copy()->startOfDay();
+                    $finDia = $dia->copy()->endOfDay();
+
+                    // Calcular la fracción para el primer y segundo día
+                    if ($index === 0) {
+                        $inicio = strtotime($Fechainicio);
+                        $fin = strtotime($Fechafin);
+
+                        // Extraer fechas sin horas para comparar si son el mismo día
+                        $diaInicio = date('Y-m-d', $inicio);
+                        $diaFin = date('Y-m-d', $fin);
+
+                        if ($diaInicio === $diaFin) {
+                            // 🟢 Mismo día: diferencia directa entre horas
+                            $diferenciaSegundos = $fin - $inicio;
+                            $fraccion = $diferenciaSegundos / 86400; // fracción del día
+                        } else {
+                            // 🔵 Días distintos: desde hora de inicio hasta 12:00 AM del día siguiente
+                            $hora = date('H', $inicio);
+                            $minuto = date('i', $inicio);
+                            $segundo = date('s', $inicio);
+                            $segundosDesdeMedianoche = ($hora * 3600) + ($minuto * 60) + $segundo;
+                            $segundosRestantes = 86400 - $segundosDesdeMedianoche;
+                            $fraccion = $segundosRestantes / 86400;
+                        }
+
+                        // Cálculo de piezas (si aplica)
+                        $piezas = ($fraccion * 24) * $Std_Hr_efectivo;
+                        $kilos = ($piezas * $Prod_Kg_Dia) / ($Std_Hr_efectivo * 24);
+                        $cambio = $Cambios_Hilo; //si Cambios_Hilo = 1, asignamos 1
+                        $rizo = 0; // Valor por defecto
+                        if ($aplic === 'RZ') {
+                            $rizo = 1 * $kilos;
+                        } elseif ($aplic === 'RZ2') {
+                            $rizo = 2 * $kilos;
+                        } elseif ($aplic === 'RZ3') {
+                            $rizo = 3 * $kilos;
+                        } elseif ($aplic === 'BOR') {
+                            $rizo = 1 * $kilos;
+                        } elseif ($aplic === 'EST') {
+                            $rizo = 1 * $kilos;
+                        } elseif ($aplic === 'DC') {
+                            $rizo = 1 * $kilos;
+                        }
+
+                        $TRAMA = ((((0.59 * ((($registro->PASADAS_C1 * 1.001) * $ancho_por_toalla) / 100)) / (float) $registro->CALIBRE_TRA) * $piezas) / 1000);
+
+                        $combinacion1 =   ((((0.59 * (((float)$registro->PASADAS_C2 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $registro->CALIBRE_C1 != 0 ? (float) $registro->CALIBRE_C1 : 1)) * $piezas) / 1000;
+                        $combinacion2 =   ((((0.59 * (((float)$registro->PASADAS_C3 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $registro->CALIBRE_C2 != 0 ? (float) $registro->CALIBRE_C2 : 1)) * $piezas) / 1000;
+                        $combinacion3 =   ((((0.59 * (((float)$registro->PASADAS_C4 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $registro->CALIBRE_C3 != 0 ? (float) $registro->CALIBRE_C3 : 1)) * $piezas) / 1000;
+                        $combinacion4 =   ((((0.59 * (((float)$registro->PASADAS_C5 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $registro->CALIBRE_C4 != 0 ? (float) $registro->CALIBRE_C4 : 1)) * $piezas) / 1000;
+                        $Piel1 = ((((((((float) $registro->Largo_Crudo + (float) $registro->Plano) / 100) * 1.055) * 0.00059) / ((0.00059 * 1) / (0.00059 / $calibre_pie))) *
+                            (((float) $request->input('cuenta_pie') - 32) / (float) $registro->Tiras)) * $piezas);
+
+                        $riso = ($kilos  - ($Piel1 + $combinacion3 + $combinacion2 + $combinacion1 +  $TRAMA + $combinacion4));
+
+                        $dias[] = [
+                            'fecha' => $dia->toDateString(),
+                            'fraccion_dia' => $fraccion,
+                            'piezas' => $piezas,
+                            'kilos' => $kilos,
+                            'rizo' => $rizo,
+                            'cambio' => $cambio,
+                            'trama' => $TRAMA,
+                            'combinacion1' => $combinacion1,
+                            'combinacion2' => $combinacion2,
+                            'combinacion3' => $combinacion3,
+                            'combinacion4' => $combinacion4,
+                            'piel1' => $Piel1,
+                            'riso' => $riso,
+                        ];
+                        $totalDias++;
+                    } elseif ($dia->isSameDay($Fechafin)) {
+                        // Último día: calcular la fracción desde 00:00 hasta la hora fin
+                        $realInicio = $inicioDia;
+                        $realFin = $Fechafin;
+                        $segundos = $realFin->diffInSeconds($realInicio, true);
+                        $fraccion = $segundos / 86400; //agregamos esta linea de codigo para calcular las piezas
+                        $piezas = ($fraccion * 24) * $Std_Hr_efectivo;
+                        $kilos = round(($piezas * $Prod_Kg_Dia) / ($Std_Hr_efectivo * 24), 2);
+
+                        $cambio = $Cambios_Hilo; //si Cambios_Hilo = 1, asignamos 1
+                        $rizo = 0; // Valor por defecto
+                        if ($aplic === 'RZ') {
+                            $rizo = 1 * $kilos;
+                        } elseif ($aplic === 'RZ2') {
+                            $rizo = 2 * $kilos;
+                        } elseif ($aplic === 'RZ3') {
+                            $rizo = 3 * $kilos;
+                        } elseif ($aplic === 'BOR') {
+                            $rizo = 1 * $kilos;
+                        } elseif ($aplic === 'EST') {
+                            $rizo = 1 * $kilos;
+                        } elseif ($aplic === 'DC') {
+                            $rizo = 1 * $kilos;
+                        }
+                        $TRAMA = ((((0.59 * ((($registro->PASADAS_C1 * 1.001) * $ancho_por_toalla) / 100)) / (float) $registro->CALIBRE_TRA) * $piezas) / 1000);
+
+                        $combinacion1 =   ((((0.59 * (((float)$registro->PASADAS_C2 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $registro->CALIBRE_C1 != 0 ? (float) $registro->CALIBRE_C1 : 1)) * $piezas) / 1000;
+                        $combinacion2 =   ((((0.59 * (((float)$registro->PASADAS_C3 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $registro->CALIBRE_C2 != 0 ? (float) $registro->CALIBRE_C2 : 1)) * $piezas) / 1000;
+                        $combinacion3 =   ((((0.59 * (((float)$registro->PASADAS_C4 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $registro->CALIBRE_C3 != 0 ? (float) $registro->CALIBRE_C3 : 1)) * $piezas) / 1000;
+                        $combinacion4 =   ((((0.59 * (((float)$registro->PASADAS_C5 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $registro->CALIBRE_C4 != 0 ? (float) $registro->CALIBRE_C4 : 1)) * $piezas) / 1000;
+                        $Piel1 = ((((((((float) $registro->Largo_Crudo + (float) $registro->Plano) / 100) * 1.055) * 0.00059) / ((0.00059 * 1) / (0.00059 / $calibre_pie))) *
+                            (((float) $request->input('cuenta_pie') - 32) / (float) $registro->Tiras)) * $piezas);
+
+                        $riso = ($kilos  - ($Piel1 + $combinacion3 + $combinacion2 + $combinacion1 +  $TRAMA + $combinacion4));
+
+                        $dias[] = [
+                            'fecha' => $dia->toDateString(),
+                            'fraccion_dia' => round($segundos / 86400, 3),
+                            'piezas' => $piezas,
+                            'kilos' => $kilos,
+                            'rizo' => $rizo,
+                            'cambio' => $cambio,
+                            'trama' => $TRAMA,
+                            'combinacion1' => $combinacion1,
+                            'combinacion2' => $combinacion2,
+                            'combinacion3' => $combinacion3,
+                            'combinacion4' => $combinacion4,
+                            'piel1' => $Piel1,
+                            'riso' => $riso,
+                        ];
+                        $totalDias++;
+                    } else {
+                        $fraccion = 1;
+                        // Días intermedios: fracción completa (1)
+                        $piezas = ($fraccion * 24) * $Std_Hr_efectivo;
+                        $kilos = round(($piezas * $Prod_Kg_Dia) / ($Std_Hr_efectivo * 24), 2);
+                        $cambio = $Cambios_Hilo; //si Cambios_Hilo = 1, asignamos 1
+                        $rizo = 0; // Valor por defecto
+                        if ($aplic === 'RZ') {
+                            $rizo = 1 * $kilos;
+                        } elseif ($aplic === 'RZ2') {
+                            $rizo = 2 * $kilos;
+                        } elseif ($aplic === 'RZ3') {
+                            $rizo = 3 * $kilos;
+                        } elseif ($aplic === 'BOR') {
+                            $rizo = 1 * $kilos;
+                        } elseif ($aplic === 'EST') {
+                            $rizo = 1 * $kilos;
+                        } elseif ($aplic === 'DC') {
+                            $rizo = 1 * $kilos;
+                        }
+
+                        $TRAMA = ((((0.59 * ((($registro->PASADAS_C1 * 1.001) * $ancho_por_toalla) / 100)) / (float) $registro->CALIBRE_TRA) * $piezas) / 1000);
+
+                        $combinacion1 =   ((((0.59 * (((float)$registro->PASADAS_C2 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $registro->CALIBRE_C1 != 0 ? (float) $registro->CALIBRE_C1 : 1)) * $piezas) / 1000;
+                        $combinacion2 =   ((((0.59 * (((float)$registro->PASADAS_C3 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $registro->CALIBRE_C2 != 0 ? (float) $registro->CALIBRE_C2 : 1)) * $piezas) / 1000;
+                        $combinacion3 =   ((((0.59 * (((float)$registro->PASADAS_C4 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $registro->CALIBRE_C3 != 0 ? (float) $registro->CALIBRE_C3 : 1)) * $piezas) / 1000;
+                        $combinacion4 =   ((((0.59 * (((float)$registro->PASADAS_C5 * 1.001) * $ancho_por_toalla)) / 100) / ((float) $registro->CALIBRE_C4 != 0 ? (float) $registro->CALIBRE_C4 : 1)) * $piezas) / 1000;
+                        $Piel1 = ((((((((float) $registro->Largo_Crudo + (float) $registro->Plano) / 100) * 1.055) * 0.00059) / ((0.00059 * 1) / (0.00059 / $calibre_pie))) *
+                            (((float) $request->input('cuenta_pie') - 32) / (float) $registro->Tiras)) * $piezas);
+
+                        $riso = ($kilos  - ($Piel1 + $combinacion3 + $combinacion2 + $combinacion1 +  $TRAMA + $combinacion4));
+
+                        $dias[] = [
+                            'fecha' => $dia->toDateString(),
+                            'fraccion_dia' => 1, // Día completo
+                            'piezas' => $piezas,
+                            'kilos' => $kilos,
+                            'rizo' => $rizo,
+                            'cambio' => $cambio,
+                            'trama' => $TRAMA,
+                            'combinacion1' => $combinacion1,
+                            'combinacion2' => $combinacion2,
+                            'combinacion3' => $combinacion3,
+                            'combinacion4' => $combinacion4,
+                            'piel1' => $Piel1,
+                            'riso' => $riso,
+                        ];
+                        $totalDias++;
+                    }
+                }
+
+                // Mostrar el resultado con dd()
+                //dd([
+                //    'dias:' => $dias,
+                //]);
+
+                // --- Elimina movimientos anteriores ---
+                \App\Models\TipoMovimientos::where('tej_num', $id)->delete();
+
+                // --- Inserta los nuevos movimientos (igual que en store) ---
+                foreach ($dias as $registroDia) {
+                    \App\Models\TipoMovimientos::create([
+                        'fecha_inicio'   => $Fechainicio,
+                        'fecha_fin'      => $Fechafin,
+                        'fecha'          => Carbon::createFromFormat('Y-m-d', $registroDia['fecha'])->toDateString(),
+                        'fraccion_dia'   => $registroDia['fraccion_dia'],
+                        'pzas'           => $registroDia['piezas'],
+                        'kilos'          => $registroDia['kilos'],
+                        'rizo'           => $registroDia['rizo'],
+                        'cambio' => $registroDia['cambio'] === '' ? 0 : $registroDia['cambio'],
+                        'trama'          => $registroDia['trama'],
+                        'combinacion1'   => $registroDia['combinacion1'],
+                        'combinacion2'   => $registroDia['combinacion2'],
+                        'combinacion3'   => $registroDia['combinacion3'],
+                        'combinacion4'   => $registroDia['combinacion4'],
+                        'piel1'          => $registroDia['piel1'],
+                        'riso'           => $registroDia['riso'],
+                        'tej_num'        => $registro->id,
+                    ]);
+                }
+
                 // El siguiente inicia donde terminó el actual
                 $lastFin = $nuevoFin;
             }
