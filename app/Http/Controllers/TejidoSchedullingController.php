@@ -602,6 +602,7 @@ class TejidoSchedullingController extends Controller
 
         // Vuelve a ordenar por el campo 'orden' (puedes reasignar aquí el valor de 'orden' secuencialmente)
         $registros = $registros->values();
+        // Vuelve a ordenar por el campo 'orden' y 'Inicio_Tejido'
 
         DB::beginTransaction();
         try {
@@ -614,6 +615,19 @@ class TejidoSchedullingController extends Controller
 
                 // Asignar nuevo orden
                 $registro->orden = $i + 1;
+
+                // Asignar campos especiales según la posición, esto es para ULTIMO Y EN_PROCESO
+                if ($i == 0) {
+                    $registro->en_proceso = true;
+                } else {
+                    $registro->en_proceso = false;
+                }
+                if ($i == ($registros->count() - 1)) {
+                    $registro->Ultimo = 'ULTIMO';
+                } else {
+                    $registro->Ultimo = null;
+                }
+
 
                 if ($i == 0) {
                     // Primer registro: mantiene su Inicio_Tejido original
