@@ -565,45 +565,76 @@ class TejidoSchedullingController extends Controller
         return redirect()->route('planeacion.index')->with('success', 'Registro actualizado correctamente');
     }
 
+    // Funión para dar sentido a las FLECHITAS arriba y abajo de PLANEACIÓN
     public function moverRegistro(Request $request)
     {
         $id = (int) $request->input('id');
         $telar = (int) $request->input('telar');
         $accion = $request->input('accion'); // 'arriba' o 'abajo'
 
-        $registroActual = Planeacion::findOrFail($id);
-
-        // Obtén todos los registros del mismo telar, ordenados por 'orden'
         $registros = Planeacion::where('Telar', $telar)
             ->orderBy('orden')
             ->get();
 
-        $index = $registros->search(function ($item) use ($id) {
-            return $item->id == $id;
-        });
 
+        //Extraermos la fecha de INICIO del primer registro de TEJ
+        $primerRegistro = $registros->first();
+        $fechaInicioOriginal = $primerRegistro ? new \DateTime($primerRegistro->Inicio_Tejido) : null;
+
+
+        $index = $registros->search(fn($item) => $item->id == $id);
         if ($index === false) {
             return response()->json(['ok' => false, 'error' => 'No se encontró el registro.']);
         }
 
         if ($accion == 'arriba' && $index > 0) {
-            $otro = $registros[$index - 1];
+            $tmp = $registros[$index];
+            $registros[$index] = $registros[$index - 1];
+            $registros[$index - 1] = $tmp;
         } elseif ($accion == 'abajo' && $index < ($registros->count() - 1)) {
-            $otro = $registros[$index + 1];
+            $tmp = $registros[$index];
+            $registros[$index] = $registros[$index + 1];
+            $registros[$index + 1] = $tmp;
         } else {
-            return response()->json(['ok' => false, 'error' => 'No se puede mover más.']);
+            return response()->json(['ok' => false, 'error' => 'El registro por el cual se pretende cambiar pretenece a otro telar.']);
         }
 
-        // Intercambiar los valores de 'orden'
+
+        // Vuelve a ordenar por el campo 'orden' (puedes reasignar aquí el valor de 'orden' secuencialmente)
+        $registros = $registros->values();
+
         DB::beginTransaction();
         try {
-            $tmpOrden = $registroActual->orden;
-            $registroActual->orden = $otro->orden;
-            $otro->orden = $tmpOrden;
+            $lastFin = null;
+            foreach ($registros as $i => $registro) {
+                // Duración original (en segundos)
+                $inicio = new \DateTime($registro->Inicio_Tejido); // Recuerda: índice 1 es el segundo registro)
+                $fin = new \DateTime($registro->Fin_Tejido);
+                $duracion = $inicio->diff($fin);
 
-            $registroActual->save();
-            $otro->save();
+                // Asignar nuevo orden
+                $registro->orden = $i + 1;
 
+                if ($i == 0) {
+                    // Primer registro: mantiene su Inicio_Tejido original
+                    $nuevoInicio = $fechaInicioOriginal;
+                } else {
+                    // Los siguientes: su inicio es el Fin_Tejido del anterior
+                    $nuevoInicio = clone $lastFin;
+                }
+
+                // Calcula el nuevo Fin_Tejido sumando la duración original
+                $nuevoFin = (clone $nuevoInicio)->add($duracion);
+
+                // Actualiza en el modelo
+                $registro->Inicio_Tejido = $nuevoInicio->format('Y-m-d H:i:s');
+                $registro->Fin_Tejido = $nuevoFin->format('Y-m-d H:i:s');
+
+                $registro->save();
+
+                // El siguiente inicia donde terminó el actual
+                $lastFin = $nuevoFin;
+            }
             DB::commit();
             return response()->json(['ok' => true]);
         } catch (\Exception $e) {
