@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="max-w-7xl mx-auto p-6">
-        <h1 class="text-3xl font-extrabold text-blue-800 mb-6 text-center tracking-tight drop-shadow">Pronósticos de Flogs
+    <div class="max-w-7xl mx-auto">
+        <h1 class="text-3xl font-extrabold text-blue-800 text-center tracking-tight drop-shadow -mt-2">ALTA DE PRONÓSTICOS
         </h1>
 
-        <!-- Filtro de mes -->
-        <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
-            <select id="mes" name="mes"
+        <div class="flex items-center gap-2 mb-1 -mt-2">
+            <!-- Select compacto -->
+            <select id="select-mes"
                 class="w-56 rounded-xl border-2 border-blue-300 bg-blue-50 text-blue-800 px-4 py-1 shadow focus:border-blue-500 focus:ring focus:ring-blue-100 transition-all text-md font-bold appearance-none">
                 <option value="">SELECCIONA UN MES:</option>
                 <option value="01">ENERO</option>
@@ -23,7 +23,14 @@
                 <option value="11">NOVIEMBRE</option>
                 <option value="12">DICIEMBRE</option>
             </select>
+
+            <!-- Chips a la derecha -->
+            <div id="meses-seleccionados" class="flex flex-wrap gap-2 min-h-[32px] items-center max-w-full overflow-x-auto">
+                <!-- Aquí van los chips -->
+            </div>
         </div>
+        <!-- Input hidden para backend -->
+        <input type="hidden" name="meses_seleccionados" id="input-meses-seleccionados" value="">
 
         <!-- Tabla dinámica -->
         <div class="overflow-x-auto rounded-2xl shadow-lg border border-blue-200 bg-white">
@@ -63,4 +70,89 @@
             </table>
         </div>
     </div>
+
+
+    <script>
+        const selectMes = document.getElementById('select-mes');
+        const barraMeses = document.getElementById('meses-seleccionados');
+        const inputMeses = document.getElementById('input-meses-seleccionados');
+
+        const mesesData = [{
+                value: "01",
+                text: "ENERO"
+            }, {
+                value: "02",
+                text: "FEBRERO"
+            }, {
+                value: "03",
+                text: "MARZO"
+            },
+            {
+                value: "04",
+                text: "ABRIL"
+            }, {
+                value: "05",
+                text: "MAYO"
+            }, {
+                value: "06",
+                text: "JUNIO"
+            },
+            {
+                value: "07",
+                text: "JULIO"
+            }, {
+                value: "08",
+                text: "AGOSTO"
+            }, {
+                value: "09",
+                text: "SEPTIEMBRE"
+            },
+            {
+                value: "10",
+                text: "OCTUBRE"
+            }, {
+                value: "11",
+                text: "NOVIEMBRE"
+            }, {
+                value: "12",
+                text: "DICIEMBRE"
+            }
+        ];
+
+        let mesesSeleccionados = [];
+
+        selectMes.addEventListener('change', function() {
+            const value = selectMes.value;
+            if (!value || mesesSeleccionados.includes(value)) return; // evitar vacíos y duplicados
+            mesesSeleccionados.push(value);
+            renderBarraMeses();
+            selectMes.value = ""; // reset select
+        });
+
+        function renderBarraMeses() {
+            barraMeses.innerHTML = "";
+            mesesSeleccionados.forEach(val => {
+                const mes = mesesData.find(m => m.value === val);
+                const chip = document.createElement('div');
+                chip.className =
+                    "bg-blue-100 border border-blue-300 text-blue-900 rounded-xl px-3 py-1 flex items-center gap-1 font-bold text-sm shadow whitespace-nowrap";
+                chip.innerHTML = `
+                <span>${mes.text}</span>
+                <button
+                    class="ml-2 text-blue-600 hover:text-red-600 font-bold focus:outline-none"
+                    data-value="${val}"
+                    title="Quitar mes"
+                    type="button"
+                >×</button>
+            `;
+                chip.querySelector('button').onclick = e => {
+                    mesesSeleccionados = mesesSeleccionados.filter(v => v !== val);
+                    renderBarraMeses();
+                };
+                barraMeses.appendChild(chip);
+            });
+            // Actualiza el input hidden, separado por coma
+            inputMeses.value = mesesSeleccionados.join(',');
+        }
+    </script>
 @endsection
