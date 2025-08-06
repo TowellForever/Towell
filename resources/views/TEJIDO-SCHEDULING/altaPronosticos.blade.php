@@ -6,7 +6,6 @@
         </h1>
 
         <div class="flex items-center gap-2 mb-1 -mt-2">
-            <!-- Select compacto -->
             <select id="select-mes"
                 class="w-56 rounded-xl border-2 border-blue-300 bg-blue-50 text-blue-800 px-4 py-1 shadow focus:border-blue-500 focus:ring focus:ring-blue-100 transition-all text-md font-bold appearance-none">
                 <option value="">SELECCIONA UN MES:</option>
@@ -23,17 +22,15 @@
                 <option value="11">NOVIEMBRE</option>
                 <option value="12">DICIEMBRE</option>
             </select>
-
-            <!-- Chips a la derecha -->
             <div id="meses-seleccionados" class="flex flex-wrap gap-2 min-h-[32px] items-center max-w-full overflow-x-auto">
-                <!-- Aquí van los chips -->
             </div>
         </div>
-        <!-- Input hidden para backend -->
-        <input type="hidden" name="meses_seleccionados" id="input-meses-seleccionados" value="">
 
-        <!-- Tabla dinámica -->
-        <div class="overflow-x-auto rounded-2xl shadow-lg border border-blue-200 bg-white">
+        <input type="hidden" id="input-meses-seleccionados" value="">
+        <input type="hidden" id="mes-actual" value="{{ $mesActual }}">
+
+        <div class="overflow-x-auto rounded-2xl shadow-lg border border-blue-200 bg-white"
+            style="max-height: 400px; overflow-y: auto;">
             <table class="min-w-full text-xs text-center">
                 <thead class="bg-blue-400 text-white font-bold leading-tight">
                     <tr>
@@ -52,30 +49,36 @@
                     </tr>
                 </thead>
                 <tbody class="bg-blue-50">
-                    <tr class="hover:bg-blue-100 transition-all">
-                        <td class="px-2 py-1">1125</td>
-                        <td class="px-2 py-1">Grupo Lala</td>
-                        <td class="px-2 py-1">ART-00123</td>
-                        <td class="px-2 py-1">Toalla Premium</td>
-                        <td class="px-2 py-1">Algodón</td>
-                        <td class="px-2 py-1">Grande</td>
-                        <td class="px-2 py-1">Sí</td>
-                        <td class="px-2 py-1">Bordado</td>
-                        <td class="px-2 py-1">1.20</td>
-                        <td class="px-2 py-1">450</td>
-                        <td class="px-2 py-1">Toalla</td>
-                        <td class="px-2 py-1">CB-1928374</td>
-                    </tr>
+                    @forelse($datos as $dato)
+                        <tr class="hover:bg-blue-100 transition-all">
+                            <td class="px-2 py-1">{{ $dato->IDFLOG ?? '-' }}</td>
+                            <td class="px-2 py-1">{{ $dato->CUSTNAME ?? '-' }}</td>
+                            <td class="px-2 py-1">{{ $dato->ITEMID ?? '-' }}</td>
+                            <td class="px-2 py-1">{{ $dato->ITEMNAME ?? '-' }}</td>
+                            <td class="px-2 py-1">{{ $dato->TIPOHILOID ?? '-' }}</td>
+                            <td class="px-2 py-1">{{ $dato->INVENTSIZEID ?? '-' }}</td>
+                            <td class="px-2 py-1">{{ $dato->RASURADOCRUDO ?? '-' }}</td>
+                            <td class="px-2 py-1">{{ $dato->VALORAGREGADO ?? '-' }}</td>
+                            <td class="px-2 py-1">{{ $dato->ANCHO ?? '-' }}</td>
+                            <td class="px-2 py-1">{{ $dato->PORENTREGAR ?? '-' }}</td>
+                            <td class="px-2 py-1">{{ $dato->TIPOARTICULO ?? '-' }}</td>
+                            <td class="px-2 py-1">{{ $dato->CODIGOBARRAS ?? '-' }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="12" class="text-center text-gray-400 py-3">No hay registros para este mes.</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
     </div>
 
-
     <script>
         const selectMes = document.getElementById('select-mes');
         const barraMeses = document.getElementById('meses-seleccionados');
         const inputMeses = document.getElementById('input-meses-seleccionados');
+        const mesActual = document.getElementById('mes-actual').value;
 
         const mesesData = [{
                 value: "01",
@@ -121,12 +124,20 @@
 
         let mesesSeleccionados = [];
 
+        window.addEventListener('DOMContentLoaded', () => {
+            if (mesActual) {
+                mesesSeleccionados = [mesActual];
+                renderBarraMeses();
+                selectMes.value = mesActual;
+            }
+        });
+
         selectMes.addEventListener('change', function() {
             const value = selectMes.value;
             if (!value || mesesSeleccionados.includes(value)) return; // evitar vacíos y duplicados
-            mesesSeleccionados.push(value);
+            mesesSeleccionados = [value]; // solo uno a la vez (si quieres varios, cambia esto)
             renderBarraMeses();
-            selectMes.value = ""; // reset select
+            selectMes.value = value;
         });
 
         function renderBarraMeses() {
@@ -137,21 +148,20 @@
                 chip.className =
                     "bg-blue-100 border border-blue-300 text-blue-900 rounded-xl px-3 py-1 flex items-center gap-1 font-bold text-sm shadow whitespace-nowrap";
                 chip.innerHTML = `
-                <span>${mes.text}</span>
-                <button
-                    class="ml-2 text-blue-600 hover:text-red-600 font-bold focus:outline-none"
-                    data-value="${val}"
-                    title="Quitar mes"
-                    type="button"
-                >×</button>
-            `;
+            <span>${mes.text}</span>
+            <button
+                class="ml-2 text-blue-600 hover:text-red-600 font-bold focus:outline-none"
+                data-value="${val}"
+                title="Quitar mes"
+                type="button"
+            >×</button>
+        `;
                 chip.querySelector('button').onclick = e => {
                     mesesSeleccionados = mesesSeleccionados.filter(v => v !== val);
                     renderBarraMeses();
                 };
                 barraMeses.appendChild(chip);
             });
-            // Actualiza el input hidden, separado por coma
             inputMeses.value = mesesSeleccionados.join(',');
         }
     </script>

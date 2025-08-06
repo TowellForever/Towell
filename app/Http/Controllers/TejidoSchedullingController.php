@@ -1053,6 +1053,53 @@ class TejidoSchedullingController extends Controller
 
     public function showBladePronos()
     {
-        return view('TEJIDO-SCHEDULING.altaPronosticos');
+        // Mes y año actual del sistema
+        $now = now();
+        $anio = $now->format('Y');
+        $mes = $now->format('m');
+
+        // Primer y último día del mes actual
+        $inicioMes = "{$anio}-{$mes}-01";
+        // El último día puedes obtenerlo así:
+        $finMes = $now->copy()->endOfMonth()->format('Y-m-d');
+
+        // Consulta: mismos joins, rango dinámico y TIPOPEDIDO = 2
+        $datos = DB::connection('sqlsrv_ti')->table('TwPronosticosFlogs as pf')
+            ->join('TwFlogsItemLine as il', function ($join) {
+                $join->on('pf.ITEMID', '=', 'il.ITEMID')
+                    ->on('pf.INVENTSIZEID', '=', 'il.INVENTSIZEID');
+            })
+            ->where('pf.TRANSDATE', '>=', $inicioMes)
+            ->where('pf.TRANSDATE', '<=', $finMes)
+            ->where('pf.TIPOPEDIDO', 2)
+            ->groupBy(
+                'pf.CUSTNAME',
+                'pf.ITEMID',
+                'pf.INVENTSIZEID',
+                'il.IDFLOG'
+            )
+            ->select(
+                'pf.CUSTNAME',
+                'pf.ITEMID',
+                'pf.INVENTSIZEID',
+                'il.IDFLOG',
+                DB::raw('MIN(pf.ITEMNAME) as ITEMNAME'),
+                DB::raw('MIN(il.TIPOHILOID) as TIPOHILOID'),
+                DB::raw('MIN(pf.RASURADOCRUDO) as RASURADOCRUDO'),
+                DB::raw('MIN(il.VALORAGREGADO) as VALORAGREGADO'),
+                DB::raw('MIN(il.ANCHO) as ANCHO'),
+                DB::raw('SUM(il.PORENTREGAR) as PORENTREGAR'),
+                DB::raw('MIN(il.ITEMTYPEID) as ITEMTYPEID'),
+                DB::raw('MIN(pf.CODIGOBARRAS) as CODIGOBARRAS')
+            )
+            ->get();
+
+        dd($datos);
+
+        // Manda los datos y el mes actual a la vista
+        return view('TEJIDO-SCHEDULING.altaPronosticos', [
+            'datos' => $datos,
+            'mesActual' => $mes,
+        ]);
     }
 }
