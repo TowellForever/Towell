@@ -659,18 +659,12 @@ class TejidoSchedullingController extends Controller
                 $aplic = $registro->Aplic;
                 $ancho_por_toalla = $registro->ancho_por_toalla;
 
-
-
-
                 $calibre_pie = $registro->Calibre_Pie;
                 $calibre_rizo = $registro->Calibre_Rizo;
-
 
                 // --- Fechas inicio y fin ---
                 $Fechainicio = Carbon::parse($registro->Inicio_Tejido);
                 $Fechafin =  Carbon::parse($registro->Fin_Tejido);
-
-
 
                 // --- Periodo de días ---
                 $periodo = CarbonPeriod::create($Fechainicio->copy()->startOfDay(), $Fechafin->copy()->endOfDay());
@@ -1055,5 +1049,10 @@ class TejidoSchedullingController extends Controller
             dd($e);
             return redirect()->back()->with('error', 'Ocurrió un error al cargar los datos: ' . $e->getMessage());
         }
+    }
+
+    public function showBladePronos()
+    {
+        return view('TEJIDO-SCHEDULING.altaPronosticos');
     }
 }

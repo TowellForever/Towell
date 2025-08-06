@@ -256,6 +256,7 @@ DELETE | /modelos/{id} | destroy() | modelos.destroy
     Route::get('/tejido-scheduling/import', [ExcelImportacionesController::class, 'showForm'])->name('tejido.import.form');
     Route::post('/tejido-scheduling/import', [ExcelImportacionesController::class, 'import'])->name('tejido.import');
     Route::get('/tejido-scheduling/ventas', [TejidoSchedullingController::class, 'showBlade'])->name('tejido.scheduling.ventas');
+    Route::get('/tejido-scheduling/pronosticos', [TejidoSchedullingController::class, 'showBladePronos'])->name('tejido.pronosticos.blade');
 
     //RUTAS TEMPORALES
     Route::post('/reportes-temporales', [ReporteTemporalController::class, 'store'])->name('reportes-temporales.store');
