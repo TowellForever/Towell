@@ -224,7 +224,6 @@
         });
 
         //AQUI comienza todo lo relacionado con el LOADER y BLOQUE TEMPORAL mientras trabaja AJAX
-        //
         const overlay = document.getElementById('ajax-loader');
         const btnProgramar = document.getElementById('enviarSeleccionados'); // puede ser null si no existe aún
         const controlsToDisable = [selectMes, btnProgramar].filter(Boolean);

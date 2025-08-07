@@ -117,7 +117,7 @@
         </div>
 
         <!--FIN DE FILTROS DE BÚSQUEDA ***************************************************************************************************************-->
-        <!--inicia tabla MODULOS-->
+        <!--inicia tabla MODELOS-->
         <div class="overflow-x-auto overflow-y-auto bigScroll table-container-plane table-wrapper bg-white shadow-lg rounded-lg p-1"
             style="max-height: calc(100vh - 100px);">
             <table id="tablonMODELOS" class="min-w-full celP plane-table border border-gray-300 text-center">
@@ -141,10 +141,13 @@
                                     $fieldsSinDecimal = ['RASEMA', 'Telar_Actual', 'Clave_Modelo', 'CUENTA', 'PASADAS'];
 
                                     // Campos de fecha
-                                    $fieldsFecha = ['Fecha_Orden', 'Fecha_Cumplimiento'];
+                                    $fieldsFecha = ['Fecha_Orden', 'Fecha_Cumplimiento', 'Fecha_Compromiso'];
 
                                     // Campos que requieren 2 decimales
                                     $fieldsDosDecimales = [
+                                        'C1_Trama_de_Fondo',
+                                        'No_De_Marbetes',
+                                        'Tra',
                                         'Rizo',
                                         'No#_De_Marbetes',
                                         'C11',
@@ -156,7 +159,6 @@
                                         'Pzas_Dia__pasadas',
                                         'Pzas_Día_formula',
                                         'DIF',
-                                        'EFIC#',
                                         'Rev',
                                         'TIRAS1',
                                         'PASADAS5',
@@ -164,6 +166,21 @@
                                         'B',
                                         'C',
                                         'COMPROBAR modelos duplicados',
+                                        'C1_A_1',
+                                        'Hilo_A_3',
+                                        'C3_A_3',
+                                        'Hilo_A_4',
+                                        'KG_p_dia',
+                                        'Pzas_p_dia_pasadas',
+                                        'Pzas_p_dia_formula',
+                                        'DIF',
+                                        'EFIC',
+                                        'Rev',
+                                        'TIRAS_2',
+                                        'PASADAS',
+                                        'CU',
+                                        'CV',
+                                        'CW',
                                     ];
 
                                     // Campo que requiere 3 decimales
@@ -187,6 +204,7 @@
                 </tbody>
             </table>
         </div>
+
     </div>
 
     <script>
