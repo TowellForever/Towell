@@ -1,16 +1,35 @@
 @extends('layouts.app')
 
 @section('content')
+    @php
+        $meses = [
+            '01' => 'ENERO',
+            '02' => 'FEBRERO',
+            '03' => 'MARZO',
+            '04' => 'ABRIL',
+            '05' => 'MAYO',
+            '06' => 'JUNIO',
+            '07' => 'JULIO',
+            '08' => 'AGOSTO',
+            '09' => 'SEPTIEMBRE',
+            '10' => 'OCTUBRE',
+            '11' => 'NOVIEMBRE',
+            '12' => 'DICIEMBRE',
+        ];
+        $anioActual = substr($mesActual, 0, 4); // '2025'
+        $mesNum = substr($mesActual, 5, 2); // '08'
+        $textoMesActual = ($meses[$mesNum] ?? '') . " $anioActual";
+    @endphp
+
     <div class="max-w-7xl mx-auto">
         <h1 class="text-3xl font-extrabold text-blue-800 text-center tracking-tight drop-shadow -mt-2">
             ALTA DE PRONÓSTICOS
         </h1>
-
         <form id="form-filtrar-mes" class="mb-4">
             <div class="flex items-center gap-2">
                 <select id="select-mes"
                     class="w-56 rounded-xl border-2 border-blue-300 bg-blue-50 text-blue-800 px-4 py-1 shadow focus:border-blue-500 focus:ring focus:ring-blue-100 transition-all text-md font-bold appearance-none">
-                    <option value="">SELECCIONA UNO O VARIOS MESES:</option>
+                    <option value="">{{ $textoMesActual }}</option>
                     <option value="2025-01">ENERO</option>
                     <option value="2025-02">FEBRERO</option>
                     <option value="2025-03">MARZO</option>
@@ -48,13 +67,39 @@
                         <th class="px-2 py-1">CANTIDAD</th>
                         <th class="px-2 py-1">TIPO DE ARTÍCULO</th>
                         <th class="px-2 py-1">CÓDIGO DE BARRAS</th>
+                        <th class="">
+                            <button id="enviarSeleccionados"
+                                class="w-full h-full font-bold text-sm bg-black text-yellow-400 rounded-full hover:bg-yellow-400 hover:text-white transition shadow px-2 py-2 border-none"
+                                style="border-radius: 50px;">
+                                PROGRAMAR
+                            </button>
+                        </th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td colspan="12" class="text-center text-gray-400 py-3">Selecciona uno o varios meses para ver
-                            registros.</td>
-                    </tr>
+                <tbody class="bg-blue-50">
+                    @forelse($datos as $dato)
+                        <tr class="hover:bg-blue-100 transition-all">
+                            <td class="px-2 py-1">{{ $dato->IDFLOG ?? '-' }}</td>
+                            <td class="px-2 py-1">{{ $dato->CUSTNAME ?? '-' }}</td>
+                            <td class="px-2 py-1">{{ $dato->ITEMID ?? '-' }}</td>
+                            <td class="px-2 py-1">{{ $dato->ITEMNAME ?? '-' }}</td>
+                            <td class="px-2 py-1">{{ $dato->TIPOHILOID ?? '-' }}</td>
+                            <td class="px-2 py-1">{{ $dato->INVENTSIZEID ?? '-' }}</td>
+                            <td class="px-2 py-1">{{ $dato->RASURADOCRUDO ?? '-' }}</td>
+                            <td class="px-2 py-1">{{ $dato->VALORAGREGADO ?? '-' }}</td>
+                            <td class="px-2 py-1">{{ decimales($dato->ANCHO) ?? '-' }}</td>
+                            <td class="px-2 py-1">{{ decimales($dato->PORENTREGAR) ?? '-' }}</td>
+                            <td class="px-2 py-1">{{ $dato->TIPOARTICULO ?? '-' }}</td>
+                            <td class="px-2 py-1">{{ $dato->CODIGOBARRAS ?? '-' }}</td>
+                            <td class="text-center align-middle border">
+                                <input type="checkbox" class="form-checkbox text-blue-500 fila-checkbox w-5 h-5" />
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="12" class="text-center text-gray-400 py-3">No hay registros para este mes.</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
@@ -141,13 +186,70 @@
                 <td class="px-2 py-1">${dato.INVENTSIZEID ?? '-'}</td>
                 <td class="px-2 py-1">${dato.RASURADOCRUDO ?? '-'}</td>
                 <td class="px-2 py-1">${dato.VALORAGREGADO ?? '-'}</td>
-                <td class="px-2 py-1">${dato.ANCHO ?? '-'}</td>
-                <td class="px-2 py-1">${dato.PORENTREGAR ?? '-'}</td>
+                <td class="px-2 py-1">${mostrarDecimalBonito(dato.ANCHO)}</td>
+                <td class="px-2 py-1">${mostrarDecimalBonito(dato.PORENTREGAR)}</td>
                 <td class="px-2 py-1">${dato.TIPOARTICULO ?? '-'}</td>
                 <td class="px-2 py-1">${dato.CODIGOBARRAS ?? '-'}</td>
+                <td class="text-center align-middle border">
+                    <input type="checkbox" class="form-checkbox text-blue-500 fila-checkbox w-5 h-5" />
+                </td>
             </tr>
         `;
             });
         }
+
+        function mostrarDecimalBonito(valor) {
+            if (valor === null || valor === undefined || valor === '') return '-';
+            const num = Number(valor);
+            if (isNaN(num)) return valor;
+            // Si es entero, muéstralo sin decimales. Si tiene decimales, muéstralo con máximo 2, pero sin ceros extra.
+            return num % 1 === 0 ? num : num.toLocaleString('en-US', {
+                maximumFractionDigits: 2,
+                minimumFractionDigits: 0
+            });
+        }
+    </script>
+    <!--script para el funcionamiento del boton PROGRAMAR, envia datos al form-create-->
+    <script>
+        document.getElementById('enviarSeleccionados').addEventListener('click', function() {
+            const seleccionados = [];
+
+            document.querySelectorAll('.fila-checkbox:checked').forEach(checkbox => {
+                const fila = checkbox.closest('tr');
+                const datos = {
+                    IDFLOG: fila.dataset.idflog,
+                    ITEMID: fila.dataset.itemid,
+                    ITEMNAME: fila.dataset.itemname,
+                    INVENTSIZEID: fila.dataset.inventsizeid,
+                    CANTIDAD: fila.dataset.porentregar,
+                    RASURADOCRUDO: fila.dataset.rasuradocrudo,
+                    TIPOHILO: fila.dataset.tipohiloid,
+                    APLICACION: fila.dataset.valoragregado,
+                    FECHACANCE: fila.dataset.fechacancelacion,
+                    // Agrega los campos que quieras pasar, para lograr agregarlo aqui, antes debe colar en TR:   data radurado $linea->RASURADOCRUDO "
+                };
+                seleccionados.push(datos);
+            });
+
+            if (seleccionados.length === 0) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'ATENCIÓN!',
+                    text: 'Marca la casilla de al menos una fila.',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Entendido'
+                });
+
+                return;
+            }
+
+            // Solo tomamos el primero si vamos a redirigir con GET
+            const primero = seleccionados[0];
+
+            const queryParams = new URLSearchParams(primero).toString();
+            const url = "{{ route('planeacion.create') }}" + "?" + queryParams;
+
+            window.location.href = url;
+        });
     </script>
 @endsection

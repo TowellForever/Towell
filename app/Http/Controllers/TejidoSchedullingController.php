@@ -1095,8 +1095,6 @@ class TejidoSchedullingController extends Controller
             )
             ->get();
 
-        //dd($datos);
-
         // Manda los datos y el mes actual a la vista
         return view('TEJIDO-SCHEDULING.altaPronosticos', [
             'datos' => $datos,
