@@ -81,6 +81,16 @@
                 </tbody>
             </table>
         </div>
+        <!-- Overlay de carga -->
+        <div id="ajax-loader"
+            class="fixed inset-0 z-[9999] hidden items-center justify-center bg-white/70 backdrop-blur-sm">
+            <div class="flex flex-col items-center gap-3">
+                <!-- Spinner -->
+                <div class="w-12 h-12 rounded-full border-4 border-gray-300 border-t-gray-700 animate-spin"></div>
+                <div class="text-sm font-semibold text-gray-700">Cargando datos…</div>
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -212,6 +222,84 @@
                 consultarPronosticosAjax();
             }
         });
+
+        //AQUI comienza todo lo relacionado con el LOADER y BLOQUE TEMPORAL mientras trabaja AJAX
+        //
+        const overlay = document.getElementById('ajax-loader');
+        const btnProgramar = document.getElementById('enviarSeleccionados'); // puede ser null si no existe aún
+        const controlsToDisable = [selectMes, btnProgramar].filter(Boolean);
+
+        function showLoader() {
+            overlay.classList.remove('hidden');
+            overlay.classList.add('flex'); // centra el spinner
+            document.body.classList.add('overflow-hidden', 'cursor-wait');
+            controlsToDisable.forEach(el => el.disabled = true);
+        }
+
+        function hideLoader() {
+            overlay.classList.add('hidden');
+            overlay.classList.remove('flex');
+            document.body.classList.remove('overflow-hidden', 'cursor-wait');
+            controlsToDisable.forEach(el => el.disabled = false);
+        }
+
+        let lastController = null;
+
+        async function consultarPronosticosAjax() {
+            if (mesesSeleccionados.length === 0) {
+                renderTablaPronosticos([]);
+                return;
+            }
+
+            // Cancelar petición previa (si aún vive)
+            if (lastController) lastController.abort();
+            lastController = new AbortController();
+
+            showLoader();
+
+            try {
+                const r = await fetch('{{ route('pronosticos.ajax') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        meses: mesesSeleccionados
+                    }),
+                    signal: lastController.signal
+                });
+
+                if (!r.ok) throw new Error('Respuesta no OK');
+                const data = await r.json();
+                renderTablaPronosticos(data.datos);
+            } catch (err) {
+                if (err.name === 'AbortError') {
+                    // petición cancelada: no hacemos nada
+                    return;
+                }
+                console.error(err);
+                renderTablaPronosticos([], true);
+            } finally {
+                hideLoader();
+            }
+        }
+        const appRoot = document.querySelector('.max-w-7xl.mx-auto'); // tu contenedor
+        function showLoader() {
+            overlay.classList.remove('hidden');
+            overlay.classList.add('flex');
+            document.body.classList.add('overflow-hidden', 'cursor-wait');
+            appRoot?.setAttribute('inert', ''); // bloquea foco/teclas
+            controlsToDisable.forEach(el => el.disabled = true);
+        }
+
+        function hideLoader() {
+            overlay.classList.add('hidden');
+            overlay.classList.remove('flex');
+            document.body.classList.remove('overflow-hidden', 'cursor-wait');
+            appRoot?.removeAttribute('inert');
+            controlsToDisable.forEach(el => el.disabled = false);
+        }
     </script>
     <!--script para el funcionamiento del boton PROGRAMAR, envia datos al form-create-->
     <script>
