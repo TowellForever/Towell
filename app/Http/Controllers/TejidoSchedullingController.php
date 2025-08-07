@@ -1057,6 +1057,7 @@ class TejidoSchedullingController extends Controller
         $now = now();
         $anio = $now->format('Y');
         $mes = $now->format('m');
+        $mesActual = "$anio-$mes";
 
         // Primer y último día del mes actual
         $inicioMes = "{$anio}-{$mes}-01";
@@ -1094,12 +1095,80 @@ class TejidoSchedullingController extends Controller
             )
             ->get();
 
-        dd($datos);
+        //dd($datos);
 
         // Manda los datos y el mes actual a la vista
         return view('TEJIDO-SCHEDULING.altaPronosticos', [
             'datos' => $datos,
-            'mesActual' => $mes,
+            'mesActual' => $mesActual,
         ]);
+    }
+
+    public function getPronosticosAjax(Request $request)
+    {
+        // Recibe meses en formato array: ['2023-08', '2023-09']
+        $meses = $request->input('meses', []);
+        if (empty($meses)) {
+            return response()->json(['datos' => []]);
+        }
+
+        $rangos = [];
+        foreach ($meses as $m) {
+            // Formato esperado: YYYY-MM
+            try {
+                $carbon = Carbon::createFromFormat('Y-m', $m);
+            } catch (\Exception $e) {
+                continue;
+            }
+            $rangos[] = [
+                'inicio' => $carbon->copy()->startOfMonth()->format('Y-m-d'),
+                'fin'    => $carbon->copy()->endOfMonth()->format('Y-m-d'),
+            ];
+        }
+
+        // Crea un solo rango de fechas (puedes adaptar para hacer múltiples rangos con OR)
+        $query = DB::connection('sqlsrv_ti')->table('TwPronosticosFlogs as pf')
+            ->join('TwFlogsItemLine as il', function ($join) {
+                $join->on('pf.ITEMID', '=', 'il.ITEMID')
+                    ->on('pf.INVENTSIZEID', '=', 'il.INVENTSIZEID');
+            })
+            ->where('pf.TIPOPEDIDO', 2);
+
+        // Agrega where para cada rango
+        $query->where(function ($q) use ($rangos) {
+            foreach ($rangos as $r) {
+                $q->orWhere(function ($sq) use ($r) {
+                    $sq->where('pf.TRANSDATE', '>=', $r['inicio'])
+                        ->where('pf.TRANSDATE', '<=', $r['fin']);
+                });
+            }
+        });
+
+        $datos = $query
+            ->groupBy(
+                'pf.CUSTNAME',
+                'pf.ITEMID',
+                'pf.INVENTSIZEID',
+                'il.IDFLOG'
+            )
+            ->select(
+                'pf.CUSTNAME',
+                'pf.ITEMID',
+                'pf.INVENTSIZEID',
+                'il.IDFLOG',
+                DB::raw('MIN(pf.ITEMNAME) as ITEMNAME'),
+                DB::raw('MIN(il.TIPOHILOID) as TIPOHILOID'),
+                DB::raw('MIN(pf.RASURADOCRUDO) as RASURADOCRUDO'),
+                DB::raw('MIN(il.VALORAGREGADO) as VALORAGREGADO'),
+                DB::raw('MIN(il.ANCHO) as ANCHO'),
+                DB::raw('SUM(il.PORENTREGAR) as PORENTREGAR'),
+                DB::raw('MIN(il.ITEMTYPEID) as TIPOARTICULO'),
+                DB::raw('MIN(pf.CODIGOBARRAS) as CODIGOBARRAS')
+            )
+            ->get();
+
+
+        // Regresa como JSON
+        return response()->json(['datos' => $datos]);
     }
 }

@@ -257,6 +257,8 @@ DELETE | /modelos/{id} | destroy() | modelos.destroy
     Route::post('/tejido-scheduling/import', [ExcelImportacionesController::class, 'import'])->name('tejido.import');
     Route::get('/tejido-scheduling/ventas', [TejidoSchedullingController::class, 'showBlade'])->name('tejido.scheduling.ventas');
     Route::get('/tejido-scheduling/pronosticos', [TejidoSchedullingController::class, 'showBladePronos'])->name('tejido.pronosticos.blade');
+    // Ruta para AJAX (puede ser POST o GET)
+    Route::post('/pronosticos/ajax', [TejidoSchedullingController::class, 'getPronosticosAjax'])->name('pronosticos.ajax');
 
     //RUTAS TEMPORALES
     Route::post('/reportes-temporales', [ReporteTemporalController::class, 'store'])->name('reportes-temporales.store');
