@@ -155,23 +155,40 @@
             tbody.innerHTML = '';
             datos.forEach(dato => {
                 tbody.innerHTML += `
-            <tr class="hover:bg-blue-100 transition-all">
-                <td class="px-2 py-1">${dato.IDFLOG ?? '-'}</td>
-                <td class="px-2 py-1">${dato.CUSTNAME ?? '-'}</td>
-                <td class="px-2 py-1">${dato.ITEMID ?? '-'}</td>
-                <td class="px-2 py-1">${dato.ITEMNAME ?? '-'}</td>
-                <td class="px-2 py-1">${dato.TIPOHILOID ?? '-'}</td>
-                <td class="px-2 py-1">${dato.INVENTSIZEID ?? '-'}</td>
-                <td class="px-2 py-1">${dato.RASURADOCRUDO ?? '-'}</td>
-                <td class="px-2 py-1">${dato.VALORAGREGADO ?? '-'}</td>
-                <td class="px-2 py-1">${mostrarDecimalBonito(dato.ANCHO)}</td>
-                <td class="px-2 py-1">${mostrarDecimalBonito(dato.PORENTREGAR)}</td>
-                <td class="px-2 py-1">${dato.TIPOARTICULO ?? '-'}</td>
-                <td class="px-2 py-1">${dato.CODIGOBARRAS ?? '-'}</td>
-                <td class="text-center align-middle border">
-                    <input type="checkbox" class="form-checkbox text-blue-500 fila-checkbox w-5 h-5" />
-                </td>
-            </tr>
+            <tr class="hover:bg-blue-100 transition-all"
+    data-idflog="${dato.IDFLOG ?? ''}"
+    data-custname="${dato.CUSTNAME ?? ''}"
+    data-itemid="${dato.ITEMID ?? ''}"
+    data-itemname="${dato.ITEMNAME ?? ''}"
+    data-inventsizeid="${dato.INVENTSIZEID ?? ''}"
+    data-porentregar="${dato.PORENTREGAR ?? ''}"
+    data-rasuradocrudo="${dato.RASURADOCRUDO ?? ''}"
+    data-tipohilo="${dato.TIPOHILOID ?? ''}"
+    data-valoragregado="${dato.VALORAGREGADO ?? ''}"
+    data-ancho="${dato.ANCHO ?? ''}"
+    data-porentregar="${dato.PORENTREGAR ?? ''}"
+    data-tipoarticulo="${dato.TIPOARTICULO ?? ''}"
+    data-codigobarras="${dato.CODIGOBARRAS ?? ''}"
+
+>
+    <td class="px-2 py-1">${dato.IDFLOG ?? '-'}</td>
+    <td class="px-2 py-1">${dato.CUSTNAME ?? '-'}</td>
+    <td class="px-2 py-1">${dato.ITEMID ?? '-'}</td>
+    <td class="px-2 py-1">${dato.ITEMNAME ?? '-'}</td>
+    <td class="px-2 py-1">${dato.TIPOHILOID ?? '-'}</td>
+    <td class="px-2 py-1">${dato.INVENTSIZEID ?? '-'}</td>
+    <td class="px-2 py-1">${dato.RASURADOCRUDO ?? '-'}</td>
+    <td class="px-2 py-1">${dato.VALORAGREGADO ?? '-'}</td>
+    <td class="px-2 py-1">${mostrarDecimalBonito(dato.ANCHO)}</td>
+    <td class="px-2 py-1">${mostrarDecimalBonito(dato.PORENTREGAR)}</td>
+    <td class="px-2 py-1">${dato.TIPOARTICULO ?? '-'}</td>
+    <td class="px-2 py-1">${dato.CODIGOBARRAS ?? '-'}</td>
+    <td class="text-center align-middle border">
+        <input type="radio" name="fila-seleccionada" 
+            class="form-radio text-blue-500 w-5 h-5" />
+    </td>
+
+</tr>
         `;
             });
         }
@@ -201,20 +218,24 @@
         document.getElementById('enviarSeleccionados').addEventListener('click', function() {
             const seleccionados = [];
 
-            document.querySelectorAll('.fila-checkbox:checked').forEach(checkbox => {
+            document.querySelectorAll('.form-radio:checked').forEach(checkbox => {
                 const fila = checkbox.closest('tr');
                 const datos = {
-                    IDFLOG: dato.dataset.idflog,
+                    IDFLOG: fila.dataset.idflog,
+                    CUSTNAME: fila.dataset.custname,
                     ITEMID: fila.dataset.itemid,
                     ITEMNAME: fila.dataset.itemname,
                     INVENTSIZEID: fila.dataset.inventsizeid,
                     CANTIDAD: fila.dataset.porentregar,
                     RASURADOCRUDO: fila.dataset.rasuradocrudo,
-                    TIPOHILO: fila.dataset.tipohiloid,
+                    TIPOHILO: fila.dataset.tipohilo,
                     APLICACION: fila.dataset.valoragregado,
-                    FECHACANCE: fila.dataset.fechacancelacion,
-                    // Agrega los campos que quieras pasar, para lograr agregarlo aqui, antes debe colar en TR:   data radurado $linea->RASURADOCRUDO "
+                    ANCHO: fila.dataset.ancho,
+                    TIPOARTICULO: fila.dataset.tipoarticulo,
+                    CODIGOBARRAS: fila.dataset.codigobarras
+                    // Si necesitas FECHACANCE o algo más, agrégalo aquí y en el <tr>
                 };
+
                 seleccionados.push(datos);
             });
 
@@ -241,20 +262,36 @@
     </script>
     <!--Script para evitar que el USER seleccione MAS de 1 CHECKBOX-->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Selecciona todos los checkboxes de la clase que uso
-            const checkboxes = document.querySelectorAll('.fila-checkbox');
+        const tbody = document.querySelector('#tabla-pronosticos tbody');
 
-            checkboxes.forEach(function(checkbox) {
-                checkbox.addEventListener('change', function() {
-                    if (this.checked) {
-                        // Cuando uno se selecciona, desmarca todos los demás
-                        checkboxes.forEach(cb => {
-                            if (cb !== this) cb.checked = false;
-                        });
-                    }
+        tbody.addEventListener('change', (e) => {
+            const cb = e.target;
+            if (!cb.classList.contains('form-radio')) return;
+
+            if (cb.checked) {
+                // Desmarcar todos los demás checkboxes del tbody
+                tbody.querySelectorAll('.form-radio').forEach(other => {
+                    if (other !== cb) other.checked = false;
                 });
-            });
+
+                // Log de la fila seleccionada
+                const fila = cb.closest('tr');
+                const datos = {
+                    IDFLOG: fila.dataset.idflog,
+                    CUSTNAME: fila.dataset.custname,
+                    ITEMID: fila.dataset.itemid,
+                    ITEMNAME: fila.dataset.itemname,
+                    INVENTSIZEID: fila.dataset.inventsizeid,
+                    CANTIDAD: fila.dataset.porentregar,
+                    RASURADOCRUDO: fila.dataset.rasuradocrudo,
+                    TIPOHILO: fila.dataset.tipohilo,
+                    APLICACION: fila.dataset.valoragregado,
+                    ANCHO: fila.dataset.ancho,
+                    TIPOARTICULO: fila.dataset.tipoarticulo,
+                    CODIGOBARRAS: fila.dataset.codigobarras
+                };
+                console.log(datos);
+            }
         });
     </script>
 @endsection
