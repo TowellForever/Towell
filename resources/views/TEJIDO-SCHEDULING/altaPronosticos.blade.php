@@ -77,29 +77,7 @@
                     </tr>
                 </thead>
                 <tbody class="bg-blue-50">
-                    @forelse($datos as $dato)
-                        <tr class="hover:bg-blue-100 transition-all">
-                            <td class="px-2 py-1">{{ $dato->IDFLOG ?? '-' }}</td>
-                            <td class="px-2 py-1">{{ $dato->CUSTNAME ?? '-' }}</td>
-                            <td class="px-2 py-1">{{ $dato->ITEMID ?? '-' }}</td>
-                            <td class="px-2 py-1">{{ $dato->ITEMNAME ?? '-' }}</td>
-                            <td class="px-2 py-1">{{ $dato->TIPOHILOID ?? '-' }}</td>
-                            <td class="px-2 py-1">{{ $dato->INVENTSIZEID ?? '-' }}</td>
-                            <td class="px-2 py-1">{{ $dato->RASURADOCRUDO ?? '-' }}</td>
-                            <td class="px-2 py-1">{{ $dato->VALORAGREGADO ?? '-' }}</td>
-                            <td class="px-2 py-1">{{ decimales($dato->ANCHO) ?? '-' }}</td>
-                            <td class="px-2 py-1">{{ decimales($dato->PORENTREGAR) ?? '-' }}</td>
-                            <td class="px-2 py-1">{{ $dato->TIPOARTICULO ?? '-' }}</td>
-                            <td class="px-2 py-1">{{ $dato->CODIGOBARRAS ?? '-' }}</td>
-                            <td class="text-center align-middle border">
-                                <input type="checkbox" class="form-checkbox text-blue-500 fila-checkbox w-5 h-5" />
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="12" class="text-center text-gray-400 py-3">No hay registros para este mes.</td>
-                        </tr>
-                    @endforelse
+
                 </tbody>
             </table>
         </div>
@@ -208,6 +186,15 @@
                 minimumFractionDigits: 0
             });
         }
+        document.addEventListener('DOMContentLoaded', function() {
+            // Si tienes el mes actual desde Blade:
+            const mesActual = "{{ $mesActual }}";
+            if (mesActual) {
+                mesesSeleccionados = [mesActual];
+                renderBarraMeses();
+                consultarPronosticosAjax();
+            }
+        });
     </script>
     <!--script para el funcionamiento del boton PROGRAMAR, envia datos al form-create-->
     <script>
@@ -217,7 +204,7 @@
             document.querySelectorAll('.fila-checkbox:checked').forEach(checkbox => {
                 const fila = checkbox.closest('tr');
                 const datos = {
-                    IDFLOG: fila.dataset.idflog,
+                    IDFLOG: dato.dataset.idflog,
                     ITEMID: fila.dataset.itemid,
                     ITEMNAME: fila.dataset.itemname,
                     INVENTSIZEID: fila.dataset.inventsizeid,
@@ -250,6 +237,24 @@
             const url = "{{ route('planeacion.create') }}" + "?" + queryParams;
 
             window.location.href = url;
+        });
+    </script>
+    <!--Script para evitar que el USER seleccione MAS de 1 CHECKBOX-->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Selecciona todos los checkboxes de la clase que uso
+            const checkboxes = document.querySelectorAll('.fila-checkbox');
+
+            checkboxes.forEach(function(checkbox) {
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        // Cuando uno se selecciona, desmarca todos los demás
+                        checkboxes.forEach(cb => {
+                            if (cb !== this) cb.checked = false;
+                        });
+                    }
+                });
+            });
         });
     </script>
 @endsection

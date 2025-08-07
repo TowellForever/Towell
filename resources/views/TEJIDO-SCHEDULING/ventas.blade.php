@@ -406,6 +406,7 @@
             });
         });
     </script>
+    <!--Script para evitar que el USER seleccione MAS de 1 CHECKBOX-->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Selecciona todos los checkboxes de la clase que uso
