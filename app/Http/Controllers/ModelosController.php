@@ -31,7 +31,7 @@ class ModelosController extends Controller
     $total = (clone $query)->count();
 
     // Subconsulta con ROW_NUMBER()
-    $subQuery = $query->selectRaw('*, ROW_NUMBER() OVER (ORDER BY Telar_Actual ASC) AS row_num');
+    $subQuery = $query->selectRaw('*, ROW_NUMBER() OVER (ORDER BY Fecha_Orden DESC) AS row_num');
 
     $modelos = DB::table(DB::raw("({$subQuery->toSql()}) as sub"))
       ->mergeBindings($subQuery)

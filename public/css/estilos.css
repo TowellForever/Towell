@@ -478,19 +478,7 @@ button:hover {
     z-index: 10;
 }
 
-.plane-thead-tr-modelos {
-    position: sticky;
-    top: 0;
-    /* Fijo arriba */
-    background-color: #1CC6DD;
-    /* Verde Excel */
-    z-index: 10;
-    font-size: 12px;
-    /* Más compacto */
-    font-weight: bold;
-    color: #fff;
-    /* Texto blanco para contraste */
-}
+
 
 /* Establecer el comportamiento de las celdas */
 table.celP td {

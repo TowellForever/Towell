@@ -138,7 +138,7 @@
                                     $value = $modelo->$field;
 
                                     // Campos que necesitan quitar ".0"
-                                    $fieldsSinDecimal = ['RASEMA', 'Telar_Actual', 'Clave_Modelo', 'CUENTA', 'PASADAS'];
+                                    $fieldsSinDecimal = ['RASEMA', 'Clave_Modelo', 'CUENTA', 'PASADAS', 'Telar_Actual'];
 
                                     // Campos de fecha
                                     $fieldsFecha = ['Fecha_Orden', 'Fecha_Cumplimiento', 'Fecha_Compromiso'];
@@ -188,7 +188,11 @@
 
                                     // Formatear según el campo
                                     if (in_array($field, $fieldsSinDecimal)) {
-                                        $value = is_numeric($value) ? intval($value) : $value;
+                                        if ($value === null || $value === '' || $value == '0' || $value == 0.0) {
+                                            $fieldsSinDecimal = '';
+                                        } else {
+                                            $value = is_numeric($value) ? decimales($value) : $value;
+                                        }
                                     } elseif (in_array($field, $fieldsFecha)) {
                                         $value = \Carbon\Carbon::parse($value)->format('d-m-y');
                                     } elseif (in_array($field, $fieldsDosDecimales)) {
