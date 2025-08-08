@@ -1168,5 +1168,7 @@ class TejidoSchedullingController extends Controller
 
         // Regresa como JSON
         return response()->json(['datos' => $datos]);
+
+        //////SELECT * FROM TWFLOGBOMID WHERE IDFLOG = 'RS-CL01499-FEB21-LG14' AND REFRECID = '5637202848 ' ////////////////////////////////////////////////
     }
 }
