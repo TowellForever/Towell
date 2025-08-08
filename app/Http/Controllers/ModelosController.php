@@ -6,42 +6,55 @@ use App\Models\Modelos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class ModelosController extends Controller
 {
+  // use App\Models\Modelos; // si no lo tienes ya importado
+
   public function index(Request $request)
   {
-    $page = $request->input('page', 1);
-    $perPage = 30;
-    $offset = ($page - 1) * $perPage;
+    $page    = max(1, (int) $request->input('page', 1));
+    $perPage = max(1, (int) $request->input('perPage', 30));
+    $offset  = ($page - 1) * $perPage;
 
-    // Armamos el query base con filtros dinámicos
+    // Query base con filtros dinámicos
     $query = DB::table('modelos')
       ->when($request->column && $request->value, function ($q) use ($request) {
-        $columns = $request->input('column');
-        $values = $request->input('value');
+        $columns = (array) $request->input('column', []);
+        $values  = (array) $request->input('value', []);
         foreach ($columns as $index => $column) {
-          if (!empty($column) && isset($values[$index])) {
+          if (!empty($column) && array_key_exists($index, $values)) {
             $q->where($column, 'like', '%' . $values[$index] . '%');
           }
         }
       });
 
-    // Contar total de registros (sin paginar)
+    // Total sin paginar
     $total = (clone $query)->count();
 
-    // Subconsulta con ROW_NUMBER()
-    $subQuery = $query->selectRaw('*, ROW_NUMBER() OVER (ORDER BY Fecha_Orden DESC) AS row_num');
+    // Orden: NULLs al final, luego Fecha_Orden DESC, y desempate por id DESC
+    $orderExpr = <<<SQL
+        ROW_NUMBER() OVER (
+            ORDER BY
+                CASE WHEN Fecha_Orden IS NULL THEN 1 ELSE 0 END ASC,
+                Fecha_Orden DESC
+        ) AS row_num
+    SQL;
 
+    // Subconsulta con ROW_NUMBER()
+    $subQuery = $query->selectRaw("*, {$orderExpr}");
+
+    // Página actual usando row_num
     $modelos = DB::table(DB::raw("({$subQuery->toSql()}) as sub"))
       ->mergeBindings($subQuery)
       ->whereBetween('row_num', [$offset + 1, $offset + $perPage])
       ->get();
 
-    // Obtener los fillable fields para mostrar columnas en la vista (usa el modelo Eloquent solo para esto)
+    // Campos visibles (usa el modelo Eloquent solo para obtener fillables)
     $fillableFields = (new Modelos())->getFillable();
 
-    // Quitar las columnas que no quieres mostrar
+    // Quitar columnas que no quieres mostrar
     $camposOcultos = [
       'Fecha_Cumplimiento',
       'TOLERANCIA',
@@ -94,17 +107,90 @@ class ModelosController extends Controller
       'CV',
       'CW',
       'COMPROBAR_modelos_duplicados',
-    ]; // las que quieras ocultar
+    ];
     $fillableFields = array_values(array_diff($fillableFields, $camposOcultos));
 
+    // Overrides para labels visibles de cabeceras
+    $overrides = [
+      'CONCATENA'                      => 'Concatenado',
+      'RASEMA'                         => 'Rasema',
+      'Fecha_Orden'                    => 'Fecha de orden',
+      'Fecha_Cumplimiento'             => 'Fecha de cumplimiento',
+      'Departamento'                   => 'Departamento',
+      'Telar_Actual'                   => 'Telar actual',
+      'Prioridad'                      => 'Prioridad',
+      'Modelo'                         => 'Modelo',
+      'CLAVE_MODELO'                   => 'Clave del modelo',
+      'CLAVE_AX'                       => 'Clave AX',
+      'Tamanio_AX'                     => 'Tamaño AX',
+      'TOLERANCIA'                     => 'Tolerancia',
+      'CODIGO_DE_DIBUJO'               => 'Código de dibujo',
+      'Fecha_Compromiso'               => 'Fecha de compromiso',
+      'Nombre_de_Formato_Logistico'    => 'Nombre formato logístico',
+      'Clave'                          => 'Clave',
+      'Cantidad_a_Producir'            => 'Cantidad a producir',
+      'Peine'                          => 'Peine',
+      'Ancho'                          => 'Ancho',
+      'Largo'                          => 'Largo',
+      'P_crudo'                        => 'Peso crudo',
+      'Luchaje'                        => 'Luchaje',
+      'Tra'                            => 'Tra',
+      'Hilo'                           => 'Hilo',
+      'OBS'                            => 'Observaciones',
+      'Tipo_plano'                     => 'Tipo plano',
+      'Med_plano'                      => 'Medida plano',
+      'TIPO_DE_RIZO'                   => 'Tipo de rizo',
+      'ALTURA_DE_RIZO'                 => 'Altura de rizo',
+      'OBS_1'                          => 'Observación 1',
+      'Veloc_Minima'                   => 'Velocidad mínima',
+      'Rizo'                           => 'Rizo',
+      'Hilo_1'                         => 'Hilo 1',
+      'CUENTA'                         => 'Cuenta',
+      'OBS_2'                          => 'Observación 2',
+      'Pie'                            => 'Pie',
+      'Hilo_2'                         => 'Hilo 2',
+      'CUENTA1'                        => 'Cuenta 1',
+      'OBS_3'                          => 'Observación 3',
+      'C1'                             => 'C1',
+      'OBS_4'                          => 'Observación 4',
+      'C2'                             => 'C2',
+      'OBS_5'                          => 'Observación 5',
+      'C3'                             => 'C3',
+      'OBS_6'                          => 'Observación 6',
+      'C4'                             => 'C4',
+      'OBS_7'                          => 'Observación 7',
+      'Med_de_Cenefa'                  => 'Medida de cenefa',
+      'Med_de_inicio_de_rizo_a_cenefa' => 'Medida de inicio de rizo a cenefa',
+      'RAZURADA'                       => 'Razurada',
+      'TIRAS'                          => 'Tiras',
+      'Repeticiones_p_corte'           => 'Repeticiones por corte',
+      'No_De_Marbetes'                 => 'No° de marbetes',
+      'Cambio_de_repaso'               => 'Cambio de repaso',
+      'Vendedor'                       => 'Vendedor',
+      'No_Orden'                       => 'No. de orden',
+      'Observaciones'                  => 'Observaciones',
+    ];
+
+
+    // Etiqueta “bonita” por defecto: subrayado→espacio, título, etc.
+    $labelMap = collect($fillableFields)->mapWithKeys(function ($f) use ($overrides) {
+      $default = Str::of($f)
+        ->replace(['_', '#'], ' ')
+        ->lower()
+        ->title(); // “fecha orden”, “clave modelo”, etc.
+      return [$f => $overrides[$f] ?? (string) $default];
+    })->toArray();
+
     return view('modulos.modelos.index', [
-      'modelos' => $modelos,
-      'total' => $total,
-      'perPage' => $perPage,
-      'currentPage' => $page,
+      'modelos'        => $modelos,
+      'total'          => $total,
+      'perPage'        => $perPage,
+      'currentPage'    => $page,
       'fillableFields' => $fillableFields,
+      'labelMap'       => $labelMap,
     ]);
   }
+
 
   public function create()
   {

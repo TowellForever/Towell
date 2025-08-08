@@ -124,11 +124,14 @@
                 <thead>
                     <tr class="plane-thead-tr text-white text-xs">
                         @foreach ($fillableFields as $field)
-                            <th class="sticky top-0 z-10">{{ str_replace('_', ' ', $field) }}</th>
+                            <th class="sticky top-0 z-10 px-2 py-1 whitespace-nowrap" data-field="{{ $field }}"
+                                title="{{ $labelMap[$field] }}">
+                                {{ $labelMap[$field] }}
+                            </th>
                         @endforeach
-
                     </tr>
                 </thead>
+
                 <tbody class="text-xs">
                     @foreach ($modelos as $modelo)
                         <tr data-CONCATENA={{ $modelo->CONCATENA }} data-clave-ax="{{ $modelo->CLAVE_AX }}"
