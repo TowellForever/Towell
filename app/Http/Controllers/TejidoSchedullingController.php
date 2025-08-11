@@ -1105,13 +1105,13 @@ class TejidoSchedullingController extends Controller
 
     public function getPronosticosAjax(Request $request)
     {
-        // Recibe meses en formato array: ['2025-08', '2025-09']
+        // Recibe meses: ['2025-08', '2025-09']
         $meses = $request->input('meses', []);
         if (empty($meses)) {
-            return response()->json(['datos' => []]);
+            return response()->json(['batas' => [], 'otros' => []]);
         }
 
-        // Construye rangos por mes (inicio/fin en YYYY-MM-DD)
+        // Construye rangos por mes (YYYY-MM-DD)
         $rangos = [];
         foreach ($meses as $m) {
             try {
@@ -1124,43 +1124,50 @@ class TejidoSchedullingController extends Controller
                 'fin'    => $c->copy()->endOfMonth()->format('Y-m-d'),
             ];
         }
-
         if (empty($rangos)) {
-            return response()->json(['datos' => []]);
+            return response()->json(['batas' => [], 'otros' => []]);
         }
 
-        // Query base SOLO sobre TwPronosticosFlogs
-        $query = DB::connection('sqlsrv_ti')
-            ->table('TwPronosticosFlogs as pf')
-            ->where('pf.TIPOPEDIDO', 2);
-
-        // OR por cada rango mensual seleccionado
-        $query->where(function ($q) use ($rangos) {
+        // Clausula reusable para OR de rangos
+        $rangoWhere = function ($q) use ($rangos) {
             foreach ($rangos as $r) {
                 $q->orWhere(function ($sq) use ($r) {
-                    $sq->where('pf.TRANSDATE', '>=', $r['inicio'])
-                        ->where('pf.TRANSDATE', '<=', $r['fin']);
+                    $sq->where('pf.TRANSDATE', '>=', $r['inicio']) //2025-08-01
+                        ->where('pf.TRANSDATE', '<=', $r['fin']); //2025-08-31 ò 2025-09-30
                 });
             }
-        });
+        };
 
-        // SQL Server 2008: inicio y fin de mes desde TRANSDATE (dd/MM/yyyy)
+        // Expresiones SQL Server 2008 para inicio/fin de mes basado en TRANSDATE (formato dd/MM/yyyy)
         $inicioExpr = "CONVERT(VARCHAR(10), DATEADD(day, 1 - DAY(pf.TRANSDATE), pf.TRANSDATE), 103)";
         $finExpr    = "CONVERT(VARCHAR(10), DATEADD(day, -DAY(DATEADD(month,1,pf.TRANSDATE)), DATEADD(month,1,pf.TRANSDATE)), 103)";
         $idflogAgg  = "'Pronóstico del ' + MIN($inicioExpr) + ' - ' + MAX($finExpr)";
 
-        // Para no mezclar meses distintos en un mismo grupo, agrupamos por Año/Mes
-        $yearExpr  = 'YEAR(pf.TRANSDATE)';
-        $monthExpr = 'MONTH(pf.TRANSDATE)';
+        $yearExpr   = 'YEAR(pf.TRANSDATE)';
+        $monthExpr  = 'MONTH(pf.TRANSDATE)';
 
-        $datos = $query
+        // ========================
+        // 1) OTROS (NO BATAS)
+        // ========================
+        $qOtros = DB::connection('sqlsrv_ti')
+            ->table('TwPronosticosFlogs as pf')
+            ->where('pf.TIPOPEDIDO', 2)
+            ->where(function ($q) use ($rangoWhere) {
+                $rangoWhere($q);
+            })
+            ->where(function ($q) {
+                // NOT BETWEEN 10 AND 19
+                $q->where('pf.ITEMTYPEID', '<', 10)
+                    ->orWhere('pf.ITEMTYPEID', '>', 19);
+            });
+
+        $otros = $qOtros
             ->groupBy(
                 DB::raw($yearExpr),
                 DB::raw($monthExpr),
                 'pf.CUSTNAME',
                 'pf.ITEMID',
                 'pf.INVENTSIZEID'
-                // Si quieres separar por un id interno adicional, agrega aquí (ej. 'pf.TWIDFLOG')
             )
             ->select(
                 DB::raw("$idflogAgg as IDFLOG"),
@@ -1178,11 +1185,55 @@ class TejidoSchedullingController extends Controller
                 DB::raw("$yearExpr  as ANIO"),
                 DB::raw("$monthExpr as MES")
             )
-            // Ordena por año/mes si quieres salida cronológica
             ->orderBy(DB::raw($yearExpr))
             ->orderBy(DB::raw($monthExpr))
             ->get();
 
-        return response()->json(['datos' => $datos]);
+        // ========================
+        // 2) BATAS (ITEMTYPEID 10-19) + JOIN TwFlogsItemLine
+        // ========================
+        $qBatas = DB::connection('sqlsrv_ti')
+            ->table('TwPronosticosFlogs as pf')
+            ->leftJoin('TwFlogsItemLine as il', 'il.PURCHBARCODE', '=', 'pf.CODIGOBARRAS')
+            ->where('pf.TIPOPEDIDO', 2)
+            ->where(function ($q) use ($rangoWhere) {
+                $rangoWhere($q);
+            })
+            ->whereBetween('pf.ITEMTYPEID', [10, 19]); // BATAS
+
+        $batas = $qBatas
+            ->groupBy(
+                DB::raw($yearExpr),
+                DB::raw($monthExpr),
+                'pf.CUSTNAME',
+                'pf.ITEMID',
+                'pf.INVENTSIZEID'
+                // Si quieres separar aún más por algún ID de línea, puedes agregarlo aquí
+            )
+            ->select(
+                DB::raw("$idflogAgg as IDFLOG"),
+                'pf.CUSTNAME',
+                'pf.ITEMID',
+                'pf.INVENTSIZEID',
+                DB::raw('MIN(pf.ITEMNAME)         as ITEMNAME'),
+                // Campos tomados de la tabla de líneas (cuando existan)
+                DB::raw('MIN(ISNULL(il.TIPOHILOID, pf.TIPOHILOID))    as TIPOHILOID'),
+                DB::raw('MIN(ISNULL(il.VALORAGREGADO, pf.VALORAGREGADO)) as VALORAGREGADO'),
+                DB::raw('MIN(ISNULL(il.ANCHO, pf.ANCHO))              as ANCHO'),
+                // Para PORENTREGAR en batas usamos la línea si existe; si no, caemos a INVENTQTY
+                DB::raw('SUM(ISNULL(il.PORENTREGAR, 0)) + SUM(CASE WHEN il.PURCHBARCODE IS NULL THEN pf.INVENTQTY ELSE 0 END) as PORENTREGAR'),
+                DB::raw('MIN(pf.ITEMTYPEID)       as ITEMTYPEID'),
+                DB::raw('MIN(pf.CODIGOBARRAS)     as CODIGOBARRAS'),
+                DB::raw("$yearExpr  as ANIO"),
+                DB::raw("$monthExpr as MES")
+            )
+            ->orderBy(DB::raw($yearExpr))
+            ->orderBy(DB::raw($monthExpr))
+            ->get();
+
+        return response()->json([
+            'batas' => $batas,
+            'otros' => $otros,
+        ]);
     }
 }

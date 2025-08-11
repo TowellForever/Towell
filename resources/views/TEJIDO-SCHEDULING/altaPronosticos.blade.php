@@ -90,8 +90,8 @@
                 <div class="text-sm font-semibold text-gray-700">Cargando datos…</div>
             </div>
         </div>
-
     </div>
+
 
     <script>
         const selectMes = document.getElementById('select-mes');
@@ -104,11 +104,12 @@
             if (!value || mesesSeleccionados.includes(value)) return;
             mesesSeleccionados.push(value);
             renderBarraMeses();
-            consultarPronosticosAjax();
+            consultarPronosticosAjax(); //peticion al servidor, toda la logica esta en el back
             // Restablece select para que puedan elegir otro sin borrar manualmente
             selectMes.value = "";
         });
 
+        //con la siguiente FUNCION pintamos los CHIPs de MESES en la cabecera
         function renderBarraMeses() {
             barraMeses.innerHTML = "";
             mesesSeleccionados.forEach(val => {
@@ -130,76 +131,90 @@
             });
         }
 
-        function consultarPronosticosAjax() {
-            if (mesesSeleccionados.length === 0) {
-                renderTablaPronosticos([]);
-                return;
-            }
-            fetch('{{ route('pronosticos.ajax') }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        meses: mesesSeleccionados
-                    })
-                })
-                .then(r => r.json())
-                .then(data => renderTablaPronosticos(data.datos))
-                .catch(() => renderTablaPronosticos([], true));
-        }
-
-        function renderTablaPronosticos(datos, error = false) {
+        function renderTablaPronosticos(batas = [], otros = [], error = false) {
             const tbody = document.querySelector('#tabla-pronosticos tbody');
+
             if (error) {
                 tbody.innerHTML =
-                    `<tr><td colspan="12" class="text-center text-red-400 py-3">Error al obtener datos.</td></tr>`;
+                    `<tr><td colspan="12" class="text-center text-red-400 py-3">ERROR AL CARGAR DATOS, POR FAVOR RECARGA LA PÀGINA.</td></tr>`;
                 return;
             }
-            if (!datos || datos.length === 0) {
+            if ((!batas || batas.length === 0) && (!otros || otros.length === 0)) {
                 tbody.innerHTML =
-                    `<tr><td colspan="12" class="text-center text-gray-400 py-3">No hay registros para estos meses.</td></tr>`;
+                    `<tr><td colspan="12" class="text-center text-gray-400 py-3">NO SE HAN ENCONTRADO REGISTROS PARA ESTOS MESES.</td></tr>`;
                 return;
             }
+
             tbody.innerHTML = '';
-            datos.forEach(dato => {
+
+            // --- OTROS ---
+            otros.forEach(o => {
+                const tipo = o.TIPOARTICULO ?? o.ITEMTYPEID ?? '-'; // 👈 fallback
                 tbody.innerHTML += `
-            <tr class="hover:bg-blue-100 transition-all"
-    data-idflog="${dato.IDFLOG ?? ''}"
-    data-custname="${dato.CUSTNAME ?? ''}"
-    data-itemid="${dato.ITEMID ?? ''}"
-    data-itemname="${dato.ITEMNAME ?? ''}"
-    data-inventsizeid="${dato.INVENTSIZEID ?? ''}"
-    data-porentregar="${dato.PORENTREGAR ?? ''}"
-    data-rasuradocrudo="${dato.RASURADOCRUDO ?? ''}"
-    data-tipohilo="${dato.TIPOHILOID ?? ''}"
-    data-valoragregado="${dato.VALORAGREGADO ?? ''}"
-    data-ancho="${dato.ANCHO ?? ''}"
-    data-porentregar="${dato.PORENTREGAR ?? ''}"
-    data-tipoarticulo="${dato.TIPOARTICULO ?? ''}"
-    data-codigobarras="${dato.CODIGOBARRAS ?? ''}"
+        <tr class="hover:bg-orange-200 transition-all"
+            data-idflog="${o.IDFLOG ?? ''}"
+            data-custname="${o.CUSTNAME ?? ''}"
+            data-itemid="${o.ITEMID ?? ''}"
+            data-itemname="${o.ITEMNAME ?? ''}"
+            data-inventsizeid="${o.INVENTSIZEID ?? ''}"
+            data-porentregar="${o.PORENTREGAR ?? ''}"
+            data-rasuradocrudo="${o.RASURADOCRUDO ?? ''}"
+            data-tipohilo="${o.TIPOHILOID ?? ''}"
+            data-valoragregado="${o.VALORAGREGADO ?? ''}"
+            data-ancho="${o.ANCHO ?? ''}"
+            data-tipoarticulo="${tipo}"
+            data-codigobarras="${o.CODIGOBARRAS ?? ''}">
+            <td class="px-2 py-1">${o.IDFLOG ?? '-'}</td>
+            <td class="px-2 py-1">${o.CUSTNAME ?? '-'}</td>
+            <td class="px-2 py-1">${o.ITEMID ?? '-'}</td>
+            <td class="px-2 py-1">${o.ITEMNAME ?? '-'}</td>
+            <td class="px-2 py-1">${o.TIPOHILOID ?? '-'}</td>
+            <td class="px-2 py-1">${o.INVENTSIZEID ?? '-'}</td>
+            <td class="px-2 py-1">${o.RASURADOCRUDO ?? '-'}</td>
+            <td class="px-2 py-1">${o.VALORAGREGADO ?? '-'}</td>
+            <td class="px-2 py-1">${mostrarDecimalBonito(o.ANCHO)}</td>
+            <td class="px-2 py-1">${mostrarDecimalBonito(o.PORENTREGAR)}</td>
+            <td class="px-2 py-1">${tipo}</td>
+            <td class="px-2 py-1">${o.CODIGOBARRAS ?? '-'}</td>
+            <td class="text-center align-middle border">
+                <input type="radio" name="fila-seleccionada" class="form-radio text-blue-500 w-5 h-5" />
+            </td>
+        </tr>`;
+            });
 
->
-    <td class="px-2 py-1">${dato.IDFLOG ?? '-'}</td>
-    <td class="px-2 py-1">${dato.CUSTNAME ?? '-'}</td>
-    <td class="px-2 py-1">${dato.ITEMID ?? '-'}</td>
-    <td class="px-2 py-1">${dato.ITEMNAME ?? '-'}</td>
-    <td class="px-2 py-1">${dato.TIPOHILOID ?? '-'}</td>
-    <td class="px-2 py-1">${dato.INVENTSIZEID ?? '-'}</td>
-    <td class="px-2 py-1">${dato.RASURADOCRUDO ?? '-'}</td>
-    <td class="px-2 py-1">${dato.VALORAGREGADO ?? '-'}</td>
-    <td class="px-2 py-1">${mostrarDecimalBonito(dato.ANCHO)}</td>
-    <td class="px-2 py-1">${mostrarDecimalBonito(dato.PORENTREGAR)}</td>
-    <td class="px-2 py-1">${dato.TIPOARTICULO ?? '-'}</td>
-    <td class="px-2 py-1">${dato.CODIGOBARRAS ?? '-'}</td>
-    <td class="text-center align-middle border">
-        <input type="radio" name="fila-seleccionada" 
-            class="form-radio text-blue-500 w-5 h-5" />
-    </td>
-
-</tr>
-        `;
+            // --- BATAS ---
+            batas.forEach(b => {
+                const tipo = b.TIPOARTICULO ?? b.ITEMTYPEID ?? '-'; // 👈 fallback
+                tbody.innerHTML += `
+        <tr class="hover:bg-blue-200 bg-blue-100 transition-all"
+            data-idflog="${b.IDFLOG ?? ''}"
+            data-custname="${b.CUSTNAME ?? ''}"
+            data-itemid="${b.ITEMID ?? ''}"
+            data-itemname="${b.ITEMNAME ?? ''}"
+            data-inventsizeid="${b.INVENTSIZEID ?? ''}"
+            data-porentregar="${b.PORENTREGAR ?? ''}"
+            data-rasuradocrudo="${b.RASURADOCRUDO ?? ''}"
+            data-tipohilo="${b.TIPOHILOID ?? ''}"
+            data-valoragregado="${b.VALORAGREGADO ?? ''}"
+            data-ancho="${b.ANCHO ?? ''}"
+            data-tipoarticulo="${tipo}"
+            data-codigobarras="${b.CODIGOBARRAS ?? ''}">
+            <td class="px-2 py-1">${b.IDFLOG ?? '-'}</td>
+            <td class="px-2 py-1">${b.CUSTNAME ?? '-'}</td>
+            <td class="px-2 py-1">${b.ITEMID ?? '-'}</td>
+            <td class="px-2 py-1">${b.ITEMNAME ?? '-'}</td>
+            <td class="px-2 py-1">${b.TIPOHILOID ?? '-'}</td>
+            <td class="px-2 py-1">${b.INVENTSIZEID ?? '-'}</td>
+            <td class="px-2 py-1">${b.RASURADOCRUDO ?? '-'}</td>
+            <td class="px-2 py-1">${b.VALORAGREGADO ?? '-'}</td>
+            <td class="px-2 py-1">${mostrarDecimalBonito(b.ANCHO)}</td>
+            <td class="px-2 py-1">${mostrarDecimalBonito(b.PORENTREGAR)}</td>
+            <td class="px-2 py-1">${tipo}</td>
+            <td class="px-2 py-1">${b.CODIGOBARRAS ?? '-'}</td>
+            <td class="text-center align-middle border">
+                <input type="radio" name="fila-seleccionada" class="form-radio text-blue-500 w-5 h-5" />
+            </td>
+        </tr>`;
             });
         }
 
@@ -207,12 +222,20 @@
             if (valor === null || valor === undefined || valor === '') return '-';
             const num = Number(valor);
             if (isNaN(num)) return valor;
-            // Si es entero, muéstralo sin decimales. Si tiene decimales, muéstralo con máximo 2, pero sin ceros extra.
-            return num % 1 === 0 ? num : num.toLocaleString('en-US', {
+            // Si es entero, mostrar con separador de miles
+            if (num % 1 === 0) {
+                return num.toLocaleString('en-US', {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                });
+            }
+            // Si tiene decimales, máximo 2 decimales, con separador de miles
+            return num.toLocaleString('en-US', {
                 maximumFractionDigits: 2,
                 minimumFractionDigits: 0
             });
         }
+
         document.addEventListener('DOMContentLoaded', function() {
             // Si tienes el mes actual desde Blade:
             const mesActual = "{{ $mesActual }}";
@@ -244,13 +267,15 @@
 
         let lastController = null;
 
+        //FUNCION que conecta con la API o BACKEND para TRAER DATOS
         async function consultarPronosticosAjax() {
+            const tbody = document.querySelector('#tabla-pronosticos tbody');
             if (mesesSeleccionados.length === 0) {
-                renderTablaPronosticos([]);
+                renderTablaPronosticos([], []);
                 return;
             }
 
-            // Cancelar petición previa (si aún vive)
+            // Cancelar petición previa
             if (lastController) lastController.abort();
             lastController = new AbortController();
 
@@ -271,18 +296,19 @@
 
                 if (!r.ok) throw new Error('Respuesta no OK');
                 const data = await r.json();
-                renderTablaPronosticos(data.datos);
+
+                // 👈🏻 AQUÍ ESTABA EL ERROR: usa las 2 colecciones correctas
+                renderTablaPronosticos(data.batas || [], data.otros || []);
             } catch (err) {
-                if (err.name === 'AbortError') {
-                    // petición cancelada: no hacemos nada
-                    return;
+                if (err.name !== 'AbortError') {
+                    console.error(err);
+                    renderTablaPronosticos([], [], true);
                 }
-                console.error(err);
-                renderTablaPronosticos([], true);
             } finally {
                 hideLoader();
             }
         }
+
         const appRoot = document.querySelector('.max-w-7xl.mx-auto'); // tu contenedor
         function showLoader() {
             overlay.classList.remove('hidden');
@@ -300,6 +326,7 @@
             controlsToDisable.forEach(el => el.disabled = false);
         }
     </script>
+
     <!--script para el funcionamiento del boton PROGRAMAR, envia datos al form-create-->
     <script>
         document.getElementById('enviarSeleccionados').addEventListener('click', function() {
@@ -347,6 +374,7 @@
             window.location.href = url;
         });
     </script>
+
     <!--Script para evitar que el USER seleccione MAS de 1 CHECKBOX-->
     <script>
         const tbody = document.querySelector('#tabla-pronosticos tbody');
