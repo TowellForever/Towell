@@ -1065,11 +1065,11 @@ class TejidoSchedullingController extends Controller
         $finMes = $now->copy()->endOfMonth()->format('Y-m-d');
 
         // Consulta: mismos joins, rango dinámico y TIPOPEDIDO = 2
+        // Fechas dinámicas (ya las recibes en $inicioMes y $finMes)
+        $inicioMesFormatted = \Carbon\Carbon::parse($inicioMes)->format('d/m/Y');
+        $finMesFormatted    = \Carbon\Carbon::parse($finMes)->format('d/m/Y');
+
         $datos = DB::connection('sqlsrv_ti')->table('TwPronosticosFlogs as pf')
-            ->join('TwFlogsItemLine as il', function ($join) {
-                $join->on('pf.ITEMID', '=', 'il.ITEMID')
-                    ->on('pf.INVENTSIZEID', '=', 'il.INVENTSIZEID');
-            })
             ->where('pf.TRANSDATE', '>=', $inicioMes)
             ->where('pf.TRANSDATE', '<=', $finMes)
             ->where('pf.TIPOPEDIDO', 2)
@@ -1077,23 +1077,24 @@ class TejidoSchedullingController extends Controller
                 'pf.CUSTNAME',
                 'pf.ITEMID',
                 'pf.INVENTSIZEID',
-                'il.IDFLOG'
+                'pf.TWIDFLOG'
             )
             ->select(
+                DB::raw("'Pronóstico del {$inicioMesFormatted} - {$finMesFormatted}' as IDFLOG"),
                 'pf.CUSTNAME',
                 'pf.ITEMID',
                 'pf.INVENTSIZEID',
-                'il.IDFLOG',
                 DB::raw('MIN(pf.ITEMNAME) as ITEMNAME'),
-                DB::raw('MIN(il.TIPOHILOID) as TIPOHILOID'),
+                DB::raw('MIN(pf.TIPOHILOID) as TIPOHILOID'),
                 DB::raw('MIN(pf.RASURADOCRUDO) as RASURADOCRUDO'),
-                DB::raw('MIN(il.VALORAGREGADO) as VALORAGREGADO'),
-                DB::raw('MIN(il.ANCHO) as ANCHO'),
-                DB::raw('SUM(il.PORENTREGAR) as PORENTREGAR'),
-                DB::raw('MIN(il.ITEMTYPEID) as ITEMTYPEID'),
+                DB::raw('MIN(pf.VALORAGREGADO) as VALORAGREGADO'),
+                DB::raw('MIN(pf.ANCHO) as ANCHO'),
+                DB::raw('SUM(pf.INVENTQTY) as PORENTREGAR'),
+                DB::raw('MIN(pf.ITEMTYPEID) as ITEMTYPEID'),
                 DB::raw('MIN(pf.CODIGOBARRAS) as CODIGOBARRAS')
             )
             ->get();
+
 
         // Manda los datos y el mes actual a la vista
         return view('TEJIDO-SCHEDULING.altaPronosticos', [
@@ -1104,35 +1105,36 @@ class TejidoSchedullingController extends Controller
 
     public function getPronosticosAjax(Request $request)
     {
-        // Recibe meses en formato array: ['2023-08', '2023-09']
+        // Recibe meses en formato array: ['2025-08', '2025-09']
         $meses = $request->input('meses', []);
         if (empty($meses)) {
             return response()->json(['datos' => []]);
         }
 
+        // Construye rangos por mes (inicio/fin en YYYY-MM-DD)
         $rangos = [];
         foreach ($meses as $m) {
-            // Formato esperado: YYYY-MM
             try {
-                $carbon = Carbon::createFromFormat('Y-m', $m);
+                $c = Carbon::createFromFormat('Y-m', $m);
             } catch (\Exception $e) {
                 continue;
             }
             $rangos[] = [
-                'inicio' => $carbon->copy()->startOfMonth()->format('Y-m-d'),
-                'fin'    => $carbon->copy()->endOfMonth()->format('Y-m-d'),
+                'inicio' => $c->copy()->startOfMonth()->format('Y-m-d'),
+                'fin'    => $c->copy()->endOfMonth()->format('Y-m-d'),
             ];
         }
 
-        // Crea un solo rango de fechas (puedes adaptar para hacer múltiples rangos con OR)
-        $query = DB::connection('sqlsrv_ti')->table('TwPronosticosFlogs as pf')
-            ->join('TwFlogsItemLine as il', function ($join) {
-                $join->on('pf.ITEMID', '=', 'il.ITEMID')
-                    ->on('pf.INVENTSIZEID', '=', 'il.INVENTSIZEID');
-            })
+        if (empty($rangos)) {
+            return response()->json(['datos' => []]);
+        }
+
+        // Query base SOLO sobre TwPronosticosFlogs
+        $query = DB::connection('sqlsrv_ti')
+            ->table('TwPronosticosFlogs as pf')
             ->where('pf.TIPOPEDIDO', 2);
 
-        // Agrega where para cada rango
+        // OR por cada rango mensual seleccionado
         $query->where(function ($q) use ($rangos) {
             foreach ($rangos as $r) {
                 $q->orWhere(function ($sq) use ($r) {
@@ -1142,33 +1144,45 @@ class TejidoSchedullingController extends Controller
             }
         });
 
+        // SQL Server 2008: inicio y fin de mes desde TRANSDATE (dd/MM/yyyy)
+        $inicioExpr = "CONVERT(VARCHAR(10), DATEADD(day, 1 - DAY(pf.TRANSDATE), pf.TRANSDATE), 103)";
+        $finExpr    = "CONVERT(VARCHAR(10), DATEADD(day, -DAY(DATEADD(month,1,pf.TRANSDATE)), DATEADD(month,1,pf.TRANSDATE)), 103)";
+        $idflogAgg  = "'Pronóstico del ' + MIN($inicioExpr) + ' - ' + MAX($finExpr)";
+
+        // Para no mezclar meses distintos en un mismo grupo, agrupamos por Año/Mes
+        $yearExpr  = 'YEAR(pf.TRANSDATE)';
+        $monthExpr = 'MONTH(pf.TRANSDATE)';
+
         $datos = $query
             ->groupBy(
+                DB::raw($yearExpr),
+                DB::raw($monthExpr),
                 'pf.CUSTNAME',
                 'pf.ITEMID',
-                'pf.INVENTSIZEID',
-                'il.IDFLOG'
+                'pf.INVENTSIZEID'
+                // Si quieres separar por un id interno adicional, agrega aquí (ej. 'pf.TWIDFLOG')
             )
             ->select(
+                DB::raw("$idflogAgg as IDFLOG"),
                 'pf.CUSTNAME',
                 'pf.ITEMID',
                 'pf.INVENTSIZEID',
-                'il.IDFLOG',
-                DB::raw('MIN(pf.ITEMNAME) as ITEMNAME'),
-                DB::raw('MIN(il.TIPOHILOID) as TIPOHILOID'),
+                DB::raw('MIN(pf.ITEMNAME)      as ITEMNAME'),
+                DB::raw('MIN(pf.TIPOHILOID)    as TIPOHILOID'),
                 DB::raw('MIN(pf.RASURADOCRUDO) as RASURADOCRUDO'),
-                DB::raw('MIN(il.VALORAGREGADO) as VALORAGREGADO'),
-                DB::raw('MIN(il.ANCHO) as ANCHO'),
-                DB::raw('SUM(il.PORENTREGAR) as PORENTREGAR'),
-                DB::raw('MIN(il.ITEMTYPEID) as TIPOARTICULO'),
-                DB::raw('MIN(pf.CODIGOBARRAS) as CODIGOBARRAS')
+                DB::raw('MIN(pf.VALORAGREGADO) as VALORAGREGADO'),
+                DB::raw('MIN(pf.ANCHO)         as ANCHO'),
+                DB::raw('SUM(pf.INVENTQTY)     as PORENTREGAR'),
+                DB::raw('MIN(pf.ITEMTYPEID)    as ITEMTYPEID'),
+                DB::raw('MIN(pf.CODIGOBARRAS)  as CODIGOBARRAS'),
+                DB::raw("$yearExpr  as ANIO"),
+                DB::raw("$monthExpr as MES")
             )
+            // Ordena por año/mes si quieres salida cronológica
+            ->orderBy(DB::raw($yearExpr))
+            ->orderBy(DB::raw($monthExpr))
             ->get();
 
-
-        // Regresa como JSON
         return response()->json(['datos' => $datos]);
-
-        //////SELECT * FROM TWFLOGBOMID WHERE IDFLOG = 'RS-CL01499-FEB21-LG14' AND REFRECID = '5637202848 ' ////////////////////////////////////////////////
     }
 }
