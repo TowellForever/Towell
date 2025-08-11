@@ -53,20 +53,20 @@
         <div class="overflow-x-auto rounded-2xl shadow-lg border border-blue-200 bg-white"
             style="max-height: 400px; overflow-y: auto;">
             <table id="tabla-pronosticos" class="min-w-full text-xs text-center">
-                <thead class="bg-blue-400 text-white font-bold leading-tight">
-                    <tr>
-                        <th class="px-2 py-1">ID FLOG</th>
-                        <th class="px-2 py-1">NOMBRE DEL CLIENTE</th>
-                        <th class="px-2 py-1">CÓDIGO DEL ARTÍCULO</th>
-                        <th class="px-2 py-1">NOMBRE DEL ARTÍCULO</th>
-                        <th class="px-2 py-1">TIPO DE HILO</th>
-                        <th class="px-2 py-1">TAMAÑO</th>
-                        <th class="px-2 py-1">RASURADO</th>
-                        <th class="px-2 py-1">VALOR AGREGADO</th>
-                        <th class="px-2 py-1">ANCHO</th>
-                        <th class="px-2 py-1">CANTIDAD</th>
-                        <th class="px-2 py-1">TIPO DE ARTÍCULO</th>
-                        <th class="px-2 py-1">CÓDIGO DE BARRAS</th>
+                <thead class="bg-blue-400 text-white font-bold leading-tight sticky top-0 z-10">
+                    <tr class="sticky">
+                        <th class="px-2 py-1 sticky top-0 z-10">ID FLOG</th>
+                        <th class="px-2 py-1 sticky top-0 z-10">NOMBRE DEL CLIENTE</th>
+                        <th class="px-2 py-1 sticky top-0 z-10">CÓDIGO DEL ARTÍCULO</th>
+                        <th class="px-2 py-1 sticky top-0 z-10">NOMBRE DEL ARTÍCULO</th>
+                        <th class="px-2 py-1 sticky top-0 z-10">TIPO DE HILO</th>
+                        <th class="px-2 py-1 sticky top-0 z-10">TAMAÑO</th>
+                        <th class="px-2 py-1 sticky top-0 z-10">RASURADO</th>
+                        <th class="px-2 py-1 sticky top-0 z-10">VALOR AGREGADO</th>
+                        <th class="px-2 py-1 sticky top-0 z-10">ANCHO</th>
+                        <th class="px-2 py-1 sticky top-0 z-10">CANTIDAD</th>
+                        <th class="px-2 py-1 sticky top-0 z-10">TIPO DE ARTÍCULO</th>
+                        <th class="px-2 py-1 sticky top-0 z-10">CÓDIGO DE BARRAS</th>
                         <th class="">
                             <button id="enviarSeleccionados"
                                 class="w-full h-full font-bold text-sm bg-black text-yellow-400 rounded-full hover:bg-yellow-400 hover:text-white transition shadow px-2 py-2 border-none"
