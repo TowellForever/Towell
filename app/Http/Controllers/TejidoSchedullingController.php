@@ -1128,7 +1128,7 @@ class TejidoSchedullingController extends Controller
             return response()->json(['batas' => [], 'otros' => []]);
         }
 
-        // Clausula reusable para OR de rangos
+        // Clausula reusable para OR de rangos / ( (TRANSDATE BETWEEN mes1_ini AND mes1_fin) OR (TRANSDATE BETWEEN mes2_ini AND mes2_fin) OR ... )
         $rangoWhere = function ($q) use ($rangos) {
             foreach ($rangos as $r) {
                 $q->orWhere(function ($sq) use ($r) {
@@ -1190,46 +1190,66 @@ class TejidoSchedullingController extends Controller
             ->get();
 
         // ========================
-        // 2) BATAS (ITEMTYPEID 10-19) + JOIN TwFlogsItemLine
+        // 2) BATAS (ITEMTYPEID 10-19) con il_rs (ROW_NUMBER) + TWFLOGBOMID
         // ========================
-        $qBatas = DB::connection('sqlsrv_ti')
+
+        // Subconsulta con ROW_NUMBER para quedarnos con el il más reciente por IDFLOG (solo RS%)
+        $ilRsSql = "
+    SELECT
+        il.*,
+        ROW_NUMBER() OVER (
+            PARTITION BY il.IDFLOG
+            ORDER BY il.CREATEDDATE DESC
+        ) AS rn
+    FROM dbo.TwFlogsItemLine AS il
+    WHERE il.IDFLOG LIKE 'RS%'
+";
+
+        $batas = DB::connection('sqlsrv_ti')
             ->table('TwPronosticosFlogs as pf')
-            ->leftJoin('TwFlogsItemLine as il', 'il.PURCHBARCODE', '=', 'pf.CODIGOBARRAS')
+            ->join(DB::raw("($ilRsSql) as il"), function ($join) {
+                $join->on('il.PURCHBARCODE', '=', 'pf.CODIGOBARRAS')
+                    ->where('il.rn', '=', 1); // solo el más reciente por IDFLOG
+            })
+            ->join(DB::raw('[TI_PRO].[dbo].[TWFLOGBOMID] as b'), function ($join) {
+                $join->on('b.IDFLOG', '=', 'il.IDFLOG')
+                    ->on('b.REFRECID', '=', 'il.RECID');
+            })
             ->where('pf.TIPOPEDIDO', 2)
+            // Rango de meses (tu closure $rangoWhere ya arma los OR por mes)
             ->where(function ($q) use ($rangoWhere) {
                 $rangoWhere($q);
             })
-            ->whereBetween('pf.ITEMTYPEID', [10, 19]); // BATAS
-
-        $batas = $qBatas
-            ->groupBy(
-                DB::raw($yearExpr),
-                DB::raw($monthExpr),
-                'pf.CUSTNAME',
-                'pf.ITEMID',
-                'pf.INVENTSIZEID'
-                // Si quieres separar aún más por algún ID de línea, puedes agregarlo aquí
-            )
+            // Igual que en tu SQL final: pf.ITEMTYPEID entre 10 y 19
+            ->whereBetween('pf.ITEMTYPEID', [10, 19])
+            ->groupBy('pf.CUSTNAME', 'b.ITEMID', 'b.INVENTSIZEID', 'il.IDFLOG')
             ->select(
-                DB::raw("$idflogAgg as IDFLOG"),
                 'pf.CUSTNAME',
-                'pf.ITEMID',
-                'pf.INVENTSIZEID',
-                DB::raw('MIN(pf.ITEMNAME)         as ITEMNAME'),
-                // Campos tomados de la tabla de líneas (cuando existan)
-                DB::raw('MIN(ISNULL(il.TIPOHILOID, pf.TIPOHILOID))    as TIPOHILOID'),
-                DB::raw('MIN(ISNULL(il.VALORAGREGADO, pf.VALORAGREGADO)) as VALORAGREGADO'),
-                DB::raw('MIN(ISNULL(il.ANCHO, pf.ANCHO))              as ANCHO'),
-                // Para PORENTREGAR en batas usamos la línea si existe; si no, caemos a INVENTQTY
-                DB::raw('SUM(ISNULL(il.PORENTREGAR, 0)) + SUM(CASE WHEN il.PURCHBARCODE IS NULL THEN pf.INVENTQTY ELSE 0 END) as PORENTREGAR'),
-                DB::raw('MIN(pf.ITEMTYPEID)       as ITEMTYPEID'),
-                DB::raw('MIN(pf.CODIGOBARRAS)     as CODIGOBARRAS'),
-                DB::raw("$yearExpr  as ANIO"),
-                DB::raw("$monthExpr as MES")
+                'b.ITEMID',
+                'b.INVENTSIZEID',
+                'il.IDFLOG',
+                // Σ (pf.INVENTQTY * b.BOMQTY)
+                DB::raw("
+            SUM(
+                CAST(ISNULL(pf.INVENTQTY,0) AS DECIMAL(18,4))
+              * CAST(ISNULL(b.BOMQTY,0)     AS DECIMAL(18,4))
+            ) AS TOTALAZO
+        "),
+                DB::raw("SUM(CAST(ISNULL(pf.INVENTQTY,0) AS DECIMAL(18,4))) AS TOTAL_INVENTQTY"),
+                DB::raw("SUM(CAST(ISNULL(b.BOMQTY,0)     AS DECIMAL(18,4))) AS TOTAL_BOMQTY"),
+                DB::raw("MIN(pf.CODIGOBARRAS) AS CODIGOBARRAS"),
+                DB::raw("MIN(b.ITEMNAME)      AS ITEMNAME"),
+                DB::raw("MIN(b.ANCHO)         AS ANCHO"),
+                DB::raw("MIN(b.TIPOHILOID)    AS TIPOHILOID"),
+                DB::raw("MIN(il.VALORAGREGADO) AS VALORAGREGADO")
             )
-            ->orderBy(DB::raw($yearExpr))
-            ->orderBy(DB::raw($monthExpr))
+            ->orderBy('pf.CUSTNAME')
+            ->orderBy('b.ITEMID')
+            ->orderBy('b.INVENTSIZEID')
+            ->orderBy('il.IDFLOG')
             ->get();
+
+
 
         return response()->json([
             'batas' => $batas,

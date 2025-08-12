@@ -192,7 +192,7 @@
             data-itemid="${b.ITEMID ?? ''}"
             data-itemname="${b.ITEMNAME ?? ''}"
             data-inventsizeid="${b.INVENTSIZEID ?? ''}"
-            data-porentregar="${b.PORENTREGAR ?? ''}"
+            data-porentregar="${b.TOTALAZO ?? ''}"
             data-rasuradocrudo="${b.RASURADOCRUDO ?? ''}"
             data-tipohilo="${b.TIPOHILOID ?? ''}"
             data-valoragregado="${b.VALORAGREGADO ?? ''}"
@@ -208,7 +208,7 @@
             <td class="px-2 py-1">${b.RASURADOCRUDO ?? '-'}</td>
             <td class="px-2 py-1">${b.VALORAGREGADO ?? '-'}</td>
             <td class="px-2 py-1">${mostrarDecimalBonito(b.ANCHO)}</td>
-            <td class="px-2 py-1">${mostrarDecimalBonito(b.PORENTREGAR)}</td>
+            <td class="px-2 py-1">${mostrarDecimalBonito(b.TOTALAZO)}</td>
             <td class="px-2 py-1">${tipo}</td>
             <td class="px-2 py-1">${b.CODIGOBARRAS ?? '-'}</td>
             <td class="text-center align-middle border">
