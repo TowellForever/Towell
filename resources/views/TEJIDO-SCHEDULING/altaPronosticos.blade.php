@@ -71,7 +71,6 @@
                         <th class="px-2 py-1 sticky top-0 z-10 sortable" data-key="ANCHO">ANCHO</th>
                         <th class="px-2 py-1 sticky top-0 z-10 sortable" data-key="CANTIDAD">CANTIDAD</th>
                         <th class="px-2 py-1 sticky top-0 z-10 sortable" data-key="TIPOARTICULO">TIPO DE ARTÍCULO</th>
-                        <th class="px-2 py-1 sticky top-0 z-10 sortable" data-key="CODIGOBARRAS">CÓDIGO DE BARRAS</th>
                         <th class="px-2 py-1">
                             <button id="enviarSeleccionados"
                                 class="w-full h-full font-bold text-sm bg-black text-yellow-400 rounded-full hover:bg-yellow-400 hover:text-white transition shadow px-2 py-2">
@@ -285,7 +284,6 @@
                 ANCHO: o.ANCHO ?? null,
                 CANTIDAD: o.PORENTREGAR ?? 0, // otros: PORENTREGAR
                 TIPOARTICULO: o.TIPOARTICULO ?? o.ITEMTYPEID ?? '',
-                CODIGOBARRAS: o.CODIGOBARRAS ?? '',
                 RAW: o
             }));
             const B = (batas || []).map(b => ({
@@ -299,9 +297,8 @@
                 RASURADOCRUDO: b.RASURADOCRUDO ?? '',
                 VALORAGREGADO: b.VALORAGREGADO ?? '',
                 ANCHO: b.ANCHO ?? null,
-                CANTIDAD: b.TOTALAZO ?? 0, // batas: TOTALAZO (Σ INVENTQTY * BOMQTY)
+                CANTIDAD: b.TOTAL_RESULTADO ?? 0, // batas: TOTALAZO (Σ INVENTQTY * BOMQTY)
                 TIPOARTICULO: b.TIPOARTICULO ?? b.ITEMTYPEID ?? '',
-                CODIGOBARRAS: b.CODIGOBARRAS ?? '',
                 RAW: b
             }));
             return [...A, ...B];
@@ -387,8 +384,7 @@
                         data-tipohilo="${r.TIPOHILOID ?? ''}"
                         data-valoragregado="${r.VALORAGREGADO ?? ''}"
                         data-ancho="${r.ANCHO ?? ''}"
-                        data-tipoarticulo="${tipo}"
-                        data-codigobarras="${r.CODIGOBARRAS ?? ''}">
+                        data-tipoarticulo="${tipo}">
                         <td class="px-2 py-1">${r.IDFLOG ?? '-'}</td>
                         <td class="px-2 py-1">${r.CUSTNAME ?? '-'}</td>
                         <td class="px-2 py-1">${r.ITEMID ?? '-'}</td>
@@ -400,7 +396,6 @@
                         <td class="px-2 py-1">${ancho}</td>
                         <td class="px-2 py-1">${cantidad}</td>
                         <td class="px-2 py-1">${tipo}</td>
-                        <td class="px-2 py-1">${r.CODIGOBARRAS ?? '-'}</td>
                         <td class="text-center align-middle border">
                             <input type="radio" name="fila-seleccionada" class="form-radio text-blue-500 w-5 h-5" />
                         </td>

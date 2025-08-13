@@ -1190,65 +1190,97 @@ class TejidoSchedullingController extends Controller
             ->orderBy(DB::raw($monthExpr))
             ->get();
 
-        // ========================
-        // 2) BATAS (ITEMTYPEID 10-19) con il_rs (ROW_NUMBER) + TWFLOGBOMID
-        // ========================
 
-        // Subconsulta con ROW_NUMBER para quedarnos con el il más reciente por IDFLOG (solo RS%)
-        $ilRsSql = "
+
+
+
+
+        // Suponiendo que ya tienes $rangos como en tu dd()
+        $fechaClauses = [];
+        $fechaBindings = [];
+
+        foreach ($rangos as $r) {
+            // Opción A (incluyente): >= inicio AND <= fin
+            $fechaClauses[] = '(pf.TRANSDATE >= ? AND pf.TRANSDATE <= ?)';
+            $fechaBindings[] = $r['inicio'];
+            $fechaBindings[] = $r['fin'];
+
+            // --- Opción B (exclusiva, más robusta con horas):
+            // $finExclusivo = date('Y-m-d', strtotime($r['fin'] . ' +1 day'));
+            // $fechaClauses[] = '(pf.TRANSDATE >= ? AND pf.TRANSDATE < ?)';
+            // $fechaBindings[] = $r['inicio'];
+            // $fechaBindings[] = $finExclusivo;
+        }
+
+        $whereFechas = implode(' OR ', $fechaClauses);
+
+        $sql = <<<SQL
+WITH PF AS (
+    SELECT *
+    FROM dbo.TwPronosticosFlogs AS pf
+    WHERE ($whereFechas)
+      AND pf.ITEMTYPEID BETWEEN ? AND ?
+),
+IL_DEDUP AS (
     SELECT
         il.*,
         ROW_NUMBER() OVER (
-            PARTITION BY il.IDFLOG
+            PARTITION BY il.IDFLOG, il.PURCHBARCODE
             ORDER BY il.CREATEDDATE DESC
         ) AS rn
-    FROM dbo.TwFlogsItemLine AS il
-    WHERE il.IDFLOG LIKE 'RS%'
-";
+    FROM dbo.TWFLOGSITEMLINE AS il
+    WHERE il.IDFLOG LIKE ?
+)
+SELECT
+    pf.CUSTNAME,
+    bom.ITEMID,
+    bom.INVENTSIZEID,
+    SUM(
+        CAST(ISNULL(pf.INVENTQTY, 0) AS DECIMAL(18,4)) *
+        CAST(ISNULL(bom.BOMQTY,   0) AS DECIMAL(18,4))
+    ) AS TOTAL_RESULTADO,
+    SUM(CAST(ISNULL(pf.INVENTQTY, 0) AS DECIMAL(18,4))) AS TOTAL_INVENTQTY,
+    SUM(CAST(ISNULL(bom.BOMQTY, 0) AS DECIMAL(18,4)))   AS SUM_BOMQTY,
+    COUNT(*)                                            AS N_FACTORES,
+    CAST(
+        SUM(CAST(ISNULL(bom.BOMQTY, 0) AS DECIMAL(18,4))) / NULLIF(COUNT(*), 0)
+        AS DECIMAL(18,4)
+    ) AS PROM_BOMQTY,
+     -- Extras solicitados para el front
+    MIN(bom.ITEMNAME)       AS ITEMNAME,
+    MIN(bom.TIPOHILOID)     AS TIPOHILOID,
+    MIN(bom.RASURADO)       AS RASURADO,
+    MIN(pf.VALORAGREGADO)   AS VALORAGREGADO,
+    MIN(bom.ANCHO)          AS ANCHO,
+    MIN(il.ITEMTYPEID)      AS ilITEMTYPEID,
+    MIN(pf.TRANSDATE)      AS FECHA
+FROM PF AS pf
+JOIN IL_DEDUP AS il
+      ON il.PURCHBARCODE = pf.CODIGOBARRAS
+     AND il.rn = 1
+JOIN dbo.TWFLOGBOMID AS bom
+      ON bom.IDFLOG   = il.IDFLOG
+     AND bom.REFRECID = il.RECID
+     AND bom.BIES     = 0
+GROUP BY
+    pf.CUSTNAME,
+    bom.ITEMID,
+    bom.INVENTSIZEID
+ORDER BY
+    pf.CUSTNAME,
+    bom.ITEMID,
+    bom.INVENTSIZEID;
+SQL;
 
-        $batas = DB::connection('sqlsrv_ti')
-            ->table('TwPronosticosFlogs as pf')
-            ->join(DB::raw("($ilRsSql) as il"), function ($join) {
-                $join->on('il.PURCHBARCODE', '=', 'pf.CODIGOBARRAS')
-                    ->where('il.rn', '=', 1); // solo el más reciente por IDFLOG
-            })
-            ->join(DB::raw('[TI_PRO].[dbo].[TWFLOGBOMID] as b'), function ($join) {
-                $join->on('b.IDFLOG', '=', 'il.IDFLOG')
-                    ->on('b.REFRECID', '=', 'il.RECID');
-            })
-            ->where('pf.TIPOPEDIDO', 2)
-            // Rango de meses (tu closure $rangoWhere ya arma los OR por mes)
-            ->where(function ($q) use ($rangoWhere) {
-                $rangoWhere($q);
-            })
-            // Igual que en tu SQL final: pf.ITEMTYPEID entre 10 y 19
-            ->whereBetween('pf.ITEMTYPEID', [10, 19])
-            ->groupBy('pf.CUSTNAME', 'b.ITEMID', 'b.INVENTSIZEID', 'il.IDFLOG')
-            ->select(
-                'pf.CUSTNAME',
-                'b.ITEMID',
-                'b.INVENTSIZEID',
-                'il.IDFLOG',
-                // Σ (pf.INVENTQTY * b.BOMQTY)
-                DB::raw("
-            SUM(
-                CAST(ISNULL(pf.INVENTQTY,0) AS DECIMAL(18,4))
-              * CAST(ISNULL(b.BOMQTY,0)     AS DECIMAL(18,4))
-            ) AS TOTALAZO
-        "),
-                DB::raw("SUM(CAST(ISNULL(pf.INVENTQTY,0) AS DECIMAL(18,4))) AS TOTAL_INVENTQTY"),
-                DB::raw("SUM(CAST(ISNULL(b.BOMQTY,0)     AS DECIMAL(18,4))) AS TOTAL_BOMQTY"),
-                DB::raw("MIN(pf.CODIGOBARRAS) AS CODIGOBARRAS"),
-                DB::raw("MIN(b.ITEMNAME)      AS ITEMNAME"),
-                DB::raw("MIN(b.ANCHO)         AS ANCHO"),
-                DB::raw("MIN(b.TIPOHILOID)    AS TIPOHILOID"),
-                DB::raw("MIN(il.VALORAGREGADO) AS VALORAGREGADO")
-            )
-            ->orderBy('pf.CUSTNAME')
-            ->orderBy('b.ITEMID')
-            ->orderBy('b.INVENTSIZEID')
-            ->orderBy('il.IDFLOG')
-            ->get();
+        // Ahora armas los bindings en el MISMO orden de los ?
+        $bindings = array_merge(
+            $fechaBindings, // todas las fechas (inicio, fin, inicio, fin, ...)
+            [10, 19],       // ITEMTYPEID min y max
+            ['RS%']         // LIKE
+        );
+
+        $batas = DB::connection('sqlsrv_ti')->select($sql, $bindings);
+        // dd($batas);
 
         return response()->json([
             'batas' => $batas,
