@@ -396,6 +396,7 @@
                         <td class="px-2 py-1">${ancho}</td>
                         <td class="px-2 py-1">${cantidad}</td>
                         <td class="px-2 py-1">${tipo}</td>
+
                         <td class="text-center align-middle border">
                             <input type="radio" name="fila-seleccionada" class="form-radio text-blue-500 w-5 h-5" />
                         </td>

@@ -1142,7 +1142,30 @@ class TejidoSchedullingController extends Controller
         // Expresiones SQL Server 2008 para inicio/fin de mes basado en TRANSDATE (formato dd/MM/yyyy)
         $inicioExpr = "CONVERT(VARCHAR(10), DATEADD(day, 1 - DAY(pf.TRANSDATE), pf.TRANSDATE), 103)";
         $finExpr    = "CONVERT(VARCHAR(10), DATEADD(day, -DAY(DATEADD(month,1,pf.TRANSDATE)), DATEADD(month,1,pf.TRANSDATE)), 103)";
-        $idflogAgg  = "'Pronóstico del ' + MIN($inicioExpr) + ' - ' + MAX($finExpr)";
+        // MES (ES) solo si el rango está en el mismo mes; si no, "VARIOS MESES"
+        $mesAgg = "
+            CASE 
+            WHEN YEAR(MIN(pf.TRANSDATE)) = YEAR(MAX(pf.TRANSDATE))
+            AND MONTH(MIN(pf.TRANSDATE)) = MONTH(MAX(pf.TRANSDATE))
+            THEN CASE MONTH(MIN(pf.TRANSDATE))
+                    WHEN 1  THEN 'ENERO'
+                    WHEN 2  THEN 'FEBRERO'
+                    WHEN 3  THEN 'MARZO'
+                    WHEN 4  THEN 'ABRIL'
+                    WHEN 5  THEN 'MAYO'
+                    WHEN 6  THEN 'JUNIO'
+                    WHEN 7  THEN 'JULIO'
+                    WHEN 8  THEN 'AGOSTO'
+                    WHEN 9  THEN 'SEPTIEMBRE'
+                    WHEN 10 THEN 'OCTUBRE'
+                    WHEN 11 THEN 'NOVIEMBRE'
+                    WHEN 12 THEN 'DICIEMBRE'
+                END
+            ELSE 'VARIOS MESES'
+            END
+            ";
+
+        $idflogAgg  = "'Pronóstico de ' + $mesAgg";
 
         $yearExpr   = 'YEAR(pf.TRANSDATE)';
         $monthExpr  = 'MONTH(pf.TRANSDATE)';
@@ -1191,10 +1214,6 @@ class TejidoSchedullingController extends Controller
             ->get();
 
 
-
-
-
-
         // Suponiendo que ya tienes $rangos como en tu dd()
         $fechaClauses = [];
         $fechaBindings = [];
@@ -1215,62 +1234,63 @@ class TejidoSchedullingController extends Controller
         $whereFechas = implode(' OR ', $fechaClauses);
 
         $sql = <<<SQL
-WITH PF AS (
-    SELECT *
-    FROM dbo.TwPronosticosFlogs AS pf
-    WHERE ($whereFechas)
-      AND pf.ITEMTYPEID BETWEEN ? AND ?
-),
-IL_DEDUP AS (
-    SELECT
-        il.*,
-        ROW_NUMBER() OVER (
-            PARTITION BY il.IDFLOG, il.PURCHBARCODE
-            ORDER BY il.CREATEDDATE DESC
-        ) AS rn
-    FROM dbo.TWFLOGSITEMLINE AS il
-    WHERE il.IDFLOG LIKE ?
-)
-SELECT
-    pf.CUSTNAME,
-    bom.ITEMID,
-    bom.INVENTSIZEID,
-    SUM(
-        CAST(ISNULL(pf.INVENTQTY, 0) AS DECIMAL(18,4)) *
-        CAST(ISNULL(bom.BOMQTY,   0) AS DECIMAL(18,4))
-    ) AS TOTAL_RESULTADO,
-    SUM(CAST(ISNULL(pf.INVENTQTY, 0) AS DECIMAL(18,4))) AS TOTAL_INVENTQTY,
-    SUM(CAST(ISNULL(bom.BOMQTY, 0) AS DECIMAL(18,4)))   AS SUM_BOMQTY,
-    COUNT(*)                                            AS N_FACTORES,
-    CAST(
-        SUM(CAST(ISNULL(bom.BOMQTY, 0) AS DECIMAL(18,4))) / NULLIF(COUNT(*), 0)
-        AS DECIMAL(18,4)
-    ) AS PROM_BOMQTY,
-     -- Extras solicitados para el front
-    MIN(bom.ITEMNAME)       AS ITEMNAME,
-    MIN(bom.TIPOHILOID)     AS TIPOHILOID,
-    MIN(bom.RASURADO)       AS RASURADO,
-    MIN(pf.VALORAGREGADO)   AS VALORAGREGADO,
-    MIN(bom.ANCHO)          AS ANCHO,
-    MIN(il.ITEMTYPEID)      AS ilITEMTYPEID,
-    MIN(pf.TRANSDATE)      AS FECHA
-FROM PF AS pf
-JOIN IL_DEDUP AS il
-      ON il.PURCHBARCODE = pf.CODIGOBARRAS
-     AND il.rn = 1
-JOIN dbo.TWFLOGBOMID AS bom
-      ON bom.IDFLOG   = il.IDFLOG
-     AND bom.REFRECID = il.RECID
-     AND bom.BIES     = 0
-GROUP BY
-    pf.CUSTNAME,
-    bom.ITEMID,
-    bom.INVENTSIZEID
-ORDER BY
-    pf.CUSTNAME,
-    bom.ITEMID,
-    bom.INVENTSIZEID;
-SQL;
+        WITH PF AS (
+            SELECT *
+            FROM dbo.TwPronosticosFlogs AS pf
+            WHERE ($whereFechas)
+            AND pf.ITEMTYPEID BETWEEN ? AND ?
+        ),
+        IL_DEDUP AS (
+            SELECT
+                il.*,
+                ROW_NUMBER() OVER (
+                    PARTITION BY il.IDFLOG, il.PURCHBARCODE
+                    ORDER BY il.CREATEDDATE DESC
+                ) AS rn
+            FROM dbo.TWFLOGSITEMLINE AS il
+            WHERE il.IDFLOG LIKE ?
+        )
+        SELECT
+            pf.CUSTNAME,
+            bom.ITEMID,
+            bom.INVENTSIZEID,
+            SUM(
+                CAST(ISNULL(pf.INVENTQTY, 0) AS DECIMAL(18,4)) *
+                CAST(ISNULL(bom.BOMQTY,   0) AS DECIMAL(18,4))
+            ) AS TOTAL_RESULTADO,
+            SUM(CAST(ISNULL(pf.INVENTQTY, 0) AS DECIMAL(18,4))) AS TOTAL_INVENTQTY,
+            SUM(CAST(ISNULL(bom.BOMQTY, 0) AS DECIMAL(18,4)))   AS SUM_BOMQTY,
+            COUNT(*)                                            AS N_FACTORES,
+            CAST(
+                SUM(CAST(ISNULL(bom.BOMQTY, 0) AS DECIMAL(18,4))) / NULLIF(COUNT(*), 0)
+                AS DECIMAL(18,4)
+            ) AS PROM_BOMQTY,
+            -- Extras solicitados para el front
+            MIN(bom.ITEMNAME)       AS ITEMNAME,
+            MIN(bom.TIPOHILOID)     AS TIPOHILOID,
+            MIN(bom.RASURADO)       AS RASURADOCRUDO,
+            MIN(pf.VALORAGREGADO)   AS VALORAGREGADO,
+            MIN(bom.ANCHO)          AS ANCHO,
+            MIN(PF.ITEMTYPEID)      AS ITEMTYPEID,
+            MIN(pf.TRANSDATE)      AS FECHA,
+            $idflogAgg as IDFLOG
+        FROM PF AS pf
+        JOIN IL_DEDUP AS il
+            ON il.PURCHBARCODE = pf.CODIGOBARRAS
+            AND il.rn = 1
+        JOIN dbo.TWFLOGBOMID AS bom
+            ON bom.IDFLOG   = il.IDFLOG
+            AND bom.REFRECID = il.RECID
+            AND bom.BIES     = 0
+        GROUP BY
+            pf.CUSTNAME,
+            bom.ITEMID,
+            bom.INVENTSIZEID
+        ORDER BY
+            pf.CUSTNAME,
+            bom.ITEMID,
+            bom.INVENTSIZEID;
+        SQL;
 
         // Ahora armas los bindings en el MISMO orden de los ?
         $bindings = array_merge(
@@ -1280,7 +1300,7 @@ SQL;
         );
 
         $batas = DB::connection('sqlsrv_ti')->select($sql, $bindings);
-        // dd($batas);
+        //dd($otros);
 
         return response()->json([
             'batas' => $batas,
