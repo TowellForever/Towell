@@ -1103,6 +1103,7 @@ class TejidoSchedullingController extends Controller
         ]);
     }
 
+    //VISTA para PRONOSTICOS PRONOSTICOS PRONOSTICOS PRONOSTICOS PRONOSTICOS PRONOSTICOS PRONOSTICOS PRONOSTICOS PRONOSTICOS PRONOSTICOS PRONOSTICOS PRONOSTICOS PRONOSTICOS PRONOSTICOS
     public function getPronosticosAjax(Request $request)
     {
         // Recibe meses: ['2025-08', '2025-09']
@@ -1248,8 +1249,6 @@ class TejidoSchedullingController extends Controller
             ->orderBy('b.INVENTSIZEID')
             ->orderBy('il.IDFLOG')
             ->get();
-
-
 
         return response()->json([
             'batas' => $batas,
