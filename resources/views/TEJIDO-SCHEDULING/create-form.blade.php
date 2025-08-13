@@ -357,9 +357,10 @@
         let flogCayente = @json($idflogSeleccionado);
 
         function getParam(name) {
-            return new URLSearchParams(window.location.search).get(name);
+            const url = new URL(window.location.href);
+            return url.searchParams.get(name);
         }
-
+        const norm = s => (s || '').toString().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
         $(document).ready(function() {
             // Inicializar Select2
@@ -427,7 +428,18 @@
                                 }).then(() => {
                                     // Solo redirige si NO viene de Planeacion
                                     if (getParam('from') === 'planeacion') {
-
+                                        // no redirige (solo cierra modal)
+                                    } else if (getParam('from') === 'pronosticos') {
+                                        window.location.href =
+                                            "{{ route('tejido.pronosticos.blade') }}";
+                                    } else if (norm(getParam('IDFLOG')) === 'pronostico') {
+                                        window.location.href =
+                                            "{{ route('tejido.pronosticos.blade') }}";
+                                    } else if (document.referrer && new URL(document.referrer)
+                                        .pathname.includes('/tejido-scheduling/pronosticos')) {
+                                        // fallback si no pasó param pero venías desde esa URL
+                                        window.location.href =
+                                            "{{ route('tejido.pronosticos.blade') }}";
                                     } else {
                                         window.location.href =
                                             "{{ route('tejido.scheduling.ventas') }}";
