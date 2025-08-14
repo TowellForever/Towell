@@ -10,15 +10,17 @@
     $fechacancelacion = $datosPrecargados['FECHACANCE'] ?? '';
 
     //aqui acomodo los datos que envia PRONOSTICOS
-    $clientePronos = ;
-    $itemIDPronos = ;
-    $itemNamePronos = ;
-    $cantidadPronos = ;
-    $rasuradoPronos = ;
-    $hiloPronos = ;
-    $valorAgregdoPronos = ;
-    $ancho = ;
-    $tipoArticulo =;
+    //parece ser que puedo obtener el MODELO armando o buscando con la clave y tamanio...
+    $clientePronos = $datosPrecargados['CUSTNAME'] ?? '';
+    $itemIDPronos = $datosPrecargados['ITEMID'] ?? '';
+    $itemNamePronos = $datosPrecargados['ITEMNAME'] ?? '';
+    $itemNamePronos = $datosPrecargados['INVENTSIZEID'] ?? '';
+    $cantidadPronos = $datosPrecargados['CANTIDAD'] ?? '';
+    $rasuradoPronos = $datosPrecargados['RASURADOCRUDO'] ?? '';
+    $hiloPronos = $datosPrecargados['TIPOHILO'] ?? '';
+    $valorAgregdoPronos = $datosPrecargados['VALORAGREGADO'] ?? '';
+    $ancho = $datosPrecargados['ANCHO'] ?? '';
+    $tipoArticulo = $datosPrecargados['TIPOARTICULO'] ?? '';
 
 @endphp
 
