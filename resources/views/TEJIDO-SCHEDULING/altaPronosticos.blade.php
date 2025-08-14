@@ -155,10 +155,6 @@
                     <input id="f_TIPOARTICULO" class="w-full border rounded px-2 py-1" placeholder="Contiene…" />
                 </div>
 
-                <div class="col-span-3">
-                    <label class="font-semibold text-gray-700">Código de barras</label>
-                    <input id="f_CODIGOBARRAS" class="w-full border rounded px-2 py-1" placeholder="Contiene…" />
-                </div>
             </div>
 
             <div class="mt-4 flex justify-end gap-2">
@@ -198,7 +194,6 @@
         const table = document.getElementById('tabla-pronosticos');
         const tbody = table.querySelector('tbody');
         const appRoot = document.querySelector('.max-w-7xl.mx-auto');
-
         const btnFiltros = document.getElementById('btn-filtros');
         const modal = document.getElementById('modal-filtros');
         const cerrarModal = document.getElementById('cerrar-modal');
@@ -323,8 +318,6 @@
                         .toUpperCase())) return false;
                 if (filters.TIPOARTICULO && !String(r.TIPOARTICULO).toUpperCase().includes(filters.TIPOARTICULO
                         .toUpperCase())) return false;
-                if (filters.CODIGOBARRAS && !String(r.CODIGOBARRAS).toUpperCase().includes(filters.CODIGOBARRAS
-                        .toUpperCase())) return false;
 
                 // numéricos
                 const ancho = Number(r.ANCHO ?? 0);
@@ -363,7 +356,7 @@
         function renderRows(rows) {
             if (!rows || rows.length === 0) {
                 tbody.innerHTML =
-                    `<tr><td colspan="13" class="text-center text-gray-400 py-3">NO SE HAN ENCONTRADO REGISTROS PARA ESTOS MESES.</td></tr>`;
+                    `<tr><td colspan="12" class="text-center text-gray-400 py-3">NO SE HAN ENCONTRADO REGISTROS PARA ESTOS MESES.</td></tr>`;
                 return;
             }
             tbody.innerHTML = rows.map(r => {
@@ -551,7 +544,6 @@
             document.getElementById('f_RASURADOCRUDO').value = filters.RASURADOCRUDO || '';
             document.getElementById('f_VALORAGREGADO').value = filters.VALORAGREGADO || '';
             document.getElementById('f_TIPOARTICULO').value = filters.TIPOARTICULO || '';
-            document.getElementById('f_CODIGOBARRAS').value = filters.CODIGOBARRAS || '';
             document.getElementById('f_ANCHO_MIN').value = filters.ANCHO_MIN ?? '';
             document.getElementById('f_ANCHO_MAX').value = filters.ANCHO_MAX ?? '';
             document.getElementById('f_CANTIDAD_MIN').value = filters.CANTIDAD_MIN ?? '';
@@ -573,7 +565,6 @@
                 RASURADOCRUDO: document.getElementById('f_RASURADOCRUDO').value.trim(),
                 VALORAGREGADO: document.getElementById('f_VALORAGREGADO').value.trim(),
                 TIPOARTICULO: document.getElementById('f_TIPOARTICULO').value.trim(),
-                CODIGOBARRAS: document.getElementById('f_CODIGOBARRAS').value.trim(),
                 ANCHO_MIN: document.getElementById('f_ANCHO_MIN').value,
                 ANCHO_MAX: document.getElementById('f_ANCHO_MAX').value,
                 CANTIDAD_MIN: document.getElementById('f_CANTIDAD_MIN').value,
@@ -593,7 +584,6 @@
                 RASURADOCRUDO: '',
                 VALORAGREGADO: '',
                 TIPOARTICULO: '',
-                CODIGOBARRAS: '',
                 ANCHO_MIN: null,
                 ANCHO_MAX: null,
                 CANTIDAD_MIN: null,
@@ -613,7 +603,6 @@
                 RASURADOCRUDO: '',
                 VALORAGREGADO: '',
                 TIPOARTICULO: '',
-                CODIGOBARRAS: '',
                 ANCHO_MIN: null,
                 ANCHO_MAX: null,
                 CANTIDAD_MIN: null,
@@ -628,7 +617,7 @@
             document.querySelectorAll('.form-radio:checked').forEach(checkbox => {
                 const fila = checkbox.closest('tr');
                 const datos = {
-                    IDFLOG: fila.dataset.idflog,
+                    //IDFLOG: fila.dataset.idflog,
                     CUSTNAME: fila.dataset.custname,
                     ITEMID: fila.dataset.itemid,
                     ITEMNAME: fila.dataset.itemname,
@@ -636,10 +625,9 @@
                     CANTIDAD: fila.dataset.porentregar,
                     RASURADOCRUDO: fila.dataset.rasuradocrudo,
                     TIPOHILO: fila.dataset.tipohilo,
-                    APLICACION: fila.dataset.valoragregado,
+                    VALORAGREGADO: fila.dataset.valoragregado,
                     ANCHO: fila.dataset.ancho,
                     TIPOARTICULO: fila.dataset.tipoarticulo,
-                    CODIGOBARRAS: fila.dataset.codigobarras
                 };
                 seleccionados.push(datos);
             });
@@ -648,7 +636,7 @@
                 Swal.fire({
                     icon: 'info',
                     title: 'ATENCIÓN!',
-                    text: 'Marca la casilla de al menos una fila.',
+                    text: 'Marca la casilla de por lo menos una fila.',
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Entendido'
                 });

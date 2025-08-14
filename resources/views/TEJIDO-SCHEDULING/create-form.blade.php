@@ -9,6 +9,17 @@
     $rasurado = $datosPrecargados['RASURADOCRUDO'] ?? '';
     $fechacancelacion = $datosPrecargados['FECHACANCE'] ?? '';
 
+    //aqui acomodo los datos que envia PRONOSTICOS
+    $clientePronos = ;
+    $itemIDPronos = ;
+    $itemNamePronos = ;
+    $cantidadPronos = ;
+    $rasuradoPronos = ;
+    $hiloPronos = ;
+    $valorAgregdoPronos = ;
+    $ancho = ;
+    $tipoArticulo =;
+
 @endphp
 
 @section('content')
@@ -792,4 +803,9 @@
             }
         </style>
     @endpush
+
+    <script>
+        // o más lindo:
+        console.table(@json($datosPrecargados));
+    </script>
 @endsection
