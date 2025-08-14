@@ -430,16 +430,13 @@
                                     if (getParam('from') === 'planeacion') {
                                         // no redirige (solo cierra modal)
                                     } else if (getParam('from') === 'pronosticos') {
-                                        window.location.href =
-                                            "{{ route('tejido.pronosticos.blade') }}";
+                                        //window.location.reload();
                                     } else if (norm(getParam('IDFLOG')) === 'pronostico') {
-                                        window.location.href =
-                                            "{{ route('tejido.pronosticos.blade') }}";
+                                        //window.location.reload();
                                     } else if (document.referrer && new URL(document.referrer)
                                         .pathname.includes('/tejido-scheduling/pronosticos')) {
                                         // fallback si no pasó param pero venías desde esa URL
-                                        window.location.href =
-                                            "{{ route('tejido.pronosticos.blade') }}";
+                                        //window.location.reload();
                                     } else {
                                         window.location.href =
                                             "{{ route('tejido.scheduling.ventas') }}";

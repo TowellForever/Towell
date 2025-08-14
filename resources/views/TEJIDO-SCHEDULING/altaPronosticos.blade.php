@@ -44,12 +44,12 @@
                 <!-- Botones de acciones -->
                 <div class="ml-auto flex items-center gap-2">
                     <button id="btn-filtros" type="button"
-                        class="rounded-xl bg-blue-600 text-white font-bold px-4 py-1 shadow hover:bg-blue-700 transition">
-                        FILTRAR
+                        class="rounded-xl  text-white font-bold px-0.5 py-1 hover:bg-yellow-400 transition">
+                        <span style="font-size: 34px;">🔎</span>
                     </button>
                     <button id="btn-reset-filtros" type="button"
-                        class="rounded-xl bg-gray-200 text-gray-800 font-bold px-4 py-1 shadow hover:bg-gray-300 transition">
-                        Limpiar filtros
+                        class="rounded-xl bg-gray-200 text-gray-800 font-bold px-1 py-1 shadow hover:bg-gray-300 transition">
+                        <span style="font-size: 34px;">🧹</span>
                     </button>
                 </div>
             </div>
@@ -99,9 +99,9 @@
         <div class="relative bg-white rounded-2xl shadow-xl w-[850px] max-w-[95vw] p-5">
             <div class="flex items-center justify-between mb-3">
                 <h3 class="text-xl font-extrabold text-blue-800">Filtros por columna</h3>
-                <button id="cerrar-modal" class="text-gray-500 hover:text-gray-800 font-bold text-xl">&times;</button>
+                <button id="cerrar-modal"
+                    class="w-16 text-black bg-red-300 hover:text-red-800 font-bold text-xl">&times;</button>
             </div>
-
             <div class="grid grid-cols-3 gap-3 text-sm">
                 <div>
                     <label class="font-semibold text-gray-700">Cliente</label>
