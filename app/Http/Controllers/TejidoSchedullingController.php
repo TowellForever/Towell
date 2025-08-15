@@ -1307,4 +1307,153 @@ class TejidoSchedullingController extends Controller
             'otros' => $otros,
         ]);
     }
+
+    //REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES
+    // REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES
+
+    public function consumo()
+    {
+        $semanas = ['Semana 6.', 'Semana 7.', 'Semana 8.', 'Semana 9.', 'Semana 10.'];
+
+        // === Helpers ===
+        $tot = function (array $data) use ($semanas) {
+            $t = array_fill(0, count($semanas), 0);
+            foreach ($data as $filas) {
+                foreach ($filas as $fila) {
+                    foreach ($fila['w'] as $i => $v) {
+                        $t[$i] += $v;
+                    }
+                }
+            }
+            return $t;
+        };
+
+        // ====== Tabla 1: Consumo Trama (mock de ejemplo) ======
+        $trama = [
+            '12' => [
+                ['color' => 'ALGODÓN', 'w' => [589, 0, 0, 0, 0]],
+                ['color' => 'ALGODÓN', 'w' => [0, 0, 0, 0, 0]],
+                ['color' => 'ANILLO',  'w' => [336, 0, 0, 0, 0]],
+            ],
+            '10' => [
+                ['color' => 'ALGODON',          'w' => [351, 203, 0, 0, 0]],
+                ['color' => 'ALGODÓN',          'w' => [266, 211, 40, 0, 0]],
+                ['color' => 'ALGODÓN',          'w' => [569, 0, 0, 0, 0]],
+                ['color' => 'POLIESTER-ALGODÓN', 'w' => [0, 0, 0, 0, 0]],
+                ['color' => 'ALGODON',          'w' => [572, 34, 0, 0, 0]],
+            ],
+            '8'  => [['color' => 'ALGODÓN', 'w' => [236, 0, 0, 0, 0]]],
+            '9'  => [['color' => 'FILAMENTO BLANCO COMPACTADO', 'w' => [206, 0, 0, 0, 0]]],
+        ];
+
+        // ====== Tabla 2: Consumo Combinación 1 ======
+        $comb1 = [
+            '8'  => [['color' => 'TERMO', 'w' => [0, 0, 0, 0, 0]]],
+            '12' => [
+                ['color' => 'AZUL', 'w' => [0, 0, 0, 0, 0]],
+                ['color' => 'CORAL', 'w' => [30, 0, 0, 0, 0]],
+                ['color' => 'VERDE BOTELLA', 'w' => [8, 31, 6, 6, 0]],
+                ['color' => 'MARRÓN', 'w' => [26, 0, 0, 0, 0]],
+                ['color' => 'POL LILA 828', 'w' => [14, 32, 0, 0, 0]],
+                ['color' => 'POL PETROLEO', 'w' => [5, 0, 0, 0, 0]],
+                ['color' => 'POLIESTER BLANCO', 'w' => [6, 0, 0, 0, 0]],
+            ],
+            '10' => [
+                ['color' => 'TERMO', 'w' => [90, 3, 0, 0, 0]],
+            ],
+            '8.86' => [
+                ['color' => 'RAYON', 'w' => [5, 0, 0, 0, 0]],
+            ],
+        ];
+
+        // ====== Tabla 3: Consumo Combinación 2 (mock cercano a tu imagen) ======
+        $comb2 = [
+            '3' => [
+                ['color' => 'POL. PETROLEO', 'w' => [0, 0, 0, 0, 0]],
+                ['color' => 'POL. ROSA 1765', 'w' => [0, 0, 0, 0, 0]],
+                ['color' => 'POLIESTER ROJO', 'w' => [0, 0, 0, 0, 0]],
+            ],
+            '11.81' => [
+                ['color' => 'FIL TURQUESA', 'w' => [11, 0, 0, 0, 0]],
+                ['color' => 'FIL VAINILLA 464', 'w' => [11, 0, 0, 0, 0]],
+            ],
+            '12' => [
+                ['color' => 'VERDE', 'w' => [30, 0, 0, 0, 0]],
+                ['color' => 'GRIS CLARO', 'w' => [26, 0, 0, 0, 0]],
+                ['color' => 'BEIGE 3694', 'w' => [8, 31, 6, 0, 0]],
+                ['color' => 'POL. MORADO C 2086', 'w' => [14, 32, 0, 0, 0]],
+            ],
+            '8.86' => [
+                ['color' => 'FIL CIELO 410', 'w' => [0, 0, 0, 0, 0]],
+                ['color' => 'FIL LILA 3210', 'w' => [14, 0, 0, 0, 0]],
+            ],
+            '10' => [
+                ['color' => 'TERMO', 'w' => [60, 0, 0, 0, 0]],
+                ['color' => 'TORZAL', 'w' => [106, 0, 0, 0, 0]],
+            ],
+            '3.5' => [
+                ['color' => 'ALGODÓN', 'w' => [0, 0, 0, 0, 0]],
+                ['color' => 'OPEN', 'w' => [0, 0, 0, 0, 0]],
+                ['color' => 'ANILLO', 'w' => [0, 0, 0, 0, 0]],
+            ],
+        ];
+
+        // ====== Tabla 4: Consumo Combinación 3 ======
+        $comb3 = [
+            '8.86' => [
+                ['color' => 'RAYON',           'w' => [15, 0, 0, 0, 0]],
+                ['color' => 'FIL VAINILLA 464', 'w' => [0, 0, 0, 0, 0]],
+                ['color' => 'FIL ROSA 1765',   'w' => [9, 0, 0, 0, 0]],
+                ['color' => 'FIL. RIGIDO BRILLOSO', 'w' => [0, 0, 0, 0, 0]],
+            ],
+        ];
+
+        // ====== Tabla 5: Consumo Combinación 4 (vacía) ======
+        $comb4 = [
+            '—' => [], // sin filas; muestra totales en 0
+        ];
+
+        // ====== Tabla 6: Consumo Pie ======
+        $pie = [
+            '10' => [
+                ['color' => '0',                    'w' => [3358, 532, 46, 0, 0]],
+                ['color' => 'OPEN 50-50/POL.-ALG.', 'w' => [0, 0, 0, 0, 0]],
+                ['color' => 'OPEN',                 'w' => [0, 0, 0, 0, 0]],
+            ],
+            '12' => [
+                ['color' => '0',      'w' => [467, 0, 0, 0, 0]],
+                ['color' => 'ANILLO', 'w' => [396, 0, 0, 0, 0]],
+            ],
+        ];
+
+        // ====== Tabla 7: Consumo Rizo ======
+        // Mantengo la estructura de 2 primeras columnas: (Calibre/Hilo)
+        $rizo = [
+            ' ' => [
+                ['color' => 'A12',                   'w' => [0, 0, 0, 0, 0]],
+                ['color' => 'H',                     'w' => [5260, 144, 0, 0, 0]],
+                ['color' => 'Fórmula1',              'w' => [0, 0, 0, 0, 0]],
+                ['color' => 'Fil600 (virgen)/A12',   'w' => [0, 0, 0, 0, 0]],
+                ['color' => 'A20',                   'w' => [0, 0, 0, 0, 0]],
+                ['color' => 'Hprpe',                 'w' => [2079, 1837, 175, 0, 0]],
+                ['color' => 'HR',                    'w' => [140, 0, 0, 0, 0]],
+                ['color' => 'Fil (reciclado-secual)', 'w' => [0, 0, 0, 0, 0]],
+                ['color' => 'O16',                   'w' => [2861, 0, 0, 0, 0]],
+                ['color' => 'Fil 370 (secual)/A12',  'w' => [0, 0, 0, 0, 0]],
+            ],
+        ];
+
+        // === Arreglo de tablas para la vista ===
+        $tablas = [
+            ['titulo' => 'CONSUMO TRAMA',          'col1' => 'CALIBRE TRAMA', 'col2' => 'COLOR TRAMA', 'data' => $trama, 'totales' => $tot($trama)],
+            ['titulo' => 'CONSUMO COMBINACIÓN 1',  'col1' => 'CALIBRE C1',    'col2' => 'COLOR C1',    'data' => $comb1, 'totales' => $tot($comb1)],
+            ['titulo' => 'CONSUMO COMBINACIÓN 2',  'col1' => 'CALIBRE',       'col2' => 'COLOR C2',    'data' => $comb2, 'totales' => $tot($comb2)],
+            ['titulo' => 'CONSUMO COMBINACIÓN 3',  'col1' => 'CALIBRE',       'col2' => 'COLOR C3',    'data' => $comb3, 'totales' => $tot($comb3)],
+            ['titulo' => 'CONSUMO COMBINACIÓN 4',  'col1' => 'CALIBRE',       'col2' => 'COLOR C4',    'data' => $comb4, 'totales' => $tot($comb4)],
+            ['titulo' => 'CONSUMO PIE',            'col1' => 'Calibre P',     'col2' => 'Color Pie',   'data' => $pie,   'totales' => $tot($pie)],
+            ['titulo' => 'CONSUMO RIZO',           'col1' => '',              'col2' => 'Hilo',        'data' => $rizo,  'totales' => $tot($rizo)],
+        ];
+
+        return view('TEJIDO-SCHEDULING.reportes.consumos-multiples', compact('semanas', 'tablas'));
+    }
 }
