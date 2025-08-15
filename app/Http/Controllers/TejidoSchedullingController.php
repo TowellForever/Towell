@@ -1315,8 +1315,8 @@ class TejidoSchedullingController extends Controller
     {
         $semanas = ['Semana 6.', 'Semana 7.', 'Semana 8.', 'Semana 9.', 'Semana 10.'];
 
-        // === Helpers ===
-        $tot = function (array $data) use ($semanas) {
+        // Helper para totales
+        $sumTot = function (array $data) use ($semanas) {
             $t = array_fill(0, count($semanas), 0);
             foreach ($data as $filas) {
                 foreach ($filas as $fila) {
@@ -1328,12 +1328,13 @@ class TejidoSchedullingController extends Controller
             return $t;
         };
 
-        // ====== Tabla 1: Consumo Trama (mock de ejemplo) ======
-        $trama = [
+        // ====== 1) CONSUMO TRAMA (mock) ======
+        $tramaData = [
             '12' => [
                 ['color' => 'ALGODÓN', 'w' => [589, 0, 0, 0, 0]],
                 ['color' => 'ALGODÓN', 'w' => [0, 0, 0, 0, 0]],
                 ['color' => 'ANILLO',  'w' => [336, 0, 0, 0, 0]],
+                ['color' => 'ALGODON', 'w' => [0, 0, 0, 0, 0]],
             ],
             '10' => [
                 ['color' => 'ALGODON',          'w' => [351, 203, 0, 0, 0]],
@@ -1341,16 +1342,25 @@ class TejidoSchedullingController extends Controller
                 ['color' => 'ALGODÓN',          'w' => [569, 0, 0, 0, 0]],
                 ['color' => 'POLIESTER-ALGODÓN', 'w' => [0, 0, 0, 0, 0]],
                 ['color' => 'ALGODON',          'w' => [572, 34, 0, 0, 0]],
+                ['color' => 'ALGODÓN CRUDO',    'w' => [0, 0, 0, 0, 0]],
+                ['color' => 'TERMO',            'w' => [0, 0, 0, 0, 0]],
             ],
-            '8'  => [['color' => 'ALGODÓN', 'w' => [236, 0, 0, 0, 0]]],
-            '9'  => [['color' => 'FILAMENTO BLANCO COMPACTADO', 'w' => [206, 0, 0, 0, 0]]],
+            '8'  => [
+                ['color' => 'ALGODÓN', 'w' => [236, 0, 0, 0, 0]],
+                ['color' => 'ALODON',  'w' => [0, 0, 0, 0, 0]],
+            ],
+            '9'  => [
+                ['color' => 'FILAMENTO BLANCO COMPACTADO', 'w' => [206, 0, 0, 0, 0]],
+            ],
         ];
+        $tramaTotales = $sumTot($tramaData);
 
-        // ====== Tabla 2: Consumo Combinación 1 ======
-        $comb1 = [
+        // ====== 2) CONSUMO COMBINACIÓN 1 ======
+        $comb1Data = [
             '8'  => [['color' => 'TERMO', 'w' => [0, 0, 0, 0, 0]]],
             '12' => [
                 ['color' => 'AZUL', 'w' => [0, 0, 0, 0, 0]],
+                ['color' => 'MARRON', 'w' => [0, 0, 0, 0, 0]],
                 ['color' => 'CORAL', 'w' => [30, 0, 0, 0, 0]],
                 ['color' => 'VERDE BOTELLA', 'w' => [8, 31, 6, 6, 0]],
                 ['color' => 'MARRÓN', 'w' => [26, 0, 0, 0, 0]],
@@ -1358,16 +1368,14 @@ class TejidoSchedullingController extends Controller
                 ['color' => 'POL PETROLEO', 'w' => [5, 0, 0, 0, 0]],
                 ['color' => 'POLIESTER BLANCO', 'w' => [6, 0, 0, 0, 0]],
             ],
-            '10' => [
-                ['color' => 'TERMO', 'w' => [90, 3, 0, 0, 0]],
-            ],
-            '8.86' => [
-                ['color' => 'RAYON', 'w' => [5, 0, 0, 0, 0]],
-            ],
+            '3' => [['color' => 'TERMO', 'w' => [0, 0, 0, 0, 0]]],
+            '10' => [['color' => 'TERMO', 'w' => [90, 3, 0, 0, 0]]],
+            '8.86' => [['color' => 'RAYON', 'w' => [5, 0, 0, 0, 0]]],
         ];
+        $comb1Totales = $sumTot($comb1Data);
 
-        // ====== Tabla 3: Consumo Combinación 2 (mock cercano a tu imagen) ======
-        $comb2 = [
+        // ====== 3) CONSUMO COMBINACIÓN 2 ======
+        $comb2Data = [
             '3' => [
                 ['color' => 'POL. PETROLEO', 'w' => [0, 0, 0, 0, 0]],
                 ['color' => 'POL. ROSA 1765', 'w' => [0, 0, 0, 0, 0]],
@@ -1386,6 +1394,8 @@ class TejidoSchedullingController extends Controller
             '8.86' => [
                 ['color' => 'FIL CIELO 410', 'w' => [0, 0, 0, 0, 0]],
                 ['color' => 'FIL LILA 3210', 'w' => [14, 0, 0, 0, 0]],
+                ['color' => 'RAYON', 'w' => [0, 0, 0, 0, 0]],
+                ['color' => 'FIL. DORADO BRILLOSO', 'w' => [0, 0, 0, 0, 0]],
             ],
             '10' => [
                 ['color' => 'TERMO', 'w' => [60, 0, 0, 0, 0]],
@@ -1397,24 +1407,25 @@ class TejidoSchedullingController extends Controller
                 ['color' => 'ANILLO', 'w' => [0, 0, 0, 0, 0]],
             ],
         ];
+        $comb2Totales = $sumTot($comb2Data);
 
-        // ====== Tabla 4: Consumo Combinación 3 ======
-        $comb3 = [
+        // ====== 4) CONSUMO COMBINACIÓN 3 ======
+        $comb3Data = [
             '8.86' => [
-                ['color' => 'RAYON',           'w' => [15, 0, 0, 0, 0]],
+                ['color' => 'RAYON', 'w' => [15, 0, 0, 0, 0]],
                 ['color' => 'FIL VAINILLA 464', 'w' => [0, 0, 0, 0, 0]],
-                ['color' => 'FIL ROSA 1765',   'w' => [9, 0, 0, 0, 0]],
+                ['color' => 'FIL ROSA 1765', 'w' => [9, 0, 0, 0, 0]],
                 ['color' => 'FIL. RIGIDO BRILLOSO', 'w' => [0, 0, 0, 0, 0]],
             ],
         ];
+        $comb3Totales = $sumTot($comb3Data);
 
-        // ====== Tabla 5: Consumo Combinación 4 (vacía) ======
-        $comb4 = [
-            '—' => [], // sin filas; muestra totales en 0
-        ];
+        // ====== 5) CONSUMO COMBINACIÓN 4 ======
+        $comb4Data = []; // vacía
+        $comb4Totales = $sumTot($comb4Data);
 
-        // ====== Tabla 6: Consumo Pie ======
-        $pie = [
+        // ====== 6) CONSUMO PIE ======
+        $pieData = [
             '10' => [
                 ['color' => '0',                    'w' => [3358, 532, 46, 0, 0]],
                 ['color' => 'OPEN 50-50/POL.-ALG.', 'w' => [0, 0, 0, 0, 0]],
@@ -1425,10 +1436,11 @@ class TejidoSchedullingController extends Controller
                 ['color' => 'ANILLO', 'w' => [396, 0, 0, 0, 0]],
             ],
         ];
+        $pieTotales = $sumTot($pieData);
 
-        // ====== Tabla 7: Consumo Rizo ======
-        // Mantengo la estructura de 2 primeras columnas: (Calibre/Hilo)
-        $rizo = [
+        // ====== 7) CONSUMO RIZO ======
+        // Primer col sin título (igual que Excel)
+        $rizoData = [
             ' ' => [
                 ['color' => 'A12',                   'w' => [0, 0, 0, 0, 0]],
                 ['color' => 'H',                     'w' => [5260, 144, 0, 0, 0]],
@@ -1442,18 +1454,24 @@ class TejidoSchedullingController extends Controller
                 ['color' => 'Fil 370 (secual)/A12',  'w' => [0, 0, 0, 0, 0]],
             ],
         ];
+        $rizoTotales = $sumTot($rizoData);
 
-        // === Arreglo de tablas para la vista ===
-        $tablas = [
-            ['titulo' => 'CONSUMO TRAMA',          'col1' => 'CALIBRE TRAMA', 'col2' => 'COLOR TRAMA', 'data' => $trama, 'totales' => $tot($trama)],
-            ['titulo' => 'CONSUMO COMBINACIÓN 1',  'col1' => 'CALIBRE C1',    'col2' => 'COLOR C1',    'data' => $comb1, 'totales' => $tot($comb1)],
-            ['titulo' => 'CONSUMO COMBINACIÓN 2',  'col1' => 'CALIBRE',       'col2' => 'COLOR C2',    'data' => $comb2, 'totales' => $tot($comb2)],
-            ['titulo' => 'CONSUMO COMBINACIÓN 3',  'col1' => 'CALIBRE',       'col2' => 'COLOR C3',    'data' => $comb3, 'totales' => $tot($comb3)],
-            ['titulo' => 'CONSUMO COMBINACIÓN 4',  'col1' => 'CALIBRE',       'col2' => 'COLOR C4',    'data' => $comb4, 'totales' => $tot($comb4)],
-            ['titulo' => 'CONSUMO PIE',            'col1' => 'Calibre P',     'col2' => 'Color Pie',   'data' => $pie,   'totales' => $tot($pie)],
-            ['titulo' => 'CONSUMO RIZO',           'col1' => '',              'col2' => 'Hilo',        'data' => $rizo,  'totales' => $tot($rizo)],
-        ];
-
-        return view('TEJIDO-SCHEDULING.reportes.consumos-multiples', compact('semanas', 'tablas'));
+        return view('TEJIDO-SCHEDULING.reportes.consumo', compact(
+            'semanas',
+            'tramaData',
+            'tramaTotales',
+            'comb1Data',
+            'comb1Totales',
+            'comb2Data',
+            'comb2Totales',
+            'comb3Data',
+            'comb3Totales',
+            'comb4Data',
+            'comb4Totales',
+            'pieData',
+            'pieTotales',
+            'rizoData',
+            'rizoTotales'
+        ));
     }
 }
