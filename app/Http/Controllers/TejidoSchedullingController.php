@@ -1456,6 +1456,43 @@ class TejidoSchedullingController extends Controller
         ];
         $rizoTotales = $sumTot($rizoData);
 
+        //GRAFICO de KG RIZO |-|-|-|-|-|-|-|-|-|-|-|-|-|-|-||-|-|-|-|-|-|-|-|-|-|-|-|-|-|-||-|-|-|-|-|-|-|-|-|-|-|-|-|-|-||-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|
+        // Semanas (etiquetas del eje X)
+        $labels = [
+            '30/jun–06/jul',
+            '07/jul–13/jul',
+            '14/jul–20/jul',
+            '21/jul–27/jul',
+            '28/jul–03/ago',
+            '04/ago–10/ago',
+            '11/ago–17/ago',
+            '18/ago–24/ago',
+            '25/ago–31/ago',
+            '01/sep–07/sep'
+        ];
+
+        // Series (datos quemados). Cada arreglo debe tener el mismo length que $labels
+        $series = [
+            'O16'                    => [5915, 5238, 4095, 3954, 4857, 2861,   0,   0,   0,   0],
+            'Fil 370 (secual)/A12'   => [800, 700, 600, 500, 400, 300,   0,   0,   0,   0],
+            'Fil (reciclado-secual)' => [600, 500, 400, 300, 200, 100,   0,   0,   0,   0],
+            'HR'                     => [0,   0,   0, 600, 300,   0,   0,   0,   0,   0],
+            'Fil600 (virgen)/A12'    => [1859, 1962, 1394,   0,   0,   0,   0,   0,   0,   0],
+            'A20'                    => [3781, 3542, 5888, 2786, 740,   0,   0,   0,   0,   0],
+            'H'                      => [9437, 7307, 7508, 9669, 8530, 5260,   0,   0, 144,   0],
+            'A12'                    => [9091, 3386, 8821, 2974, 236,   0,   0,   0,   0,   0],
+        ];
+
+        // Totales por semana para la línea
+        $totales = [];
+        for ($i = 0; $i < count($labels); $i++) {
+            $suma = 0;
+            foreach ($series as $vals) $suma += $vals[$i] ?? 0;
+            $totales[] = $suma;
+        }
+
+
+
         return view('TEJIDO-SCHEDULING.reportes.consumo', compact(
             'semanas',
             'tramaData',
@@ -1471,7 +1508,10 @@ class TejidoSchedullingController extends Controller
             'pieData',
             'pieTotales',
             'rizoData',
-            'rizoTotales'
+            'rizoTotales',
+            'labels', //grafico KGRIZO
+            'series', //grafico KGRIZO
+            'totales' //grafico KGRIZO
         ));
     }
 }

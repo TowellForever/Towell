@@ -8,11 +8,14 @@
         $head = 'px-1.5 py-px text-left text-[9px] font-bold uppercase tracking-tight whitespace-nowrap';
         $cell = 'px-1.5 py-px text-[10px] leading-[1] whitespace-nowrap';
         $altoTabla = 'max-h-[260px]'; // cambia el alto visible si quieres
+        $altoGrafica = 'h-[420px]';
     @endphp
 
     <div class="max-w-7xl mx-auto">
+
+
         {{-- Wrapper que permite scroll vertical de TODAS las tarjetas de tablas --}}
-        <div class="h-[calc(100vh-50px)] overflow-y-auto thin-scroll bigScroll pr-1 pl-1">
+        <div class="h-[calc(100vh-50px)] overflow-y-auto  bigScroll pr-1 pl-1">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-1.5">
 
                 {{-- =============== TABLA 1 =============== --}}
@@ -376,8 +379,112 @@
                 </div>
 
             </div>
+            {{-- =============== GRAFICO KG RITZO =============== --}}
+            <div class="max-w-7xl mx-auto mt-4">
+                <div class="rounded-2xl shadow border border-blue-200 bg-white p-3">
+                    <h2 class="text-xl font-extrabold text-center text-gray-800 mb-2">KG RIZO</h2>
+
+                    <div class="{{ $altoGrafica }}">
+                        <canvas id="kgRizoChart"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
+
     </div>
+
+    <script>
+        (function() {
+            const labels = @json($labels);
+            const seriesObj = @json($series);
+            const totales = @json($totales);
+
+            // Paleta (aprox. Excel)
+            const colorMap = {
+                "O16": "#f2c200", // amarillo
+                "Fil 370 (secual)/A12": "#7f8c4a", // verde oliva
+                "Fil (reciclado-secual)": "#7b4b3a", // café
+                "HR": "#ff9e47", // naranja claro
+                "Fil600 (virgen)/A12": "#2f86eb", // azul
+                "A20": "#ff7a3d", // naranja
+                "H": "#16a34a", // verde
+                "A12": "#e11d48" // rojo
+            };
+
+            // Datasets de barras apiladas
+            const barDatasets = Object.keys(seriesObj).map((name) => ({
+                type: 'bar',
+                label: name,
+                data: seriesObj[name],
+                backgroundColor: colorMap[name] || '#89a',
+                borderColor: colorMap[name] || '#89a',
+                borderWidth: 1,
+                stack: 'kg'
+            }));
+
+            // Dataset de línea (Total general)
+            const lineDataset = {
+                type: 'line',
+                label: 'Total general',
+                data: totales,
+                borderColor: '#111',
+                backgroundColor: '#111',
+                pointRadius: 3,
+                pointHoverRadius: 4,
+                tension: 0.25,
+                yAxisID: 'y', // misma escala que las barras
+            };
+
+            const ctx = document.getElementById('kgRizoChart').getContext('2d');
+            const nf = new Intl.NumberFormat('es-MX');
+
+            new Chart(ctx, {
+                data: {
+                    labels,
+                    datasets: [...barDatasets, lineDataset]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // usamos el alto del contenedor
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => `${ctx.dataset.label}: ${nf.format(ctx.parsed.y || 0)}`
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: true,
+                            ticks: {
+                                maxRotation: 0,
+                                autoSkip: true
+                            }
+                        },
+                        y: {
+                            stacked: true,
+                            beginAtZero: true,
+                            ticks: {
+                                callback: (v) => nf.format(v)
+                            },
+                            title: {
+                                display: false,
+                                text: 'kg'
+                            }
+                        }
+                        // Si quieres un eje secundario de % añade y1 aquí.
+                    }
+                }
+            });
+        })();
+    </script>
 
     <style>
         .tbl-compact {
@@ -417,7 +524,7 @@
         }
 
         .thin-scroll::-webkit-scrollbar-thumb {
-            background: #c9dff7;
+            background: #61abf9;
             border-radius: 8px;
             border: 2px solid transparent;
             background-clip: content-box;

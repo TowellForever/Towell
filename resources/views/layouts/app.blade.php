@@ -24,6 +24,8 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Animate.css (CDN) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" />
+    {{-- Chart.js (CDN) --}}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Estilos personalizados -->
