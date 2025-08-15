@@ -37,7 +37,7 @@
                 <div class="w-auto ml-auto ">
                     <button id="enviarSeleccionados"
                         class="font-bold px-5 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700 transition shadow">
-                        Programar
+                        PROGRAMAR
                     </button>
                 </div>
             </div>
@@ -89,7 +89,7 @@
                 </div>
             </div>
 
-            <div class="max-h-[500px] overflow-y-auto rounded shadow border border-gray-200 bg-white -mt-9">
+            <div class="max-h-[500px] overflow-y-auto bigScroll rounded shadow border border-gray-200 bg-white -mt-9">
                 @if (request()->has('column'))
                     <div class="mb-2 text-sm text-gray-600">
                         <strong>Filtros activos:</strong>
@@ -101,7 +101,7 @@
                         </ul>
                     </div>
                 @endif
-                <div class="max-h-[600px] overflow-y-auto border rounded bigScroll">
+                <div class="max-h-[600px] border rounded ">
                     <table class="min-w-full border text-xs text-left ordenable ">
                         <thead class="bg-blue-300">
                             <tr>

@@ -982,7 +982,7 @@ class TejidoSchedullingController extends Controller
                 ->where('f.TIPOPEDIDO', 1)
                 ->where('l.ESTADOLINEA', 0)
                 ->where('l.PORENTREGAR', '!=', 0)
-                ->orderBy('b.FECHACANCELACION', 'asc');
+                ->orderBy('b.FECHACANCELACION', 'asc'); // aqui esta la manera de ordenar POR DEFECTO
 
             // 👉 **AGREGA LOS FILTROS AQUÍ**
             foreach ($columns as $i => $col) {
