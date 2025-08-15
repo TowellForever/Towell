@@ -214,15 +214,15 @@ Route::middleware('auth')->group(function () {
     Route::resource('eficiencia', CatalagoEficienciaController::class);
     Route::resource('velocidad', CatalagoVelocidadController::class);
 
-    //RUTAS para REPORTES en TEJIDO_SCHEDULING
+    //RUTAS para REPORTES en TEJIDO_SCHEDULING - REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES
     // routes/web.php
-    Route::get('/reportes/consumo', [\App\Http\Controllers\TejidoSchedullingController::class, 'consumo'])->name('reportes.consumo');
-    Route::get('/reportes/run', [\App\Http\Controllers\TejidoSchedullingController::class, 'run'])->name('reportes.run');
-    Route::get('/reportes/resumen-tejido', [\App\Http\Controllers\TejidoSchedullingController::class, 'resumenTejido'])->name('reportes.resumen.tejido');
-    Route::get('/reportes/aplicaciones', [\App\Http\Controllers\TejidoSchedullingController::class, 'aplicaciones'])->name('reportes.aplicaciones');
-    Route::get('/reportes/rasurado', [\App\Http\Controllers\TejidoSchedullingController::class, 'rasurado'])->name('reportes.rasurado');
-    Route::get('/reportes/perso-x-mod', [\App\Http\Controllers\TejidoSchedullingController::class, 'pesoPorMod'])->name('reportes.peso.por.mod');
-    Route::get('/reportes/perso-tenido', [\App\Http\Controllers\TejidoSchedullingController::class, 'pesoTenido'])->name('reportes.peso.tenido');
+    Route::get('/reportes/consumo', [\App\Http\Controllers\ReportesController::class, 'consumo'])->name('reportes.consumo');
+    Route::get('/reportes/run', [\App\Http\Controllers\ReportesController::class, 'run'])->name('reportes.run');
+    Route::get('/reportes/resumen-tejido', [\App\Http\Controllers\ReportesController::class, 'resumenTejido'])->name('reportes.resumen.tejido');
+    Route::get('/reportes/aplicaciones', [\App\Http\Controllers\ReportesController::class, 'aplicaciones'])->name('reportes.aplicaciones');
+    Route::get('/reportes/rasurado', [\App\Http\Controllers\ReportesController::class, 'rasurado'])->name('reportes.rasurado');
+    Route::get('/reportes/perso-x-mod', [\App\Http\Controllers\ReportesController::class, 'pesoPorMod'])->name('reportes.peso.por.mod');
+    Route::get('/reportes/perso-tenido', [\App\Http\Controllers\ReportesController::class, 'pesoTenido'])->name('reportes.peso.tenido');
 
     //twilio
     // Ruta para mostrar el formulario (GET)
