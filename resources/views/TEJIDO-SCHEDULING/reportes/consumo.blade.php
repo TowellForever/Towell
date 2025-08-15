@@ -7,15 +7,49 @@
     @php
         $head = 'px-1.5 py-px text-left text-[9px] font-bold uppercase tracking-tight whitespace-nowrap';
         $cell = 'px-1.5 py-px text-[10px] leading-[1] whitespace-nowrap';
-        $altoTabla = 'max-h-[260px]'; // cambia el alto visible si quieres
-        $altoGrafica = 'h-[420px]';
+        $altoTabla = 'max-h-[260px]'; // alto visible por tabla
+        $altoGrafica = 'h-[420px]'; // alto de la gráfica
     @endphp
 
     <div class="max-w-7xl mx-auto">
 
+        {{-- ====== BARRA DE FILTRO (rango de fechas) ====== --}}
+        <form method="GET" action="{{ route('reportes.consumo') }}"
+            class=" top-0 z-30 mb-1 bg-white/90 backdrop-blur rounded-xl border border-blue-200 p-0.5">
+            <div class="flex flex-wrap items-end gap-2 items-center ml-[4px]">
+                <div>
+                    <label class=" text-[11px] font-semibold text-gray-700 mb-0.5">Inicio</label>
+                    <input type="date" name="inicio" value="{{ optional($inicio)->toDateString() }}"
+                        class="border rounded px-2 py-1 text-[12px]" required>
+                </div>
+                <div>
+                    <label class=" text-[11px] font-semibold text-gray-700 mb-0.5">Fin</label>
+                    <input type="date" name="fin" value="{{ optional($fin)->toDateString() }}"
+                        class="border rounded px-2 py-1 text-[12px]" required>
+                </div>
 
-        {{-- Wrapper que permite scroll vertical de TODAS las tarjetas de tablas --}}
-        <div class="h-[calc(100vh-50px)] overflow-y-auto  bigScroll pr-1 pl-1">
+                <button type="submit"
+                    class="w-20 ml-1 inline-flex items-center gap-1 rounded bg-blue-600 text-white text-[12px] font-semibold px-3 py-1">
+                    APLICAR
+                </button>
+
+                {{-- Rápidos --}}
+                <div class="ml-auto flex items-center gap-1">
+                    <button type="button" class="text-[11px] font-bold rounded border bg-blue-600 text-white"
+                        onclick="setQuickRange('4w')">Últimas 4
+                        semanas</button>
+                    <button type="button" class="text-[11px] px-2 py-1 font-bold rounded border bg-blue-600 text-white"
+                        onclick="setQuickRange('mes')">Este
+                        mes</button>
+                    <button type="button" class="text-[11px] px-2 py-1 font-bold rounded border bg-blue-600 text-white"
+                        onclick="setQuickRange('hoy')">Esta
+                        semana</button>
+                </div>
+            </div>
+        </form>
+
+        {{-- ====== CONTENEDOR SCROLLEABLE DE TODAS LAS TARJETAS ====== --}}
+        <div class="h-[calc(100vh-160px)] overflow-y-auto thin-scroll pr-1 pl-1">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-1.5">
 
                 {{-- =============== TABLA 1 =============== --}}
@@ -24,7 +58,6 @@
                         <h2 class="text-blue-800 font-extrabold text-[15px] leading-tight">CONSUMO TRAMA</h2>
                     </div>
                     <div class="overflow-x-auto">
-                        {{-- Scroll vertical con altura máxima --}}
                         <div class="{{ $altoTabla }} overflow-y-auto thin-scroll">
                             <table class="min-w-full text-gray-800 tbl-compact">
                                 <thead class="bg-blue-100 border-y border-blue-200 sticky top-0 z-20">
@@ -32,7 +65,7 @@
                                         <th class="{{ $head }} w-28">CALIBRE TRAMA</th>
                                         <th class="{{ $head }} w-52">COLOR TRAMA</th>
                                         @foreach ($semanas as $s)
-                                            <th class="{{ $head }} text-center w-16">{{ $s }}</th>
+                                            <th class="{{ $head }} text-center w-20">{{ $s }}</th>
                                         @endforeach
                                     </tr>
                                 </thead>
@@ -63,8 +96,7 @@
                                         <td class="{{ $cell }}"></td>
                                         @foreach ($tramaTotales as $t)
                                             <td class="{{ $cell }} text-center">
-                                                {{ number_format($t, 0, '.', ',') }}
-                                            </td>
+                                                {{ number_format($t, 0, '.', ',') }}</td>
                                         @endforeach
                                     </tr>
                                 </tfoot>
@@ -86,7 +118,7 @@
                                         <th class="{{ $head }} w-28">CALIBRE C1</th>
                                         <th class="{{ $head }} w-52">COLOR C1</th>
                                         @foreach ($semanas as $s)
-                                            <th class="{{ $head }} text-center w-16">{{ $s }}</th>
+                                            <th class="{{ $head }} text-center w-20">{{ $s }}</th>
                                         @endforeach
                                     </tr>
                                 </thead>
@@ -117,8 +149,7 @@
                                         <td class="{{ $cell }}"></td>
                                         @foreach ($comb1Totales as $t)
                                             <td class="{{ $cell }} text-center">
-                                                {{ number_format($t, 0, '.', ',') }}
-                                            </td>
+                                                {{ number_format($t, 0, '.', ',') }}</td>
                                         @endforeach
                                     </tr>
                                 </tfoot>
@@ -140,7 +171,7 @@
                                         <th class="{{ $head }} w-28">CALIBRE</th>
                                         <th class="{{ $head }} w-52">COLOR C2</th>
                                         @foreach ($semanas as $s)
-                                            <th class="{{ $head }} text-center w-16">{{ $s }}</th>
+                                            <th class="{{ $head }} text-center w-20">{{ $s }}</th>
                                         @endforeach
                                     </tr>
                                 </thead>
@@ -171,8 +202,7 @@
                                         <td class="{{ $cell }}"></td>
                                         @foreach ($comb2Totales as $t)
                                             <td class="{{ $cell }} text-center">
-                                                {{ number_format($t, 0, '.', ',') }}
-                                            </td>
+                                                {{ number_format($t, 0, '.', ',') }}</td>
                                         @endforeach
                                     </tr>
                                 </tfoot>
@@ -194,7 +224,7 @@
                                         <th class="{{ $head }} w-28">CALIBRE</th>
                                         <th class="{{ $head }} w-52">COLOR C3</th>
                                         @foreach ($semanas as $s)
-                                            <th class="{{ $head }} text-center w-16">{{ $s }}</th>
+                                            <th class="{{ $head }} text-center w-20">{{ $s }}</th>
                                         @endforeach
                                     </tr>
                                 </thead>
@@ -225,8 +255,7 @@
                                         <td class="{{ $cell }}"></td>
                                         @foreach ($comb3Totales as $t)
                                             <td class="{{ $cell }} text-center">
-                                                {{ number_format($t, 0, '.', ',') }}
-                                            </td>
+                                                {{ number_format($t, 0, '.', ',') }}</td>
                                         @endforeach
                                     </tr>
                                 </tfoot>
@@ -248,7 +277,7 @@
                                         <th class="{{ $head }} w-28">CALIBRE</th>
                                         <th class="{{ $head }} w-52">COLOR C4</th>
                                         @foreach ($semanas as $s)
-                                            <th class="{{ $head }} text-center w-16">{{ $s }}</th>
+                                            <th class="{{ $head }} text-center w-20">{{ $s }}</th>
                                         @endforeach
                                     </tr>
                                 </thead>
@@ -261,8 +290,7 @@
                                         <td class="{{ $cell }}"></td>
                                         @foreach ($comb4Totales as $t)
                                             <td class="{{ $cell }} text-center">
-                                                {{ number_format($t, 0, '.', ',') }}
-                                            </td>
+                                                {{ number_format($t, 0, '.', ',') }}</td>
                                         @endforeach
                                     </tr>
                                 </tfoot>
@@ -284,7 +312,7 @@
                                         <th class="{{ $head }} w-28">Calibre P</th>
                                         <th class="{{ $head }} w-52">Color Pie</th>
                                         @foreach ($semanas as $s)
-                                            <th class="{{ $head }} text-center w-16">{{ $s }}</th>
+                                            <th class="{{ $head }} text-center w-20">{{ $s }}</th>
                                         @endforeach
                                     </tr>
                                 </thead>
@@ -315,8 +343,7 @@
                                         <td class="{{ $cell }}"></td>
                                         @foreach ($pieTotales as $t)
                                             <td class="{{ $cell }} text-center">
-                                                {{ number_format($t, 0, '.', ',') }}
-                                            </td>
+                                                {{ number_format($t, 0, '.', ',') }}</td>
                                         @endforeach
                                     </tr>
                                 </tfoot>
@@ -335,10 +362,10 @@
                             <table class="min-w-full text-gray-800 tbl-compact">
                                 <thead class="bg-blue-100 border-y border-blue-200 sticky top-0 z-20">
                                     <tr class="text-[9px]">
-                                        <th class="{{ $head }} w-28">&nbsp;</th> {{-- sin título, como en Excel --}}
+                                        <th class="{{ $head }} w-28">&nbsp;</th>
                                         <th class="{{ $head }} w-52">Hilo</th>
                                         @foreach ($semanas as $s)
-                                            <th class="{{ $head }} text-center w-16">{{ $s }}</th>
+                                            <th class="{{ $head }} text-center w-20">{{ $s }}</th>
                                         @endforeach
                                     </tr>
                                 </thead>
@@ -378,40 +405,66 @@
                     </div>
                 </div>
 
-            </div>
-            {{-- =============== GRAFICO KG RITZO =============== --}}
-            <div class="max-w-7xl mx-auto mt-4">
-                <div class="rounded-2xl shadow border border-blue-200 bg-white p-3">
+                {{-- =============== GRÁFICO KG RIZO =============== --}}
+                <div class="rounded-2xl shadow border border-blue-200 bg-white p-3 md:col-span-2">
                     <h2 class="text-xl font-extrabold text-center text-gray-800 mb-2">KG RIZO</h2>
-
                     <div class="{{ $altoGrafica }}">
                         <canvas id="kgRizoChart"></canvas>
                     </div>
+                    <div class="text-center mt-1 text-[11px] text-gray-500">
+                        Rango actual: {{ $etiquetasX[0] ?? '' }} → {{ $etiquetasX[count($etiquetasX) - 1] ?? '' }}
+                    </div>
                 </div>
+
             </div>
         </div>
-
     </div>
 
+    {{-- Chart.js (CDN) --}}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
     <script>
+        // Rápidos para el rango (JS simple)
+        function setQuickRange(tipo) {
+            const i = document.querySelector('input[name="inicio"]');
+            const f = document.querySelector('input[name="fin"]');
+            const today = new Date();
+            const end = new Date(today); // hoy
+
+            let start;
+            if (tipo === '4w') {
+                start = new Date(today);
+                start.setDate(start.getDate() - 7 * 3 - (start.getDay() + 6) % 7); // hace 4 semanas aprox
+            } else if (tipo === 'mes') {
+                start = new Date(today.getFullYear(), today.getMonth(), 1);
+                // fin a último día del mes
+                end.setMonth(end.getMonth() + 1, 0);
+            } else { // 'hoy' = esta semana (Lun-Dom)
+                start = new Date(today);
+                const dow = (today.getDay() + 6) % 7; // 0=Lunes
+                start.setDate(today.getDate() - dow);
+                end.setDate(start.getDate() + 6);
+            }
+
+            i.value = start.toISOString().slice(0, 10);
+            f.value = end.toISOString().slice(0, 10);
+        }
+
         (function() {
-            const labels = @json($labels);
+            const labels = @json($etiquetasX);
             const seriesObj = @json($series);
             const totales = @json($totales);
 
-            // Paleta (aprox. Excel)
             const colorMap = {
-                "O16": "#f2c200", // amarillo
-                "Fil 370 (secual)/A12": "#7f8c4a", // verde oliva
-                "Fil (reciclado-secual)": "#7b4b3a", // café
-                "HR": "#ff9e47", // naranja claro
-                "Fil600 (virgen)/A12": "#2f86eb", // azul
-                "A20": "#ff7a3d", // naranja
-                "H": "#16a34a", // verde
-                "A12": "#e11d48" // rojo
+                "O16": "#f2c200",
+                "Fil 370 (secual)/A12": "#7f8c4a",
+                "Fil (reciclado-secual)": "#7b4b3a",
+                "HR": "#ff9e47",
+                "Fil600 (virgen)/A12": "#2f86eb",
+                "A20": "#ff7a3d",
+                "H": "#16a34a",
+                "A12": "#e11d48"
             };
 
-            // Datasets de barras apiladas
             const barDatasets = Object.keys(seriesObj).map((name) => ({
                 type: 'bar',
                 label: name,
@@ -422,7 +475,6 @@
                 stack: 'kg'
             }));
 
-            // Dataset de línea (Total general)
             const lineDataset = {
                 type: 'line',
                 label: 'Total general',
@@ -432,7 +484,7 @@
                 pointRadius: 3,
                 pointHoverRadius: 4,
                 tension: 0.25,
-                yAxisID: 'y', // misma escala que las barras
+                yAxisID: 'y',
             };
 
             const ctx = document.getElementById('kgRizoChart').getContext('2d');
@@ -445,7 +497,7 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false, // usamos el alto del contenedor
+                    maintainAspectRatio: false,
                     interaction: {
                         mode: 'index',
                         intersect: false
@@ -456,7 +508,7 @@
                         },
                         tooltip: {
                             callbacks: {
-                                label: (ctx) => `${ctx.dataset.label}: ${nf.format(ctx.parsed.y || 0)}`
+                                label: (c) => `${c.dataset.label}: ${nf.format(c.parsed.y || 0)}`
                             }
                         }
                     },
@@ -473,13 +525,8 @@
                             beginAtZero: true,
                             ticks: {
                                 callback: (v) => nf.format(v)
-                            },
-                            title: {
-                                display: false,
-                                text: 'kg'
                             }
                         }
-                        // Si quieres un eje secundario de % añade y1 aquí.
                     }
                 }
             });
