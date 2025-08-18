@@ -21,5 +21,14 @@ class ReporteTemporal extends Model
         'hora_reporte',
         'operador',
         'observaciones',
+        'enviado_telegram',
+        'enviado_telegram_at',
+        'telegram_message_id'
+    ];
+
+    protected $casts = [
+        'enviado_telegram' => 'boolean',
+        'enviado_telegram_at' => 'datetime',
+        'fecha_reporte' => 'date',
     ];
 }

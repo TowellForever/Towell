@@ -3,7 +3,8 @@
 @section('content')
     <div class="container mx-auto mt-10 max-w-2xl">
         <h1 class="text-2xl font-bold text-center mb-6">REPORTAR FALLA</h1>
-        <form action="" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form id="form-reporte" action="{{ route('reportes.temporales.guardar') }}" method="POST"
+            class="grid grid-cols-1 md:grid-cols-2 gap-6">
             @csrf
 
             <!-- Telar -->
@@ -74,11 +75,16 @@
             <div class="md:col-span-2 text-center mt-4 flex justify-center gap-4">
                 <!-- WhatsApp -->
 
-
                 <!-- Enviar por SMS -->
                 <button type="button" id="guardadoTemporal"
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded">
+                    class="bg-orange-500 hover:bg-orange-700 text-white font-semibold px-6 py-2 rounded">
                     Enviar por Correo Electrónico
+                </button>
+
+                <!-- Enviar por TELEGRAM -->
+                <button type="button" id="enviarTelegram"
+                    class="flex items-center gap-2 bg-blue-500 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded">
+                    Enviar por Telegram <i class="fa-brands fa-telegram"></i>
                 </button>
             </div>
 
@@ -224,6 +230,30 @@
             // Formatear hora (HH:MM)
             const horaFormateada = fecha.toTimeString().slice(0, 5);
             document.getElementById('hora_reporte').value = horaFormateada;
+        });
+    </script>
+    {{-- TELEGRAM SCRIPT --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('form-reporte');
+            const btnTelegram = document.getElementById('enviarTelegram');
+
+            btnTelegram.addEventListener('click', () => {
+                // Opcional: validación HTML5 rápida antes de enviar
+                if (!form.reportValidity()) return;
+
+                // UI de “enviando”
+                btnTelegram.disabled = true;
+                btnTelegram.classList.add('opacity-60', 'cursor-wait');
+                btnTelegram.innerHTML = 'Enviando…';
+
+                // Envía el form (POST) a tu método guardar()
+                if (form.requestSubmit) {
+                    form.requestSubmit(); // estándar moderno
+                } else {
+                    form.submit(); // fallback
+                }
+            });
         });
     </script>
 @endsection

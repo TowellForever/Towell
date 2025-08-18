@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Fallas;
@@ -11,9 +12,9 @@ class WhatsAppController extends Controller
     public function enviarMensaje(Request $request)
     {
         // Lista de números de teléfono a los que se enviará el mensaje
-        $phoneNumbers = ['522214125380' ,'522221130412'];
+        $phoneNumbers = ['522214125380', '522221130412'];
         $accessToken = 'EAAQtu7d8DzoBOyQHpcZAZBy0qgQMCEplPNRX1M7F2IBnM7o1fjErxEyb6oNpMXKg3aipjkPfD8B9KSYDmiGFqaSxFHDthNe4Euv270MeKnrvLmFadtpEoUGKvDWSExKGMyIQXpQLZAHJ6V2XbxWjEK9vq3NZBsqmegUZCnZBQrUxLZBgHYDg5Lps6NXuI2kS4xtAGSDX0MB7ZCGhIpjBeLSXfYQ7ZA7wUb5ZB4EuUZD';
-    
+
         // Validar campos
         $request->validate([
             'telar' => 'required',
@@ -25,7 +26,7 @@ class WhatsAppController extends Controller
             'operador' => 'required',
             'observaciones' => 'nullable',
         ]);
-    
+
         // Construir mensaje unificado
         $mensaje = "📟 *Reporte de Falla* | ";
         $mensaje .= "🔧 *Telar:* {$request->telar} | ";
@@ -35,17 +36,17 @@ class WhatsAppController extends Controller
         $mensaje .= "📅 *Fecha:* {$request->fecha_reporte} | ";
         $mensaje .= "⏰ *Hora:* {$request->hora_reporte} | ";
         $mensaje .= "👤 *Operador:* {$request->operador} | ";
-        $mensaje .= "🗒️ *Observaciones:* " . ($request->observaciones ?: 'Sin observaciones');        
-    
+        $mensaje .= "🗒️ *Observaciones:* " . ($request->observaciones ?: 'Sin observaciones');
+
         // URL de la API de WhatsApp
         $url = 'https://graph.facebook.com/v14.0/607016819162527/messages';
-    
+
         // Datos del template
         $templateName = 'prueba_towellin';
         $languageCode = 'en_US'; // O el idioma que esté configurado
-    
+
         $responses = [];
-    
+
         foreach ($phoneNumbers as $phoneNumber) {
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
@@ -64,16 +65,16 @@ class WhatsAppController extends Controller
                     ]]
                 ],
             ]);
-    
+
             $responses[] = [
                 'number' => $phoneNumber,
                 'status' => $response->successful() ? 'Mensaje enviado' : 'Error',
                 'response' => $response->json()
             ];
         }
-    
+
         return response()->json(['results' => $responses]);
-    }  
+    }
 
 
     public function sendMessage(Request $request)
@@ -81,7 +82,7 @@ class WhatsAppController extends Controller
         // Lista de números de teléfono a los que se enviará el mensaje
         $phoneNumbers = ['522214125380'];
         $accessToken = 'EAAQtu7d8DzoBOyQHpcZAZBy0qgQMCEplPNRX1M7F2IBnM7o1fjErxEyb6oNpMXKg3aipjkPfD8B9KSYDmiGFqaSxFHDthNe4Euv270MeKnrvLmFadtpEoUGKvDWSExKGMyIQXpQLZAHJ6V2XbxWjEK9vq3NZBsqmegUZCnZBQrUxLZBgHYDg5Lps6NXuI2kS4xtAGSDX0MB7ZCGhIpjBeLSXfYQ7ZA7wUb5ZB4EuUZD'; // Reemplaza con tu token
-    
+
         // Validación de los datos
         $request->validate([
             'telar' => 'required',
@@ -89,7 +90,7 @@ class WhatsAppController extends Controller
             'falla' => 'required',
             'usuario' => 'required',
         ]);
-    
+
         // Capturar los datos ingresados por el usuario
         $parameters = [
             ['type' => 'text', 'text' => $request->telar],
@@ -97,17 +98,17 @@ class WhatsAppController extends Controller
             ['type' => 'text', 'text' => $request->falla],
             ['type' => 'text', 'text' => $request->usuario],
         ];
-    
+
         // Definir la URL de la API de WhatsApp
         $url = 'https://graph.facebook.com/v14.0/607016819162527/messages';
-    
+
         // Nombre de la plantilla y código de idioma
         $templateName = 'prueba_variables'; // Reemplaza con el nombre real de la plantilla
         $languageCode = 'en_US';
-    
+
         // Variable para almacenar respuestas
         $responses = [];
-    
+
         // Enviar el mensaje a cada número en la lista
         foreach ($phoneNumbers as $phoneNumber) {
             $response = Http::withHeaders([
@@ -125,7 +126,7 @@ class WhatsAppController extends Controller
                     ]]
                 ],
             ]);
-    
+
             // Guardar la respuesta para cada número
             $responses[] = [
                 'number' => $phoneNumber,
@@ -133,18 +134,16 @@ class WhatsAppController extends Controller
                 'response' => $response->json()
             ];
         }
-    
+
         return response()->json(['results' => $responses]);
-    }    
-
-    public function mensajeFallas(Request $request){
-          // Obtener todas las fallas
-          $fallas = Fallas::all();
-
-          // Retornar los datos a una vista o simplemente devolverlo en formato JSON
-          return view('whatsapp2', compact('fallas'));
     }
 
-  
-    
+    public function mensajeFallas(Request $request)
+    {
+        // Obtener todas las fallas
+        $fallas = Fallas::all();
+
+        // Retornar los datos a una vista o simplemente devolverlo en formato JSON
+        return view('telegram', compact('fallas'));
+    }
 }

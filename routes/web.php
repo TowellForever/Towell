@@ -241,6 +241,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/send-whatsapp2', [WhatsAppController::class, 'enviarMensaje']);
     Route::post('/send-failSMS', [ReporteFallaController::class, 'enviarSMS']);
 
+    //TELEGRAM
+    Route::post('/reportes-temporales/guardar', [ReporteTemporalController::class, 'guardar'])
+        ->name('reportes.temporales.guardar');
+
     // MODELOS ***************************************************************************************************************************
     Route::resource('modelos', ModelosController::class);
     /* 
