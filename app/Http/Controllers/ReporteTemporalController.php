@@ -39,7 +39,6 @@ class ReporteTemporalController extends Controller
     //TELEGRAM
     public function guardar(Request $request)
     {
-        dd($request);
         $data = $request->validate([
             'telar'         => 'required|string|max:50',
             'tipo'          => 'required|string|max:50',
@@ -57,6 +56,6 @@ class ReporteTemporalController extends Controller
 
         return redirect()
             ->back()
-            ->with('ok', "Reporte #{$reporte->id} capturado. Se enviará por Telegram desde el worker.");
+            ->with('ok', "Reporte #{$reporte->id} capturado. En breve se enviará por Telegram desde el worker.");
     }
 }

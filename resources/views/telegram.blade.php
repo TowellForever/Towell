@@ -1,6 +1,24 @@
 @extends('layouts.app')
 
 @section('content')
+    @if (session('ok'))
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'ÉXITO!',
+                    text: "{{ session('ok') }}",
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Entendido'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "/produccionProceso";
+                    }
+                });
+            });
+        </script>
+    @endif
+
     <div class="container mx-auto mt-10 max-w-2xl">
         <h1 class="text-2xl font-bold text-center mb-6">REPORTAR FALLA</h1>
         <form id="form-reporte" action="{{ route('reportes.temporales.guardar') }}" method="POST"
