@@ -24,7 +24,7 @@
         <div class="rounded-xl bg-gradient-to-r from-blue-50 via-blue-100 to-blue-50 border border-blue-200 p-3 mb-3">
             <div class="flex items-center justify-between">
                 <h1 class="text-xl font-extrabold text-blue-800 tracking-tight">
-                    📊 Usuarios
+                    🙍🏻‍♂️ LISTA DE USUARIOS TOWELL
                 </h1>
                 <span class="text-[11px] px-2 py-0.5 rounded-full bg-blue-200 text-blue-900 font-semibold">
                     {{ $usuarios->total() }} registros
@@ -60,9 +60,15 @@
                                     <img src="{{ $u->foto }}" alt="Foto"
                                         class="h-9 w-9 rounded-full object-cover ring-2 ring-blue-200">
                                 @else
-                                    <div
-                                        class="h-9 w-9 rounded-full bg-blue-600 text-white text-xs font-bold grid place-items-center ring-2 ring-blue-200">
-                                        {{ iniciales($u->nombre) }}
+                                    {{-- Avatar / foto o logo --}}
+                                    <div class="flex-shrink-0">
+                                        @if (!empty($u->foto))
+                                            <img src="{{ $u->foto }}" alt="Foto"
+                                                class="h-9 w-9 rounded-full object-cover ring-2 ring-blue-200">
+                                        @else
+                                            <img src="{{ asset('images/fondosTowell/TOWELLIN.png') }}" alt="Towellin"
+                                                class="h-9 w-9 rounded-full object-cover ring-2 ring-blue-200">
+                                        @endif
                                     </div>
                                 @endif
                             </div>
