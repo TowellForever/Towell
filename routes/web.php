@@ -179,6 +179,9 @@ Route::middleware('auth')->group(function () {
     //Route::get('/alta-usuarios', function () { return view('alta_usuarios');});//BORRAR UNA VEZ CREADO EL CONTROLLER
     Route::get('/usuarios/create', [UsuarioController::class, 'create'])->name('usuarios.create');
     Route::post('/usuarios', [UsuarioController::class, 'store'])->name('usuarios.store');
+    Route::get('/usuarios/select', [UsuarioController::class, 'select'])->name('usuarios.select');
+    Route::get('/usuarios/{numero_empleado}/edit', [UsuarioController::class, 'edit'])->name('usuarios.edit'); // (puedes apuntarlo a tu formulario existente)
+    Route::delete('/usuarios/{numero_empleado}', [UsuarioController::class, 'destroy'])->name('usuarios.destroy');
 
     //RUTAS DEL MODULO planeacion
     // Ruta de RECURSOS para Planeacion

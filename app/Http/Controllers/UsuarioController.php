@@ -80,6 +80,34 @@ class UsuarioController extends Controller
         }
     }
 
+    public function select(Request $request)
+    {
+        $usuarios = Usuario::query()
+            ->select('numero_empleado', 'nombre', 'area', 'turno', 'telefono', 'foto', 'enviarMensaje')
+            ->orderBy('nombre')
+            ->paginate(20)
+            ->withQueryString();
+
+        return view('modulos.usuarios.select', compact('usuarios'));
+    }
+
+    // Stub para que el botón "Editar" funcione (ajústalo a tu vista de edición)
+    public function edit($numero_empleado)
+    {
+        $usuario = Usuario::where('numero_empleado', $numero_empleado)->firstOrFail();
+        return view('usuarios.edit', compact('usuario'));
+    }
+
+    public function destroy($numero_empleado)
+    {
+        $usuario = Usuario::where('numero_empleado', $numero_empleado)->firstOrFail();
+        $usuario->delete();
+
+        return redirect()
+            ->route('usuarios.select')
+            ->with('success', "Usuario #{$numero_empleado} eliminado.");
+    }
+
 
 
     //METODO para filtrar los contenedores de la interfaz principal (produccionProceso), dependiendo

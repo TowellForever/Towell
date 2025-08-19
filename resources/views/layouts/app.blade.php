@@ -71,7 +71,26 @@
             <a href="#" id="logout-btn" class="absolute top-1 right-[1000px] z-1 btn btn-warning text-xs">
                 CERRAR SESIÓN
             </a>
+
+            <div class="relative z-1" style="position: absolute; left: 300px;">
+                <button id="btnUsuarios"
+                    class="mt-[5px] bg-orange-500 text-black font-bold px-4 py-1 rounded-md shadow hover:bg-orange-700 transition-all duration-200 cursor-pointer text-xs">
+                    USUARIOS
+                </button>
+                <div id="menuUsuarios"
+                    class="hidden absolute bg-white border border-gray-300 mt-1 w-40 rounded-md shadow-lg z-[99] transition transform scale-95 opacity-0"
+                    style="left: 0px;">
+                    <a href="{{ route('usuarios.create') }}"
+                        class="block px-3 py-2 text-xs text-gray-800 hover:bg-gray-100">📈
+                        ALTA</a>
+                    <a href="{{ route('usuarios.select') }}"
+                        class="block px-3 py-2 text-xs text-gray-800 hover:bg-gray-100">📊
+                        VER USUARIOS</a>
+                </div>
+            </div>
         @endif
+
+
 
         <!-- El siguiente if, es para injertar un titulo en la parte de app.balde, esto por solicitud del jefazo, solo funciona en la pagina de informacion del modulo de urdido-->
         @if (Route::currentRouteName() === 'produccion.ordenTrabajo')
@@ -118,7 +137,8 @@
             {{ Auth::user()->nombre }}
         </p>
 
-        <a href="{{ route('telares.falla') }}" class="absolute top-1 right-20 z-1 btn btn-danger text-sm">Reportar Falla</a>
+        <a href="{{ route('telares.falla') }}" class="absolute top-1 right-20 z-1 btn btn-danger text-sm">Reportar
+            Falla</a>
         <!-- Navbar -->
         <nav class="bg-blue-350 text-white ">
             <div class="container mx-auto flex justify-between items-center relative">
@@ -180,8 +200,50 @@
                 const loader = document.getElementById('globalLoader');
                 loader.style.display = 'none'; // Oculta el loader cuando la página se carga
             });
-
             // Puedes agregar más scripts para mostrar el loader durante eventos específicos (AJAX, formularios, etc.)
+        </script>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const btn = document.getElementById("btnUsuarios");
+                const menu = document.getElementById("menuUsuarios");
+
+                btn.addEventListener("click", function(e) {
+                    e.stopPropagation(); // Evita que el evento se propague y se cierre de inmediato
+                    const isOpen = !menu.classList.contains("hidden");
+
+                    // Cerrar si ya está abierto
+                    if (isOpen) {
+                        menu.classList.add("hidden");
+                        menu.classList.remove("scale-100", "opacity-100");
+                        menu.classList.add("scale-95", "opacity-0");
+                    } else {
+                        menu.classList.remove("hidden");
+                        // Forzar reflow para animación (truco CSS)
+                        void menu.offsetWidth;
+                        menu.classList.remove("scale-95", "opacity-0");
+                        menu.classList.add("scale-100", "opacity-100");
+                    }
+                });
+
+                // Ocultar el menú si haces clic fuera de él
+                document.addEventListener("click", function(e) {
+                    if (!btn.contains(e.target) && !menu.contains(e.target)) {
+                        menu.classList.add("hidden");
+                        menu.classList.remove("scale-100", "opacity-100");
+                        menu.classList.add("scale-95", "opacity-0");
+                    }
+                });
+
+                // También cerrar al hacer clic en una opción
+                menu.querySelectorAll("a").forEach(link => {
+                    link.addEventListener("click", () => {
+                        menu.classList.add("hidden");
+                        menu.classList.remove("scale-100", "opacity-100");
+                        menu.classList.add("scale-95", "opacity-0");
+                    });
+                });
+            });
         </script>
 
     </body>

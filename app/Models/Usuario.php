@@ -11,7 +11,7 @@ class Usuario extends Authenticatable
 {
     protected $table = 'usuarios'; // Asegura que sea el nombre correcto
     protected $primaryKey = 'numero_empleado'; // Laravel usa 'id' por defecto, cambia esto si es necesario
-    public $timestamps = false; // Si tu tabla no tiene timestamps, pon esto
+    public $timestamps = true; // Si tu tabla no tiene timestamps, pon esto
 
 
     protected $fillable = [

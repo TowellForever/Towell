@@ -8,17 +8,16 @@
                 document.addEventListener('DOMContentLoaded', () => {
                     Swal.fire({
                         icon: 'success',
-                        title: '¡Éxito!',
+                        title: '¡ÉXITO!',
                         text: @json(session('success')),
-                        confirmButtonColor: '#2563eb'
+                        confirmButtonColor: '#2563eb',
+                        confirmButtonText: 'Entendido'
                     }).then(() => {
 
                         // ==== Opción A: Recargar la página ====
                         location.reload(); // recarga simple
                         window.location.href =
                             "{{ route('usuarios.create') }}"; // recarga "limpia" por si hay querystring
-
-
                     });
                 });
             </script>
