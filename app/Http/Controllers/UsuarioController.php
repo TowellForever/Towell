@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Usuario;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class UsuarioController extends Controller
 {
@@ -18,27 +21,66 @@ class UsuarioController extends Controller
     // Almacena un nuevo usuario en la base de datos
     public function store(Request $request)
     {
-        //dd($request->all()); // Muestra los datos enviados (puedes comentarlo después de probar)
+        //dd($request->all());
+        try {
+            // 1) Validación (re-agregamos 'contrasenia')
+            $data = $request->validate([
+                'area'            => 'required|string|in:Almacen,Urdido,Engomado,Tejido,Atadores,Tejedores,Mantenimiento',
+                'numero_empleado' => 'required|string|max:50',
+                'nombre'          => 'required|string|max:255',
+                'contrasenia'     => 'required|string',
+                'turno'           => 'required|in:1,2,3',
+                'telefono'        => 'nullable|string',
+                'foto'            => 'nullable|image|max:2048',
+            ]);
 
-        $data = $request->validate([
-            'numero_empleado' => 'required|string',
-            'nombre' => 'required|string',
-            'contrasenia' => 'required|string',
-            'area' => 'required|string',
-            'foto' => 'nullable|image|max:2048',
-        ]);
+            // 3) Checkboxes -> 0/1
+            $checkboxes = [
+                'enviarMensaje',
+                'almacen',
+                'urdido',
+                'engomado',
+                'tejido',
+                'atadores',
+                'tejedores',
+                'mantenimiento',
+                'planeacion',
+                'configuracion',
+                'UrdidoEngomado'
+            ];
+            foreach ($checkboxes as $cb) {
+                $data[$cb] = $request->boolean($cb) ? 1 : 0;
+            }
 
-        // Asegurar que los checkboxes siempre tengan un valor válido (0 o 1)
-        $checkboxes = ['almacen', 'urdido', 'engomado', 'tejido', 'atadores', 'tejedores', 'mantenimiento'];
-        foreach ($checkboxes as $checkbox) {
-            $data[$checkbox] = $request->has($checkbox) ? 1 : 0;
+            // 4) Foto (guardar ruta pública)
+            if ($request->hasFile('foto')) {
+                $data['foto'] = $request->file('foto')->store('usuarios', 'public');
+            }
+
+            // 5) Hashear contraseña
+            $data['contrasenia'] = Hash::make($data['contrasenia']);
+
+            // 6) remember_token
+            $data['remember_token'] = Str::random(60);
+
+            // 7) Crear
+            Usuario::create($data);
+
+            return redirect()
+                ->route('usuarios.create')
+                ->with('success', 'Usuario registrado correctamente');
+        } catch (ValidationException $e) {
+            // Validación: mostramos errores con SweetAlert (ya lo tienes en el Blade)
+            return back()->withErrors($e->errors())->withInput();
+        } catch (\Throwable $e) {
+            Log::error('Error al crear usuario', ['msg' => $e->getMessage()]);
+            return back()
+                ->with('error', 'No se pudo registrar el usuario. Intenta de nuevo.')
+                ->withInput();
         }
-
-        // Guardar usuario en la base de datos
-        Usuario::create($data);
-
-        return redirect()->route('usuarios.create')->with('success', 'Usuario registrado correctamente');
     }
+
+
 
     //METODO para filtrar los contenedores de la interfaz principal (produccionProceso), dependiendo
     public function index()

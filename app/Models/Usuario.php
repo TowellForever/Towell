@@ -19,6 +19,9 @@ class Usuario extends Authenticatable
         'nombre',
         'contrasenia',
         'area',
+        'telefono',
+        'turno',
+        'enviarMensaje',
         'foto',
         'almacen',
         'urdido',
@@ -30,6 +33,7 @@ class Usuario extends Authenticatable
         'planeacion',
         'configuracion',
         'UrdidoEngomado',
+        'remember_token', // <-- importante
     ];
 
     // Mutador para encriptar la contraseña automáticamente

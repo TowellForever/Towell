@@ -175,7 +175,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/ultimos-requerimientos', [RequerimientoController::class, 'obtenerRequerimientosActivos']);
     Route::get('/ordenes-programadas-dinamica/{telar}', [PlaneacionController::class, 'obtenerOrdenesProgramadas'])->name('ordenes.programadas');
 
-
+    //CRUDZAZO de USUARIOS, 1er mantenimiento 19-08-2025. USUARIOS USUARIOS USUARIOS USUARIOS, en el USUARIOSCONTROLLER se manejan los contenedores visibles o no visibles
     //Route::get('/alta-usuarios', function () { return view('alta_usuarios');});//BORRAR UNA VEZ CREADO EL CONTROLLER
     Route::get('/usuarios/create', [UsuarioController::class, 'create'])->name('usuarios.create');
     Route::post('/usuarios', [UsuarioController::class, 'store'])->name('usuarios.store');
