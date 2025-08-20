@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 class Usuario extends Authenticatable
 {
     protected $table = 'usuarios'; // Asegura que sea el nombre correcto
-    protected $primaryKey = 'numero_empleado'; // Laravel usa 'id' por defecto, cambia esto si es necesario
+    protected $primaryKey = 'numero_empleado'; // Laravel usa 'id' por defecto, cambia esto si es necesario, PRIMARY KEY
     public $incrementing = false;
     protected $keyType = 'string';
     public $timestamps = true; // Si tu tabla no tiene timestamps, pon esto
@@ -35,7 +35,7 @@ class Usuario extends Authenticatable
         'planeacion',
         'configuracion',
         'UrdidoEngomado',
-        'remember_token', // <-- importante
+        'remember_token', // <-- importante, si se omite este campo/atributo, no se guardará el token hasheado
     ];
 
     // Mutador para encriptar la contraseña automáticamente
@@ -44,7 +44,7 @@ class Usuario extends Authenticatable
         $this->attributes['contrasenia'] = Hash::make($value);
     }
 
-    public function telares()
+    public function telares() //recuerda asignar los telares insertando los registros adecuadamente, aun no hay vista automatizada.
     {
         return $this->belongsToMany(CatalagoTelar::class, 'telares_usuario', 'usuario_id', 'telar_id');
     }

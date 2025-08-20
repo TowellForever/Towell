@@ -100,13 +100,15 @@
                         class="w-3/4 text-sm p-1 rounded border border-blue-200">
                 </div>
 
-                <div>
-                    <label class="w-[120px] text-[12px] font-semibold text-blue-900 mb-0.5 text-right">ÁREA</label>
+                <div class="flex items-center gap-2 w-[570px]">
+                    <label class="w-[160px] text-[12px] font-semibold text-blue-900 text-right">
+                        ÁREA
+                    </label>
                     <select id="area" name="area"
-                        class=" text-sm px-1 rounded-lg border border-blue-200/80 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 w-1/2"
-                        required>
-                        <option value="" disabled {{ $usuario->area }}>Selecciona el
-                            área</option>
+                        class="inline-block h-8 text-sm p-1 rounded border border-blue-200" required>
+                        <option value="" disabled {{ old('area', $usuario->area) ? '' : 'selected' }}>
+                            Selecciona el área
+                        </option>
                         @foreach ([
             'Almacén' => 'Almacen',
             'Urdido' => 'Urdido',
@@ -116,11 +118,15 @@
             'Tejedores' => 'Tejedores',
             'Mantenimiento' => 'Mantenimiento',
         ] as $label => $val)
-                            <option value="{{ $val }}" {{ old('area') === $val ? 'selected' : '' }}>
-                                {{ $label }}</option>
+                            <option value="{{ $val }}"
+                                {{ old('area', $usuario->area) === $val ? 'selected' : '' }}>
+                                {{ $label }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
+
+
 
                 <div>
                     <label class="w-[120px] text-[12px] font-semibold text-blue-900 mb-0.5 text-right">TELÉFONO</label>

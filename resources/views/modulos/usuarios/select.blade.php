@@ -27,7 +27,7 @@
                     LISTA DE USUARIOS TOWELL 👨‍💼
                 </h1>
                 <span class="text-[11px] px-2 py-0.5 rounded-full bg-blue-200 text-blue-900 font-semibold">
-                    {{ $usuarios->count() }} registros
+                    {{ $usuarios->count() }} REGISTROS
                 </span>
 
             </div>
@@ -118,11 +118,13 @@
                                     </div>
                                     <div class="text-[11px]">
                                         @if ($u->enviarMensaje)
-                                            <span class="px-1.5 py-0.5 rounded bg-blue-600 text-white font-semibold">Avisos
+                                            <span class="px-1.5 py-0.5 rounded bg-blue-600 text-white font-semibold">Enviar
+                                                mensajes
                                                 ON</span>
                                         @else
                                             <span
-                                                class="px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 font-semibold">Avisos
+                                                class="px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 font-semibold">Enviar
+                                                mensajes
                                                 OFF</span>
                                         @endif
                                     </div>

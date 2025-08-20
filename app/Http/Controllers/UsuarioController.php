@@ -15,7 +15,7 @@ class UsuarioController extends Controller
     // Muestra el formulario de creación de usuario
     public function create()
     {
-        return view('alta_usuarios');
+        return view('modulos.usuarios.alta_usuarios');
     }
 
     // Almacena un nuevo usuario en la base de datos
@@ -85,7 +85,7 @@ class UsuarioController extends Controller
         $usuarios = Usuario::query()
             ->select('numero_empleado', 'nombre', 'area', 'turno', 'telefono', 'foto', 'enviarMensaje')
             ->orderBy('nombre')
-            ->get(); // sin paginar
+            ->get(); // paginate no funciona aqui :(, ya que tenemos una version 2008 de SQLSERVER, lo que lo hace imposible, la paginacion debe ser a mano.
 
         return view('modulos.usuarios.select', compact('usuarios'));
     }
@@ -150,7 +150,7 @@ class UsuarioController extends Controller
 
         return redirect()
             ->route('usuarios.select')
-            ->with('success', "Usuario #{$usuario->numero_empleado} eliminado.");
+            ->with('success', "Usuario #{$usuario->numero_empleado} eliminado correctamente.");
     }
 
     //METODO para filtrar los contenedores de la interfaz principal (produccionProceso), dependiendo
