@@ -31,9 +31,9 @@
     <!-- Estilos personalizados -->
     <style>
         body {
-            background: linear-gradient(135deg, #099ff6, #c2e7ff, #0857be);
+            background: linear-gradient(135deg, #000000, #000005, hsl(204, 95%, 57%));
             background-size: 300% 300%;
-            animation: gradientAnimation 5s ease infinite;
+            animation: gradientAnimation 8s ease infinite;
             position: relative;
             overflow: hidden;
             /* Para que los círculos no se salgan del body */
@@ -72,7 +72,7 @@
                 CERRAR SESIÓN
             </a>
 
-            <div class="relative z-1" style="position: absolute; left: 300px;">
+            <div class="relative z-1" style="position: absolute; left: 350px;">
                 <button id="btnUsuarios"
                     class="mt-[5px] bg-orange-500 text-black font-bold px-4 py-1 rounded-md shadow hover:bg-orange-700 transition-all duration-200 cursor-pointer text-xs">
                     USUARIOS
@@ -81,11 +81,11 @@
                     class="hidden absolute bg-white border border-gray-300 mt-1 w-40 rounded-md shadow-lg z-[99] transition transform scale-95 opacity-0"
                     style="left: 0px;">
                     <a href="{{ route('usuarios.create') }}"
-                        class="block px-3 py-2 text-xs text-gray-800 hover:bg-gray-100">📈
-                        ALTA</a>
+                        class="block px-3 py-2 text-xs text-gray-800 hover:bg-gray-100 bg-green-200 font-bold">
+                        ALTA 📝</a>
                     <a href="{{ route('usuarios.select') }}"
-                        class="block px-3 py-2 text-xs text-gray-800 hover:bg-gray-100">📊
-                        VER USUARIOS</a>
+                        class="block px-3 py-2 text-xs text-gray-800 hover:bg-gray-100 bg-blue-300 font-bold">
+                        VER USUARIOS 👥</a>
                 </div>
             </div>
         @endif

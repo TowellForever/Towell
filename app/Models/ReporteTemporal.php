@@ -11,7 +11,6 @@ class ReporteTemporal extends Model
     use HasFactory;
     protected $table = 'reportes_temporales';
 
-
     protected $fillable = [
         'telar',
         'tipo',
@@ -23,7 +22,8 @@ class ReporteTemporal extends Model
         'observaciones',
         'enviado_telegram',
         'enviado_telegram_at',
-        'telegram_message_id'
+        'telegram_message_id',
+        'telefonos_destino'
     ];
 
     protected $casts = [
