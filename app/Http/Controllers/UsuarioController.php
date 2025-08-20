@@ -85,30 +85,73 @@ class UsuarioController extends Controller
         $usuarios = Usuario::query()
             ->select('numero_empleado', 'nombre', 'area', 'turno', 'telefono', 'foto', 'enviarMensaje')
             ->orderBy('nombre')
-            ->paginate(20)
-            ->withQueryString();
+            ->get(); // sin paginar
 
         return view('modulos.usuarios.select', compact('usuarios'));
     }
 
-    // Stub para que el botón "Editar" funcione (ajústalo a tu vista de edición)
-    public function edit($numero_empleado)
+    //CRUD REST, solo edit, update y destroy
+
+    // EDITAR
+    public function edit(Usuario $usuario)
     {
-        $usuario = Usuario::where('numero_empleado', $numero_empleado)->firstOrFail();
-        return view('usuarios.edit', compact('usuario'));
+        return view('modulos.usuarios.edit', compact('usuario'));
     }
 
-    public function destroy($numero_empleado)
+    // ACTUALIZAR
+    public function update(Request $request, Usuario $usuario)
     {
-        $usuario = Usuario::where('numero_empleado', $numero_empleado)->firstOrFail();
+        // Campos de texto/base (no validamos checkboxes como boolean por el "on")
+        $data = $request->validate([
+            'nombre'   => 'required|string|max:255',
+            'area'     => 'nullable|string|max:255',
+            'telefono' => 'nullable|string|max:30',
+            'turno'    => 'nullable|string|max:50',
+            'foto'     => 'nullable|url',
+            // 'contrasenia' => 'nullable|string|max:255', // solo si la vas a usar (ojo hashing)
+        ]);
+
+        // Checkboxes -> boolean
+        $checks = [
+            'enviarMensaje',
+            'almacen',
+            'urdido',
+            'engomado',
+            'tejido',
+            'atadores',
+            'tejedores',
+            'mantenimiento',
+            'planeacion',
+            'configuracion',
+            'UrdidoEngomado'
+        ];
+        foreach ($checks as $f) {
+            $data[$f] = $request->boolean($f);
+        }
+
+        // Si deseas permitir cambiar la contraseña (no se actualiza si viene vacía).
+        if ($request->filled('contrasenia')) {
+            // Si esta contraseña fuera de login, idealmente: $data['contrasenia'] = Hash::make($request->input('contrasenia'));
+            $data['contrasenia'] = $request->input('contrasenia');
+        }
+
+        // numero_empleado lo dejamos como clave, no editable aquí
+        $usuario->update($data);
+
+        return redirect()
+            ->route('usuarios.select')
+            ->with('success', "Usuario #{$usuario->numero_empleado} actualizado correctamente.");
+    }
+
+    // ELIMINAR
+    public function destroy(Usuario $usuario)
+    {
         $usuario->delete();
 
         return redirect()
             ->route('usuarios.select')
-            ->with('success', "Usuario #{$numero_empleado} eliminado.");
+            ->with('success', "Usuario #{$usuario->numero_empleado} eliminado.");
     }
-
-
 
     //METODO para filtrar los contenedores de la interfaz principal (produccionProceso), dependiendo
     public function index()

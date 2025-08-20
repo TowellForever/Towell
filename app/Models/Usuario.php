@@ -11,6 +11,8 @@ class Usuario extends Authenticatable
 {
     protected $table = 'usuarios'; // Asegura que sea el nombre correcto
     protected $primaryKey = 'numero_empleado'; // Laravel usa 'id' por defecto, cambia esto si es necesario
+    public $incrementing = false;
+    protected $keyType = 'string';
     public $timestamps = true; // Si tu tabla no tiene timestamps, pon esto
 
 
@@ -46,4 +48,25 @@ class Usuario extends Authenticatable
     {
         return $this->belongsToMany(CatalagoTelar::class, 'telares_usuario', 'usuario_id', 'telar_id');
     }
+
+    // Para que {usuario} en la ruta resuelva por numero_empleado - 20-08-2025
+    public function getRouteKeyName()
+    {
+        return 'numero_empleado';
+    }
+
+    // Que los módulos se manejen como boolean en PHP
+    protected $casts = [
+        'enviarMensaje'   => 'boolean',
+        'almacen'         => 'boolean',
+        'urdido'          => 'boolean',
+        'engomado'        => 'boolean',
+        'tejido'          => 'boolean',
+        'atadores'        => 'boolean',
+        'tejedores'       => 'boolean',
+        'mantenimiento'   => 'boolean',
+        'planeacion'      => 'boolean',
+        'configuracion'   => 'boolean',
+        'UrdidoEngomado'  => 'boolean',
+    ];
 }

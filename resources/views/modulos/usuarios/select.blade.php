@@ -21,14 +21,15 @@
 
     <div class="max-w-full mx-auto px-2 overflow-y-auto bigScroll max-h-[550px]">
         {{-- Encabezado --}}
-        <div class="rounded-xl bg-gradient-to-r from-blue-50 via-blue-100 to-blue-50 border border-blue-200 p-3 mb-3">
+        <div class="rounded-xl bg-gradient-to-r from-blue-50 via-blue-100 to-blue-50 border border-blue-200 p-1 mb-1">
             <div class="flex items-center justify-between">
                 <h1 class="text-xl font-extrabold text-blue-800 tracking-tight">
-                    🙍🏻‍♂️ LISTA DE USUARIOS TOWELL
+                    LISTA DE USUARIOS TOWELL 👨‍💼
                 </h1>
                 <span class="text-[11px] px-2 py-0.5 rounded-full bg-blue-200 text-blue-900 font-semibold">
-                    {{ $usuarios->total() }} registros
+                    {{ $usuarios->count() }} registros
                 </span>
+
             </div>
         </div>
 
@@ -133,11 +134,6 @@
                     <li class="px-3 py-4 text-sm text-blue-900/70">No hay usuarios para mostrar.</li>
                 @endforelse
             </ul>
-
-            {{-- Paginación --}}
-            <div class="px-2 py-2 bg-blue-50 border-t border-blue-200">
-                {{ $usuarios->links() }}
-            </div>
         </div>
     </div>
 
