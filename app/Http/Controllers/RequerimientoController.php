@@ -216,8 +216,6 @@ class RequerimientoController extends Controller
 
         //    dd($requerimientos);
 
-
-
         // Buscar el requerimiento activo con coincidencia de telar y tipo (rizo o pie)
         $requerimiento = DB::table('requerimiento')
             ->where('telar', $telar)

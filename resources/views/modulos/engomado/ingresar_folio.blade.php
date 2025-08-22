@@ -110,25 +110,54 @@
                     <div class="overflow-x-auto flex-1 flex flex-col min-h-0">
                         <div class="min-w-full flex-1 flex flex-col min-h-0">
                             <!-- Encabezados tipo tabla -->
-                            <div class="grid grid-cols-5 bg-gray-100 rounded-t-2xl">
+                            <div class="grid grid-cols-7 bg-gray-100 rounded-t-2xl">
                                 <div class="py-0.5 px-1 text-gray-700 font-bold text-sm">Folio</div>
                                 <div class="py-0.5 px-1 text-gray-700 font-bold text-sm">Tipo</div>
                                 <div class="py-0.5 px-1 text-gray-700 font-bold text-sm">Metros</div>
-                                <div class="py-0.5  text-gray-700 font-bold text-sm col-span-2">L. Maturdido</div>
+                                <div class="py-0.5  text-gray-700 font-bold text-sm col-span-2">Lista de Materiales Engomado
+                                </div>
+                                <div class="py-0.5 px-1 text-gray-700 font-bold text-sm">Cuenta</div>
+                                <div class="py-0.5 px-1 text-gray-700 font-bold text-sm">Calibre</div>
                             </div>
-                            <!-- Aquí inicia la "tabla" pero usando <ul> -->
-                            <ul class="divide-y divide-gray-200 flex-1 max-h-full overflow-y-auto min-h-0" id="orderList">
-                                @foreach ($ordenesPendientesEngo as $ordE)
-                                    <li class="order-item grid grid-cols-5 items-center   rounded-xl transition-colors cursor-pointer hover:bg-yellow-100"
-                                        data-orden="{{ $ordE->folio }}">
-                                        <span class="text-gray-700 font-medium">{{ $ordE->folio }}</span>
-                                        <span class="text-gray-700 font-medium">{{ $ordE->tipo }}</span>
-                                        <span
-                                            class="text-gray-700 font-medium">{{ fmod($ordE->metros, 1) == 0 ? intval($ordE->metros) : rtrim(rtrim(number_format($ordE->metros, 2, '.', ''), '0'), '.') }}</span>
-                                        <span class="text-gray-700 font-medium col-span-2">{{ $ordE->lmaturdido }}</span>
-                                    </li>
+                            <!-- Aquí inicia el cuerpo de la tabla, 2 listas apiladas de acuerdo a los west point -->
+                            @php
+                                $secciones = ['West Point 2', 'West Point 3'];
+                                $fmtMetros = function ($v) {
+                                    return fmod($v, 1) == 0
+                                        ? intval($v)
+                                        : rtrim(rtrim(number_format($v, 2, '.', ''), '0'), '.');
+                                };
+                            @endphp
+                            <div class="space-y-1">
+                                @foreach ($secciones as $wp)
+                                    <div class="rounded-xl border border-blue-200 bg-white p-1">
+                                        <h3 class="text-blue-800 font-bold">{{ $wp }}</h3>
+                                        <div class="overflow-x-auto">
+                                            <table class="w-full text-xs">
+                                                <tbody class="divide-y">
+                                                    @forelse (($porEngomado[$wp] ?? collect()) as $ordP)
+                                                        <tr class="order-item hover:bg-yellow-200 cursor-pointer"
+                                                            data-orden="{{ $ordP->folio }}">
+                                                            <td>{{ $ordP->folio ?? '' }}</td>
+                                                            <td>{{ $ordP->tipo ?? '' }}</td>
+                                                            <td>{{ $fmtMetros($ordP->metros) ?? '' }}</td>
+                                                            <td>{{ $ordP->lmatengomado ?? '' }}</td>
+                                                            <td>{{ decimales($ordP->cuenta) ?? '' }}</td>
+                                                            <td>{{ $ordP->calibre ?? '' }}</td>
+                                                        </tr>
+                                                    @empty
+                                                        <tr>
+                                                            <td colspan="6"
+                                                                class="py-2 text-center text-gray-400 italic">Sin registros.
+                                                            </td>
+                                                        </tr>
+                                                    @endforelse
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
                                 @endforeach
-                            </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -138,27 +167,26 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const orderList = document.getElementById('orderList');
-            orderList.addEventListener('click', function(e) {
-                const items = orderList.querySelectorAll('li');
-                items.forEach(li => li.classList.remove('bg-yellow-200', 'ring', 'ring-yellow-300'));
-                let target = e.target;
-                while (target && target.tagName !== "LI") {
-                    target = target.parentElement;
-                }
-                if (target && target.classList.contains('order-item')) {
-                    target.classList.add('bg-yellow-200', 'ring', 'ring-yellow-300');
+        // Usa el contenedor si existe; si no, delega desde document.
+        const container = document.getElementById('orderList') || document;
 
-                    // Obtener el folio del data-orden
-                    const folio = target.getAttribute(
-                        'data-orden'
-                    ); //data-orden es lo que alojó el folio, cuando se seleccionó un registro c:
+        container.addEventListener('click', (e) => {
+            // Captura clicks en cualquier elemento con .order-item (o hijos)
+            const item = e.target.closest('.order-item');
+            if (!item) return;
+            // Si tenías un contenedor específico, asegura que el item esté dentro
+            if (container !== document && !container.contains(item)) return;
 
-                    //input para el folio:
-                    document.getElementById('folio').value = folio;
-                }
-            });
+            const folio = item.dataset.orden?.trim();
+            if (!folio) return;
+
+            const input = document.getElementById('folio');
+            if (!input) return;
+
+            if ('value' in input) input.value = folio; // inputs
+            else input.textContent = folio; // spans/divs
+
+            input.focus();
         });
     </script>
 @endsection

@@ -108,13 +108,15 @@
                     <div class="overflow-x-auto flex-1 flex flex-col min-h-0">
                         <div class="min-w-full flex-1 flex flex-col min-h-0">
                             <!-- Encabezados tipo tabla -->
-                            <div class="grid grid-cols-6 bg-gray-100 rounded-t-2xl">
+                            <div class="grid grid-cols-8 bg-gray-100 rounded-t-2xl">
                                 <div class="py-0.5 px-1 text-gray-700 font-bold text-sm">Prioridad</div>
                                 <div class="py-0.5 px-1 text-gray-700 font-bold text-sm">Folio</div>
                                 <div class="py-0.5 px-1 text-gray-700 font-bold text-sm">Tipo</div>
                                 <div class="py-0.5 px-1 text-gray-700 font-bold text-sm">Metros</div>
                                 <div class="py-0.5 px-1 text-gray-700 font-bold text-sm col-span-2">Lista de Materiales
                                     Urdido</div>
+                                <div class="py-0.5 px-1 text-gray-700 font-bold text-sm">Cuenta</div>
+                                <div class="py-0.5 px-1 text-gray-700 font-bold text-sm">Calibre</div>
                             </div>
                             <!-- ahora pintamos 3 listas para los 3 mc coy -->
                             @php
@@ -126,7 +128,7 @@
                                 };
                             @endphp
 
-                            <div class="space-y-6"> {{-- APILADAS, no en columnas --}}
+                            <div class="space-y-1"> {{-- APILADAS, no en columnas --}}
                                 @foreach ($secciones as $mc)
                                     <div class="rounded-xl border border-blue-200 bg-white p-1">
                                         <h3 class="text-blue-800 font-bold">{{ $mc }}
@@ -134,33 +136,25 @@
 
                                         <div class="overflow-x-auto">
                                             <table class="w-full text-xs">
-                                                <thead>
-                                                    <tr class="text-left border-b">
-                                                        <th class="py-1 pr-2 w-20">Prioridad</th>
-                                                        <th class="py-1 pr-2">Folio</th>
-                                                        <th class="py-1 pr-2">Tipo</th>
-                                                        <th class="py-1 pr-2">Metros</th>
-                                                        <th class="py-1 pr-2">Cuenta</th>
-                                                        <th class="py-1 pr-2">Calibre</th>
-                                                    </tr>
-                                                </thead>
+
                                                 <tbody class="divide-y">
                                                     @forelse (($porUrdido[$mc] ?? collect()) as $ordP)
-                                                        <tr class="hover:bg-yellow-50">
-                                                            <td class="py-1 pr-2">{{ 'priority' }}</td>
-                                                            <td class="py-1 pr-2">{{ $ordP->folio }}</td>
-                                                            <td class="py-1 pr-2">{{ $ordP->tipo }}</td>
-                                                            <td class="py-1 pr-2">{{ $fmtMetros($ordP->metros) }}</td>
-                                                            <td class="py-1 pr-2">
-                                                                {{ $ordP->cuenta ?? ($ordP->lmatengomado ?? '-') }}
+                                                        <tr class="order-item hover:bg-yellow-100 cursor-pointer"
+                                                            data-orden="{{ $ordP->folio }}">
+                                                            <td class="">{{ 'priority' }}</td>
+                                                            <td class="">{{ $ordP->folio ?? '' }}</td>
+                                                            <td class="">{{ $ordP->tipo ?? '' }}</td>
+                                                            <td class="">{{ $fmtMetros($ordP->metros) ?? '' }}</td>
+                                                            <td class="">
+                                                                {{ $ordP->cuenta ?? ($ordP->lmaturdido ?? '-') }}
                                                             </td>
-                                                            <td class="py-1 pr-2">
+                                                            <td class="">
                                                                 {{ $ordP->calibre ?? '-' }}
                                                             </td>
                                                         </tr>
                                                     @empty
                                                         <tr>
-                                                            <td colspan="6"
+                                                            <td colspan="8"
                                                                 class="py-2 text-center text-gray-400 italic">Sin registros.
                                                             </td>
                                                         </tr>
@@ -201,8 +195,6 @@
                 if ('value' in input) input.value = folio; // inputs
                 else input.textContent = folio; // spans/divs
 
-                // Si tu app reacciona a 'change' (ej. Livewire/Alpine), descomenta:
-                // input.dispatchEvent(new Event('change', { bubbles: true }));
                 input.focus();
             });
         </script>

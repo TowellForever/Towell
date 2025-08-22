@@ -130,8 +130,23 @@ class EngomadoController extends Controller
 
     public function cargarOrdenesPendientesEng()
     {
-        $ordenesPendientesEngo = UrdidoEngomado::where('estatus_engomado', 'en_proceso')->get();
-        return view('modulos.engomado.ingresar_folio', compact('ordenesPendientesEngo'));
+        $ordenes = UrdidoEngomado::where('estatus_engomado', 'en_proceso')->get();
+
+        // Normaliza 
+        $agrupadas = $ordenes->groupBy(function ($row) {
+            return preg_replace('/\s+/', ' ', trim($row->maquinaEngomado)); // "West ponit 2", etc.
+        });
+
+        // Ordena dentro de cada grupo por folio (ajusta si quieres otro campo)
+        $agrupadas = $agrupadas->map(fn($items) => $items->sortBy('folio')->values());
+
+        // Fuerza el orden de los grupos: 1, 2, 3
+        $ordenGrupos = ['West Point 2', 'West Point 3'];
+        $porEngomado = collect($ordenGrupos)->mapWithKeys(
+            fn($k) => [$k => $agrupadas->get($k, collect())]
+        );
+
+        return view('modulos.engomado.ingresar_folio', compact('porEngomado'));
     }
 
     public function imprimirPapeletasEngomado($folio)
