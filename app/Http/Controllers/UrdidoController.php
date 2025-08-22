@@ -82,8 +82,6 @@ class UrdidoController extends Controller
         }
     }
 
-
-
     public function finalizarUrdido(Request $request)
     {
         $folio = $request->input('folio');
@@ -257,10 +255,29 @@ class UrdidoController extends Controller
 
         return view('modulos.urdido.imprimir_papeletas_vacias', compact('folio', 'orden', 'ordUrdido', 'telares'));
     }
+
+    //estos son los datos que se muestran en la interfaz INGRESAR FOLIO
     public function cargarOrdenesPendientesUrd()
     {
-        $ordenesPendientes = UrdidoEngomado::where('estatus_urdido', 'en_proceso')->get();
+        // Trae lo necesario (incluye 'urdido')
+        $ordenes = UrdidoEngomado::select('folio', 'tipo', 'metros', 'lmatengomado', 'urdido')
+            ->where('estatus_urdido', 'en_proceso')
+            ->get();
 
-        return view('modulos.urdido.ingresar_folio', compact('ordenesPendientes'));
+        // Normaliza y agrupa por 'urdido'
+        $agrupadas = $ordenes->groupBy(function ($row) {
+            return preg_replace('/\s+/', ' ', trim($row->urdido)); // "Mc Coy 1", etc.
+        });
+
+        // Ordena dentro de cada grupo por folio (ajusta si quieres otro campo)
+        $agrupadas = $agrupadas->map(fn($items) => $items->sortBy('folio')->values());
+
+        // Fuerza el orden de los grupos: 1, 2, 3
+        $ordenGrupos = ['Mc Coy 1', 'Mc Coy 2', 'Mc Coy 3'];
+        $porUrdido = collect($ordenGrupos)->mapWithKeys(
+            fn($k) => [$k => $agrupadas->get($k, collect())]
+        );
+
+        return view('modulos.urdido.ingresar_folio', compact('porUrdido'));
     }
 }
