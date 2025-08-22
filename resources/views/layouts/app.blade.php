@@ -31,9 +31,9 @@
     <!-- Estilos personalizados -->
     <style>
         body {
-            background: linear-gradient(135deg, #000000, #000005, hsl(204, 95%, 57%));
+            background: linear-gradient(135deg, #099ff6, #c2e7ff, #0857be);
             background-size: 300% 300%;
-            animation: gradientAnimation 8s ease infinite;
+            animation: gradientAnimation 5s ease infinite;
             position: relative;
             overflow: hidden;
             /* Para que los círculos no se salgan del body */

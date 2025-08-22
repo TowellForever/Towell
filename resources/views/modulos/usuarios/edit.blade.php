@@ -183,9 +183,9 @@
                     </div>
                 </div>
 
-                <div class="md:col-span-2 flex items-center gap-2 pt-1">
+                <div class="md:col-span-2 flex items-right gap-2 pt-1">
                     <button type="submit"
-                        class="w-1/2 inline-flex text-center text-[12px] px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold">
+                        class="w-1/4 inline-flex text-center text-[12px] px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold">
                         💾 Guardar cambios
                     </button>
 
