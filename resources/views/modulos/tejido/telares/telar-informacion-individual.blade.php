@@ -127,7 +127,7 @@
                             <br><b>Trama 5:</b>
                             {{ $dato->CALIBRE_C4 == 0 ? '0' : rtrim(rtrim(number_format($dato->CALIBRE_C4, 2, '.', ''), '0'), '.') }}
                             <br><b>Producido:</b> {{ '' }}
-                            <br>
+                            <br><b>Calibre Rizo:</b> {{ $dato->Calibre_Rizo ?? '' }}
                             <br><b>Fecha de Compromiso Tejido:</b>
                             {{ \Carbon\Carbon::parse($dato->Fecha_Compromiso)->format('d/m/Y') }}
                         </td>
@@ -139,7 +139,7 @@
                             {{ $dato->Tiras == 0 ? '0' : rtrim(rtrim(number_format($dato->Tiras, 2, '.', ''), '0'), '.') }}
                             <br><b>Producción (KG)/Día:</b>
                             {{ $dato->Prod_Kg_Dia == 0 ? '0' : rtrim(rtrim(number_format($dato->Prod_Kg_Dia, 2, '.', ''), '0'), '.') }}
-                            <br>
+                            <br><b>Calibre Pie:</b> {{ $dato->Calibre_Pie ?? '' }}
                             <br><b>Fecha de Compromiso Cliente:</b>
                             {{ \Carbon\Carbon::parse($dato->Fecha_Compromiso1)->format('d/m/Y') }}
                         </td>
@@ -194,8 +194,8 @@
                                     <div class="mr-4">
                                         <b id="fecha"></b>
                                         <!--<br><b>Turno:</b> {{ '' }}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <br><b>Metros:</b> <br><input type="text" id="metros" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <br><input type="text" id="metros_pie" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <br><b>Metros:</b> <br><input type="text" id="metros" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <br><input type="text" id="metros_pie" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">-->
                                     </div>
                                 </div>
 
@@ -516,6 +516,8 @@
                 let datos = @json($datos);
                 let cuentaRizo = datos[0].Cuenta;
                 let cuentaPie = datos[0].Cuenta_Pie;
+                let calibreRizo = datos[0].Calibre_Rizo;
+                let calibrePie = datos[0].Calibre_Pie;
                 let ordenProd = '';
                 let telar = @json($telar);
 
@@ -547,7 +549,9 @@
                         valor: valorCheckbox,
                         rizo,
                         pie,
-                        telar
+                        telar,
+                        calibre_rizo: calibreRizo,
+                        calibre_pie: calibrePie
                     }, {
                         headers: {
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')

@@ -6,6 +6,8 @@
             <!-- Inputs ocultos para enviar el telar y tipo seleccionados -->
             <input type="hidden" name="telar" id="telarInput">
             <input type="hidden" name="tipo" id="tipoInput">
+            <input type="hidden" name="calibre" id="calibreInput">
+
             <!-- Tabla 1: Requerimiento desde Dynamics AX -->
             <div class="bg-white shadow-md rounded-lg p-2 custom-scroll">
 
@@ -13,7 +15,7 @@
                     <h2 class="text-lg font-bold bg-yellow-200 text-center flex-grow">Programación de Requerimientos</h2>
                     <input type="hidden" name="idsSeleccionados" id="idsSeleccionados">
                     <button type
-                        class="w-40 font-semibold text-lg bg-blue-500 text-white hover:bg-green-600">Programar</button>
+                        class="w-40 font-semibold text-lg bg-blue-500 text-white hover:bg-green-600">PROGRAMAR</button>
                 </div>
 
                 <div class="overflow-y-auto max-h-60 "> <!-- Contenedor con scroll -->
@@ -24,6 +26,7 @@
                                 <th class="border px-1 py-0.5">Telar 🔽</th>
                                 <th class="border px-1 py-0.5">Tipo 🔽</th>
                                 <th class="border px-1 py-0.5">Cuenta 🔽</th>
+                                <th class="border px-1 py-0.5">Calibre 🔽</th>
                                 <th class="border px-1 py-0.5">Fecha Requerida 🔽</th>
                                 <th class="border px-1 py-0.5">Metros 🔽</th>
                                 <th class="border px-1 py-0.5">Mc Coy 🔽</th>
@@ -36,7 +39,8 @@
                                 <tr class="cursor-pointer hover:bg-yellow-200 transition duration-200"
                                     data-tipo="{{ $req->rizo == 1 ? 'Rizo' : ($req->pie == 1 ? 'Pie' : 'N/A') }}"
                                     data-telar="{{ $req->telar }}" onclick="seleccionarFila(this)"
-                                    data-cuenta="{{ $req->rizo == 1 ? $req->cuenta_rizo : ($req->pie == 1 ? $req->cuenta_pie : '-') }}">
+                                    data-cuenta="{{ $req->rizo == 1 ? $req->cuenta_rizo : ($req->pie == 1 ? $req->cuenta_pie : '-') }}"
+                                    data-calibre="{{ $req->rizo == 1 ? $req->calibre_rizo : ($req->pie == 1 ? $req->calibre_pie : '-') }}">
                                     <td class="border
                                     px-1 py-1">{{ $req->telar }}
                                     </td>
@@ -55,6 +59,13 @@
                                             ? preg_replace('/\.0$/', '', $req->cuenta_rizo)
                                             : ($req->pie == 1
                                                 ? preg_replace('/\.0$/', '', $req->cuenta_pie)
+                                                : '-') }}
+                                    </td>
+                                    <td class="border px-1 py-1">
+                                        {{ $req->rizo == 1
+                                            ? preg_replace('/\.0$/', '', $req->calibre_rizo)
+                                            : ($req->pie == 1
+                                                ? preg_replace('/\.0$/', '', $req->calibre_pie)
                                                 : '-') }}
                                     </td>
 
@@ -86,7 +97,7 @@
             <div class="w-full mt-2 mb-2 flex items-center justify-between">
                 <h2 class="text-lg font-bold bg-yellow-200 text-center flex-grow">Inventario Disponible</h2>
                 <button class="w-40 font-semibold text-lg bg-blue-500 text-white hover:bg-green-600"
-                    id="btnReservar">Reservar</button>
+                    id="btnReservar">RESERVAR</button>
             </div>
             <div class="overflow-y-auto max-h-60 "> <!-- Contenedor con scroll -->
                 <!-- Tabla 2: Inventarios -->
@@ -184,10 +195,12 @@
             // Extraer los valores de los atributos data-tipo y data-telar de la fila
             const telar = row.getAttribute("data-telar");
             const tipo = row.getAttribute("data-tipo");
+            const calibre = row.getAttribute("data-calibre");
 
             // Actualizar los campos ocultos
             document.getElementById("telarInput").value = telar;
             document.getElementById("tipoInput").value = tipo;
+            document.getElementById("calibreInput").value = calibre;
 
             // Opcional: resaltar la fila seleccionada (por ejemplo, eliminando la clase de las demás)
             document.querySelectorAll("#seleccionForm tbody tr").forEach(r => r.classList.remove("bg-blue-200"));
@@ -483,6 +496,7 @@
             }
 
             document.getElementById('idsSeleccionados').value = JSON.stringify(seleccionados);
+
         });
     </script>
 @endsection

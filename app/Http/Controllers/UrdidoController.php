@@ -56,7 +56,7 @@ class UrdidoController extends Controller
         return view('modulos/urdido', compact('urdido', 'construccion', 'requerimiento', 'ordenUrdido', 'julios', 'oficiales', 'turnoActual'));
     }
 
-    //mewtodo para insertar o actualizar registro de ORDEN-URDIDO y antes de FINALIZARLO - se habia unificado dado que solicitaron borrar uno de los 2 botones.
+    //metodo para insertar o actualizar registro de ORDEN-URDIDO y antes de FINALIZARLO - se habia unificado dado que solicitaron borrar uno de los 2 botones.
     public function autoguardar(Request $request)
     {
 
