@@ -249,7 +249,7 @@ class RequerimientoController extends Controller
 
     /* metodo que realiza funciones de vista PROGRAMARURDIDOENGOMADO**********************************************************************************
     ***********************************************************************************************************************************************
-     */
+    aqui GUARDAMOS lo de PROGRAMAR URDIDO ENGOMADO */
     public function requerimientosAGuardar(Request $request)
     {
         $folioBase = $this->generarFolioUnico(); // base para distinguirlos si lo deseas
@@ -286,6 +286,8 @@ class RequerimientoController extends Controller
                 return redirect()->back()->withInput()->with('error', 'Datos de construcción inválidos.');
             }
 
+            // ====== Iniciar Transacción para asegurar consecutivos de prioridad ======
+            DB::beginTransaction();
 
             $registros = $request->input('registros');
             $telares = array_column($registros, 'telar');
@@ -310,12 +312,32 @@ class RequerimientoController extends Controller
 
             $metros = (float) $request->input('metros'); // Para decimales
 
+            // ====== Cálculo de prioridades por grupo ======
+            $urdidoValor = $request->input('urdido'); // Mc Coy 1, 2 o 3
+            $maquinaEngoValor = $request->input('maquinaEngomado'); // West Point 2 o 3
+
+            // Obtener el máximo actual dentro del grupo de Urdido
+            // lockForUpdate() para evitar que dos inserciones tomen el mismo consecutivo
+            $maxPrioridadUrd = DB::table('urdido_engomado')
+                ->where('urdido', $urdidoValor)
+                ->lockForUpdate()
+                ->max('prioridadUrd');
+
+            $prioridadUrd = is_null($maxPrioridadUrd) ? 1 : ((int)$maxPrioridadUrd + 1);
+
+            // Obtener el máximo actual dentro del grupo de Engomado
+            $maxPrioridadEngo = DB::table('urdido_engomado')
+                ->where('maquinaEngomado', $maquinaEngoValor)
+                ->lockForUpdate()
+                ->max('prioridadEngo');
+
+            $prioridadEngo = is_null($maxPrioridadEngo) ? 1 : ((int)$maxPrioridadEngo + 1);
 
             // Insertar en urdido_engomado
             DB::table('urdido_engomado')->insert([
                 'folio' => $folioBase,
                 'cuenta' => $request->input('cuenta'),
-                'urdido' => $request->input('urdido'),
+                'urdido' => $urdidoValor,
                 'proveedor' => $request->input('proveedor'),
                 'tipo' => $request->input('tipo'),
                 'destino' => $request->input('destino'),
@@ -334,8 +356,11 @@ class RequerimientoController extends Controller
                 'color' => '',
                 'solidos' => '',
                 'lmaturdido' => $request->input('lmaturdido'),
-                'maquinaEngomado' => $request->input('maquinaEngomado'),
+                'maquinaEngomado' => $maquinaEngoValor,
                 'lmatengomado' => $request->input('lmatengomado'),
+                // ====== NUEVOS CAMPOS DE PRIORIDAD ======
+                'prioridadUrd' => $prioridadUrd,
+                'prioridadEngo' => $prioridadEngo,
             ]);
 
             // Insertar detalles de construcción
@@ -354,16 +379,27 @@ class RequerimientoController extends Controller
                 }
             }
 
+            // Confirmar transacción
+            DB::commit();
+
             return view('modulos.programar_requerimientos.lanzador')->with('folio', $folioBase);
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Validación fallida
+            // Si hubiera transacción abierta, revertir
+            if (DB::transactionLevel() > 0) {
+                DB::rollBack();
+            }
             return redirect()->back()->withErrors($e->validator)->withInput();
         } catch (\Exception $e) {
             // Otro tipo de error: DB, lógica, etc.
+            if (DB::transactionLevel() > 0) {
+                DB::rollBack();
+            }
             Log::error('Error al guardar requerimientos: ' . $e->getMessage()); // opcional: log para debug
             return redirect()->back()->with('error', 'Ocurrió un error inesperado al guardar los datos. Intenta nuevamente.');
         }
     }
+
 
 
     private function generarFolioUnico()

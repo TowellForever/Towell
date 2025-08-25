@@ -2,7 +2,7 @@
 
 @section('content')
     <!-- Vista del formulario para registrar datos de URDIDO y ENGOMADO, además Construcción JULIOS -->
-    <div class="mt-3 mb-20 p-1 overflow-y-auto lg:max-h-[400px] ">
+    <div class="mt-3 mb-20 p-1 overflow-y-auto max-h-[550px] ">
 
         {{-- Mostrar errores de validación --}}
         <form action="{{ route('orden.produccion.store') }}" method="POST">
@@ -70,8 +70,9 @@
 
                         </td>
                         <td class="border px-1 py-0.5">
-                            <input type="text" name="cuenta" value="{{ $cuenta }}"
+                            <input type="text" name="cuenta" value="{{ decimales($cuenta) }}"
                                 class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded">
+                        </td>
                         <td class="border px-1 py-0.5">
                             <select name="urdido"
                                 class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded" required>

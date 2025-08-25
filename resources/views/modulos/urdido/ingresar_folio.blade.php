@@ -141,7 +141,7 @@
                                                     @forelse (($porUrdido[$mc] ?? collect()) as $ordP)
                                                         <tr class="order-item hover:bg-yellow-100 cursor-pointer"
                                                             data-orden="{{ $ordP->folio }}">
-                                                            <td class="">{{ 'priority' }}</td>
+                                                            <td class="">{{ $ordP->prioridadUrd }}</td>
                                                             <td class="">{{ $ordP->folio ?? '' }}</td>
                                                             <td class="">{{ $ordP->tipo ?? '' }}</td>
                                                             <td class="">{{ $fmtMetros($ordP->metros) ?? '' }}</td>
