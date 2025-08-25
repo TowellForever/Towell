@@ -113,8 +113,7 @@
                                 <div class="py-0.5 px-1 text-gray-700 font-bold text-sm">Folio</div>
                                 <div class="py-0.5 px-1 text-gray-700 font-bold text-sm">Tipo</div>
                                 <div class="py-0.5 px-1 text-gray-700 font-bold text-sm">Metros</div>
-                                <div class="py-0.5 px-1 text-gray-700 font-bold text-sm col-span-2">Lista de Materiales
-                                    Urdido</div>
+                                <div class="py-0.5 px-1 text-gray-700 font-bold text-sm col-span-2">L. Mat. Urdido</div>
                                 <div class="py-0.5 px-1 text-gray-700 font-bold text-sm">Cuenta</div>
                                 <div class="py-0.5 px-1 text-gray-700 font-bold text-sm">Calibre</div>
                             </div>
@@ -139,9 +138,12 @@
                                                 <tbody class="divide-y tabla-urdido" data-grupo="{{ $mc }}">
                                                     @forelse (($porUrdido[$mc] ?? collect()) as $ordP)
                                                         <tr class="order-item hover:bg-yellow-100"
-                                                            data-id="{{ $ordP->folio }}">
+                                                            data-id="{{ $ordP->folio }}" data-orden="{{ $ordP->folio }}">
+                                                            {{-- data-orden="{{ $ordP->folio }}" -> ESTO FUNCIONA PARA SELECCIONAR UN REGISTRO Y COLOCAR EL FOLIO EN EL PRIMER CONTENEDOR --}}
                                                             {{-- Handle + Prioridad + flechas --}}
-                                                            <td class="py-0.5 px-1">
+                                                            <td
+                                                                class="py-0.5
+                                                            px-1">
                                                                 <div class="flex items-center gap-2">
                                                                     <span
                                                                         class="font-semibold">{{ $ordP->prioridadUrd ?? '-' }}</span>
@@ -231,21 +233,37 @@
                         })
                     });
                     const data = await res.json();
-                    if (!data.ok) {
-                        alert(data.message || 'No se ha logrado mover, error.');
-                        return;
-                    }
-                    // Recargar para reflejar prioridades (simple y seguro)
-                    if (data.ok) {
-                        await Swal.fire({
-                            icon: 'success',
-                            title: '¡Éxito!',
-                            text: data.message || 'La prioridad se movió correctamente.',
+
+                    if (data.status === 'info') {
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Aviso',
+                            text: data.message || 'No se puede mover más en esa dirección.',
                             confirmButtonText: 'Entendido',
                             confirmButtonColor: '#2563eb'
                         });
-                        location.reload();
+                        return; // no recargues
                     }
+
+                    if (!data.ok) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'No se pudo mover',
+                            text: data.message || 'Intenta de nuevo',
+                            confirmButtonColor: '#2563eb'
+                        });
+                        return;
+                    }
+
+                    // éxito real
+                    await Swal.fire({
+                        icon: 'success',
+                        title: '¡Éxito!',
+                        text: data.message || 'Prioridad actualizada.',
+                        confirmButtonText: 'Ok',
+                        confirmButtonColor: '#2563eb'
+                    });
+                    location.reload();
 
                 } catch (e) {
                     alert('Error al mover');

@@ -336,7 +336,12 @@ class UrdidoController extends Controller
                 }
 
                 if (!$vecino) {
-                    return response()->json(['ok' => true, 'message' => 'Ya está en el extremo']);
+                    return response()->json([
+                        'ok'      => true,                 // la petición fue válida
+                        'status'  => 'info',               // <— clave: no es "success"
+                        'code'    => 'AT_LIMIT',
+                        'message' => 'Ya está en el extremo, no se puede mover más.'
+                    ]);
                 }
 
                 DB::table('urdido_engomado')->where('id', $id)
