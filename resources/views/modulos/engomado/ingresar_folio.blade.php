@@ -157,8 +157,6 @@
                                                                     </div>
                                                                 </div>
                                                             </td>
-
-                                                            <td>{{ $ordP->prioridadEngo ?? '' }}</td>
                                                             <td>{{ $ordP->folio ?? '' }}</td>
                                                             <td>{{ $ordP->tipo ?? '' }}</td>
                                                             <td>{{ $fmtMetros($ordP->metros) ?? '' }}</td>
