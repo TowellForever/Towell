@@ -256,11 +256,11 @@ class UrdidoController extends Controller
         return view('modulos.urdido.imprimir_papeletas_vacias', compact('folio', 'orden', 'ordUrdido', 'telares'));
     }
 
-    //estos son los datos que se muestran en la interfaz INGRESAR FOLIO
+    //estos son los datos que se muestran en la interfaz INGRESAR FOLIO URDIDO INGRESAR FOLIO URDIDO INGRESAR FOLIO URDIDO INGRESAR FOLIO URDIDO INGRESAR FOLIO URDIDO
     public function cargarOrdenesPendientesUrd()
     {
         // Trae lo necesario (incluye 'urdido')
-        $ordenes = UrdidoEngomado::select('folio', 'cuenta', 'tipo', 'metros', 'lmatengomado', 'urdido', 'prioridadUrd')
+        $ordenes = UrdidoEngomado::select('id', 'folio', 'cuenta', 'tipo', 'metros', 'lmatengomado', 'urdido', 'prioridadUrd')
             ->where('estatus_urdido', 'en_proceso')
             ->get();
 
@@ -269,15 +269,93 @@ class UrdidoController extends Controller
             return preg_replace('/\s+/', ' ', trim($row->urdido)); // "Mc Coy 1", etc.
         });
 
-        // Ordena dentro de cada grupo por folio (ajusta si quieres otro campo)
-        $agrupadas = $agrupadas->map(fn($items) => $items->sortBy('folio')->values());
+        //ordena dentro de cada grupo por prioridad <- ANTES era: ordena dentro de cada grupo por folio (ajusta si quieres otro campo)
+        $agrupadas = $agrupadas->map(
+            fn($items) =>
+            $items->sortBy([['prioridadUrd', 'asc'], ['folio', 'asc']])->values()
+        );
+
 
         // Fuerza el orden de los grupos: 1, 2, 3
         $ordenGrupos = ['Mc Coy 1', 'Mc Coy 2', 'Mc Coy 3'];
+
         $porUrdido = collect($ordenGrupos)->mapWithKeys(
             fn($k) => [$k => $agrupadas->get($k, collect())]
         );
 
         return view('modulos.urdido.ingresar_folio', compact('porUrdido'));
+    }
+
+    // Flechas ▲/▼: swap con vecino en el mismo grupo (urdido)
+    public function mover(Request $req)
+    {
+        try {
+            $data = $req->validate([
+                'id'    => 'required|integer',
+                'dir'   => 'required|in:-1,1',
+                'grupo' => 'required|string',
+            ]);
+
+            $id = $data['id'];
+            $dir = (int)$data['dir'];
+            $grupo = $data['grupo'];
+
+            return DB::transaction(function () use ($id, $dir, $grupo) {
+                $row = DB::table('urdido_engomado')
+                    ->select('id', 'urdido', 'prioridadUrd')
+                    ->where('id', $id)->where('urdido', $grupo)
+                    ->lockForUpdate()->first();
+
+                if (!$row) {
+                    return response()->json(['ok' => false, 'message' => 'Registro no encontrado'], 404);
+                }
+
+                if (is_null($row->prioridadUrd)) {
+                    $max = DB::table('urdido_engomado')->where('urdido', $grupo)->max('prioridadUrd');
+                    $nuevo = (int)$max + 100;
+                    DB::table('urdido_engomado')->where('id', $id)->update(['prioridadUrd' => $nuevo]);
+                    $row->prioridadUrd = $nuevo;
+                }
+
+                if ($dir === -1) {
+                    $vecino = DB::table('urdido_engomado')
+                        ->select('id', 'prioridadUrd')
+                        ->where('urdido', $grupo)
+                        ->whereNotNull('prioridadUrd')
+                        ->where('prioridadUrd', '<', $row->prioridadUrd)
+                        ->orderBy('prioridadUrd', 'desc')->orderBy('id', 'desc')
+                        ->lockForUpdate()->first();
+                } else {
+                    $vecino = DB::table('urdido_engomado')
+                        ->select('id', 'prioridadUrd')
+                        ->where('urdido', $grupo)
+                        ->whereNotNull('prioridadUrd')
+                        ->where('prioridadUrd', '>', $row->prioridadUrd)
+                        ->orderBy('prioridadUrd', 'asc')->orderBy('id', 'asc')
+                        ->lockForUpdate()->first();
+                }
+
+                if (!$vecino) {
+                    return response()->json(['ok' => true, 'message' => 'Ya está en el extremo']);
+                }
+
+                DB::table('urdido_engomado')->where('id', $id)
+                    ->update(['prioridadUrd' => $vecino->prioridadUrd]);
+
+                DB::table('urdido_engomado')->where('id', $vecino->id)
+                    ->update(['prioridadUrd' => $row->prioridadUrd]);
+
+                return response()->json(['ok' => true, 'message' => 'Movimiento aplicado']);
+            });
+        } catch (\Illuminate\Validation\ValidationException $ve) {
+            // Fuerza JSON de validación
+            return response()->json([
+                'ok' => false,
+                'message' => 'Validación: ' . json_encode($ve->errors())
+            ], 422);
+        } catch (\Throwable $e) {
+            report($e);
+            return response()->json(['ok' => false, 'message' => $e->getMessage()], 500);
+        }
     }
 }

@@ -120,6 +120,7 @@
                             </div>
                             <!-- ahora pintamos 3 listas para los 3 mc coy -->
                             @php
+                                use Illuminate\Support\Str;
                                 $secciones = ['Mc Coy 1', 'Mc Coy 2', 'Mc Coy 3'];
                                 $fmtMetros = function ($v) {
                                     return fmod($v, 1) == 0
@@ -128,29 +129,42 @@
                                 };
                             @endphp
 
-                            <div class="space-y-1"> {{-- APILADAS, no en columnas --}}
+                            <div class="space-y-1">
                                 @foreach ($secciones as $mc)
                                     <div class="rounded-xl border border-blue-200 bg-white p-1">
-                                        <h3 class="text-blue-800 font-bold">{{ $mc }}
-                                        </h3>
+                                        <h3 class="text-blue-800 font-bold">{{ $mc }}</h3>
 
                                         <div class="overflow-x-auto">
                                             <table class="w-full text-xs">
-
-                                                <tbody class="divide-y">
+                                                <tbody class="divide-y tabla-urdido" data-grupo="{{ $mc }}">
                                                     @forelse (($porUrdido[$mc] ?? collect()) as $ordP)
-                                                        <tr class="order-item hover:bg-yellow-100 cursor-pointer"
-                                                            data-orden="{{ $ordP->folio }}">
-                                                            <td class="">{{ $ordP->prioridadUrd }}</td>
-                                                            <td class="">{{ $ordP->folio ?? '' }}</td>
-                                                            <td class="">{{ $ordP->tipo ?? '' }}</td>
-                                                            <td class="">{{ $fmtMetros($ordP->metros) ?? '' }}</td>
-                                                            <td class="">
-                                                                {{ $ordP->cuenta ?? ($ordP->lmaturdido ?? '-') }}
+                                                        <tr class="order-item hover:bg-yellow-100"
+                                                            data-id="{{ $ordP->folio }}">
+                                                            {{-- Handle + Prioridad + flechas --}}
+                                                            <td class="py-0.5 px-1">
+                                                                <div class="flex items-center gap-2">
+                                                                    <span
+                                                                        class="font-semibold">{{ $ordP->prioridadUrd ?? '-' }}</span>
+                                                                    <div class="ml-1 flex flex-col">
+                                                                        <button type="button"
+                                                                            class="btn-up text-[10px] leading-3"
+                                                                            data-id="{{ $ordP->id }}"
+                                                                            data-grupo="{{ $mc }}">▲</button>
+                                                                        <button type="button"
+                                                                            class="btn-down text-[10px] leading-3"
+                                                                            data-id="{{ $ordP->id }}"
+                                                                            data-grupo="{{ $mc }}">▼</button>
+                                                                    </div>
+                                                                </div>
                                                             </td>
-                                                            <td class="">
-                                                                {{ $ordP->calibre ?? '-' }}
+
+                                                            <td class="py-0.5 px-1">{{ $ordP->folio ?? '' }}</td>
+                                                            <td class="py-0.5 px-1">{{ $ordP->tipo ?? '' }}</td>
+                                                            <td class="py-0.5 px-1">{{ $fmtMetros($ordP->metros) ?? '' }}
                                                             </td>
+                                                            <td class="py-0.5 px-1">
+                                                                {{ $ordP->cuenta ?? ($ordP->lmaturdido ?? '-') }}</td>
+                                                            <td class="py-0.5 px-1">{{ $ordP->calibre ?? '-' }}</td>
                                                         </tr>
                                                     @empty
                                                         <tr>
@@ -165,8 +179,6 @@
                                     </div>
                                 @endforeach
                             </div>
-
-
                         </div>
                     </div>
                 </div>
@@ -196,6 +208,55 @@
                 else input.textContent = folio; // spans/divs
 
                 input.focus();
+            });
+        </script>
+
+        <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+        <script>
+            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            // 2) Flechas ▲ / ▼
+            async function mover(id, dir, grupo) {
+                try {
+                    const res = await fetch("{{ route('urdido.prioridad.mover') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': token
+                        },
+                        body: JSON.stringify({
+                            id,
+                            dir,
+                            grupo
+                        })
+                    });
+                    const data = await res.json();
+                    if (!data.ok) {
+                        alert(data.message || 'No se ha logrado mover, error.');
+                        return;
+                    }
+                    // Recargar para reflejar prioridades (simple y seguro)
+                    if (data.ok) {
+                        await Swal.fire({
+                            icon: 'success',
+                            title: '¡Éxito!',
+                            text: data.message || 'La prioridad se movió correctamente.',
+                            confirmButtonText: 'Entendido',
+                            confirmButtonColor: '#2563eb'
+                        });
+                        location.reload();
+                    }
+
+                } catch (e) {
+                    alert('Error al mover');
+                }
+            }
+
+            document.querySelectorAll('.btn-up').forEach(b => {
+                b.addEventListener('click', () => mover(Number(b.dataset.id), -1, b.dataset.grupo));
+            });
+            document.querySelectorAll('.btn-down').forEach(b => {
+                b.addEventListener('click', () => mover(Number(b.dataset.id), +1, b.dataset.grupo));
             });
         </script>
     @endsection
