@@ -110,11 +110,12 @@
                     <div class="overflow-x-auto flex-1 flex flex-col min-h-0">
                         <div class="min-w-full flex-1 flex flex-col min-h-0">
                             <!-- Encabezados tipo tabla -->
-                            <div class="grid grid-cols-7 bg-gray-100 rounded-t-2xl">
+                            <div class="grid grid-cols-8 bg-gray-100 rounded-t-2xl">
+                                <div class="py-0.5 px-1 text-gray-700 font-bold text-sm">Prioridad</div>
                                 <div class="py-0.5 px-1 text-gray-700 font-bold text-sm">Folio</div>
                                 <div class="py-0.5 px-1 text-gray-700 font-bold text-sm">Tipo</div>
                                 <div class="py-0.5 px-1 text-gray-700 font-bold text-sm">Metros</div>
-                                <div class="py-0.5  text-gray-700 font-bold text-sm col-span-2">Lista de Materiales Engomado
+                                <div class="py-0.5 text-gray-700 font-bold text-sm col-span-2">L. Mat Engomado
                                 </div>
                                 <div class="py-0.5 px-1 text-gray-700 font-bold text-sm">Cuenta</div>
                                 <div class="py-0.5 px-1 text-gray-700 font-bold text-sm">Calibre</div>
@@ -132,12 +133,32 @@
                                 @foreach ($secciones as $wp)
                                     <div class="rounded-xl border border-blue-200 bg-white p-1">
                                         <h3 class="text-blue-800 font-bold">{{ $wp }}</h3>
+
                                         <div class="overflow-x-auto">
                                             <table class="w-full text-xs">
-                                                <tbody class="divide-y">
+
+                                                <tbody class="divide-y tabla-engomado" data-grupo="{{ $wp }}">
                                                     @forelse (($porEngomado[$wp] ?? collect()) as $ordP)
                                                         <tr class="order-item hover:bg-yellow-200 cursor-pointer"
-                                                            data-orden="{{ $ordP->folio }}">
+                                                            data-orden="{{ $ordP->folio }}" data-id="{{ $ordP->id }}">
+                                                            <td class="py-0.5 px-1">
+                                                                <div class="flex items-center gap-2">
+                                                                    <span
+                                                                        class="font-semibold">{{ $ordP->prioridadEngo ?? '-' }}</span>
+                                                                    <div class="ml-1 flex flex-col">
+                                                                        <button type="button"
+                                                                            class="btn-up text-[10px] leading-3"
+                                                                            data-id="{{ $ordP->id }}"
+                                                                            data-grupo="{{ $wp }}">▲</button>
+                                                                        <button type="button"
+                                                                            class="btn-down text-[10px] leading-3"
+                                                                            data-id="{{ $ordP->id }}"
+                                                                            data-grupo="{{ $wp }}">▼</button>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+
+                                                            <td>{{ $ordP->prioridadEngo ?? '' }}</td>
                                                             <td>{{ $ordP->folio ?? '' }}</td>
                                                             <td>{{ $ordP->tipo ?? '' }}</td>
                                                             <td>{{ $fmtMetros($ordP->metros) ?? '' }}</td>
@@ -147,7 +168,7 @@
                                                         </tr>
                                                     @empty
                                                         <tr>
-                                                            <td colspan="6"
+                                                            <td colspan="8"
                                                                 class="py-2 text-center text-gray-400 italic">Sin registros.
                                                             </td>
                                                         </tr>
@@ -187,6 +208,69 @@
             else input.textContent = folio; // spans/divs
 
             input.focus();
+        });
+    </script>
+    <script>
+        const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        // 2) Flechas ▲ / ▼
+        async function mover(id, dir, grupo) {
+            try {
+                const res = await fetch("{{ route('engomado.prioridad.mover') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    },
+                    body: JSON.stringify({
+                        id,
+                        dir,
+                        grupo
+                    })
+                });
+                const data = await res.json();
+
+                if (data.status === 'info') {
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Aviso',
+                        text: data.message || 'No se puede mover más en esa dirección.',
+                        confirmButtonText: 'Entendido',
+                        confirmButtonColor: '#2563eb'
+                    });
+                    return; // no recargues
+                }
+
+                if (!data.ok) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'No se pudo mover, msm desde front',
+                        text: data.message || 'Intenta de nuevo',
+                        confirmButtonColor: '#2563eb'
+                    });
+                    return;
+                }
+
+                // éxito real
+                await Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: data.message || 'Prioridad actualizada.',
+                    confirmButtonText: 'Ok',
+                    confirmButtonColor: '#2563eb'
+                });
+                location.reload();
+
+            } catch (e) {
+                alert('Error al mover');
+            }
+        }
+
+        document.querySelectorAll('.btn-up').forEach(b => {
+            b.addEventListener('click', () => mover(Number(b.dataset.id), -1, b.dataset.grupo));
+        });
+        document.querySelectorAll('.btn-down').forEach(b => {
+            b.addEventListener('click', () => mover(Number(b.dataset.id), +1, b.dataset.grupo));
         });
     </script>
 @endsection

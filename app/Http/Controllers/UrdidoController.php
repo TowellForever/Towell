@@ -260,7 +260,7 @@ class UrdidoController extends Controller
     public function cargarOrdenesPendientesUrd()
     {
         // Trae lo necesario (incluye 'urdido')
-        $ordenes = UrdidoEngomado::select('id', 'folio', 'cuenta', 'tipo', 'metros', 'lmatengomado', 'urdido', 'prioridadUrd')
+        $ordenes = UrdidoEngomado::select('id', 'folio', 'cuenta', 'tipo', 'metros', 'lmaturdido', 'urdido', 'prioridadUrd')
             ->where('estatus_urdido', 'en_proceso')
             ->get();
 

@@ -135,6 +135,7 @@
 
                                         <div class="overflow-x-auto">
                                             <table class="w-full text-xs">
+
                                                 <tbody class="divide-y tabla-urdido" data-grupo="{{ $mc }}">
                                                     @forelse (($porUrdido[$mc] ?? collect()) as $ordP)
                                                         <tr class="order-item hover:bg-yellow-100"
@@ -164,9 +165,10 @@
                                                             <td class="py-0.5 px-1">{{ $ordP->tipo ?? '' }}</td>
                                                             <td class="py-0.5 px-1">{{ $fmtMetros($ordP->metros) ?? '' }}
                                                             </td>
+                                                            <td class="py-0.5 px-1">{{ $ordP->lmaturdido ?? '' }}</td>
                                                             <td class="py-0.5 px-1">
-                                                                {{ $ordP->cuenta ?? ($ordP->lmaturdido ?? '-') }}</td>
-                                                            <td class="py-0.5 px-1">{{ $ordP->calibre ?? '-' }}</td>
+                                                                {{ decimales($ordP->cuenta) ?? '' }}</td>
+                                                            <td class="py-0.5 px-1">{{ $ordP->calibre ?? '' }}</td>
                                                         </tr>
                                                     @empty
                                                         <tr>
@@ -212,8 +214,6 @@
                 input.focus();
             });
         </script>
-
-        <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
         <script>
             const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 

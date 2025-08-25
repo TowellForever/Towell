@@ -11,6 +11,7 @@ use App\Models\OrdenUrdido;
 use App\Models\Requerimiento;
 use App\Models\UrdidoEngomado;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -137,10 +138,13 @@ class EngomadoController extends Controller
             return preg_replace('/\s+/', ' ', trim($row->maquinaEngomado)); // "West ponit 2", etc.
         });
 
-        // Ordena dentro de cada grupo por folio (ajusta si quieres otro campo)
-        $agrupadas = $agrupadas->map(fn($items) => $items->sortBy('folio')->values());
+        //ordena dentro de cada grupo por prioridad <- ANTES era: ordena dentro de cada grupo por folio (ajusta si quieres otro campo)
+        $agrupadas = $agrupadas->map(
+            fn($items) =>
+            $items->sortBy([['prioridadEngo', 'asc'], ['folio', 'asc']])->values()
+        );
 
-        // Fuerza el orden de los grupos: 1, 2, 3
+        // Fuerza el orden de los grupos: 2, 3
         $ordenGrupos = ['West Point 2', 'West Point 3'];
         $porEngomado = collect($ordenGrupos)->mapWithKeys(
             fn($k) => [$k => $agrupadas->get($k, collect())]
@@ -160,5 +164,84 @@ class EngomadoController extends Controller
         $telares = Requerimiento::where('orden_prod', 'like', $folio . '-%')->pluck('telar');
 
         return view('modulos.engomado.imprimir_papeletas_llenas', compact('folio', 'orden', 'ordEngomado', 'telares'));
+    }
+
+    // Flechas ▲/▼: swap con vecino en el mismo grupo (urdido)
+    public function mover(Request $req)
+    {
+        try {
+            $data = $req->validate([
+                'id'    => 'required|integer',
+                'dir'   => 'required|in:-1,1',
+                'grupo' => 'required|string',
+            ]);
+
+            $id = $data['id'];
+            $dir = (int)$data['dir'];
+            $grupo = $data['grupo'];
+
+            return DB::transaction(function () use ($id, $dir, $grupo) {
+                $row = DB::table('urdido_engomado')
+                    ->select('id', 'maquinaEngomado', 'prioridadEngo')
+                    ->where('id', $id)->where('maquinaEngomado', $grupo)
+                    ->lockForUpdate()->first();
+
+                if (!$row) {
+                    return response()->json(['ok' => false, 'message' => 'Registro no encontrado, msm desde back'], 404);
+                }
+
+                if (is_null($row->prioridadEngo)) {
+                    $max = DB::table('urdido_engomado')->where('maquinaEngomado', $grupo)->max('prioridadEngo');
+                    $nuevo = (int)$max + 100;
+                    DB::table('urdido_engomado')->where('id', $id)->update(['prioridadEngo' => $nuevo]);
+                    $row->prioridadEngo = $nuevo;
+                }
+
+                if ($dir === -1) {
+                    $vecino = DB::table('urdido_engomado')
+                        ->select('id', 'prioridadEngo')
+                        ->where('maquinaEngomado', $grupo)
+                        ->whereNotNull('prioridadEngo')
+                        ->where('prioridadEngo', '<', $row->prioridadEngo)
+                        ->orderBy('prioridadEngo', 'desc')->orderBy('id', 'desc')
+                        ->lockForUpdate()->first();
+                } else {
+                    $vecino = DB::table('urdido_engomado')
+                        ->select('id', 'prioridadEngo')
+                        ->where('maquinaEngomado', $grupo)
+                        ->whereNotNull('prioridadEngo')
+                        ->where('prioridadEngo', '>', $row->prioridadEngo)
+                        ->orderBy('prioridadEngo', 'asc')->orderBy('id', 'asc')
+                        ->lockForUpdate()->first();
+                }
+
+                if (!$vecino) {
+                    return response()->json([
+                        'ok'      => true,                 // la petición fue válida
+                        'status'  => 'info',               // <— clave: no es "success"
+                        'code'    => 'AT_LIMIT',
+                        'message' => 'Ya está en el extremo, no se puede mover más.'
+                    ]);
+                }
+
+                DB::table('urdido_engomado')->where('id', $id)
+                    ->update(['prioridadEngo' => $vecino->prioridadEngo]);
+
+                DB::table('urdido_engomado')->where('id', $vecino->id)
+                    ->update(['prioridadEngo' => $row->prioridadEngo]);
+
+
+                return response()->json(['ok' => true, 'message' => 'Movimiento aplicado']);
+            });
+        } catch (\Illuminate\Validation\ValidationException $ve) {
+            // Fuerza JSON de validación
+            return response()->json([
+                'ok' => false,
+                'message' => 'Validación: ' . json_encode($ve->errors())
+            ], 422);
+        } catch (\Throwable $e) {
+            report($e);
+            return response()->json(['ok' => false, 'message' => $e->getMessage()], 500);
+        }
     }
 }

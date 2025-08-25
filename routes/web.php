@@ -88,20 +88,13 @@ Route::middleware('auth')->group(function () {
     //rutas para la interfaz INREGSAR FOLIO del modulo URDIDO, se agregaron mas rutas para function drag-and-drop
     Route::get('ingresar-folio', [UrdidoController::class, 'cargarOrdenesPendientesUrd'])->name('ingresarFolio');
     Route::post(
-        '/urdido-engomado/prioridad/reordenar-grupo',
-        [UrdidoController::class, 'reordenarGrupo']
-    )->name('urdido.prioridad.reordenarGrupo');
-
-    Route::post(
-        '/urdido-engomado/prioridad/mover',
+        '/urdido/prioridad/mover',
         [UrdidoController::class, 'mover']
     )->name('urdido.prioridad.mover');
-    // (opcional) compactar un grupo
-
     Route::post(
-        '/urdido-engomado/prioridad/compactar-grupo',
-        [UrdidoController::class, 'compactarGrupo']
-    )->name('urdido.prioridad.compactarGrupo');
+        '/engomado/prioridad/mover',
+        [EngomadoController::class, 'mover']
+    )->name('engomado.prioridad.mover');
 
     Route::post('orden-trabajo', [UrdidoController::class, 'cargarDatosUrdido'])->name('produccion.ordenTrabajo');
     Route::post('/urdido/autoguardar', [UrdidoController::class, 'autoguardar'])->name('urdido.autoguardar');
