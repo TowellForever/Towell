@@ -75,7 +75,7 @@ class RequerimientoController extends Controller
     }
 
 
-
+    //este metodo FUNCIONA PARA MOSTRAR los datos de TELAR INDIVIDUAL en 2DA TABLA
     public function obtenerRequerimientosActivos()
     {
         $fechaHoy = now()->toDateString(); // Fecha actual

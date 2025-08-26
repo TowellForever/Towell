@@ -20,7 +20,7 @@
         </script>
     @endif
 
-    <div class=" container mx-auto overflow-y-auto" style="max-height: calc(100vh - 120px);">
+    <div class="container mx-auto overflow-y-auto" style="max-height: calc(100vh - 120px);">
         @php
             // Detectar si estás en la ruta especial
             $esJacquardSulzer = request()->is('tejido/jacquard-sulzer/*'); //tejido/jacquard-sulzer/ ESTA ES LA URL GLOBAL DE LA VISTA DINÁMICA, NUNCA CAMBIARÁ ESTA PARTE
@@ -101,78 +101,81 @@
                 }
             </script>
         @endif
-        <table class="table border-0 sm:mt-[20px] md:-mt-2">
+        <table class="border-0 mb-[4px] w-full -mt-3">
             <thead class="bg-cyan-500 text-white text-center">
                 <tr>
-                    <th colspan="5">EN PROCESO JACQUARD SULZER {{ $telar }}</th>
+                    <th colspan="5">EN PROCESO: JACQUARD SULZER {{ $telar }}</th>
                 </tr>
             </thead>
             <tbody class="bg-white text-black">
                 @foreach ($datos as $dato)
-                    <tr class="text-sm">
-                        <td class=" p-2">
-                            <b>Orden:</b> {{ rtrim(rtrim(number_format($dato->Orden_Prod, 2, '.', ''), '0'), '.') }}
-                            <br><b>Cuenta Rizo:</b> {{ rtrim(rtrim(number_format($dato->Cuenta, 2, '.', ''), '0'), '.') }}
-                            <br><b>Trama 4:</b>
-                            {{ $dato->CALIBRE_C3 == 0 ? '0' : rtrim(rtrim(number_format($dato->CALIBRE_C3, 2, '.', ''), '0'), '.') }}
+                    <tr class="text-sm"> {{-- LABELS están ordenados de arriba hacia abajo, así como está en la interfaz --}}
+                        <td class=" p-2">{{-- COLUMNA 1 --}}
+                            <b>Orden:</b> {{ decimales($dato->Orden_Prod) }}
+                            <br><b>No. Flog:</b> {{ $dato->Id_Flog }}
+                            <br><b>Cliente:</b> {{ '-' }}
+                            <br><b>Tiras:</b> {{ $dato->Tiras == 0 ? '0' : decimales($dato->Tiras) }}
+                            <br><b>Tamaño:</b> {{ $dato->Tamano_AX }}
                             <br><b>Artículo:</b> {{ $dato->Nombre_Producto }}
-                            <br><b>Pedido:</b>
-                            {{ $dato->Saldos == 0 ? '0' : rtrim(rtrim(number_format($dato->Saldos, 2, '.', ''), '0'), '.') }}
-                            <br><b>Fin:</b> {{ \Carbon\Carbon::parse($dato->Fin_Tejido)->format('d/m/Y') }}
                         </td>
-                        <td class=" p-2">
-                            <b>No. Flog:</b> {{ $dato->Id_Flog }}
-                            <br><b>Cuenta Pie:</b>
-                            {{ rtrim(rtrim(number_format($dato->Cuenta_Pie, 2, '.', ''), '0'), '.') }}
-                            <br><b>Trama 5:</b>
-                            {{ $dato->CALIBRE_C4 == 0 ? '0' : rtrim(rtrim(number_format($dato->CALIBRE_C4, 2, '.', ''), '0'), '.') }}
-                            <br><b>Producido:</b> {{ '' }}
-                            <br><b>Calibre Rizo:</b> {{ $dato->Calibre_Rizo ?? '' }}
-                            <br><b>Fecha de Compromiso Tejido:</b>
+                        <td class=" p-2"> {{-- COLUMNA 2 --}}
+                            <b>Artículo:</b> {{ $dato->Hilo }}
+                            <br><b>Artículo:</b> {{ $dato->PASADAS_TRAMA }}
+                            <br><b>Pie:</b> {{ decimales($dato->Cuenta_Pie) . ' - ' . $dato->Calibre_Pie }}
+                            <br><b>Rizo:</b> {{ decimales($dato->Cuenta) . ' - ' . $dato->Calibre_Rizo }}
+                            <br><b>Trama:</b> {{ decimales($dato->CALIBRE_TRA) . '-' . $dato->COLOR_TRAMA }}
+                        </td>
+                        {{-- COLUMNA 3: Tramas C1–C5 --}}
+                        <td class="p-2">
+                            <b>Trama_C1:</b>
+                            {{ $dato->CALIBRE_C1 == 0 ? '0' : decimales($dato->CALIBRE_C1) . '-' . $dato->Clave_Color_C1 . '-' . $dato->COLOR_C1 }}
+
+                            <br><b>Trama C2:</b>
+                            {{ $dato->CALIBRE_C2 == 0 ? '0' : decimales($dato->CALIBRE_C2) . '-' . $dato->Clave_Color_C2 . '-' . $dato->COLOR_C2 }}
+
+                            <br><b>Trama C3:</b>
+                            {{ $dato->CALIBRE_C3 == 0 ? '0' : decimales($dato->CALIBRE_C3) . '-' . $dato->Clave_Color_C3 . '-' . $dato->COLOR_C3 }}
+
+                            <br><b>Trama C4:</b>
+                            {{ $dato->CALIBRE_C4 == 0 ? '0' : decimales($dato->CALIBRE_C4) . '-' . $dato->Clave_Color_C4 . '-' . $dato->COLOR_C4 }}
+
+                            <br><b>Trama C5:</b>
+                            {{ $dato->CALIBRE_C5 == 0 ? '0' : decimales($dato->CALIBRE_C5) . '-' . $dato->Clave_Color_C5 . '-' . $dato->COLOR_C5 }}
+                        </td>
+
+                        {{-- COLUMNA 4: Pedido / Producción / Marbetes / Fechas --}}
+                        <td class="p-2">
+                            <b>Pedido:</b>
+                            {{ $dato->Saldos == 0 ? '0' : decimales($dato->Saldos) }}
+
+                            <br><b>Producción:</b>
+                            {{ $dato->Prod_Kg_Dia == 0 ? '0' : decimales($dato->Prod_Kg_Dia) }}
+
+                            <br><b>Marbetes Pendientes:</b>
+                            {{ $dato->Marbetes_Pend ?? ($dato->MarbetesPend ?? '-') }}
+
+                            <br><b>Inicio:</b>
+                            {{ \Carbon\Carbon::parse($dato->Inicio_Tejido)->format('d/m/Y') }}
+
+                            <br><b>Fin:</b>
+                            {{ \Carbon\Carbon::parse($dato->Fin_Tejido)->format('d/m/Y') }}
+
+                            <br><b>Compromiso tejido:</b>
                             {{ \Carbon\Carbon::parse($dato->Fecha_Compromiso)->format('d/m/Y') }}
                         </td>
-                        <td class=" p-2">
-                            <b>Trama 1:</b> {{ number_format($dato->CALIBRE_TRA, 2) }}
-                            <br><b>Trama 6:</b>
-                            {{ $dato->CALIBRE_C5 == 0 ? '0' : rtrim(rtrim(number_format($dato->CALIBRE_C5, 2, '.', ''), '0'), '.') }}
-                            <br><b>Número de Tiras:</b>
-                            {{ $dato->Tiras == 0 ? '0' : rtrim(rtrim(number_format($dato->Tiras, 2, '.', ''), '0'), '.') }}
-                            <br><b>Producción (KG)/Día:</b>
-                            {{ $dato->Prod_Kg_Dia == 0 ? '0' : rtrim(rtrim(number_format($dato->Prod_Kg_Dia, 2, '.', ''), '0'), '.') }}
-                            <br><b>Calibre Pie:</b> {{ $dato->Calibre_Pie ?? '' }}
-                            <br><b>Fecha de Compromiso Cliente:</b>
-                            {{ \Carbon\Carbon::parse($dato->Fecha_Compromiso1)->format('d/m/Y') }}
+                        {{-- COLUMNA 5: Paros --}}
+                        <td class="p-2">
+                            <b>Total Paros:</b> {{ $dato->Total_Paros ?? '-' }}
+                            <br><b>Tiempo de Paro:</b> {{ $dato->Tiempo_Paro ?? '-' }}
                         </td>
-                        <td class=" p-2">
-                            <b>Cliente:</b> {{ '' }}
-                            <br><b>Trama 2:</b>
-                            {{ $dato->CALIBRE_C1 == 0 ? '0' : rtrim(rtrim(number_format($dato->CALIBRE_C1, 2, '.', ''), '0'), '.') }}
-                            <br><b>Trama 7:</b> {{ '-' }}
-                            <br>
-                            <br>
-                            <br><b>STD/Día:</b> {{ rtrim(rtrim(number_format($dato->Std_Dia, 2, '.', ''), '0'), '.') }}
-
-
-                        </td>
-                        <td class=" p-2">
-                            <br>
-                            <b>Trama 3:</b>
-                            {{ $dato->CALIBRE_C2 == 0 ? '0' : rtrim(rtrim(number_format($dato->CALIBRE_C2, 2, '.', ''), '0'), '.') }}
-                            <br><b>Trama 8:</b> {{ '-' }}
-                            <br>
-                            <br><b>Inicio:</b> {{ \Carbon\Carbon::parse($dato->Inicio_Tejido)->format('d/m/Y') }}
-                            <br><b>Entrega:</b> {{ \Carbon\Carbon::parse($dato->Entrega)->format('d/m/Y') }}
-
-                        </td>
-
                     </tr>
                 @endforeach
             </tbody>
         </table>
 
         <!--TABLA REQUERIMIENTO **********************************************************************************************************************************************-->
-        <div class="overflow-x-auto sm:max-w-[620px] md:max-w-full">
-            <table class="table w-full">
+        <div class="overflow-x-auto">
+            <table class=" w-full">
                 <thead class="bg-cyan-500 text-white">
                     <tr>
                         <th class="text-center">REQUERIMIENTO</th>
@@ -180,7 +183,7 @@
                 </thead>
                 <tbody class="bg-white text-black">
                     <tr>
-                        <td class="border p-2">
+                        <td class="border p-1">
                             <div class="flex">
                                 <div class="flex">
                                     <div class="mr-4 mt-[32px]">
@@ -194,8 +197,8 @@
                                     <div class="mr-4">
                                         <b id="fecha"></b>
                                         <!--<br><b>Turno:</b> {{ '' }}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <br><b>Metros:</b> <br><input type="text" id="metros" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <br><input type="text" id="metros_pie" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <br><b>Metros:</b> <br><input type="text" id="metros" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <br><input type="text" id="metros_pie" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">-->
                                     </div>
                                 </div>
 
@@ -491,10 +494,10 @@
                 </tbody>
             </table>
         </div>
-        <div class="flex justify-center mt-6 w-80">
+        <div class="flex justify-center w-80 mt-1">
             <a href="{{ route('ordenes.programadas', ['telar' => $telar]) }}"
-                class="inline-block bg-blue-800 text-white font-bold py-2 px-6 rounded hover:bg-blue-900">
-                Órdenes Programadas
+                class="inline-block bg-blue-800 text-white font-bold py-1 px-6 rounded hover:bg-blue-900">
+                ÓRDENES PROGRAMADAS
             </a>
 
         </div>
@@ -606,10 +609,13 @@
                         // Si el requerimiento coincide con el telar, se procesan los datos
                         if (req.cuenta_rizo) {
                             document.getElementById('cuenta-rizo').innerText = parseInt(req
-                                .cuenta_rizo);
+                                    .cuenta_rizo) + ' - ' +
+                                req.calibre_rizo;
                         }
                         if (req.cuenta_pie) {
-                            document.getElementById('cuenta-pie').innerText = parseInt(req.cuenta_pie);
+                            document.getElementById('cuenta-pie').innerText = parseInt(req.cuenta_pie) +
+                                ' - ' +
+                                req.calibre_pie;
                         }
                         if (req.fecha_hora_creacion) {
                             let fecha = req.fecha_hora_creacion.split(' ')[

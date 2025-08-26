@@ -2,14 +2,10 @@
 
 @section('content')
     <div class="container container mx-auto overflow-y-auto" style="max-height: calc(100vh - 120px);">
-        <h1 class="text-center text-black font-bold text-2xl mb-4">
-            ÓRDENES PROGRAMADAS (Telar: {{ $telar }})
-        </h1>
-
-        <table class="table border-4 border-gray-300 w-full">
+        <table class=" border-4 border-gray-300 w-full -mt-4">
             <thead class="bg-cyan-500 text-white text-center">
                 <tr>
-                    <th colspan="5">ÓRDENES PROGRAMADAS</th>
+                    <th colspan="5">ÓRDENES PROGRAMADAS PARA TELAR: {{ $telar }}</th>
                 </tr>
             </thead>
             <tbody>

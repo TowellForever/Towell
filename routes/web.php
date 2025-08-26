@@ -19,6 +19,7 @@ use App\Http\Controllers\ReporteFallaController;
 use App\Http\Controllers\ReporteTemporalController;
 use App\Http\Controllers\TejedorController;
 use App\Http\Controllers\TejidoSchedullingController;
+use App\Http\Controllers\TelaresController;
 use App\Http\Controllers\UrdidoController;
 use App\Http\Controllers\WhatsAppController;
 
@@ -175,14 +176,14 @@ Route::middleware('auth')->group(function () {
         return view('modulos/urdido/urdidoTemporal');
     });
 
-    //ruta para llegar a la vista dinámica de los telares de jacquard-sulzer*************************************************************
+    //ruta para llegar a la vista dinámica para INFORMACIÓN INDIVIDUAL DE TELARES *************************************************************
     //***********************************************************************************************************************************
-    Route::get('/tejido/jacquard-sulzer/{telar}', [PlaneacionController::class, 'mostrarTelarSulzer'])->name('tejido.mostrarTelarSulzer');
+    Route::get('/tejido/jacquard-sulzer/{telar}', [TelaresController::class, 'mostrarTelarSulzer'])->name('tejido.mostrarTelarSulzer');
     //el método de arriba sirve para mstrar la informacion de un telar individualmente (telar-informacion-individual)
-    Route::get('/modulos/tejido/telares/ordenes-programadas/{telar}', [PlaneacionController::class, 'mostrarOrdenesProgramadas'])->name('tejido.mostrarOrdenesProgramadas');
+    Route::get('/ordenes-programadas-dinamica/{telar}', [TelaresController::class, 'obtenerOrdenesProgramadas'])->name('ordenes.programadas');
+
     Route::post('/guardar-requerimiento', [RequerimientoController::class, 'store']);
     Route::get('/ultimos-requerimientos', [RequerimientoController::class, 'obtenerRequerimientosActivos']);
-    Route::get('/ordenes-programadas-dinamica/{telar}', [PlaneacionController::class, 'obtenerOrdenesProgramadas'])->name('ordenes.programadas');
 
     //CRUDZAZO de USUARIOS, 1er mantenimiento 19-08-2025. USUARIOS USUARIOS USUARIOS USUARIOS, en el USUARIOSCONTROLLER se manejan los contenedores visibles o no visibles
     //Route::get('/alta-usuarios', function () { return view('alta_usuarios');});//BORRAR UNA VEZ CREADO EL CONTROLLER
