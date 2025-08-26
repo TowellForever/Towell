@@ -22,6 +22,7 @@ class RequerimientoController extends Controller
 
     public function store(Request $request)
     {
+
         DB::beginTransaction();
 
         try {
@@ -33,6 +34,8 @@ class RequerimientoController extends Controller
                 ->lockForUpdate() // 👈 Esto bloquea la fila hasta que la transacción termine
                 ->get();
 
+            //Aqui haremos el proceso para detectar que un requerimiento esta fuera del rango de la semana, para no borrarlo, 
+            //vamos a descartar requerimientos (checkboxes que hayan sido marcados en dias previos al RANGO DE DIAS QUE SE MUESTRAN EN EL FRONT)
             // Si el registro es de tipo 'rizo'
             if ($request->rizo == 1) {
                 Requerimiento::where('rizo', 1)
