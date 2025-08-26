@@ -16,8 +16,20 @@ class TelaresController
         // Buscar el registro en proceso para este telar
         $datos = DB::table('TEJIDO_SCHEDULING')
             ->where('en_proceso', true)
-            ->where('telar', $telar)
+            ->where('Telar', $telar)
             ->get();
+
+
+        //buscamos la orden que sigue despues de la que esta en proceso
+        $actual = $datos->sortByDesc('Inicio_Tejido')->first(); // toma 1 (ajusta si quieres el más reciente/antiguo)
+        $ref = $actual->Inicio_Tejido; // referencia: fecha del registro en proceso
+        $ordenSig = DB::table('TEJIDO_SCHEDULING')
+            ->where('en_proceso', 0)
+            ->where('Telar', $telar)
+            ->whereNotNull('Inicio_Tejido')
+            ->where('Inicio_Tejido', '>', $ref)
+            ->orderBy('Inicio_Tejido', 'asc') // la más próxima hacia adelante
+            ->first();
 
         if ($datos->isEmpty()) {
             return redirect()->back()->with(
@@ -26,7 +38,7 @@ class TelaresController
             );
         }
 
-        return view('modulos/tejido/telares/telar-informacion-individual', compact('telar', 'datos'));
+        return view('modulos/tejido/telares/telar-informacion-individual', compact('telar', 'datos', 'ordenSig'));
     }
 
     public function obtenerOrdenesProgramadas($telar)
