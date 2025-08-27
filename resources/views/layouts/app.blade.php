@@ -73,7 +73,7 @@
                 CERRAR SESIÓN
             </a>
 
-            <div class="relative z-1" style="position: absolute; left: 350px;">
+            <div class="relative z-1" style="position: absolute; left: 450px;">
                 <button id="btnUsuarios"
                     class="mt-[5px] bg-orange-500 text-black font-bold px-4 py-1 rounded-md shadow hover:bg-orange-700 transition-all duration-200 cursor-pointer text-xs">
                     USUARIOS
@@ -138,8 +138,11 @@
             {{ Auth::user()->nombre }}
         </p>
 
-        <a href="{{ route('telares.falla') }}" class="absolute top-1 right-20 z-1 btn btn-danger text-sm">Reportar
-            Falla</a>
+        <a href="{{ route('telares.falla') }}"
+            class="absolute top-1 right-20 z-1 btn btn-danger text-sm  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600"
+            style="font-family: 'Playfair Display', serif;">⚠️
+            Notificar
+            Falla ⚠️</a>
         <!-- Navbar -->
         <nav class="bg-blue-350 text-white ">
             <div class="container mx-auto flex justify-between items-center relative">

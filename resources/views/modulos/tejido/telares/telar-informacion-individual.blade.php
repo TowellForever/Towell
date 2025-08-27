@@ -118,11 +118,11 @@
                 @foreach ($datos as $dato)
                     <tr class="text-sm"> {{-- LABELS están ordenados de arriba hacia abajo, así como está en la interfaz --}}
                         <td class=" p-2">{{-- COLUMNA 1 --}}
-                            <b>Orden:</b> {{ decimales($dato->Orden_Prod) }}
-                            <br><b>No. Flog:</b> {{ $dato->Id_Flog }}
+                            <b>Orden:</b> {{ decimales($dato->Orden_Prod) ?? '' }}
+                            <br><b>No. Flog:</b> {{ $dato->Id_Flog ?? '' }}
                             <br><b>Cliente:</b> {{ '-' }}
                             <br><b>Tiras:</b> {{ $dato->Tiras == 0 ? '0' : decimales($dato->Tiras) }}
-                            <br><b>Tamaño:</b> {{ $dato->Tamano_AX }}
+                            <br><b>Tamaño:</b> {{ $dato->Tamano_AX ?? '' }}
                             <br><b>Artículo:</b>{{-- Para este caso quitamos el tamaño, que aparece antes de un primer guion medio p. Ej. MB-NombreProducto --}}
                             {{ preg_replace('/^[^-]*-\s*/', '', (string) ($dato->Nombre_Producto ?? '')) }}
 
@@ -196,37 +196,59 @@
             </tbody>
         </table>
 
-        <table class="border-0 mb-[4px] w-full ">
-            <thead class="bg-blue-400 text-white text-center">
-                <tr>
-                    <th colspan="5">DATOS DE LA SIGUIENTE ORDEN</th>
-                </tr>
-            </thead>
-            <tbody class="bg-white text-black">
-                <tr class="text-sm"> {{-- LABELS están ordenados de arriba hacia abajo, así como está en la interfaz --}}
-                    <td class=" p-2">{{-- COLUMNA 1 --}}
-                        <b>Orden:</b> {{ decimales($ordenSig->Orden_Prod) ?? '' }}
-                        <br><b>Artículo + Tamaño:</b>
-                        {{ preg_replace('/^[^-]*-\s*/', '', (string) ($dato->Nombre_Producto ?? '')) }}
+        @empty($ordenSig)
+            {{-- Usa @empty/@else (maneja variable no definida y null) y dentro evita que “0” se oculte. --}}
+            <table class="border-0 mb-[4px] w-full">
+                <thead class="bg-blue-400 text-white text-center">
+                    <tr>
+                        <th colspan="5">DATOS DE LA SIGUIENTE ORDEN</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white text-black">
+                    <tr class="text-sm">
+                        <td class="p-2">
+                            <p>NO SE HA ENCONTRADO OTRA ORDEN PARA ESTE TELAR.</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        @else
+            <table class="border-0 mb-[4px] w-full">
+                <thead class="bg-blue-400 text-white text-center">
+                    <tr>
+                        <th colspan="5">DATOS DE LA SIGUIENTE ORDEN</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white text-black">
+                    <tr class="text-sm">
+                        <td class="p-2">
+                            {{-- Orden: no ocultar 0 y evitar error si es null --}}
+                            <b>Orden:</b>
+                            {{ ($op = $ordenSig->Orden_Prod) === null ? '' : decimales($op) }}
 
-                    </td>
-                    <td class=" p-2"> {{-- COLUMNA 2 --}}
-                        <b>Rizo:</b> {{ $ordenSig->Hilo }}
-                        <br><b>Pie:</b> {{ $ordenSig->PASADAS_TRAMA }}
-                    </td>
-                    {{-- COLUMNA 3: Tramas C1–C5 --}}
-                    <td class="p-2">
-                        <b>Pedido:</b>
-                        {{ formatearFecha($ordenSig->Entrega) }}
+                            <br><b>Artículo + Tamaño:</b>
+                            {{ preg_replace('/^[^-]*-\s*/', '', (string) ($ordenSig->Nombre_Producto ?? '')) }}
+                        </td>
 
-                        <br><b>Fecha Inicio:</b>
-                        {{ formatearFecha($ordenSig->Inicio_Tejido) }}
+                        <td class="p-2">
+                            <b>Rizo:</b> {{ $ordenSig->Hilo ?? '' }}
+                            <br><b>Pie:</b> {{ $ordenSig->PASADAS_TRAMA ?? '' }}
+                        </td>
 
-                    </td>
+                        <td class="p-2">
+                            <b>Pedido:</b>
+                            {{ isset($ordenSig->Entrega) ? formatearFecha($ordenSig->Entrega) : '' }}
 
-                </tr>
-            </tbody>
-        </table>
+                            <br><b>Fecha Inicio:</b>
+                            {{ isset($ordenSig->Inicio_Tejido) ? formatearFecha($ordenSig->Inicio_Tejido) : '' }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        @endempty
+
+
+
 
         <!--TABLA REQUERIMIENTO **********************************************************************************************************************************************-->
         <div class="overflow-x-auto">
@@ -252,8 +274,8 @@
                                     <div class="mr-4">
                                         <b id="fecha"></b>
                                         <!--<br><b>Turno:</b> {{ '' }}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <br><b>Metros:</b> <br><input type="text" id="metros" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <br><input type="text" id="metros_pie" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <br><b>Metros:</b> <br><input type="text" id="metros" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <br><input type="text" id="metros_pie" class="border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">-->
                                     </div>
                                 </div>
 

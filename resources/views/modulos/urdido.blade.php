@@ -160,7 +160,7 @@
                                     class="w-5 font-bold border rounded p-1 text-xs text-center"
                                     value="{{ $turnoActual ?? '' }}">
                             </td>
-
+                            {{-- HORAS INICIAL Y FINAL --}}
                             @php
                                 // Solo para ejemplo: crea un id único por fila para manipular los campos
                                 $horaInicioId = 'hora_inicio_' . $registroIndex;
@@ -340,6 +340,7 @@
         }
     </script>
 
+    {{-- SCRIPT para funcion de colocar hora en automatico, y le da función a los botones de relojitos --}}
     <script>
         // Coloca la hora del sistema por defecto en todos los inputs de tipo 'time' vacíos en hora_inicio
         document.addEventListener('DOMContentLoaded', function() {

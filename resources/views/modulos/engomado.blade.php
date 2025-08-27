@@ -147,17 +147,33 @@
                         <td class="border p-1"><input type="text" inputmode="numeric" pattern="[0-9]*"
                                 name="datos[{{ $registroIndex }}][turno]" class="w-10 border rounded p-1 text-xs"
                                 value="{{ $orden->turno ?? '' }}"></td>
-                        <td class="border p-1">
-                            <input type="time" name="datos[{{ $registroIndex }}][hora_inicio]"
-                                class="w-24 border rounded p-1 text-xs"
-                                value="{{ isset($orden->hora_inicio) ? \Illuminate\Support\Str::limit($orden->hora_inicio, 5, '') : '' }}"
-                                step="60">
+                        {{-- HORAS INICIAL Y FINAL --}}
+                        @php
+                            // Solo para ejemplo: crea un id único por fila para manipular los campos
+                            $horaInicioId = 'hora_inicio_' . $registroIndex;
+                            $horaFinId = 'hora_fin_' . $registroIndex;
+                        @endphp
+                        <td class="border p-0.5">
+                            <div style="display: flex; align-items: center; gap: 3px;">
+                                <input type="time" id="{{ $horaInicioId }}"
+                                    name="datos[{{ $registroIndex }}][hora_inicio]"
+                                    class="w-[90px] border rounded p-1 text-xs"
+                                    value="{{ isset($orden->hora_inicio) ? \Illuminate\Support\Str::limit($orden->hora_inicio, 5, '') : '' }}">
+                                <button type="button"
+                                    class="text-xs w-8 px-1 py-0.5 border rounded bg-gray-100 hover:bg-blue-100"
+                                    onclick="setTimeNow('{{ $horaInicioId }}')">🕒</button>
+                            </div>
                         </td>
-                        <td class="border p-1">
-                            <input type="time" name="datos[{{ $registroIndex }}][hora_fin]"
-                                class="w-24 border rounded p-1 text-xs"
-                                value="{{ isset($orden->hora_fin) ? \Illuminate\Support\Str::limit($orden->hora_fin, 5, '') : '' }}"
-                                step="60">
+                        <td class="border p-0.5">
+                            <div style="display: flex; align-items: center; gap: 3px;">
+                                <input type="time" id="{{ $horaFinId }}"
+                                    name="datos[{{ $registroIndex }}][hora_fin]"
+                                    class="w-[90px] border rounded p-1 text-xs"
+                                    value="{{ isset($orden->hora_fin) ? \Illuminate\Support\Str::limit($orden->hora_fin, 5, '') : '' }}">
+                                <button type="button"
+                                    class="text-xs w-8 px-1 py-0.5 border rounded bg-gray-100 hover:bg-red-100"
+                                    onclick="setTimeNowAndSync('{{ $horaFinId }}', '{{ 'hora_inicio_' . ($registroIndex + 1) }}')">🕒</button>
+                            </div>
                         </td>
 
                         <td class="border p-1"><input type="text" inputmode="numeric" pattern="[0-9]*"
@@ -353,6 +369,55 @@
             const tipoInput = document.getElementById('tipo_oficial_' + index);
             if (tipoInput) {
                 tipoInput.value = tipo;
+            }
+        }
+    </script>
+
+    {{-- SCRIPT para funcion de colocar hora en automatico, y le da función a los botones de relojitos --}}
+    <script>
+        // Coloca la hora del sistema por defecto en todos los inputs de tipo 'time' vacíos en hora_inicio
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('input[type="time"]').forEach(function(input) {
+                if (!input.value && input.name.includes('[hora_inicio]')) {
+                    input.value = getCurrentTime();
+                }
+            });
+        });
+
+        function getCurrentTime() {
+            const now = new Date();
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            return h + ":" + m;
+        }
+
+
+        // Botón para poner la hora actual en cualquier input de time
+        function setTimeNow(inputId) {
+            const input = document.getElementById(inputId);
+            if (input) {
+                const now = new Date();
+                const h = String(now.getHours()).padStart(2, '0');
+                const m = String(now.getMinutes()).padStart(2, '0');
+                input.value = h + ":" + m;
+                // 🔥 Dispara el evento 'change'
+                input.dispatchEvent(new Event('change'));
+            }
+        }
+
+        // Botón para poner la hora actual en hora_fin Y sincronizar como inicio en la siguiente fila
+        function setTimeNowAndSync(finId, nextInicioId) {
+            const time = getCurrentTime();
+            const finInput = document.getElementById(finId);
+            const nextInput = document.getElementById(nextInicioId);
+
+            if (finInput) {
+                finInput.value = time;
+                finInput.dispatchEvent(new Event('change')); // ¡Aquí sí!
+            }
+            if (nextInput) {
+                nextInput.value = time;
+                nextInput.dispatchEvent(new Event('change')); // ¡Y aquí también!
             }
         }
     </script>
