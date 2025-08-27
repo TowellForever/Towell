@@ -37,9 +37,11 @@
                 <thead class="h-10">
                     <tr class="bg-gray-200 text-left">
                         <th class="border px-1 py-0.5 w-12">Telar</th>
+                        <th class="border px-1 py-0.5 w-12">Fecha Requerida</th>
                         <th class="border px-1 py-0.5 w-12">Cuenta</th>
-                        <th class="border px-1 py-0.5 w-24">Urdido</th>
-                        <th class="border px-1 py-0.5 w-32">Proveedor</th>
+                        <th class="border px-1 py-0.5 w-24">Calibre</th>
+                        <th class="border px-1 py-0.5 w-32">Hilo</th>
+                        <th class="border px-1 py-0.5 w-32">Urdido</th>
                         <th class="border px-1 py-0.5 w-12">Tipo</th>
                         <th class="border px-1 py-0.5 w-32">Destino</th>
                         <th class="border px-1 py-0.5 w-24">Metros</th>
@@ -59,7 +61,7 @@
                         }
                     @endphp
 
-                    <tr>
+                    <tr>{{-- comienza TABLA de DATOS URDIDAZO --}}
                         <td class="border px-1 py-0.5">
                             @foreach ($requerimientos as $index => $select)
                                 <input type="hidden" name="registros[{{ $index }}][id]" value="{{ $select->id }}">
@@ -69,11 +71,22 @@
                             @endforeach
 
                         </td>
+
+                        <td class="border px-1 py-0.5">{{-- FECHA REQUERIDA --}}
+
+                        </td>
+
                         <td class="border px-1 py-0.5">
                             <input type="text" name="cuenta" value="{{ decimales($cuenta) }}"
                                 class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded">
                         </td>
-                        <td class="border px-1 py-0.5">
+                        <td class="border px-1 py-0.5">{{-- CALIBRE --}}
+
+                        </td>
+                        <td class="border px-1 py-0.5">{{-- HILO --}}
+
+                        </td>
+                        <td class="border px-1 py-0.5"> {{-- URDIDO - MC COY --}}
                             <select name="urdido"
                                 class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded" required>
                                 <option value="" disabled {{ old('urdido') ? '' : 'selected' }}></option>
@@ -87,38 +100,10 @@
                         </td>
 
                         <td class="border px-1 py-0.5">
-                            <select name="proveedor"
-                                class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded" required>
-                                <option value="" disabled {{ old('proveedor') ? '' : 'selected' }}></option>
-                                <option value="HILADOS JIUTEPEC"
-                                    {{ old('proveedor') == 'HILADOS JIUTEPEC' ? 'selected' : '' }}>HILADOS JIUTEPEC
-                                </option>
-                                <option value="FÁBRICA INDUSTRIAL TEXTIL ANÁHUAC"
-                                    {{ old('proveedor') ==
-                                    'FÁBRICA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              INDUSTRIAL TEXTIL ANÁHUAC'
-                                        ? 'selected'
-                                        : '' }}>
-                                    FÁBRICA
-                                    INDUSTRIAL TEXTIL ANÁHUAC
-                                </option>
-                                <option value="TRITON INDUSTRIAL, S.A. DE C.V."
-                                    {{ old('proveedor') == 'TRITON INDUSTRIAL, S.A. DE C.V.' ? 'selected' : '' }}>TRITON
-                                    INDUSTRIAL, S.A. DE C.V.
-                                </option>
-                                <option value="P Y T TEXTIL" {{ old('proveedor') == 'P Y T TEXTIL' ? 'selected' : '' }}>
-                                    P Y T TEXTIL
-                                </option>
-                                <option value="SAJITEX" {{ old('proveedor') == 'SAJITEX' ? 'selected' : '' }}>SAJITEX
-                                </option>
-
-                            </select>
-                        </td>
-
-                        <td class="border px-1 py-0.5">
                             <input type="text" name="tipo" value="{{ $tipo }}"
                                 class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded" readonly>
                         </td>
-                        <td class="border px-1 py-0.5">
+                        <td class="border px-1 py-0.5">{{-- DESTINO --}}
                             <input type="text" name="destino" value="{{ $datos->salon ?? '' }}"
                                 class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded" readonly>
                         </td>
@@ -135,6 +120,23 @@
                     </tr>
                 </tbody>
             </table>
+
+
+
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+
             <!-- LISTA DE MATERIALES Urdido-->
             <table class="w-1/2 text-xs border-collapse border border-gray-300 mb-4">
                 <thead class="h-10">
@@ -153,6 +155,20 @@
                     </tr>
                 </tbody>
             </table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             <div class="flex space-x-1">
                 <!-- Columna 1: Datos de JULIOS, tablita con 2 columnas -->
