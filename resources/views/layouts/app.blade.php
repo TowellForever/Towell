@@ -95,7 +95,7 @@
 
         <!-- El siguiente if, es para injertar un titulo en la parte de app.balde, esto por solicitud del jefazo, solo funciona en la pagina de informacion del modulo de urdido-->
         @if (Route::currentRouteName() === 'produccion.ordenTrabajo')
-            <h2 class="fixed top-[5px] left-[280px] z-50 -translate-x-1/2 px-4 py-2 text-xl md:text-2xl font-extrabold bg-transparent pointer-events-none select-none"
+            <h2 class="fixed top-[5px] left-[310px] z-50 -translate-x-1/2 px-4 py-2 text-xl md:text-2xl font-extrabold bg-transparent pointer-events-none select-none"
                 style="
             background: transparent;
             background-clip: text;
