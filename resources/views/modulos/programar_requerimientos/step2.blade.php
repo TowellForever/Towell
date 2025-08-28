@@ -18,30 +18,6 @@
     @endphp
 
     <div class="space-y-4">
-        <div class="flex items-start gap-4">
-            {{-- Botones laterales (si necesitas pasar ids del paso 1) --}}
-            <div class="shrink-0 w-56 space-y-4">
-                <form method="POST" action="{{ route('reservar.inventario') }}">
-                    @csrf
-                    @foreach ($requerimientos as $i => $req)
-                        <input type="hidden" name="ids[]" value="{{ $req->id }}">
-                    @endforeach
-                    <button class="w-full border px-4 py-3 rounded bg-white hover:bg-slate-50 font-semibold">
-                        Reservar Inventario
-                    </button>
-                </form>
-
-                <form method="POST" action="{{ route('orden.produccion.store') }}">
-                    @csrf
-                    @foreach ($requerimientos as $i => $req)
-                        <input type="hidden" name="ids[]" value="{{ $req->id }}">
-                    @endforeach
-                    <button class="w-full border px-4 py-3 rounded bg-white hover:bg-slate-50 font-semibold">
-                        Crear Órdenes
-                    </button>
-                </form>
-            </div>
-        </div>
 
         {{-- ===================== SEGUNDAS PÁGINA (AGRUPADOS) ===================== --}}
         <table class="w-full text-xs border-separate border-spacing-0 border border-gray-300 mb-2">
@@ -56,14 +32,12 @@
                     <th class="border px-1 py-0.5 w-12">Tipo</th>
                     <th class="border px-1 py-0.5 w-24">Destino</th>
                     <th class="border px-1 py-0.5 w-14">Metros</th>
-                    <th class="border px-1 py-0.5 w-14">L.Mat</th>
+                    <th class="border px-1 py-0.5 w-14">L.Mat Urdido</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($agrupados as $i => $g)
-                    @php
-                        $rowClass = $rowPalette[$i % count($rowPalette)];
-                    @endphp
+                    @php $rowClass = $rowPalette[$i % count($rowPalette)]; @endphp
                     <tr class="{{ $rowClass }}">
                         <td class="border px-1 py-0.5">{{ $g->telar_str }}</td>
                         <td class="border px-1 py-0.5">
@@ -76,19 +50,82 @@
                         <td class="border px-1 py-0.5">{{ $g->tipo }}</td>
                         <td class="border px-1 py-0.5">{{ $g->destino }}</td>
                         <td class="border px-1 py-0.5 text-right">{{ number_format($g->metros, 0) }}</td>
-                        <td class="border px-1 py-0.5 text-center">—</td>
+                        <td class="border px-1 py-0.5">
+                            {{-- IMPORTANTE: usa clase y nombre indexado --}}
+                            @php
+                                // Lo que tengas guardado (id y texto). Si solo tienes id, usamos el mismo id como texto.
+                                $preId = old("agrupados.$i.lmaturdido", $g->lmaturdido_id ?? null);
+                                $preText = old("agrupados.$i.lmaturdido_text", $g->lmaturdido_text ?? null) ?? $preId;
+                            @endphp
+
+                            <select name="agrupados[{{ $i }}][lmaturdido]"
+                                class="js-bom-select form-select w-full px-1 py-1 text-xs border border-gray-300 rounded"
+                                data-selected-id="{{ $preId ?? '' }}" data-selected-text="{{ $preText ?? '' }}">
+                                {{-- opción vacía para placeholder --}}
+                                <option value=""></option>
+
+                                {{-- si ya hay valor previo, imprimimos la opción seleccionada con texto --}}
+                                @if ($preId)
+                                    <option value="{{ $preId }}" selected>{{ $preText }}</option>
+                                @endif
+                            </select>
+
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
+
         </table>
+        <div class="flex items-start gap-4">
+            {{-- ...tu tabla u otro contenido del lado izquierdo... --}}
+
+            {{-- Botones laterales compactos y bonitos --}}
+            <aside class="ml-auto w-56 sticky top-4">
+                <div class="rounded-xl border border-slate-200 bg-white/90 shadow-sm p-2 space-y-2">
+
+                    <form method="POST" action="{{ route('reservar.inventario') }}">
+                        @csrf
+                        @foreach ($requerimientos as $req)
+                            <input type="hidden" name="ids[]" value="{{ $req->id }}">
+                        @endforeach
+
+                        <button
+                            class="w-full px-3 py-2 rounded-lg text-sm font-semibold
+                           bg-emerald-600 text-white hover:bg-emerald-700
+                           focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-1">
+                            Reservar inventario
+                        </button>
+                    </form>
+
+                    <form method="POST" action="{{ route('orden.produccion.store') }}">
+                        @csrf
+                        @foreach ($requerimientos as $req)
+                            <input type="hidden" name="ids[]" value="{{ $req->id }}">
+                        @endforeach
+
+                        <button
+                            class="w-full px-3 py-2 rounded-lg text-sm font-semibold
+                           bg-blue-600 text-white hover:bg-blue-700
+                           focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1">
+                            Crear órdenes
+                        </button>
+                    </form>
+
+                </div>
+            </aside>
+        </div>
+
 
         {{-- ====== Bloques inferiores ====== --}}
         <div class="flex space-x-1">
             <div class="w-1/6 p-1">
-                <h2 class="text-sm font-bold">Construcción Urdido</h2>
+
                 <div class="flex">
                     <table class="w-full text-xs border-collapse border border-gray-300 mb-4">
                         <thead class="h-10">
+                            <tr class="bg-gray-200 text-center">
+                                <th colspan="2">CONTRUCCIÓN URDIDO</th>
+                            </tr>
                             <tr class="bg-gray-200 text-center">
                                 <th class="border px-1 py-0.5">No. Julios</th>
                                 <th class="border px-1 py-0.5">Hilos</th>
@@ -115,17 +152,18 @@
             </div>
 
             <div class="w-5/6 p-1">
-                <h2 class="text-sm font-bold">Datos Engomado</h2>
-                <br class="block md:hidden">
-
                 <table class="w-full text-xs border-collapse border border-gray-300 mb-1">
                     <thead class="h-10">
+                        <tr class="bg-gray-200 text-center">
+                            <th colspan="6">DATOS DE ENGOMADO</th>
+                        </tr>
                         <tr class="bg-gray-200 text-left">
                             <th class="border px-1 py-0.5">Núcleo</th>
                             <th class="border px-1 py-0.5">No. de Telas</th>
                             <th class="border px-1 py-0.5">Ancho Balonas</th>
                             <th class="border px-1 py-0.5">Metraje de Telas</th>
                             <th class="border px-1 py-0.5">Cuendeados Mínimos por Tela</th>
+                            <th class="border px-1 py-0.5">L Mat Engomado</th>
                             <th class="border px-1 py-0.5 w-1/4">Observaciones</th>
                         </tr>
                     </thead>
@@ -164,6 +202,12 @@
                                     value="{{ old('cuendados_mini') }}">
                             </td>
                             <td class="border px-1 py-0.5">
+                                <select id="bomSelect2" name="lmatengomado"
+                                    class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded" required>
+                                    <option value="" disabled selected>Selecciona una lista</option>
+                                </select>
+                            </td>
+                            <td class="border px-1 py-0.5">
                                 <textarea name="observaciones" class="form-textarea w-full px-1 py-1 text-xs border border-gray-300 rounded h-16">{{ old('observaciones') }}</textarea>
                             </td>
                         </tr>
@@ -181,4 +225,84 @@
             </button>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlBoms = @json(route('bomids.api'));
+
+            $('.js-bom-select').each(function() {
+                const $el = $(this);
+
+                // Si trae data-selected-id pero no existe un <option selected> con texto,
+                // podríamos cargarlo por AJAX (opcional). Si no tienes endpoint por id, omite este bloque.
+                const selId = $el.data('selected-id');
+                const selText = $el.data('selected-text');
+
+                if (selId && !$el.find('option[value="' + selId + '"]').length) {
+                    const opt = new Option(selText || selId, selId, true, true);
+                    $el.append(opt);
+                }
+
+                $el.select2({
+                    placeholder: 'Buscar BOM...',
+                    allowClear: false,
+                    ajax: {
+                        url: urlBoms,
+                        dataType: 'json',
+                        delay: 250,
+                        data: params => ({
+                            q: params.term
+                        }),
+                        processResults: data => ({
+                            results: data.map(item => ({
+                                id: item.BOMID,
+                                text: item.BOMID
+                            })) // usa item.DESCRIPCION si la tienes
+                        }),
+                        cache: true
+                    },
+                    minimumInputLength: 1,
+                    dropdownParent: $el.parent(), // estable dentro de celdas/scroll
+                    width: 'style',
+                    // Si por cualquier motivo viene sin "text", mostramos el id
+                    templateSelection: function(data, container) {
+                        if (!data.id) return 'Buscar BOM...';
+                        return data.text || data.id;
+                    }
+                });
+            });
+        });
+    </script>
+
+
+    <!--busca BOMIDs para select2 de ENGOMADO-->
+    <script>
+        $(document).ready(function() {
+            $('#bomSelect2').select2({
+                placeholder: "Buscar lista...",
+                ajax: {
+                    url: '{{ route('bomids.api2') }}',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            q: params.term, // texto del buscador
+                            tipo: '{{ $g->tipo }}' // aquí se envía "Pie" o "Rizo" desde Blade
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data.map(item => ({
+                                id: item.BOMID,
+                                text: item.BOMID
+                            }))
+                        };
+                    },
+                    cache: true
+                },
+                minimumInputLength: 1,
+                width: 'resolve'
+            });
+        });
+    </script>
 @endsection
