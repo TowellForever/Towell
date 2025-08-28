@@ -1,82 +1,28 @@
 @extends('layouts.app')
 
 @section('content')
+    @php
+        $step1 = collect(session('urdido.step1', [])); // id => { destino, metros, urdido, ... }
+
+        // Paleta
+        $rowPalette = [
+            'bg-[#93C5FD]', // blue-300
+            'bg-[#7DD3FC]', // sky-300
+            'bg-[#5EEAD4]', // teal-300
+            'bg-[#6EE7B7]', // emerald-300
+            'bg-[#FCD34D]', // amber-300
+            'bg-[#FDA4AF]', // rose-300
+            'bg-[#C4B5FD]', // violet-300
+            'bg-[#A5B4FC]', // indigo-300
+        ];
+    @endphp
+
     <div class="space-y-4">
-        <h1 class="text-lg font-bold text-slate-800">Segundas Página</h1>
-
-        @php
-            // Paleta PRO, más viva y corporativa
-            $rowPalette = [
-                'bg-[#93C5FD]', // blue-300
-                'bg-[#7DD3FC]', // sky-300
-                'bg-[#5EEAD4]', // teal-300
-                'bg-[#6EE7B7]', // emerald-300
-                'bg-[#FCD34D]', // amber-300
-                'bg-[#FDA4AF]', // rose-300
-                'bg-[#C4B5FD]', // violet-300
-                'bg-[#A5B4FC]', // indigo-300
-            ];
-        @endphp
-
-        {{-- ====== RESUMEN DE REGISTROS (igual a tu imagen de arriba) ====== --}}
         <div class="flex items-start gap-4">
-            <div class="grow">
-                <table class="w-full text-xs border-separate border-spacing-0 border border-gray-300 mb-2">
-                    <thead class="h-10">
-                        <tr class="bg-gray-200 text-left text-slate-900">
-                            <th class="border px-1 py-0.5 w-20">Telar</th>
-                            <th class="border px-1 py-0.5 w-20">Fec Req</th>
-                            <th class="border px-1 py-0.5 w-16">Cuenta</th>
-                            <th class="border px-1 py-0.5 w-16">Calibre</th>
-                            <th class="border px-1 py-0.5 w-12">Hilo</th>
-                            <th class="border px-1 py-0.5 w-24">Urdido</th>
-                            <th class="border px-1 py-0.5 w-12">Tipo</th>
-                            <th class="border px-1 py-0.5 w-24">Destino</th>
-                            <th class="border px-1 py-0.5 w-14">Metros</th>
-                            <th class="border px-1 py-0.5 w-14">L.Mat</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($requerimientos as $i => $req)
-                            @php
-                                $idx = crc32((string) ($req->id ?? $i)) % count($rowPalette);
-                                $rowClass = $rowPalette[$idx];
-
-                                $tipo = ($req->rizo ?? 0) == 1 ? 'Rizo' : (($req->pie ?? 0) == 1 ? 'Pie' : '');
-                                $cuenta = $tipo === 'Rizo' ? $req->cuenta_rizo ?? '' : $req->cuenta_pie ?? '';
-                                $calibre = $tipo === 'Rizo' ? $req->calibre_rizo ?? '' : $req->calibre_pie ?? '';
-                                $metros = $tipo === 'Rizo' ? $req->metros ?? 0 : $req->metros_pie ?? 0;
-
-                                // Persistir ids del paso 1 en el siguiente form:
-
-                            @endphp
-                            <tr
-                                class="{{ $rowClass }} text-slate-900 transition
-                                   hover:[&>td]:bg-white/70 hover:[&>td]:ring-1 hover:[&>td]:ring-slate-400 hover:[&>td]:ring-inset
-                                   focus-within:[&>td]:ring-2 focus-within:[&>td]:ring-sky-500">
-                                <td class="border px-1 py-0.5">{{ $req->telar ?? '-' }}</td>
-                                <td class="border px-1 py-0.5">
-                                    {{ $req->fecha_requerida ? \Carbon\Carbon::parse($req->fecha_requerida)->format('d/m/Y') : '' }}
-                                </td>
-                                <td class="border px-1 py-0.5">{{ $cuenta }}</td>
-                                <td class="border px-1 py-0.5">{{ $calibre }}</td>
-                                <td class="border px-1 py-0.5">{{ $req->hilo ?? 'H' }}</td>
-                                <td class="border px-1 py-0.5">{{ $req->urdido ?? '' }}</td>
-                                <td class="border px-1 py-0.5">{{ $tipo }}</td>
-                                <td class="border px-1 py-0.5">{{ $req->valor ?? '' }}</td>
-                                <td class="border px-1 py-0.5 text-right">{{ number_format($metros, 0) }}</td>
-                                <td class="border px-1 py-0.5 text-center">—</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-
-            {{-- Botones laterales como en tu screenshot --}}
+            {{-- Botones laterales (si necesitas pasar ids del paso 1) --}}
             <div class="shrink-0 w-56 space-y-4">
                 <form method="POST" action="{{ route('reservar.inventario') }}">
                     @csrf
-                    {{-- pasa ids si hace falta --}}
                     @foreach ($requerimientos as $i => $req)
                         <input type="hidden" name="ids[]" value="{{ $req->id }}">
                     @endforeach
@@ -91,40 +37,53 @@
                         <input type="hidden" name="ids[]" value="{{ $req->id }}">
                     @endforeach
                     <button class="w-full border px-4 py-3 rounded bg-white hover:bg-slate-50 font-semibold">
-                        Crear Ordenes
+                        Crear Órdenes
                     </button>
                 </form>
             </div>
         </div>
 
-        {{-- ====== LISTA DE MATERIALES: Urdido ====== --}}
-        <table class="w-1/2 text-xs border-collapse border border-gray-300 mb-4">
+        {{-- ===================== SEGUNDAS PÁGINA (AGRUPADOS) ===================== --}}
+        <table class="w-full text-xs border-separate border-spacing-0 border border-gray-300 mb-2">
             <thead class="h-10">
-                <tr class="bg-gray-200 text-left">
-                    <th class="border px-1 py-0.5 w-12">L. Mat. Urdido</th>
+                <tr class="bg-gray-200 text-left text-slate-900">
+                    <th class="border px-1 py-0.5 w-28">Telar</th>
+                    <th class="border px-1 py-0.5 w-20">Fec Req</th>
+                    <th class="border px-1 py-0.5 w-16">Cuenta</th>
+                    <th class="border px-1 py-0.5 w-16">Calibre</th>
+                    <th class="border px-1 py-0.5 w-12">Hilo</th>
+                    <th class="border px-1 py-0.5 w-24">Urdido</th>
+                    <th class="border px-1 py-0.5 w-12">Tipo</th>
+                    <th class="border px-1 py-0.5 w-24">Destino</th>
+                    <th class="border px-1 py-0.5 w-14">Metros</th>
+                    <th class="border px-1 py-0.5 w-14">L.Mat</th>
                 </tr>
             </thead>
-            <tbody class="h-10">
-                <tr>
-                    <td class="border px-1 py-0.5">
-                        <select id="bomSelect" name="lmaturdido"
-                            class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded" required>
-                            <option value="" disabled {{ old('lmaturdido') ? '' : 'selected' }}>Selecciona un BOM
-                            </option>
-                            @foreach ($boms as $bom)
-                                <option value="{{ $bom->id }}" {{ old('lmaturdido') == $bom->id ? 'selected' : '' }}>
-                                    {{ $bom->nombre }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </td>
-                </tr>
+            <tbody>
+                @foreach ($agrupados as $i => $g)
+                    @php
+                        $rowClass = $rowPalette[$i % count($rowPalette)];
+                    @endphp
+                    <tr class="{{ $rowClass }}">
+                        <td class="border px-1 py-0.5">{{ $g->telar_str }}</td>
+                        <td class="border px-1 py-0.5">
+                            {{ $g->fecha_requerida ? \Carbon\Carbon::parse($g->fecha_requerida)->format('d/m/Y') : '' }}
+                        </td>
+                        <td class="border px-1 py-0.5">{{ decimales($g->cuenta) }}</td>
+                        <td class="border px-1 py-0.5">{{ $g->calibre }}</td>
+                        <td class="border px-1 py-0.5">{{ $g->hilo }}</td>
+                        <td class="border px-1 py-0.5">{{ $g->urdido }}</td>
+                        <td class="border px-1 py-0.5">{{ $g->tipo }}</td>
+                        <td class="border px-1 py-0.5">{{ $g->destino }}</td>
+                        <td class="border px-1 py-0.5 text-right">{{ number_format($g->metros, 0) }}</td>
+                        <td class="border px-1 py-0.5 text-center">—</td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
 
-        {{-- ====== Bloques inferiores: Construcción Urdido + Datos Engomado ====== --}}
+        {{-- ====== Bloques inferiores ====== --}}
         <div class="flex space-x-1">
-            {{-- Columna 1: Construcción Urdido (tabla 2xN) --}}
             <div class="w-1/6 p-1">
                 <h2 class="text-sm font-bold">Construcción Urdido</h2>
                 <div class="flex">
@@ -155,7 +114,6 @@
                 </div>
             </div>
 
-            {{-- Columna 2: Datos Engomado --}}
             <div class="w-5/6 p-1">
                 <h2 class="text-sm font-bold">Datos Engomado</h2>
                 <br class="block md:hidden">
@@ -177,8 +135,10 @@
                                 <select name="nucleo"
                                     class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded">
                                     <option value="" disabled {{ old('nucleo') ? '' : 'selected' }}></option>
-                                    <option value="Itema" {{ old('nucleo') == 'Itema' ? 'selected' : '' }}>Itema</option>
-                                    <option value="Smit" {{ old('nucleo') == 'Smit' ? 'selected' : '' }}>Smit</option>
+                                    <option value="Itema" {{ old('nucleo') == 'Itema' ? 'selected' : '' }}>Itema
+                                    </option>
+                                    <option value="Smit" {{ old('nucleo') == 'Smit' ? 'selected' : '' }}>Smit
+                                    </option>
                                     <option value="Jacquard" {{ old('nucleo') == 'Jacquard' ? 'selected' : '' }}>Jacquard
                                     </option>
                                 </select>
@@ -212,7 +172,7 @@
             </div>
         </div>
 
-        {{-- Navegación / acciones inferiores (opcional) --}}
+        {{-- Navegación inferior --}}
         <div class="flex justify-end gap-2 pt-2">
             <a href="{{ url()->previous() }}"
                 class="px-4 py-2 rounded border font-semibold bg-white hover:bg-slate-50">Volver</a>

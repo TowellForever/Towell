@@ -412,10 +412,9 @@ class RequerimientoController extends Controller
         }
     }
 
-    public function step2(Request $request)
+    public function step2(Request $request) // STEP 2
     {
-        //dd($request);
-        // Vienen del paso 1 como registros[i][id]...
+        // 1) Filas del paso 1
         $rows = collect($request->input('registros', []));
         $ids  = $rows->pluck('id')->filter()->unique()->values();
 
@@ -423,23 +422,103 @@ class RequerimientoController extends Controller
             return back()->with('error', 'Selecciona al menos un registro.');
         }
 
+        // 2) Guardamos todo lo del paso 1 en sesión
+        $step1Map = $rows->keyBy('id'); // [id => {...}]
+        session(['urdido.step1' => $step1Map->toArray()]);
+
+        // 3) Traemos requerimientos base
         $requerimientos = Requerimiento::whereIn('id', $ids)->get();
 
-        // Guarda campos del paso 1 para usarlos en el paso 2/final (opcional)
-        session(['urdido.step1' => $rows->keyBy('id')->toArray()]);
+        // 4) Normalizamos (BD + overrides del paso 1)
+        $full = $requerimientos->map(function ($req) use ($step1Map) {
 
-        // Opciones del BOM de Urdido (ajusta a tu fuente real)
-        // $boms = BomUrdido::orderBy('nombre')->get(['id','nombre']);
-        $boms = collect([
-            (object)['id' => 1, 'nombre' => 'WP2 - Jacquard'],
-            (object)['id' => 2, 'nombre' => 'WP3 - Smit'],
-            (object)['id' => 3, 'nombre' => 'WP4 - Itema'],
-        ]);
+            // Tipo
+            $rizo = (int)($req->rizo ?? 0) === 1;
+            $pie  = (int)($req->pie  ?? 0) === 1;
+            $tipo = $rizo ? 'Rizo' : ($pie ? 'Pie' : '');
 
-        return view('modulos.programar_requerimientos.step2', compact('requerimientos', 'boms'));
+            // Cuenta / calibre según tipo
+            $cuenta  = $rizo ? ($req->cuenta_rizo  ?? $req->cuenta  ?? null)
+                : ($req->cuenta_pie   ?? $req->cuenta  ?? null);
+            $calibre = $rizo ? ($req->calibre_rizo ?? $req->calibre ?? null)
+                : ($req->calibre_pie  ?? $req->calibre ?? null);
+
+            // Overrides del paso 1
+            $s1 = $step1Map->get($req->id, []);
+
+            // FECHA: prioriza la del paso 1 si viene
+            $fecha_requerida = $s1['fecha_requerida'] ?? $req->fecha_requerida;
+
+            // Destino en mayúsculas
+            $destino = Str::of($s1['destino'] ?? $req->valor ?? '')
+                ->trim()->upper()->toString();
+
+            // Metros: prioriza paso 1
+            $metros = (int)preg_replace('/[^\d]/', '', (string)($s1['metros'] ?? $req->metros ?? 0));
+
+            // Urdido que eligieron (si lo usas)
+            $urdido = $s1['urdido'] ?? null;
+
+            return (object) [
+                'id'              => $req->id,
+                'telar'           => $req->telar,
+                'fecha_requerida' => $fecha_requerida,
+                'cuenta'          => $cuenta,
+                'calibre'         => $calibre,
+                'hilo'            => $req->hilo ?? 'H',
+                'tipo'            => $tipo,
+                'destino'         => $destino,
+                'metros'          => $metros,
+                'urdido'          => $urdido,
+            ];
+        });
+
+        // 5) AGRUPAR por (cuenta, calibre, tipo, destino) y sumar metros
+        $agrupados = $full
+            ->groupBy(fn($x) => implode('|', [$x->cuenta, $x->calibre, $x->tipo, $x->destino]))
+            ->values()
+            ->map(function ($group, $idx) {
+
+                // Telar: lista ordenada y única
+                $telars = $group->pluck('telar')
+                    ->filter()
+                    ->map(fn($t) => (string)$t)
+                    ->unique()
+                    ->values()
+                    ->all();
+                sort($telars, SORT_NATURAL);
+
+                // FECHA del grupo: la más temprana (cámbialo a ->last() si quieres la más reciente)
+                $fecha = $group->pluck('fecha_requerida')
+                    ->filter()
+                    ->map(fn($d) => $d instanceof Carbon ? $d : Carbon::parse($d))
+                    ->sort()
+                    ->first();
+                $fecha_str = $fecha?->format('Y-m-d'); // guardamos como string ISO
+
+                // Urdido a mostrar
+                $urdido = optional($group->first())->urdido ?: ('Mc Coy ' . ($idx + 1));
+
+                $first = $group->first();
+                return (object) [
+                    'ids'             => $group->pluck('id')->all(),
+                    'telar_str'       => implode(',', $telars),
+                    'fecha_requerida' => $fecha_str,
+                    'cuenta'          => $first->cuenta,
+                    'calibre'         => $first->calibre,
+                    'hilo'            => $first->hilo,
+                    'urdido'          => $urdido,
+                    'tipo'            => $first->tipo,
+                    'destino'         => $first->destino,
+                    'metros'          => $group->sum('metros'),
+                ];
+            });
+
+        return view(
+            'modulos.programar_requerimientos.step2',
+            compact('requerimientos', 'agrupados')
+        );
     }
-
-
 
     private function generarFolioUnico()
     {
