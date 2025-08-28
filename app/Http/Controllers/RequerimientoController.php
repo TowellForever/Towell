@@ -65,7 +65,10 @@ class RequerimientoController extends Controller
                 'rizo' => $request->rizo,
                 'pie' => $request->pie,
                 'calibre_rizo' =>  $request->calibre_rizo,
-                'calibre_pie' =>  $request->calibre_pie
+                'calibre_pie' =>  $request->calibre_pie,
+                'hilo' => $request->hilo,
+                'tipo_atado' => 'Normal',
+                'fecha_requerida' => $request->fecha_reque,
             ]);
 
             DB::commit();
@@ -200,11 +203,10 @@ class RequerimientoController extends Controller
     }
     /*************************************************************************************************************************************************************************/
     /*************************************************************************************************************************************************************************/
-    /*************************************************************************************************************************************************************************/
     //metodo que regresa 2 objetos a la vista para llenar 2 tablas (amarillas)
     //PROGRAMAR-REQUERIMIENTO en programar_requerimiento //PROGRAMAR-REQUERIMIENTO en programar_requerimiento //PROGRAMAR-REQUERIMIENTO en programar_requerimiento
-    /*************************************************************************************************************************************************************************/
-    /*************************************************************************************************************************************************************************/
+    /********************VISTA DOBLE - PROGRAMAR - URDIDO ENGOMADO*****************************************************************************************************************************************************/
+    /********************VISTA DOBLE - PROGRAMAR - URDIDO ENGOMADO*****************************************************************************************************************************************************/
     public function requerimientosAProgramar(Request $request)
     {
         //dd($request);
@@ -217,13 +219,11 @@ class RequerimientoController extends Controller
         }
 
         // Buscar los registros en Produccion.dbo.requerimiento SQLSERVER
+        //AQUI BUSCAMOS los registros de acuerdo a los IDs SELECCIONADOS
         $requerimientos = DB::connection('sqlsrv') // si estás usando SQL Server
             ->table('Produccion.dbo.requerimiento')
             ->whereIn('id', $idsSeleccionados)
             ->get();
-
-
-        //    dd($requerimientos);
 
         // Buscar el requerimiento activo con coincidencia de telar y tipo (rizo o pie)
         $requerimiento = DB::table('requerimiento')
@@ -410,6 +410,33 @@ class RequerimientoController extends Controller
             Log::error('Error al guardar requerimientos: ' . $e->getMessage()); // opcional: log para debug
             return redirect()->back()->with('error', 'Ocurrió un error inesperado al guardar los datos. Intenta nuevamente.');
         }
+    }
+
+    public function step2(Request $request)
+    {
+        //dd($request);
+        // Vienen del paso 1 como registros[i][id]...
+        $rows = collect($request->input('registros', []));
+        $ids  = $rows->pluck('id')->filter()->unique()->values();
+
+        if ($ids->isEmpty()) {
+            return back()->with('error', 'Selecciona al menos un registro.');
+        }
+
+        $requerimientos = Requerimiento::whereIn('id', $ids)->get();
+
+        // Guarda campos del paso 1 para usarlos en el paso 2/final (opcional)
+        session(['urdido.step1' => $rows->keyBy('id')->toArray()]);
+
+        // Opciones del BOM de Urdido (ajusta a tu fuente real)
+        // $boms = BomUrdido::orderBy('nombre')->get(['id','nombre']);
+        $boms = collect([
+            (object)['id' => 1, 'nombre' => 'WP2 - Jacquard'],
+            (object)['id' => 2, 'nombre' => 'WP3 - Smit'],
+            (object)['id' => 3, 'nombre' => 'WP4 - Itema'],
+        ]);
+
+        return view('modulos.programar_requerimientos.step2', compact('requerimientos', 'boms'));
     }
 
 

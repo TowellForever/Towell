@@ -74,10 +74,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/tejido/itema-nuevo', function () {
         return view('modulos/tejido/itema-nuevo');
     });
-    Route::get('/tejido/programarReq', [RequerimientoController::class, 'requerimientosAProgramar'])->name('formulario.programarRequerimientos');
-    Route::post('/tejido/guardarUrdidoEngomado', [RequerimientoController::class, 'requerimientosAGuardar'])->name('orden.produccion.store');
-    Route::get('/tejido/bomids', [App\Http\Controllers\Select2Controller::class, 'getBomIds'])->name('bomids.api'); //<- rutas para buscador select2 BOMIDs
-    Route::get('/tejido/bomids2', [App\Http\Controllers\Select2Controller::class, 'getBomIds2'])->name('bomids.api2'); //<- rutas para buscador select2 BOMIDs
+
 
     //RUTAS DEL MODULO **urdido**
     Route::get('/modulo-urdido', function () {
@@ -154,7 +151,15 @@ Route::middleware('auth')->group(function () {
     });
 
     //RUTAS DEL MODULO **Programacion-Urdido-Engomado**
+    Route::post('/guardar-requerimiento', [RequerimientoController::class, 'store']);
+    Route::get('/ultimos-requerimientos', [RequerimientoController::class, 'obtenerRequerimientosActivos']);
     Route::get('/modulo-UrdidoEngomado', [RequerimientoController::class, 'requerimientosActivos'])->name('index.requerimientosActivos');
+    Route::get('/tejido/programarReq', [RequerimientoController::class, 'requerimientosAProgramar'])->name('formulario.programarRequerimientos');
+    Route::post('/tejido/guardarUrdidoEngomado', [RequerimientoController::class, 'requerimientosAGuardar'])->name('orden.produccion.store');
+
+    Route::post('/prog-req/step2', [RequerimientoController::class, 'step2'])->name('urdido.step2');
+    Route::get('/tejido/bomids', [App\Http\Controllers\Select2Controller::class, 'getBomIds'])->name('bomids.api'); //<- rutas para buscador select2 BOMIDs
+    Route::get('/tejido/bomids2', [App\Http\Controllers\Select2Controller::class, 'getBomIds2'])->name('bomids.api2'); //<- rutas para buscador select2 BOMIDs
 
     //RUTAS DEL MODULO **EDICION-Urdido-Engomado** 22-05-2025
     Route::get('/modulo-edicion-urdido-engomado', function () {
@@ -163,8 +168,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/orden-trabajo-editar', [UrdidoController::class, 'cargarDatosOrdenUrdEng'])->name('update.ordenTrabajo');
     Route::post('/tejido/actualizarUrdidoEngomado', [UrdidoController::class, 'ordenToActualizar'])->name('orden.produccion.update');
     Route::post('/reservar-inventario', [RequerimientoController::class, 'BTNreservar'])->name('reservar.inventario');
-
-
 
     //RUTAS DEL MODULO **configuracion**
     Route::get('/modulo-configuracion', function () {
@@ -182,8 +185,6 @@ Route::middleware('auth')->group(function () {
     //el método de arriba sirve para mstrar la informacion de un telar individualmente (telar-informacion-individual)
     Route::get('/ordenes-programadas-dinamica/{telar}', [TelaresController::class, 'obtenerOrdenesProgramadas'])->name('ordenes.programadas');
 
-    Route::post('/guardar-requerimiento', [RequerimientoController::class, 'store']);
-    Route::get('/ultimos-requerimientos', [RequerimientoController::class, 'obtenerRequerimientosActivos']);
 
     //CRUDZAZO de USUARIOS, 1er mantenimiento 19-08-2025. USUARIOS USUARIOS USUARIOS USUARIOS, en el USUARIOSCONTROLLER se manejan los contenedores visibles o no visibles
     //Route::get('/alta-usuarios', function () { return view('alta_usuarios');});//BORRAR UNA VEZ CREADO EL CONTROLLER

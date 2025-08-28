@@ -27,7 +27,10 @@
                                 <th class="border px-1 py-0.5">Tipo 🔽</th>
                                 <th class="border px-1 py-0.5">Cuenta 🔽</th>
                                 <th class="border px-1 py-0.5">Calibre 🔽</th>
+                                <th class="border px-1 py-0.5">Hilo 🔽</th>
                                 <th class="border px-1 py-0.5">Fecha Requerida 🔽</th>
+                                <th class="border px-1 py-0.5">Turno 🔽</th>
+                                <th class="border px-1 py-0.5">Tipo Atado 🔽</th>
                                 <th class="border px-1 py-0.5">Metros 🔽</th>
                                 <th class="border px-1 py-0.5">Mc Coy 🔽</th>
                                 <th class="border px-1 py-0.5">Orden Urdido o Engomado 🔽</th>
@@ -68,10 +71,24 @@
                                                 ? preg_replace('/\.0$/', '', $req->calibre_pie)
                                                 : '-') }}
                                     </td>
-
-
+                                    <td class="border px-1 py-1">{{ $req->calibre_pie }}</td>
+                                    <!-- HILO nulo -->
                                     <td class="border px-1 py-1">{{ \Carbon\Carbon::parse($req->fecha)->format('d-m-Y') }}
                                     </td>
+                                    <td class="border px-1 py-1">
+                                        @php
+                                            $m = [];
+                                            $n = preg_match(
+                                                '/^(rizo|pie)\s*([1-3])$/i',
+                                                (string) ($req->valor ?? ''),
+                                                $m,
+                                            )
+                                                ? $m[2]
+                                                : '';
+                                        @endphp
+                                        {{ $n }}
+                                    </td>
+                                    <td class="border px-1 py-1">{{ $req->tipo_atado }}</td> <!-- TIPO ATADO nulo -->
                                     <td class="border px-1 py-1">-</td> <!-- Metros nulo -->
                                     <td class="border px-1 py-1">-</td> <!-- Mc Coy nulo -->
                                     <td class="border px-1 py-1"></td>
@@ -81,7 +98,6 @@
                                     <td class="border px-1 py-1 flex items-center justify-center">
                                         <input type="checkbox" class="fila-check scale-150" value="{{ $req->id }}">
                                     </td>
-
                                 </tr>
                             @endforeach
                         </tbody>
@@ -90,7 +106,7 @@
             </div>
         </form>
         <!-- Espacio entre tablas -->
-        <div class="my-2"></div>
+        <div class="my-1"></div>
 
         <!-- Tabla 2: Inventario Disponible -->
         <div class="bg-white shadow-md rounded-lg p-2">
@@ -444,6 +460,7 @@
         });
     </script>
     <!--capturamos los checkbox seleccionados c:-->
+    {{-- VERIFICAMOS QUE, en caso de seleccionar mas de un checkbox, sean del mismo TIPO y CALIBRE --}}
     <script>
         // Selección múltiple
         function toggleTodos(masterCheckbox) {
@@ -476,19 +493,20 @@
 
                 // Sacamos los valores tipo y cuenta de esas filas
                 const tipos = filasSeleccionadas.map(fila => fila.getAttribute('data-tipo'));
-                const cuentas = filasSeleccionadas.map(fila => fila.getAttribute('data-cuenta'));
+                const calibres = filasSeleccionadas.map(fila => fila.getAttribute('data-calibre'));
 
                 // Validamos que todos los tipos sean iguales
                 const todosTiposIguales = tipos.every(tipo => tipo === tipos[0]);
-                const todasCuentasIguales = cuentas.every(cuenta => cuenta === cuentas[0]);
+                const todasCalibreIguales = calibres.every(calibre => calibre === calibres[0]);
 
-                if (!todosTiposIguales || !todasCuentasIguales) {
+                if (!todosTiposIguales || !todasCalibreIguales) {
                     e.preventDefault();
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: 'Los registros seleccionados deben tener el mismo Tipo y Cuenta para continuar.',
+                        text: 'Los registros seleccionados deben tener el mismo Calibre y Tipo (Rizo o Pie).',
                         confirmButtonColor: '#d33',
+                        confirmButtonText: 'Entendido',
                     });
 
                     return;
