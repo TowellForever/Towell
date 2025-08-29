@@ -32,7 +32,6 @@
                     <strong class="font-bold">¡Operación exitosa!</strong> {{ session('success') }}
                 </div>
             @endif
-            <h2 class="text-sm font-bold mb-1">Datos Urdido</h2>
             @php
                 $tipo = '';
                 $cuenta = '';
@@ -57,126 +56,142 @@
                     'bg-[#93C5FD]', // blue-300
                 ];
             @endphp
-            <table class="w-full text-xs border-separate border-spacing-0 border border-gray-300 mb-4">
-                <thead class="h-10 bg-gray-200 text-left">
-                    <tr>
-                        <th class="border px-1 py-0.5 w-12">Telar</th>
-                        <th class="border px-1 py-0.5 w-24">Fecha Req</th>
-                        <th class="border px-1 py-0.5 w-16">Cuenta</th>
-                        <th class="border px-1 py-0.5 w-16">Calibre</th>
-                        <th class="border px-1 py-0.5 w-16">Hilo</th>
-                        <th class="border px-1 py-0.5 w-24">Urdido</th>
-                        <th class="border px-1 py-0.5 w-16">Tipo</th>
-                        <th class="border px-1 py-0.5 w-24">Destino</th>
-                        <th class="border px-1 py-0.5 w-24">Tipo Atado</th>
-                        <th class="border px-1 py-0.5 w-16">Metros</th>
-                    </tr>
-                </thead>
+            {{-- === CONTENEDOR/TARJETA === --}}
+            <section class="">
+                <div class="rounded-[26px] overflow-hidden border border-blue-200 shadow-2xl bg-white/90 backdrop-blur">
 
-                <tbody>
-                    @foreach ($requerimientos as $index => $req)
-                        @php
-                            $idx = crc32((string) ($req->id ?? $i)) % count($rowPalette); // color estable por id
-                            $rowClass = $rowPalette[$idx];
-                        @endphp
-                        <tr
-                            class="{{ $rowClass }} text-slate-800 transition
-                            hover:[&>td]:bg-white/70
-                            hover:[&>td]:ring-1 hover:[&>td]:ring-slate-400 hover:[&>td]:ring-inset
-                            focus-within:[&>td]:ring-2 focus-within:[&>td]:ring-sky-500">
-                            {{-- Telar --}}
-                            <td class="border px-1 py-0.5 text-center first:rounded-l-md last:rounded-r-md overflow-hidden">
-                                <input type="hidden" name="registros[{{ $index }}][id]" value="{{ $req->id }}">
-                                <input type="text" name="registros[{{ $index }}][telar]"
-                                    value="{{ $req->telar ?? '' }}"
-                                    class="form-input w-full px-1 py-0.5 text-xs border border-gray-300 rounded">
-                            </td>
+                    {{-- Título / banda superior --}}
+                    <div class="px-3 py-1 text-white font-extrabold tracking-wide"
+                        style="background:linear-gradient(90deg,#a5b4fc,#93c5fd,#60a5fa,#3b82f6,#2563eb,#1d4ed8);">
+                        Planeación de Requerimientos
+                    </div>
 
-                            {{-- Fecha requerida --}}
-                            <td class="border px-1 py-0.5 text-center first:rounded-l-md last:rounded-r-md overflow-hidden">
-                                <input type="date" name="registros[{{ $index }}][fecha_requerida]"
-                                    value="{{ $req->fecha ? \Carbon\Carbon::parse($req->fecha)->format('Y-m-d') : '' }}"
-                                    class="form-input w-full px-1 py-0.5 text-xs border border-gray-300 rounded">
-                            </td>
+                    {{-- Tabla --}}
+                    <div class="  overflow-auto">
+                        <table id="tabla-requerimientos" class="modern-table w-full text-xs">
+                            <thead>
+                                <tr class="text-white uppercase text-[11px] tracking-wider"
+                                    style="background:linear-gradient(90deg,#c7d2fe,#93c5fd,#60a5fa,#3b82f6,#2563eb,#1d4ed8);">
+                                    <th class="th w-12">Telar</th>
+                                    <th class="th w-24">Fecha Req</th>
+                                    <th class="th w-16">Cuenta</th>
+                                    <th class="th w-16">Calibre</th>
+                                    <th class="th w-16">Hilo</th>
+                                    <th class="th w-24">Urdido</th>
+                                    <th class="th w-16">Tipo</th>
+                                    <th class="th w-24">Destino</th>
+                                    <th class="th w-24">Tipo Atado</th>
+                                    <th class="th w-16 text-right">Metros</th>
+                                </tr>
+                            </thead>
 
-                            {{-- Cuenta --}}
-                            <td class="border px-1 py-0.5 text-center first:rounded-l-md last:rounded-r-md overflow-hidden">
-                                <input type="text" name="registros[{{ $index }}][cuenta]"
-                                    value="{{ $req->rizo == 1 ? decimales($req->cuenta_rizo) : decimales($req->cuenta_pie) }}"
-                                    class="form-input w-full px-1 py-0.5 text-xs border border-gray-300 rounded">
-                            </td>
+                            <tbody class="divide-y divide-blue-100/70">
+                                @foreach ($requerimientos as $index => $req)
+                                    {{-- Fila --}}
+                                    <tr class="tr-row">
+                                        {{-- Telar --}}
+                                        <td class="td text-center">
+                                            <input type="hidden" name="registros[{{ $index }}][id]"
+                                                value="{{ $req->id }}">
+                                            <input type="text" name="registros[{{ $index }}][telar]"
+                                                value="{{ $req->telar ?? '' }}" class="inpt w-full">
+                                        </td>
 
-                            {{-- Calibre --}}
-                            <td class="border px-1 py-0.5 text-center first:rounded-l-md last:rounded-r-md overflow-hidden">
-                                {{ $req->rizo ? $req->calibre_rizo : $req->calibre_pie }}
-                            </td>
+                                        {{-- Fecha requerida --}}
+                                        <td class="td text-center">
+                                            <input type="date" name="registros[{{ $index }}][fecha_requerida]"
+                                                value="{{ $req->fecha ? \Carbon\Carbon::parse($req->fecha)->format('Y-m-d') : '' }}"
+                                                class="inpt w-full">
+                                        </td>
 
-                            {{-- Hilo --}}
-                            <td class="border px-1 py-0.5 text-center first:rounded-l-md last:rounded-r-md overflow-hidden">
-                                {{ $req->hilo ?? '-' }}
-                            </td>
+                                        {{-- Cuenta --}}
+                                        <td class="td text-center">
+                                            <input type="text" name="registros[{{ $index }}][cuenta]"
+                                                value="{{ $req->rizo == 1 ? decimales($req->cuenta_rizo) : decimales($req->cuenta_pie) }}"
+                                                class="inpt w-full">
+                                        </td>
 
-                            {{-- Urdido (select) --}}
-                            <td class="border px-1 py-0.5 first:rounded-l-md last:rounded-r-md overflow-hidden">
-                                {{-- URDIDO - MC COY --}}
-                                @php
-                                    // Valor seleccionado: primero old(), si no existe usa $datos->salon (o '')
-                                    $sel = old("registros.$index.destino", $datos->salon ?? '');
-                                @endphp
+                                        {{-- Calibre --}}
+                                        <td class="td text-center">
+                                            {{ $req->rizo ? $req->calibre_rizo : $req->calibre_pie }}
+                                        </td>
 
-                                <select name="registros[{{ $index }}][urdido]"
-                                    class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded" required>
-                                    <option value="" disabled {{ $sel === '' ? 'selected' : '' }}></option>
-                                    <option value="Mc Coy 1" {{ $sel === 'Mc Coy 1' ? 'selected' : '' }}>Mc Coy 1</option>
-                                    <option value="Mc Coy 2" {{ $sel === 'Mc Coy 2' ? 'selected' : '' }}>Mc Coy 2</option>
-                                    <option value="Mc Coy 3" {{ $sel === 'Mc Coy 3' ? 'selected' : '' }}>Mc Coy 3</option>
-                                </select>
-                            </td>
+                                        {{-- Hilo --}}
+                                        <td class="td text-center">
+                                            {{ $req->hilo ?? '-' }}
+                                        </td>
 
+                                        {{-- Urdido (select) --}}
+                                        <td class="td">
+                                            @php
+                                                $sel = old("registros.$index.destino", $datos->salon ?? '');
+                                            @endphp
+                                            <select name="registros[{{ $index }}][urdido]" class="inpt w-full"
+                                                required>
+                                                <option value="" disabled {{ $sel === '' ? 'selected' : '' }}>
+                                                </option>
+                                                <option value="Mc Coy 1" {{ $sel === 'Mc Coy 1' ? 'selected' : '' }}>Mc Coy
+                                                    1</option>
+                                                <option value="Mc Coy 2" {{ $sel === 'Mc Coy 2' ? 'selected' : '' }}>Mc Coy
+                                                    2</option>
+                                                <option value="Mc Coy 3" {{ $sel === 'Mc Coy 3' ? 'selected' : '' }}>Mc Coy
+                                                    3</option>
+                                            </select>
+                                        </td>
 
-                            {{-- Tipo --}}
-                            <td class="border px-1 py-0.5 text-center first:rounded-l-md last:rounded-r-md overflow-hidden">
-                                {{ $req->rizo ? 'Rizo' : ($req->pie ? 'Pie' : '-') }}
-                            </td>
+                                        {{-- Tipo --}}
+                                        <td class="td text-center">
+                                            {{ $req->rizo ? 'Rizo' : ($req->pie ? 'Pie' : '-') }}
+                                        </td>
 
-                            {{-- Destino --}}
-                            <td class="border px-1 py-0.5 text-center first:rounded-l-md last:rounded-r-md overflow-hidden">
-                                <input type="text" name="registros[{{ $index }}][destino]"
-                                    value="{{ $datos->salon ?? '' }}"
-                                    class="form-input w-full px-1 py-0.5 text-xs border border-gray-300 rounded">
-                            </td>
+                                        {{-- Destino --}}
+                                        <td class="td text-center">
+                                            <input type="text" name="registros[{{ $index }}][destino]"
+                                                value="{{ $datos->salon ?? '' }}" class="inpt w-full">
+                                        </td>
 
-                            {{-- Tipo Atado --}}
-                            <td class="border px-1 py-0.5 text-center first:rounded-l-md last:rounded-r-md overflow-hidden">
-                                <select name="registros[{{ $index }}][tipo_atado]"
-                                    class="form-input w-full px-1 py-0.5 text-xs border border-gray-300 rounded" required>
-                                    <option value="Normal"
-                                        {{ old('registros.' . $index . '.tipo_atado') == 'Normal' ? 'selected' : '' }}>
-                                        Normal</option>
-                                    <option value="Especial"
-                                        {{ old('registros.' . $index . '.tipo_atado') == 'Especial' ? 'selected' : '' }}>
-                                        Especial</option>
-                                </select>
-                            </td>
+                                        {{-- Tipo Atado --}}
+                                        <td class="td text-center">
+                                            <select name="registros[{{ $index }}][tipo_atado]" class="inpt w-full"
+                                                required>
+                                                <option value="Normal"
+                                                    {{ old('registros.' . $index . '.tipo_atado') == 'Normal' ? 'selected' : '' }}>
+                                                    Normal</option>
+                                                <option value="Especial"
+                                                    {{ old('registros.' . $index . '.tipo_atado') == 'Especial' ? 'selected' : '' }}>
+                                                    Especial</option>
+                                            </select>
+                                        </td>
 
-                            {{-- Metros --}}
-                            <td class="border px-1 py-0.5 text-center first:rounded-l-md last:rounded-r-md overflow-hidden">
-                                <input type="number" name="registros[{{ $index }}][metros]"
-                                    value="{{ $req->metros ?? '' }}"
-                                    class="form-input w-full px-1 py-0.5 text-xs border border-gray-300 rounded"
-                                    min="0" step="1" placeholder="0">
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                                        {{-- Metros --}}
+                                        <td class="td text-right">
+                                            <input type="number" name="registros[{{ $index }}][metros]"
+                                                value="{{ $req->metros ?? '' }}" class="inpt w-full text-right"
+                                                min="0" step="1" placeholder="0">
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
 
-            <div class="-mt-4">
-                <button type="submit" onclick="this.disabled=true; this.innerText='Enviando...'; this.form.submit();"
-                    class="w-1/5 bg-green-600 text-white px-4 py-2 rounded font-semibold hover:bg-green-700">
-                    SIGUIENTE
-                </button>
-            </div>
+                        {{-- Botón SIGUIENTE (píldora degradada) --}}
+                        <div class="mt-5 flex justify-end">
+                            <button type="submit"
+                                onclick="this.disabled=true; this.innerText='Enviando...'; this.form.submit();"
+                                class="btn-candy btn-indigo">
+                                <span class="btn-text">SIGUIENTE</span>
+                                <span class="btn-bubble" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                                        stroke="currentColor" stroke-width="2">
+                                        <path d="M9 6l6 6-6 6" />
+                                    </svg>
+                                </span>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
 
 
             <script>
@@ -274,4 +289,112 @@
                     });
                 });
             </script>
+
+            {{-- ======= ESTILOS (mismo look que la otra vista) ======= --}}
+            <style>
+                /* Header redondeado */
+                .modern-table thead th:first-child {
+                    border-top-left-radius: 18px;
+                }
+
+                .modern-table thead th:last-child {
+                    border-top-right-radius: 18px;
+                }
+
+                .th {
+                    padding: .25rem .6rem;
+                    white-space: nowrap;
+                    font-weight: 800;
+                    border-right: 1px solid rgba(78, 72, 72, 0.25);
+                }
+
+                .th:last-child {
+                    border-right: none;
+                }
+
+                .td {
+                    padding: .55rem .5rem;
+                    background: rgba(255, 255, 255, .98);
+                    border-left: 1px solid rgba(191, 219, 254, .6);
+                    color: #0f172a;
+                }
+
+                .tr-row:hover .td {
+                    background: #eef6ff;
+                    transition: background-color .15s ease;
+                }
+
+                .modern-table tbody tr .td:last-child {
+                    border-right: 1px solid rgba(191, 219, 254, .6);
+                }
+
+                /* Inputs/selects “glass” discretos */
+                .inpt {
+                    border: 1px solid #c7d2fe;
+                    /* indigo-200 */
+                    background: #ffffff;
+                    border-radius: .5rem;
+                    /* 8px */
+                    padding: .38rem .45rem;
+                    outline: none;
+                    transition: border-color .15s ease, box-shadow .15s ease;
+                }
+
+                .inpt:focus {
+                    border-color: #60a5fa;
+                    /* sky-400 */
+                    box-shadow: 0 0 0 3px rgba(96, 165, 250, .25);
+                }
+
+                /* Botón “píldora” degradado (igual que el otro) */
+                .btn-candy {
+                    --from: #4f46e5;
+                    --to: #1d4ed8;
+                    /* fallback — se sobreescribe por variante */
+                    width: 200px;
+                    position: relative;
+                    display: inline-flex;
+                    padding: .45rem 3.2rem .45rem 1.2rem;
+                    border-radius: 9999px;
+                    color: #fff;
+                    font-weight: 800;
+                    letter-spacing: .2px;
+                    background: linear-gradient(145deg, var(--from), var(--to));
+                    box-shadow: 0 10px 20px rgba(2, 6, 23, .18), inset 0 1px 0 rgba(255, 255, 255, .25);
+                    transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+                }
+
+                .btn-candy .btn-bubble {
+                    position: absolute;
+                    right: .35rem;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    width: 2.25rem;
+                    height: 2.25rem;
+                    border-radius: 9999px;
+                    background: #fff;
+                    color: #1d4ed8;
+                    display: grid;
+                    place-items: center;
+                    box-shadow: 0 8px 16px rgba(0, 0, 0, .22);
+                }
+
+                .btn-candy:hover {
+                    transform: translateY(-2px);
+                    filter: saturate(1.05);
+                }
+
+                .btn-candy:hover .btn-bubble svg {
+                    transform: translateX(2px);
+                    transition: transform .18s ease;
+                }
+
+                /* Variantes */
+                .btn-indigo {
+                    --from: #6366f1;
+                    --to: #1d4ed8;
+                }
+
+                /* degradado azul/índigo */
+            </style>
         @endsection

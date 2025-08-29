@@ -592,6 +592,11 @@ class RequerimientoController extends Controller
         return $letra . str_pad($numero, 3, '0', STR_PAD_LEFT); // Devuelve "A001", "A002", etc.
     }
 
+    public function step3()
+    {
+        return view('modulos.programar_requerimientos.step3');
+    }
+
 
     /*
 

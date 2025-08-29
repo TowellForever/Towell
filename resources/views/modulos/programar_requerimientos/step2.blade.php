@@ -19,66 +19,70 @@
 
     <div class="space-y-1">
         {{-- ===================== SEGUNDA PÁGINA (AGRUPADOS) ===================== --}}
-        <div class="flex items-start gap-4">
+        <div class="flex gap-4">
             <!-- Columna izquierda: TABLA -->
-            <div class="flex-1">
-                <table class="w-full text-xs border-separate border-spacing-0 border border-gray-300 ml-1 pr-2">
-                    <thead class="h-8">
-                        <tr class="bg-gray-200 text-left text-slate-900">
-                            <th class="border px-0.5 w-[130px]">Telar</th>
-                            <th class="border px-0.5 w-[70px]">Fec Req</th>
-                            <th class="border px-0.5 w-[50px]">Cuenta</th>
-                            <th class="border px-0.5 w-[50px]">Calibre</th>
-                            <th class="border px-0.5 w-[50px]">Hilo</th>
-                            <th class="border px-0.5 w-[70px]">Urdido</th>
-                            <th class="border px-0.5 w-[50px]">Tipo</th>
-                            <th class="border px-0.5 w-[70px]">Destino</th>
-                            <th class="border px-0.5 w-[70px]">Metros</th>
-                            <th class="border px-0.5 w-[180px]">L.Mat Urdido</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($agrupados as $i => $g)
-                            @php $rowClass = $rowPalette[$i % count($rowPalette)]; @endphp
-                            <tr class="{{ $rowClass }}">
-                                <td class="border px-0.5">{{ $g->telar_str }}</td>
-                                <td class="border px-0.5">
-                                    {{ $g->fecha_requerida ? \Carbon\Carbon::parse($g->fecha_requerida)->format('d/m/Y') : '' }}
-                                </td>
-                                <td class="border px-0.5">{{ decimales($g->cuenta) }}</td>
-                                <td class="border px-0.5">{{ $g->calibre }}</td>
-                                <td class="border px-0.5">{{ $g->hilo }}</td>
-                                <td class="border px-0.5">{{ $g->urdido }}</td>
-                                <td class="border px-0.5">{{ $g->tipo }}</td>
-                                <td class="border px-0.5">{{ $g->destino }}</td>
-                                <td class="border px-0.5 text-right">{{ decimales($g->metros) }}</td>
-                                <td class="border px-0.5">
-                                    @php
-                                        $preId = old("agrupados.$i.lmaturdido", $g->lmaturdido_id ?? null);
-                                        $preText =
-                                            old("agrupados.$i.lmaturdido_text", $g->lmaturdido_text ?? null) ?? $preId;
-                                    @endphp
-
-                                    <select name="agrupados[{{ $i }}][lmaturdido]" class="js-bom-select"
-                                        data-selected-id="{{ $preId ?? '' }}" data-selected-text="{{ $preText ?? '' }}">
-                                        <option value=""></option>
-                                        @if ($preId)
-                                            <option value="{{ $preId }}" selected>{{ $preText }}</option>
-                                        @endif
-                                    </select>
-                                </td>
-
+            <div class="flex-1"> <!-- límite de ancho para que no se vea enorme -->
+                <div class="rounded-2xl border border-blue-200 shadow-xl bg-white/90 overflow-hidden">
+                    <table id="agrupados-table"
+                        class="w-full text-xs border-separate border-spacing-0 border border-gray-300 ml-1 pr-2">
+                        <thead class="h-8">
+                            <tr class="text-left text-white">
+                                <th class="border px-0.5 w-[130px]">Telar</th>
+                                <th class="border px-0.5 w-[70px]">Fec Req</th>
+                                <th class="border px-0.5 w-[50px]">Cuenta</th>
+                                <th class="border px-0.5 w-[50px]">Calibre</th>
+                                <th class="border px-0.5 w-[50px]">Hilo</th>
+                                <th class="border px-0.5 w-[70px]">Urdido</th>
+                                <th class="border px-0.5 w-[50px]">Tipo</th>
+                                <th class="border px-0.5 w-[70px]">Destino</th>
+                                <th class="border px-0.5 w-[70px]">Metros</th>
+                                <th class="border px-0.5 w-[180px]">L.Mat Urdido</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+
+                        <tbody>
+                            @foreach ($agrupados as $i => $g)
+                                @php $rowClass = $rowPalette[$i % count($rowPalette)]; @endphp
+                                <tr class="{{ $rowClass }}">
+                                    <td class="border px-0.5">{{ $g->telar_str }}</td>
+                                    <td class="border px-0.5">
+                                        {{ $g->fecha_requerida ? \Carbon\Carbon::parse($g->fecha_requerida)->format('d/m/Y') : '' }}
+                                    </td>
+                                    <td class="border px-0.5">{{ decimales($g->cuenta) }}</td>
+                                    <td class="border px-0.5">{{ $g->calibre }}</td>
+                                    <td class="border px-0.5">{{ $g->hilo }}</td>
+                                    <td class="border px-0.5">{{ $g->urdido }}</td>
+                                    <td class="border px-0.5">{{ $g->tipo }}</td>
+                                    <td class="border px-0.5">{{ $g->destino }}</td>
+                                    <td class="border px-0.5 text-right">{{ decimales($g->metros) }}</td>
+                                    <td class="border px-0.5">
+                                        @php
+                                            $preId = old("agrupados.$i.lmaturdido", $g->lmaturdido_id ?? null);
+                                            $preText =
+                                                old("agrupados.$i.lmaturdido_text", $g->lmaturdido_text ?? null) ??
+                                                $preId;
+                                        @endphp
+
+                                        <select name="agrupados[{{ $i }}][lmaturdido]" class="js-bom-select"
+                                            data-selected-id="{{ $preId ?? '' }}"
+                                            data-selected-text="{{ $preText ?? '' }}">
+                                            <option value=""></option>
+                                            @if ($preId)
+                                                <option value="{{ $preId }}" selected>{{ $preText }}</option>
+                                            @endif
+                                        </select>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-
         <!-- Columna derecha: BOTONES -->
-        <section class="max-w-6xl mx-auto">
+        <section class="ml-[620px] w-[600px]">
             <div class="rounded-3xl bg-blue-600/90 p-1 sm:p-8 shadow-2xl">
-                <div class="flex flex-wrap items-center gap-2 ">
+                <div class="flex flex-wrap justify-end gap-2 ">
 
                     <!-- VOLVER -->
                     <a href="{{ url()->previous() }}" class="btn-candy btn-gray btn-left">
@@ -93,7 +97,7 @@
                     </a>
 
                     <!-- Reservar inventario -->
-                    <form method="POST" action="{{ route('reservar.inventario') }}">
+                    <form method="POST" action="{{ route('urdido.step3') }}">{{-- reservar.inventario - RUTA ANTERIOR --}}
                         @csrf
                         @foreach ($requerimientos as $req)
                             <input type="hidden" name="ids[]" value="{{ $req->id }}">
@@ -147,100 +151,107 @@
         {{-- ====== Bloques inferiores  CONS URDIDO Y ENGOMADO ====== --}}
         <div class="flex space-x-1">
             <div class="w-1/6 p-1">
-
-                <div class="flex">
-                    <table class="w-full text-xs border-collapse border border-gray-300 mb-4">
-                        <thead class="h-10">
-                            <tr class="bg-gray-200 text-center">
-                                <th colspan="2">CONTRUCCIÓN URDIDO</th>
-                            </tr>
-                            <tr class="bg-gray-200 text-center">
-                                <th class="border px-1 py-0.5">No. Julios</th>
-                                <th class="border px-1 py-0.5">Hilos</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @for ($i = 0; $i < 4; $i++)
-                                <tr>
-                                    <td class="border px-1 py-0.5">
-                                        <input type="text" inputmode="numeric" pattern="[0-9]*" name="no_julios[]"
-                                            class="form-input px-1 py-0.5 text-[10px] border border-gray-300 rounded w-full"
-                                            value="{{ old('no_julios.' . $i) }}">
-                                    </td>
-                                    <td class="border px-1 py-0.5">
-                                        <input type="text" inputmode="numeric" pattern="[0-9]*" name="hilos[]"
-                                            class="form-input px-1 py-0.5 text-[10px] border border-gray-300 rounded w-full"
-                                            value="{{ old('hilos.' . $i) }}">
-                                    </td>
+                <div class="rounded-2xl border border-blue-200 shadow-xl bg-white/90 overflow-hidden">
+                    <div class="flex">
+                        <table id="tbl-urdido"
+                            class="modern-table w-full text-xs border-collapse border border-gray-300 mb-4">
+                            <thead class="h-10">
+                                <tr class="text-center text-white"
+                                    style="background:linear-gradient(90deg,#c7d2fe,#93c5fd,#60a5fa,#3b82f6,#2563eb,#1d4ed8);">
+                                    <th colspan="2" class="th">CONTRUCCIÓN URDIDO</th>
                                 </tr>
-                            @endfor
-                        </tbody>
-                    </table>
+                                <tr class="text-center text-white"
+                                    style="background:linear-gradient(90deg,#c7d2fe,#93c5fd,#60a5fa,#3b82f6,#2563eb,#1d4ed8);">
+                                    <th class="th border px-1 py-0.5">No. Julios</th>
+                                    <th class="th border px-1 py-0.5">Hilos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for ($i = 0; $i < 4; $i++)
+                                    <tr>
+                                        <td class="td border px-1 py-0.5">
+                                            <input type="text" inputmode="numeric" pattern="[0-9]*" name="no_julios[]"
+                                                class="inpt form-input px-1 py-0.5 text-[10px] rounded w-full"
+                                                value="{{ old('no_julios.' . $i) }}">
+                                        </td>
+                                        <td class="td border px-1 py-0.5">
+                                            <input type="text" inputmode="numeric" pattern="[0-9]*" name="hilos[]"
+                                                class="inpt form-input px-1 py-0.5 text-[10px] rounded w-full"
+                                                value="{{ old('hilos.' . $i) }}">
+                                        </td>
+                                    </tr>
+                                @endfor
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
             <div class="w-5/6 p-1">
-                <table class="w-full text-xs border-collapse border border-gray-300">
-                    <thead class="h-4">
-                        <tr class="bg-gray-200 text-center">
-                            <th colspan="7">DATOS DE ENGOMADO</th>
-                        </tr>
-                        <tr class="bg-gray-200 text-left">
-                            <th class="border px-1">Núcleo</th>
-                            <th class="border px-1">No. de Telas</th>
-                            <th class="border px-1">Ancho Balonas</th>
-                            <th class="border px-1">Metraje de Telas</th>
-                            <th class="border px-1">Cuendeados Mín. por Tela</th>
-                            <th class="border px-1">L Mat Engomado</th>
-                            <th class="border px-1 w-1/4">Observaciones</th>
-                        </tr>
-                    </thead>
-                    <tbody class="h-24">
-                        <tr>
-                            <td class="border px-1 py-0.5">
-                                <select name="nucleo"
-                                    class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded">
-                                    <option value="" disabled {{ old('nucleo') ? '' : 'selected' }}></option>
-                                    <option value="Itema" {{ old('nucleo') == 'Itema' ? 'selected' : '' }}>Itema
-                                    </option>
-                                    <option value="Smit" {{ old('nucleo') == 'Smit' ? 'selected' : '' }}>Smit
-                                    </option>
-                                    <option value="Jacquard" {{ old('nucleo') == 'Jacquard' ? 'selected' : '' }}>Jacquard
-                                    </option>
-                                </select>
-                            </td>
-                            <td class="border px-1 py-0.5">
-                                <input type="text" inputmode="numeric" pattern="[0-9]*" name="no_telas"
-                                    class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded"
-                                    value="{{ old('no_telas') }}">
-                            </td>
-                            <td class="border px-1 py-0.5">
-                                <input type="text" inputmode="numeric" pattern="[0-9]*" name="balonas"
-                                    class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded"
-                                    value="{{ old('balonas') }}">
-                            </td>
-                            <td class="border px-1 py-0.5">
-                                <input type="text" inputmode="numeric" pattern="[0-9]*" name="metros_tela"
-                                    class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded"
-                                    value="{{ old('metros_tela') }}">
-                            </td>
-                            <td class="border px-1 py-0.5">
-                                <input type="text" inputmode="numeric" pattern="[0-9]*" name="cuendados_mini"
-                                    class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded"
-                                    value="{{ old('cuendados_mini') }}">
-                            </td>
-                            <td class="">
-                                <select id="bomSelect2" name="lmatengomado"
-                                    class="form-select px-3 py-1 text-xs border border-gray-300 rounded" required>
-                                    <option value="" disabled selected>Selecciona una lista</option>
-                                </select>
-                            </td>
-                            <td class="border px-3 py-1">
-                                <textarea name="observaciones" class="form-textarea w-full px-1 py-1 text-xs border border-gray-300 rounded h-16">{{ old('observaciones') }}</textarea>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="rounded-2xl border border-blue-200 shadow-xl bg-white/90 overflow-hidden">
+                    <table id="tbl-engomado" class="modern-table w-full text-xs border-collapse border border-gray-300">
+                        <thead class="h-4">
+                            <tr class="text-center text-white"
+                                style="background:linear-gradient(90deg,#c7d2fe,#93c5fd,#60a5fa,#3b82f6,#2563eb,#1d4ed8);">
+                                <th class="th" colspan="7">DATOS DE ENGOMADO</th>
+                            </tr>
+                            <tr class="text-left text-white"
+                                style="background:linear-gradient(90deg,#c7d2fe,#93c5fd,#60a5fa,#3b82f6,#2563eb,#1d4ed8);">
+                                <th class="th border px-1">Núcleo</th>
+                                <th class="th border px-1">No. de Telas</th>
+                                <th class="th border px-1">Ancho Balonas</th>
+                                <th class="th border px-1">Metraje de Telas</th>
+                                <th class="th border px-1">Cuendeados Mín. por Tela</th>
+                                <th class="th border px-1">L Mat Engomado</th>
+                                <th class="th border px-1 w-1/4">Observaciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="h-24">
+                            <tr>
+                                <td class="td border px-1 py-0.5">
+                                    <select name="nucleo" class="inpt form-select w-full px-1 py-1 text-xs rounded">
+                                        <option value="" disabled {{ old('nucleo') ? '' : 'selected' }}></option>
+                                        <option value="Itema" {{ old('nucleo') == 'Itema' ? 'selected' : '' }}>Itema
+                                        </option>
+                                        <option value="Smit" {{ old('nucleo') == 'Smit' ? 'selected' : '' }}>Smit
+                                        </option>
+                                        <option value="Jacquard"{{ old('nucleo') == 'Jacquard' ? 'selected' : '' }}>
+                                            Jacquard</option>
+                                    </select>
+                                </td>
+                                <td class="td border px-1 py-0.5">
+                                    <input type="text" inputmode="numeric" pattern="[0-9]*" name="no_telas"
+                                        class="inpt form-input w-full px-1 py-1 text-xs rounded"
+                                        value="{{ old('no_telas') }}">
+                                </td>
+                                <td class="td border px-1 py-0.5">
+                                    <input type="text" inputmode="numeric" pattern="[0-9]*" name="balonas"
+                                        class="inpt form-input w-full px-1 py-1 text-xs rounded"
+                                        value="{{ old('balonas') }}">
+                                </td>
+                                <td class="td border px-1 py-0.5">
+                                    <input type="text" inputmode="numeric" pattern="[0-9]*" name="metros_tela"
+                                        class="inpt form-input w-full px-1 py-1 text-xs rounded"
+                                        value="{{ old('metros_tela') }}">
+                                </td>
+                                <td class="td border px-1 py-0.5">
+                                    <input type="text" inputmode="numeric" pattern="[0-9]*" name="cuendados_mini"
+                                        class="inpt form-input w-full px-1 py-1 text-xs rounded"
+                                        value="{{ old('cuendados_mini') }}">
+                                </td>
+                                <td class="td px-1 py-0.5">
+                                    <select id="bomSelect2" name="lmatengomado"
+                                        class="inpt form-select px-3 py-1 text-xs rounded" required>
+                                        <option value="" disabled selected>Selecciona una lista</option>
+                                    </select>
+                                </td>
+                                <td class="td border px-3 py-1">
+                                    <textarea name="observaciones" class="inpt form-textarea w-full px-1 py-1 text-xs rounded h-16">{{ old('observaciones') }}</textarea>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -336,7 +347,7 @@
                 display: inline-flex;
                 align-items: center;
                 gap: .75rem;
-                padding: .4rem 1.7rem .4rem 1rem;
+                padding: .1rem 1.7rem .1rem 1rem;
                 /* margen para la burbuja derecha */
                 border-radius: 9999px;
                 color: #fff;
@@ -436,7 +447,7 @@
             /* flecha gris */
 
             .btn-left {
-                padding: .8rem 1.2rem .8rem 3.4rem;
+                padding: .1rem 1.2rem .1rem 3.4rem;
                 /* espacio a la izquierda para la burbuja */
             }
 
@@ -449,6 +460,57 @@
             .btn-left:hover .btn-bubble svg {
                 transform: translateX(-2px);
             }
+
+            /* === Skin azul como la tabla anterior (sin tocar tu estructura) === */
+            #agrupados-table {
+                border-color: #bfdbfe;
+            }
+
+            /* blue-200 */
+            #agrupados-table thead tr {
+                background: linear-gradient(90deg, #c7d2fe, #93c5fd, #60a5fa, #3b82f6, #2563eb, #1d4ed8);
+            }
+
+            #agrupados-table thead th {
+                color: #fff;
+                font-weight: 800;
+                letter-spacing: .02em;
+                white-space: nowrap;
+                border-color: rgba(255, 255, 255, .25);
+                padding-top: .45rem;
+                padding-bottom: .45rem;
+                /* respeta tu px-0.5 de lados */
+            }
+
+            /* esquinas redondeadas arriba */
+            #agrupados-table thead th:first-child {
+                border-top-left-radius: 16px;
+            }
+
+            #agrupados-table thead th:last-child {
+                border-top-right-radius: 16px;
+            }
+
+            /* Celdas cuerpo */
+            #agrupados-table tbody td {
+                background: rgba(255, 255, 255, .98);
+                border-color: #bfdbfe;
+                color: #0f172a;
+                /* slate-900 */
+            }
+
+            /* Hover suave como la otra tabla */
+            #agrupados-table tbody tr:hover td {
+                background: #eef6ff;
+                transition: background-color .15s ease;
+            }
+
+            /* Limitar tamaño general (que no se vea gigantesca) */
+            .max-w-\[980px] table {
+                font-size: 0.75rem;
+            }
+
+            /* ya usas text-xs, reforzamos proporción */
         </style>
     @endpush
 @endsection
