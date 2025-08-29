@@ -17,83 +17,77 @@
         ];
     @endphp
 
-    <div class="space-y-4">
-
+    <div class="space-y-1">
         {{-- ===================== SEGUNDA PÁGINA (AGRUPADOS) ===================== --}}
-        <table class="w-full text-xs border-separate border-spacing-0 border border-gray-300 mb-2">
-            <thead class="h-8">
-                <tr class="bg-gray-200 text-left text-slate-900">{{-- ESPACIOS WIDHT POR PIXELES 1900 --}}
-                    <th class="border px-1 py-0.5 w-20">Telar</th>
-                    <th class="border px-1 py-0.5 w-14">Fec Req</th>
-                    <th class="border px-1 py-0.5 w-12">Cuenta</th>
-                    <th class="border px-1 py-0.5 w-8">Calibre</th>
-                    <th class="border px-1 py-0.5 w-12">Hilo</th>
-                    <th class="border px-1 py-0.5 w-20">Urdido</th>
-                    <th class="border px-1 py-0.5 w-6">Tipo</th>
-                    <th class="border px-1 py-0.5 w-8">Destino</th>
-                    <th class="border px-1 py-0.5 w-14">Metros</th>
-                    <th class="border px-1 py-0.5 w-30">L.Mat Urdido</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($agrupados as $i => $g)
-                    @php $rowClass = $rowPalette[$i % count($rowPalette)]; @endphp
-                    <tr class="{{ $rowClass }}">
-                        <td class="border px-1 py-0.5">{{ $g->telar_str }}</td>
-                        <td class="border px-1 py-0.5">
-                            {{ $g->fecha_requerida ? \Carbon\Carbon::parse($g->fecha_requerida)->format('d/m/Y') : '' }}
-                        </td>
-                        <td class="border px-1 py-0.5">{{ decimales($g->cuenta) }}</td>
-                        <td class="border px-1 py-0.5">{{ $g->calibre }}</td>
-                        <td class="border px-1 py-0.5">{{ $g->hilo }}</td>
-                        <td class="border px-1 py-0.5">{{ $g->urdido }}</td>
-                        <td class="border px-1 py-0.5">{{ $g->tipo }}</td>
-                        <td class="border px-1 py-0.5">{{ $g->destino }}</td>
-                        <td class="border px-1 py-0.5 text-right">{{ decimales($g->metros) }}</td>
-                        <td class="border px-1 py-0.5">
-                            {{-- IMPORTANTE: usa clase y nombre indexado --}}
-                            @php
-                                // Lo que tengas guardado (id y texto). Si solo tienes id, usamos el mismo id como texto.
-                                $preId = old("agrupados.$i.lmaturdido", $g->lmaturdido_id ?? null);
-                                $preText = old("agrupados.$i.lmaturdido_text", $g->lmaturdido_text ?? null) ?? $preId;
-                            @endphp
-
-                            <select name="agrupados[{{ $i }}][lmaturdido]"
-                                class="js-bom-select form-select w-full px-1 py-1 text-xs border border-gray-300 rounded"
-                                data-selected-id="{{ $preId ?? '' }}" data-selected-text="{{ $preText ?? '' }}">
-                                {{-- opción vacía para placeholder --}}
-                                <option value=""></option>
-
-                                {{-- si ya hay valor previo, imprimimos la opción seleccionada con texto --}}
-                                @if ($preId)
-                                    <option value="{{ $preId }}" selected>{{ $preText }}</option>
-                                @endif
-                            </select>
-
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-
-        </table>
         <div class="flex items-start gap-4">
-            {{-- ... tabla y BOTONES del lado izquierdo... --}}
+            <!-- Columna izquierda: TABLA -->
+            <div class="flex-1">
+                <table class="w-full text-xs border-separate border-spacing-0 border border-gray-300 ml-2">
+                    <thead class="h-8">
+                        <tr class="bg-gray-200 text-left text-slate-900">
+                            <th class="border px-0.5 w-[130px]">Telar</th>
+                            <th class="border px-0.5 w-[70px]">Fec Req</th>
+                            <th class="border px-0.5 w-[50px]">Cuenta</th>
+                            <th class="border px-0.5 w-[50px]">Calibre</th>
+                            <th class="border px-0.5 w-[50px]">Hilo</th>
+                            <th class="border px-0.5 w-[70px]">Urdido</th>
+                            <th class="border px-0.5 w-[50px]">Tipo</th>
+                            <th class="border px-0.5 w-[70px]">Destino</th>
+                            <th class="border px-0.5 w-[70px]">Metros</th>
+                            <th class="border px-0.5 w-[180px]">L.Mat Urdido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($agrupados as $i => $g)
+                            @php $rowClass = $rowPalette[$i % count($rowPalette)]; @endphp
+                            <tr class="{{ $rowClass }}">
+                                <td class="border px-0.5">{{ $g->telar_str }}</td>
+                                <td class="border px-0.5">
+                                    {{ $g->fecha_requerida ? \Carbon\Carbon::parse($g->fecha_requerida)->format('d/m/Y') : '' }}
+                                </td>
+                                <td class="border px-0.5">{{ decimales($g->cuenta) }}</td>
+                                <td class="border px-0.5">{{ $g->calibre }}</td>
+                                <td class="border px-0.5">{{ $g->hilo }}</td>
+                                <td class="border px-0.5">{{ $g->urdido }}</td>
+                                <td class="border px-0.5">{{ $g->tipo }}</td>
+                                <td class="border px-0.5">{{ $g->destino }}</td>
+                                <td class="border px-0.5 text-right">{{ decimales($g->metros) }}</td>
+                                <td class="border px-0.5">
+                                    @php
+                                        $preId = old("agrupados.$i.lmaturdido", $g->lmaturdido_id ?? null);
+                                        $preText =
+                                            old("agrupados.$i.lmaturdido_text", $g->lmaturdido_text ?? null) ?? $preId;
+                                    @endphp
 
-            {{-- Botones laterales compactos y bonitos --}}
-            <aside class="ml-auto w-56  top-4">
-                <div class="rounded-xl border border-slate-200 bg-white/90 shadow-sm p-2 space-y-2">
+                                    <select name="agrupados[{{ $i }}][lmaturdido]" class="js-bom-select"
+                                        data-selected-id="{{ $preId ?? '' }}" data-selected-text="{{ $preText ?? '' }}">
+                                        <option value=""></option>
+                                        @if ($preId)
+                                            <option value="{{ $preId }}" selected>{{ $preText }}</option>
+                                        @endif
+                                    </select>
+                                </td>
+
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Columna derecha: BOTONES -->
+            <aside class="w-40 self-start mr-8">
+                <div class="rounded-xl border border-slate-200 bg-white/90 shadow-sm p-1 space-y-2">
 
                     <form method="POST" action="{{ route('reservar.inventario') }}">
                         @csrf
                         @foreach ($requerimientos as $req)
                             <input type="hidden" name="ids[]" value="{{ $req->id }}">
                         @endforeach
-
                         <button
-                            class="w-full px-3 py-2 rounded-lg text-sm font-semibold
-                           bg-emerald-600 text-white hover:bg-emerald-700
-                           focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-1">
-                            Reservar inventario
+                            class="w-full px-1.5 py-1 rounded-lg text-sm font-semibold
+                 bg-emerald-600 text-white hover:bg-emerald-700
+                 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-1">
+                            RESERVAR INVENTARIO
                         </button>
                     </form>
 
@@ -102,19 +96,17 @@
                         @foreach ($requerimientos as $req)
                             <input type="hidden" name="ids[]" value="{{ $req->id }}">
                         @endforeach
-
                         <button
-                            class="w-full px-3 py-2 rounded-lg text-sm font-semibold
-                           bg-blue-600 text-white hover:bg-blue-700
-                           focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1">
-                            Crear órdenes
+                            class="w-full px-1.5 py-1 rounded-lg text-sm font-semibold
+                 bg-blue-600 text-white hover:bg-blue-700
+                 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1">
+                            CREAR ÓRDENES
                         </button>
                     </form>
 
                 </div>
             </aside>
         </div>
-
 
         {{-- ====== Bloques inferiores  CONS URDIDO Y ENGOMADO ====== --}}
         <div class="flex space-x-1">
@@ -201,13 +193,13 @@
                                     class="form-input w-full px-1 py-1 text-xs border border-gray-300 rounded"
                                     value="{{ old('cuendados_mini') }}">
                             </td>
-                            <td class="border px-1 py-0.5">
+                            <td class="">
                                 <select id="bomSelect2" name="lmatengomado"
-                                    class="form-select w-full px-1 py-1 text-xs border border-gray-300 rounded" required>
+                                    class="form-select px-3 py-1 text-xs border border-gray-300 rounded" required>
                                     <option value="" disabled selected>Selecciona una lista</option>
                                 </select>
                             </td>
-                            <td class="border px-1 py-0.5">
+                            <td class="border px-3 py-1">
                                 <textarea name="observaciones" class="form-textarea w-full px-1 py-1 text-xs border border-gray-300 rounded h-16">{{ old('observaciones') }}</textarea>
                             </td>
                         </tr>
@@ -217,10 +209,13 @@
         </div>
 
         {{-- Navegación inferior --}}
-        <div class="flex justify-end gap-2 pt-2">
+        <div class="flex justify-end gap-1 text-xs">
             <a href="{{ url()->previous() }}"
-                class="px-4 py-1 rounded border font-semibold bg-white hover:bg-slate-50 ">VOLVER</a>
-            <button class="w-[200px] px-4 py-1 rounded bg-blue-600 text-white font-semibold hover:bg-blue-700">
+                class="inline-flex items-center justify-center w-[150px] h-10 rounded border font-bold bg-gray-200 hover:bg-slate-50">
+                VOLVER
+            </a>
+
+            <button class="w-[150px] px-1 py-1 rounded bg-blue-600 text-white font-bold hover:bg-blue-700">
                 GUARDAR DATOS DE ENGOMADO
             </button>
         </div>
@@ -263,7 +258,7 @@
                     },
                     minimumInputLength: 1,
                     dropdownParent: $el.parent(), // estable dentro de celdas/scroll
-                    width: 'style',
+                    width: '100%', // para este SELECT estamos modificando el ancho desde JS (ATENCIÓN)
                     // Si por cualquier motivo viene sin "text", mostramos el id
                     templateSelection: function(data, container) {
                         if (!data.id) return 'Buscar BOM...';
@@ -273,7 +268,6 @@
             });
         });
     </script>
-
 
     <!--busca BOMIDs para select2 de ENGOMADO-->
     <script>

@@ -535,7 +535,6 @@ class RequerimientoController extends Controller
         } catch (QueryException $e) {
             // Errores SQL/BD
             Log::error('step2: Error de base de datos', [
-                'user_id' => auth()->id(),
                 'code'    => $e->getCode(),
                 'sql'     => $e->getSql(),
                 'bindings' => $e->getBindings(),
