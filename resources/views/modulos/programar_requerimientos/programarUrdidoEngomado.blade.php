@@ -95,7 +95,7 @@
                             {{-- Fecha requerida --}}
                             <td class="border px-1 py-0.5 text-center first:rounded-l-md last:rounded-r-md overflow-hidden">
                                 <input type="date" name="registros[{{ $index }}][fecha_requerida]"
-                                    value="{{ $req->fecha_requerida ? \Carbon\Carbon::parse($req->fecha_requerida)->format('Y-m-d') : '' }}"
+                                    value="{{ $req->fecha ? \Carbon\Carbon::parse($req->fecha)->format('Y-m-d') : '' }}"
                                     class="form-input w-full px-1 py-0.5 text-xs border border-gray-300 rounded">
                             </td>
 

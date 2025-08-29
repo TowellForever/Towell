@@ -14,8 +14,7 @@
                 <div class="w-full mt-2 mb-2 flex items-center justify-between">
                     <h2 class="text-lg font-bold bg-yellow-200 text-center flex-grow">Programación de Requerimientos</h2>
                     <input type="hidden" name="idsSeleccionados" id="idsSeleccionados">
-                    <button type
-                        class="w-40 font-semibold text-lg bg-blue-500 text-white hover:bg-green-600">PROGRAMAR</button>
+                    <button class="w-40 font-semibold text-lg bg-blue-500 text-white hover:bg-green-600">PROGRAMAR</button>
                 </div>
 
                 <div class="overflow-y-auto max-h-60 "> <!-- Contenedor con scroll -->

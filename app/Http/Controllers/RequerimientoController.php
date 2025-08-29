@@ -71,7 +71,7 @@ class RequerimientoController extends Controller
                 'calibre_pie' =>  $request->calibre_pie,
                 'hilo' => $request->hilo,
                 'tipo_atado' => 'Normal',
-                'fecha_requerida' => $request->fecha_reque,
+                'fecha_requerida' => $request->fecha,
             ]);
 
             DB::commit();
@@ -254,7 +254,6 @@ class RequerimientoController extends Controller
 
         //MANDAMOS los datos provenientes de TI_PRO para LMAT de URDIDO y ENGOMADO
 
-
         // Retornar vista con requerimiento y salón
         return view('modulos.programar_requerimientos.programarUrdidoEngomado', compact('requerimiento', 'datos', 'requerimientos'));
     }
@@ -417,6 +416,7 @@ class RequerimientoController extends Controller
 
     public function step2(Request $request) // STEP 2
     {
+        //dd($request);
         try {
             // 1) Filas del paso 1 - Leer lo seleccionado en el Paso 1
             $rows = collect($request->input('registros', []));

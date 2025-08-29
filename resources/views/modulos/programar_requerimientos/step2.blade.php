@@ -22,7 +22,7 @@
         <div class="flex items-start gap-4">
             <!-- Columna izquierda: TABLA -->
             <div class="flex-1">
-                <table class="w-full text-xs border-separate border-spacing-0 border border-gray-300 ml-2">
+                <table class="w-full text-xs border-separate border-spacing-0 border border-gray-300 ml-1 pr-2">
                     <thead class="h-8">
                         <tr class="bg-gray-200 text-left text-slate-900">
                             <th class="border px-0.5 w-[130px]">Telar</th>
@@ -73,40 +73,76 @@
                     </tbody>
                 </table>
             </div>
+        </div>
 
-            <!-- Columna derecha: BOTONES -->
-            <aside class="w-40 self-start mr-8">
-                <div class="rounded-xl border border-slate-200 bg-white/90 shadow-sm p-1 space-y-2">
+        <!-- Columna derecha: BOTONES -->
+        <section class="max-w-6xl mx-auto">
+            <div class="rounded-3xl bg-blue-600/90 p-1 sm:p-8 shadow-2xl">
+                <div class="flex flex-wrap items-center gap-2 ">
 
+                    <!-- VOLVER -->
+                    <a href="{{ url()->previous() }}" class="btn-candy btn-gray btn-left">
+                        <span class="btn-bubble" aria-hidden="true">
+                            <!-- Flecha hacia la izquierda -->
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M15 6l-6 6 6 6" />
+                            </svg>
+                        </span>
+                        <span class="btn-text">VOLVER</span>
+                    </a>
+
+                    <!-- Reservar inventario -->
                     <form method="POST" action="{{ route('reservar.inventario') }}">
                         @csrf
                         @foreach ($requerimientos as $req)
                             <input type="hidden" name="ids[]" value="{{ $req->id }}">
                         @endforeach
-                        <button
-                            class="w-full px-1.5 py-1 rounded-lg text-sm font-semibold
-                 bg-emerald-600 text-white hover:bg-emerald-700
-                 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-1">
-                            RESERVAR INVENTARIO
+                        <button type="submit" class="btn-candy btn-teal">
+                            <span class="btn-text">RESERVAR INVENTARIO</span>
+                            <span class="btn-bubble" aria-hidden="true">
+                                <!-- Flecha -->
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M9 6l6 6-6 6" />
+                                </svg>
+                            </span>
                         </button>
                     </form>
 
+                    <!-- Crear órdenes -->
                     <form method="POST" action="{{ route('orden.produccion.store') }}">
                         @csrf
                         @foreach ($requerimientos as $req)
                             <input type="hidden" name="ids[]" value="{{ $req->id }}">
                         @endforeach
-                        <button
-                            class="w-full px-1.5 py-1 rounded-lg text-sm font-semibold
-                 bg-blue-600 text-white hover:bg-blue-700
-                 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1">
-                            CREAR ÓRDENES
+                        <button type="submit" class="btn-candy btn-blue">
+                            <span class="btn-text">CREAR ÓRDENES</span>
+                            <span class="btn-bubble" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M9 6l6 6-6 6" />
+                                </svg>
+                            </span>
                         </button>
                     </form>
 
+                    <!-- (Opcional) Más botones con colores de muestra similares a la imagen -->
+                    {{-- 
+                    <button class="btn-candy btn-red"><span class="btn-text">ACCION ROJA</span><span class="btn-bubble"
+                            aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <path d="M9 6l6 6-6 6" />
+                            </svg></span></button>
+                    <button class="btn-candy btn-yellow"><span class="btn-text">ACCION AMARILLA</span><span
+                            class="btn-bubble" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20"
+                                fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 6l6 6-6 6" />
+                            </svg></span></button>
+                    --}}
                 </div>
-            </aside>
-        </div>
+            </div>
+        </section>
 
         {{-- ====== Bloques inferiores  CONS URDIDO Y ENGOMADO ====== --}}
         <div class="flex space-x-1">
@@ -207,18 +243,6 @@
                 </table>
             </div>
         </div>
-
-        {{-- Navegación inferior --}}
-        <div class="flex justify-end gap-1 text-xs">
-            <a href="{{ url()->previous() }}"
-                class="inline-flex items-center justify-center w-[150px] h-10 rounded border font-bold bg-gray-200 hover:bg-slate-50">
-                VOLVER
-            </a>
-
-            <button class="w-[150px] px-1 py-1 rounded bg-blue-600 text-white font-bold hover:bg-blue-700">
-                GUARDAR DATOS DE ENGOMADO
-            </button>
-        </div>
     </div>
 
     <script>
@@ -299,4 +323,132 @@
             });
         });
     </script>
+
+    @push('styles')
+        <style>
+            /* Botón “píldora” con burbuja blanca a la derecha */
+            .btn-candy {
+                --from: #60a5fa;
+                /* fallback */
+                --to: #2563eb;
+                /* fallback */
+                position: relative;
+                display: inline-flex;
+                align-items: center;
+                gap: .75rem;
+                padding: .4rem 1.7rem .4rem 1rem;
+                /* margen para la burbuja derecha */
+                border-radius: 9999px;
+                color: #fff;
+                font-weight: 600;
+                letter-spacing: .2px;
+                background: linear-gradient(145deg, var(--from), var(--to));
+                box-shadow: 0 10px 20px rgba(0, 0, 0, .18), inset 0 1px 0 rgba(255, 255, 255, .25);
+                transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+                outline: none;
+            }
+
+            .btn-candy .btn-text {
+                white-space: nowrap;
+                text-shadow: 0 1px 0 rgba(0, 0, 0, .15);
+            }
+
+            .btn-candy .btn-bubble {
+                position: absolute;
+                right: .1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 1.5rem;
+                height: 1.5rem;
+                border-radius: 9999px;
+                background: #fff;
+
+                color: #ff3d7b;
+                /* tono como en ejemplo rosa/fucsia */
+                display: grid;
+                place-items: center;
+                box-shadow: 0 8px 16px rgba(0, 0, 0, .22);
+                transition: transform .18s ease;
+            }
+
+            .btn-candy:hover,
+            .btn-candy:focus-visible {
+                transform: translateY(-2px);
+                box-shadow: 0 14px 28px rgba(0, 0, 0, .22), inset 0 1px 0 rgba(255, 255, 255, .3);
+                filter: saturate(1.05);
+            }
+
+            .btn-candy:hover .btn-bubble,
+            .btn-candy:focus-visible .btn-bubble {
+                transform: translateY(-50%) scale(1.06);
+            }
+
+            .btn-candy .btn-bubble svg {
+                transition: transform .18s ease;
+            }
+
+            .btn-candy:hover .btn-bubble svg {
+                transform: translateX(2px);
+            }
+
+            /* Paletas tipo “candy” (muy similares a las de tus imágenes) */
+            .btn-teal {
+                --from: #2fd5d3;
+                --to: #0ea5a6;
+            }
+
+            /* verde/agua */
+            .btn-blue {
+                --from: #4facfe;
+                --to: #2563eb;
+            }
+
+            /* azul */
+            .btn-red {
+                --from: #ff5e62;
+                --to: #d00000;
+            }
+
+            /* rojo */
+            .btn-yellow {
+                --from: #f6d365;
+                --to: #f7b733;
+            }
+
+            /* Variante gris + burbuja a la izquierda para VOLVER */
+            .btn-gray {
+                --from: #e5e7eb;
+                /* gris claro */
+                --to: #9ca3af;
+                /* gris medio */
+                color: #111827;
+                /* texto oscuro para mejor contraste */
+            }
+
+            .btn-gray .btn-text {
+                text-shadow: none;
+            }
+
+            .btn-gray .btn-bubble {
+                color: #6b7280;
+            }
+
+            /* flecha gris */
+
+            .btn-left {
+                padding: .8rem 1.2rem .8rem 3.4rem;
+                /* espacio a la izquierda para la burbuja */
+            }
+
+            .btn-left .btn-bubble {
+                left: .35rem;
+                right: auto;
+                /* mueve la burbuja a la izquierda */
+            }
+
+            .btn-left:hover .btn-bubble svg {
+                transform: translateX(-2px);
+            }
+        </style>
+    @endpush
 @endsection
