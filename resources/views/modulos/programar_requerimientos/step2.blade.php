@@ -19,20 +19,20 @@
 
     <div class="space-y-4">
 
-        {{-- ===================== SEGUNDAS PÁGINA (AGRUPADOS) ===================== --}}
+        {{-- ===================== SEGUNDA PÁGINA (AGRUPADOS) ===================== --}}
         <table class="w-full text-xs border-separate border-spacing-0 border border-gray-300 mb-2">
-            <thead class="h-10">
-                <tr class="bg-gray-200 text-left text-slate-900">
-                    <th class="border px-1 py-0.5 w-28">Telar</th>
-                    <th class="border px-1 py-0.5 w-20">Fec Req</th>
-                    <th class="border px-1 py-0.5 w-16">Cuenta</th>
-                    <th class="border px-1 py-0.5 w-16">Calibre</th>
+            <thead class="h-8">
+                <tr class="bg-gray-200 text-left text-slate-900">{{-- ESPACIOS WIDHT POR PIXELES 1900 --}}
+                    <th class="border px-1 py-0.5 w-20">Telar</th>
+                    <th class="border px-1 py-0.5 w-14">Fec Req</th>
+                    <th class="border px-1 py-0.5 w-12">Cuenta</th>
+                    <th class="border px-1 py-0.5 w-8">Calibre</th>
                     <th class="border px-1 py-0.5 w-12">Hilo</th>
-                    <th class="border px-1 py-0.5 w-24">Urdido</th>
-                    <th class="border px-1 py-0.5 w-12">Tipo</th>
-                    <th class="border px-1 py-0.5 w-24">Destino</th>
+                    <th class="border px-1 py-0.5 w-20">Urdido</th>
+                    <th class="border px-1 py-0.5 w-6">Tipo</th>
+                    <th class="border px-1 py-0.5 w-8">Destino</th>
                     <th class="border px-1 py-0.5 w-14">Metros</th>
-                    <th class="border px-1 py-0.5 w-14">L.Mat Urdido</th>
+                    <th class="border px-1 py-0.5 w-30">L.Mat Urdido</th>
                 </tr>
             </thead>
             <tbody>
@@ -49,7 +49,7 @@
                         <td class="border px-1 py-0.5">{{ $g->urdido }}</td>
                         <td class="border px-1 py-0.5">{{ $g->tipo }}</td>
                         <td class="border px-1 py-0.5">{{ $g->destino }}</td>
-                        <td class="border px-1 py-0.5 text-right">{{ number_format($g->metros, 0) }}</td>
+                        <td class="border px-1 py-0.5 text-right">{{ decimales($g->metros) }}</td>
                         <td class="border px-1 py-0.5">
                             {{-- IMPORTANTE: usa clase y nombre indexado --}}
                             @php
@@ -77,10 +77,10 @@
 
         </table>
         <div class="flex items-start gap-4">
-            {{-- ...tu tabla u otro contenido del lado izquierdo... --}}
+            {{-- ... tabla y BOTONES del lado izquierdo... --}}
 
             {{-- Botones laterales compactos y bonitos --}}
-            <aside class="ml-auto w-56 sticky top-4">
+            <aside class="ml-auto w-56  top-4">
                 <div class="rounded-xl border border-slate-200 bg-white/90 shadow-sm p-2 space-y-2">
 
                     <form method="POST" action="{{ route('reservar.inventario') }}">
@@ -116,7 +116,7 @@
         </div>
 
 
-        {{-- ====== Bloques inferiores ====== --}}
+        {{-- ====== Bloques inferiores  CONS URDIDO Y ENGOMADO ====== --}}
         <div class="flex space-x-1">
             <div class="w-1/6 p-1">
 
@@ -152,19 +152,19 @@
             </div>
 
             <div class="w-5/6 p-1">
-                <table class="w-full text-xs border-collapse border border-gray-300 mb-1">
-                    <thead class="h-10">
+                <table class="w-full text-xs border-collapse border border-gray-300">
+                    <thead class="h-4">
                         <tr class="bg-gray-200 text-center">
-                            <th colspan="6">DATOS DE ENGOMADO</th>
+                            <th colspan="7">DATOS DE ENGOMADO</th>
                         </tr>
                         <tr class="bg-gray-200 text-left">
-                            <th class="border px-1 py-0.5">Núcleo</th>
-                            <th class="border px-1 py-0.5">No. de Telas</th>
-                            <th class="border px-1 py-0.5">Ancho Balonas</th>
-                            <th class="border px-1 py-0.5">Metraje de Telas</th>
-                            <th class="border px-1 py-0.5">Cuendeados Mínimos por Tela</th>
-                            <th class="border px-1 py-0.5">L Mat Engomado</th>
-                            <th class="border px-1 py-0.5 w-1/4">Observaciones</th>
+                            <th class="border px-1">Núcleo</th>
+                            <th class="border px-1">No. de Telas</th>
+                            <th class="border px-1">Ancho Balonas</th>
+                            <th class="border px-1">Metraje de Telas</th>
+                            <th class="border px-1">Cuendeados Mín. por Tela</th>
+                            <th class="border px-1">L Mat Engomado</th>
+                            <th class="border px-1 w-1/4">Observaciones</th>
                         </tr>
                     </thead>
                     <tbody class="h-24">
@@ -219,9 +219,9 @@
         {{-- Navegación inferior --}}
         <div class="flex justify-end gap-2 pt-2">
             <a href="{{ url()->previous() }}"
-                class="px-4 py-2 rounded border font-semibold bg-white hover:bg-slate-50">Volver</a>
-            <button class="px-4 py-2 rounded bg-blue-600 text-white font-semibold hover:bg-blue-700">
-                Guardar datos de Engomado
+                class="px-4 py-1 rounded border font-semibold bg-white hover:bg-slate-50 ">VOLVER</a>
+            <button class="w-[200px] px-4 py-1 rounded bg-blue-600 text-white font-semibold hover:bg-blue-700">
+                GUARDAR DATOS DE ENGOMADO
             </button>
         </div>
     </div>

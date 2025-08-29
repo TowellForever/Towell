@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Database\QueryException;
+use Throwable;
 
 class RequerimientoController extends Controller
 {
@@ -414,110 +417,153 @@ class RequerimientoController extends Controller
 
     public function step2(Request $request) // STEP 2
     {
-        // 1) Filas del paso 1
-        $rows = collect($request->input('registros', []));
-        $ids  = $rows->pluck('id')->filter()->unique()->values();
+        try {
+            // 1) Filas del paso 1 - Leer lo seleccionado en el Paso 1
+            $rows = collect($request->input('registros', []));
+            $ids  = $rows->pluck('id')->filter()->unique()->values();
 
-        if ($ids->isEmpty()) {
-            return back()->with('error', 'Selecciona al menos un registro.');
-        }
+            if ($ids->isEmpty()) {
+                return back()->with('error', 'Selecciona al menos un registro.');
+            }
 
-        // 2) Guardamos todo lo del paso 1 en sesión
-        $step1Map = $rows->keyBy('id'); // [id => {...}]
-        session(['urdido.step1' => $step1Map->toArray()]);
+            // 2) Guardamos todo lo del paso 1 en sesión
+            $step1Map = $rows->keyBy('id'); // [id => {...}]
+            session(['urdido.step1' => $step1Map->toArray()]); // Convierte la lista en map y lo guarda
 
-        // 3) Traemos requerimientos base
-        $requerimientos = Requerimiento::whereIn('id', $ids)->get();
+            // 3) Traemos requerimientos base
+            $requerimientos = Requerimiento::whereIn('id', $ids)->get();
 
-        // 4) Normalizamos (BD + overrides del paso 1)
-        $full = $requerimientos->map(function ($req) use ($step1Map) {
+            // 4) Normalizamos (BD + overrides del paso 1)
+            $full = $requerimientos->map(function ($req) use ($step1Map) {
+                // Tipo
+                $rizo = (int)($req->rizo ?? 0) === 1;
+                $pie  = (int)($req->pie  ?? 0) === 1;
+                $tipo = $rizo ? 'Rizo' : ($pie ? 'Pie' : '');
 
-            // Tipo
-            $rizo = (int)($req->rizo ?? 0) === 1;
-            $pie  = (int)($req->pie  ?? 0) === 1;
-            $tipo = $rizo ? 'Rizo' : ($pie ? 'Pie' : '');
+                // Cuenta / calibre según tipo
+                $cuenta  = $rizo ? ($req->cuenta_rizo  ?? $req->cuenta  ?? null)
+                    : ($req->cuenta_pie   ?? $req->cuenta  ?? null);
+                $calibre = $rizo ? ($req->calibre_rizo ?? $req->calibre ?? null)
+                    : ($req->calibre_pie  ?? $req->calibre ?? null);
 
-            // Cuenta / calibre según tipo
-            $cuenta  = $rizo ? ($req->cuenta_rizo  ?? $req->cuenta  ?? null)
-                : ($req->cuenta_pie   ?? $req->cuenta  ?? null);
-            $calibre = $rizo ? ($req->calibre_rizo ?? $req->calibre ?? null)
-                : ($req->calibre_pie  ?? $req->calibre ?? null);
+                // Overrides del paso 1
+                $s1 = $step1Map->get($req->id, []);
 
-            // Overrides del paso 1
-            $s1 = $step1Map->get($req->id, []);
+                // FECHA: prioriza la del paso 1 si viene
+                $fecha_requerida = $s1['fecha_requerida'] ?? $req->fecha_requerida;
 
-            // FECHA: prioriza la del paso 1 si viene
-            $fecha_requerida = $s1['fecha_requerida'] ?? $req->fecha_requerida;
+                // Destino en mayúsculas
+                $destino = Str::of($s1['destino'] ?? $req->valor ?? '')
+                    ->trim()->upper()->toString();
 
-            // Destino en mayúsculas
-            $destino = Str::of($s1['destino'] ?? $req->valor ?? '')
-                ->trim()->upper()->toString();
+                // Metros: prioriza paso 1
+                $metros = (int)preg_replace('/[^\d]/', '', (string)($s1['metros'] ?? $req->metros ?? 0));
 
-            // Metros: prioriza paso 1
-            $metros = (int)preg_replace('/[^\d]/', '', (string)($s1['metros'] ?? $req->metros ?? 0));
+                // Urdido que eligieron (si lo usas)
+                $urdido = $s1['urdido'] ?? null;
 
-            // Urdido que eligieron (si lo usas)
-            $urdido = $s1['urdido'] ?? null;
-
-            return (object) [
-                'id'              => $req->id,
-                'telar'           => $req->telar,
-                'fecha_requerida' => $fecha_requerida,
-                'cuenta'          => $cuenta,
-                'calibre'         => $calibre,
-                'hilo'            => $req->hilo ?? 'H',
-                'tipo'            => $tipo,
-                'destino'         => $destino,
-                'metros'          => $metros,
-                'urdido'          => $urdido,
-            ];
-        });
-
-        // 5) AGRUPAR por (cuenta, calibre, tipo, destino) y sumar metros
-        $agrupados = $full
-            ->groupBy(fn($x) => implode('|', [$x->cuenta, $x->calibre, $x->tipo, $x->destino]))
-            ->values()
-            ->map(function ($group, $idx) {
-
-                // Telar: lista ordenada y única
-                $telars = $group->pluck('telar')
-                    ->filter()
-                    ->map(fn($t) => (string)$t)
-                    ->unique()
-                    ->values()
-                    ->all();
-                sort($telars, SORT_NATURAL);
-
-                // FECHA del grupo: la más temprana (cámbialo a ->last() si quieres la más reciente)
-                $fecha = $group->pluck('fecha_requerida')
-                    ->filter()
-                    ->map(fn($d) => $d instanceof Carbon ? $d : Carbon::parse($d))
-                    ->sort()
-                    ->first();
-                $fecha_str = $fecha?->format('Y-m-d'); // guardamos como string ISO
-
-                // Urdido a mostrar
-                $urdido = optional($group->first())->urdido ?: ('Mc Coy ' . ($idx + 1));
-
-                $first = $group->first();
                 return (object) [
-                    'ids'             => $group->pluck('id')->all(),
-                    'telar_str'       => implode(',', $telars),
-                    'fecha_requerida' => $fecha_str,
-                    'cuenta'          => $first->cuenta,
-                    'calibre'         => $first->calibre,
-                    'hilo'            => $first->hilo,
+                    'id'              => $req->id,
+                    'telar'           => $req->telar,
+                    'fecha_requerida' => $fecha_requerida,
+                    'cuenta'          => $cuenta,
+                    'calibre'         => $calibre,
+                    'hilo'            => $req->hilo ?? 'H',
+                    'tipo'            => $tipo,
+                    'destino'         => $destino,
+                    'metros'          => $metros,
                     'urdido'          => $urdido,
-                    'tipo'            => $first->tipo,
-                    'destino'         => $first->destino,
-                    'metros'          => $group->sum('metros'),
                 ];
             });
 
-        return view(
-            'modulos.programar_requerimientos.step2',
-            compact('requerimientos', 'agrupados')
-        );
+            // 5) AGRUPAR por (cuenta, calibre, tipo, destino) y sumar metros
+            $agrupados = $full
+                ->groupBy(fn($x) => implode('|', [$x->cuenta, $x->calibre, $x->tipo, $x->destino]))
+                ->values()
+                ->map(function ($group, $idx) {
+                    // Telar: lista ordenada y única
+                    $telars = $group->pluck('telar')
+                        ->filter()
+                        ->map(fn($t) => (string)$t)
+                        ->unique()
+                        ->values()
+                        ->all();
+                    sort($telars, SORT_NATURAL);
+
+                    // FECHA del grupo: la más temprana
+                    $fecha = $group->pluck('fecha_requerida')
+                        ->filter()
+                        ->map(fn($d) => $d instanceof Carbon ? $d : Carbon::make($d)) // no lanza
+                        ->filter()   // quita los null si alguno no se pudo crear
+                        ->sort()
+                        ->first();
+                    $fecha_str = $fecha?->format('Y-m-d'); // string ISO
+
+                    // Urdido a mostrar
+                    $urdido = optional($group->first())->urdido ?: ('Mc Coy ' . ($idx + 1));
+
+                    $first = $group->first();
+                    return (object) [
+                        'ids'             => $group->pluck('id')->all(),
+                        'telar_str'       => implode(',', $telars),
+                        'fecha_requerida' => $fecha_str,
+                        'cuenta'          => $first->cuenta,
+                        'calibre'         => $first->calibre,
+                        'hilo'            => $first->hilo,
+                        'urdido'          => $urdido,
+                        'tipo'            => $first->tipo,
+                        'destino'         => $first->destino,
+                        'metros'          => $group->sum('metros'),
+                    ];
+                });
+
+            return view('modulos.programar_requerimientos.step2', compact('requerimientos', 'agrupados'));
+        } catch (ValidationException $e) {
+            // Errores de validación (si agregas Validator arriba)
+            Log::warning('step2: Validación fallida', [
+                'errors'  => $e->errors(),
+            ]);
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Datos inválidos. Revisa los campos.',
+                    'errors'  => $e->errors(),
+                ], 422);
+            }
+
+            return back()->withErrors($e->errors())->withInput();
+        } catch (QueryException $e) {
+            // Errores SQL/BD
+            Log::error('step2: Error de base de datos', [
+                'user_id' => auth()->id(),
+                'code'    => $e->getCode(),
+                'sql'     => $e->getSql(),
+                'bindings' => $e->getBindings(),
+                'msg'     => $e->getMessage(),
+            ]);
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'No se pudo consultar/guardar en la base de datos.',
+                ], 500);
+            }
+
+            return back()->with('error', 'No se pudo consultar la base de datos.')->withInput();
+        } catch (Throwable $e) {
+            // Cualquier otro error inesperado
+            Log::error('step2: Error no controlado', [
+                'msg'     => $e->getMessage(),
+                'trace'   => $e->getTraceAsString(),
+            ]);
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Ocurrió un error al procesar el Paso 2.',
+                ], 500);
+            }
+
+            return back()->with('error', 'Ocurrió un error al procesar el Paso 2.')->withInput();
+        }
     }
 
     private function generarFolioUnico()
